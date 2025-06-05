@@ -1,3 +1,5 @@
+这里是MingDynasty的主页。
+
 # 置顶：宣[https://www.luogu.com.cn/contest/247666](https://www.luogu.com.cn/contest/247666)
 
 ![](https://atrating.baoshuo.dev/rating?username=MingDynasty)
