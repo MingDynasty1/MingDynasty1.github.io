@@ -1,4 +1,4 @@
-这里是MingDynasty的主页。
+这里是MingDynasty的洛谷主页。
 
 # 置顶：宣[https://www.luogu.com.cn/contest/247666](https://www.luogu.com.cn/contest/247666)
 
