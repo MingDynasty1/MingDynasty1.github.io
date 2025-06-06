@@ -2,10 +2,10 @@
 
 以下人物均来自洛谷。
 
-- Wangzyy
+ Wangzyy
 
-- shiyilang0910
+ shiyilang0910
 
-- Sweet_2013
+ Sweet_2013
 
-- ClaudeHsu
+ ClaudeHsu
