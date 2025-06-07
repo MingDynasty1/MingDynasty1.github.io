@@ -1,5 +1,7 @@
 这里是MingDynasty的洛谷主页。
 
+[假的友链](https://mingdynasty1.github.io/friends/friends.md)
+
 # 置顶：宣[https://www.luogu.com.cn/contest/247666](https://www.luogu.com.cn/contest/247666)
 
 ![](https://atrating.baoshuo.dev/rating?username=MingDynasty)
