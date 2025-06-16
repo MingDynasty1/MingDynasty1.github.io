@@ -1,5 +1,7 @@
 这里是MingDynasty的洛谷主页。
 
+# upd on 2025.6.16 22:14 注意！MingDynasty_xiaohao2不是MingDynasty的小号
+
 [假的友链](https://mingdynasty1.github.io/friends/friends.md)
 
 # 置顶：宣[https://www.luogu.com.cn/contest/247666](https://www.luogu.com.cn/contest/247666)
