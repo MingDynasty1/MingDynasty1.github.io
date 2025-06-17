@@ -2,6 +2,4 @@
 
 [洛谷头像](https://mingdynasty1.github.io/cbpan/000000000000000000.png)
 
-[粉福爆照](https://mingdynasty1.github.io/cbpan/00.png)
-
 暂时就这些。
