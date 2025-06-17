@@ -4,7 +4,7 @@
 
 [假的友链](https://mingdynasty1.github.io/friends/friends.md)
 
-[MingDynasty的网盘帮助中心](https://mingdynasty1.github.io/cbpan_help/MingDynasty_cbpan_help.md)
+[MingDynasty的网盘帮助中心](https://mingdynasty1.github.io/cbpan_help/MingDynasty_cbpan_help.html)
 
 # 置顶：宣[https://www.luogu.com.cn/contest/247666](https://www.luogu.com.cn/contest/247666)
 
