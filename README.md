@@ -16,7 +16,7 @@
 
 ![](https://api.jerryz.com.cn/shield?id=1015347&dark_mode=true&disable_cache=true)
 
-![](https://api.jerryz.com.cn/guzhi?id=1015347&scores=100,69,54,64,30&dark_mode=true&disable_cache=true)
+![](https://api.jerryz.com.cn/guzhi?id=1015347&scores=100,68,43,88,30&dark_mode=true&disable_cache=true)
 
 ![](https://api.jerryz.com.cn/practice?id=1015347&dark_mode=true&disable_cache=true)
 
