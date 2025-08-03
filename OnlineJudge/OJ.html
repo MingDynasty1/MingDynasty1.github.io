@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Online Judge - 支持 C++ 和 JavaScript</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f6f7fb; margin: 0; padding: 0; }
+        .container { max-width: 700px; margin: 40px auto; background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 32px; }
+        h2 { text-align: center; color: #2574a9; }
+        label { font-weight: bold; }
+        textarea, input[type="text"], select { width: 100%; padding: 8px; margin: 8px 0 16px 0; border: 1px solid #ccc; border-radius: 4px; resize: vertical; }
+        button { background: #2574a9; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #1c5a7a; }
+        .result { margin-top: 24px; padding: 12px; background: #eafaf1; border-radius: 4px; color: #27ae60; }
+        .error { color: #c0392b; background: #fbeee0; border-radius: 4px; padding: 12px; margin-top: 24px; }
+        .note { font-size: 14px; color: #888; margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Online Judge (C++ & JavaScript)</h2>
+        <form id="judge-form">
+            <label for="problem">题目描述：</label>
+            <div id="problem" style="background:#eef; padding:12px; border-radius:4px; color:#333; margin-bottom:16px;">
+                请输入一个整数 n，输出 n 的平方。
+            </div>
+            <label for="language">选择语言：</label>
+            <select id="language">
+                <option value="javascript">JavaScript</option>
+                <option value="cpp">C++</option>
+            </select>
+            <div class="note" id="note-js">
+                JavaScript: 请提交 solve(n) 函数。
+            </div>
+            <div class="note" id="note-cpp" style="display:none;">
+                C++: 请提交 int solve(int n) 函数体。例如：<br>
+                <code>int solve(int n) { return n * n; }</code>
+            </div>
+            <label for="code">提交你的代码：</label>
+            <textarea id="code" rows="8" placeholder="// 这里写你的代码"></textarea>
+            <label for="input">输入：</label>
+            <input type="text" id="input" placeholder="比如: 5">
+            <button type="button" onclick="judgeCode()">提交评测</button>
+        </form>
+        <div id="output"></div>
+    </div>
+    <script>
+        document.getElementById('language').addEventListener('change', function() {
+            var lang = this.value;
+            document.getElementById('note-js').style.display = lang === 'javascript' ? '' : 'none';
+            document.getElementById('note-cpp').style.display = lang === 'cpp' ? '' : 'none';
+        });
+
+        function judgeCode() {
+            const code = document.getElementById('code').value;
+            const input = document.getElementById('input').value.trim();
+            const lang = document.getElementById('language').value;
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerHTML = '';
+            let result, error = null;
+            try {
+                const n = Number(input);
+                if (isNaN(n)) throw new Error('输入必须为整数');
+                const expected = n * n;
+
+                if (lang === "javascript") {
+                    // 提取 JavaScript 用户函数
+                    const userFunc = new Function('n', code.match(/function\s+solve\s*\((.*?)\)\s*{([\s\S]*)}/) ? code.replace(/function\s+solve\s*\((.*?)\)\s*{([\s\S]*)}/, '$2') : code);
+                    result = userFunc(n);
+                } else if (lang === "cpp") {
+                    // 简易模拟 C++ 代码评测
+                    // 这里只能模拟最简单的 return 表达式
+                    // 真实 OJ 需要后端编译器支持，这里仅做演示
+                    const match = code.match(/return\s+([^\;]+);/);
+                    if (!match) throw new Error('请确保你的代码中有 return 表达式，如 return n * n;');
+                    // 安全只允许 n 运算
+                    const expr = match[1].replace(/[^n0-9\*\+\-\/\(\) ]/g, "");
+                    // 用 JavaScript 计算表达式
+                    result = eval(expr.replace(/n/g, n));
+                }
+                // 结果判断
+                if (result === expected) {
+                    outputDiv.innerHTML = `<div class="result">评测通过！输出: ${result}</div>`;
+                } else {
+                    outputDiv.innerHTML = `<div class="error">评测未通过。你的输出: ${result}，标准答案: ${expected}</div>`;
+                }
+            } catch (e) {
+                outputDiv.innerHTML = `<div class="error">代码运行错误: ${e.message}</div>`;
+            }
+        }
+    </script>
+</body>
+</html>
