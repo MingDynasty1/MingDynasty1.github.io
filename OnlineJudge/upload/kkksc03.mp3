@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>简易线上网盘</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 40px; }
+    #fileList { margin-top: 20px; }
+    table { border-collapse: collapse; width: 100%; }
+    td, th { border: 1px solid #ddd; padding: 8px; }
+    th { background: #f7f7f7; }
+  </style>
+</head>
+<body>
+  <h1>简易线上网盘（5GB）</h1>
+  <form id="uploadForm" enctype="multipart/form-data">
+    <input type="file" name="file" required>
+    <button type="submit">上传文件</button>
+  </form>
+  <div id="status"></div>
+  <div id="fileList"></div>
+  <script>
+    function fetchFiles() {
+      fetch('/files').then(r => r.json()).then(data => {
+        let html = '<table><tr><th>文件名</th><th>大小</th><th>操作</th></tr>';
+        data.forEach(f => {
+          html += `<tr>
+            <td>${f.name}</td>
+            <td>${(f.size/1024/1024).toFixed(2)} MB</td>
+            <td>
+              <a href="/download/${encodeURIComponent(f.name)}" target="_blank">下载</a>
+              <button onclick="delFile('${encodeURIComponent(f.name)}')">删除</button>
+            </td>
+          </tr>`;
+        });
+        html += '</table>';
+        document.getElementById('fileList').innerHTML = html;
+      });
+    }
+    function delFile(name) {
+      if (confirm('确定要删除吗？')) {
+        fetch('/delete/' + name, { method: 'DELETE' })
+          .then(r => r.json())
+          .then(() => fetchFiles());
+      }
+    }
+    document.getElementById('uploadForm').onsubmit = function(e) {
+      e.preventDefault();
+      let formData = new FormData(this);
+      document.getElementById('status').textContent = '正在上传...';
+      fetch('/upload', { method: 'POST', body: formData })
+        .then(r => r.json())
+        .then(res => {
+          document.getElementById('status').textContent = res.message;
+          fetchFiles();
+        });
+    };
+    fetchFiles();
+  </script>
+</body>
+</html>
