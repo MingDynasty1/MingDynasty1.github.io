@@ -1,0 +1,493 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="icon" href="favicon.ico">
+<title>首页 - 西北工业大学附属中学</title>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta http-equiv="keywords" content="西北工业大学附属中学" />
+	<meta http-equiv="description" content="西北工业大学附属中学" />
+	<link href="/XGDFZ/r/cms/www/red/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+	<link href="/XGDFZ/r/cms/www/red/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
+	<link href="/XGDFZ/r/cms/www/red/css/index.css" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]>
+         <script src="/XGDFZ/r/cms/www/red/js/html5shiv.js"></script>
+         <script src="/XGDFZ/r/cms/www/red/js/respond.min.js"></script>
+  <![endif]-->
+	<script src="/XGDFZ/r/cms/www/red/js/jquery-1.12.4.js" type="text/javascript"></script>
+	<script src="/XGDFZ/r/cms/front.js" type="text/javascript"></script>
+	<script src="/XGDFZ/r/cms/www/red/js/common.js" type="text/javascript"></script>
+	<script src="/XGDFZ/r/cms/www/red/js/clientfuns.js" type="text/javascript"></script>
+	
+</head>
+
+<!---header start--->
+  
+
+ 
+ <div class="green_bg"></div>
+
+  <div class="header">
+    <div class="logo"><a title="西工大附中" >西工大附中</a></div>
+    <form class="search"  action="/XGDFZ/search.jspx" target="_blank" id="searchForm">
+      <input type="text" id="searchInput" name="q" value="请输入关键字"  onfocus="aval(this)" 
+						onblur="bval(this)" maxlength="50" autocomplete="off" />
+      <a style="cursor: pointer;" onclick="subSearForm()" title="搜索">搜索</a>
+    </form>
+    <div class="sign">
+       <p>2025年09月06日<span> &nbsp;星期六 </span> </p> 
+    </div>
+  </div>
+  <script type="text/javascript">
+	function aval (obj){
+		if(obj.value=='请输入关键字'){
+			obj.value=''
+			obj.style.color="black";
+		}
+	}
+	function bval (obj){
+		if(obj.value==''){
+			obj.value='请输入关键字'
+			obj.style.color="#D5D5D5";
+		}
+	}
+	
+	function subSearForm(){
+		var vl=$("#searchInput").val();
+		if(isNull(vl)||vl=="请输入关键字"){
+			alert("请输入查询关键字！");
+			return ;
+		}
+		$("#searchForm").submit();
+	}
+</script> <div class="nav">
+	<ul>
+		<li><a href="/XGDFZ/">首 &nbsp;&nbsp;页</a><i></i>
+		</li>
+					<li><a href="/XGDFZ/xx/index.jhtml" target="_self">学校概况</a>
+					<i></i>
+						<div class="dropdown_nav">
+							<ul>
+								<li><a href="/XGDFZ/xxgk/index.jhtml" target="_blank">学校概况</a></li>
+								<li><a href="/XGDFZ/tzgg/index.jhtml" target="_blank">通知公告</a></li>
+								<li><a href="/XGDFZ/xiaoyxw/index.jhtml" target="_blank">校园新闻</a></li>
+								<li><a href="/XGDFZ/xywh/index.jhtml" target="_blank">校园文化</a></li>
+								<li><a href="/XGDFZ/lxfs/index.jhtml" target="_blank">联系方式</a></li>
+							</ul>
+						</div>
+					</li>
+					<li><a href="/XGDFZ/js/index.jhtml" target="_self">教学教研</a>
+					<i></i>
+						<div class="dropdown_nav">
+							<ul>
+								<li><a href="/XGDFZ/jsfc/index.jhtml" target="_blank">教师风采</a></li>
+								<li><a href="/XGDFZ/jxgl/index.jhtml" target="_blank">教学管理</a></li>
+								<li><a href="/XGDFZ/xbyj/index.jhtml" target="_blank">校本研修</a></li>
+								<li><a href="/XGDFZ/wjxz/index.jhtml" target="_blank">文件下载</a></li>
+								<li><a href="http://192.168.73.250:8000" target="_blank">网上评卷</a></li>
+							</ul>
+						</div>
+					</li>
+					<li><a href="/XGDFZ/tt/index.jhtml" target="_self">校园专题</a>
+					<i></i>
+						<div class="dropdown_nav">
+							<ul>
+								<li><a href="/XGDFZ/ tqys/index.jhtml" target="_blank">天泉艺术</a></li>
+								<li><a href="http://eduserver/shengwu" target="_blank">生物资源</a></li>
+								<li><a href="/XGDFZ/tsg/index.jhtml" target="_blank">图书馆</a></li>
+								<li><a href="/XGDFZ/dsjlb/index.jhtml" target="_blank">读书俱乐部</a></li>
+								<li><a href="/XGDFZ/yws/index.jhtml" target="_blank">医务室</a></li>
+								<li><a href="/XGDFZ/szh/index.jhtml" target="_blank">校红十字会</a></li>
+							</ul>
+						</div>
+					</li>
+					<li><a href="/XGDFZ/xs/index.jhtml" target="_self">德育园地</a>
+					<i></i>
+						<div class="dropdown_nav">
+							<ul>
+								<li><a href="/XGDFZ/dyjs/index.jhtml" target="_blank">德育活动</a></li>
+								<li><a href="/XGDFZ/xshd/index.jhtml" target="_blank">学生天地</a></li>
+								<li><a href="/XGDFZ/jiaxgt/index.jhtml" target="_blank">家校沟通</a></li>
+								<li><a href="/XGDFZ/xinlyjk/index.jhtml" target="_blank">心理与健康</a></li>
+								<li><a href="/XGDFZ/guoqxjh/index.jhtml" target="_blank">国旗下讲话</a></li>
+							</ul>
+						</div>
+					</li>
+					<li><a href="/XGDFZ/app/index.jhtml" target="_self">视频图册</a>
+					<i></i>
+						<div class="dropdown_nav">
+							<ul>
+								<li><a href="http://192.168.70.75" target="_blank">录播教室</a></li>
+								<li><a href="/XGDFZ/tpll/index.jhtml" target="_blank">图册</a></li>
+								<li><a href="/XGDFZ/spzs/index.jhtml" target="_blank">视频</a></li>
+							</ul>
+						</div>
+					</li>
+					<li><a href="http://222.90.136.234:8009/" target="_self">大学区专区</a>
+					<i></i>
+						<div class="dropdown_nav">
+							<ul>
+							</ul>
+						</div>
+					</li>
+					<li><a href="/XGDFZ/duiwjl/index.jhtml" target="_self">对外交流</a>
+						<div class="dropdown_nav">
+							<ul>
+							</ul>
+						</div>
+					</li>
+		
+	</ul>
+</div><!---header end--->
+<!---banner start--->
+<div id="myCarousel" class="carousel slide banner carousel-fade" data-ride="carousel">
+	<ol class="carousel-indicators" style="border:0px red solid;padding-left: 300px">
+				<li data-target="#myCarousel" data-slide-to="0" style="float:left;margin-left : 5px;"  class="active"></li>
+		<li data-target="#myCarousel" data-slide-to="1" style="float:left;margin-left : 5px;" ></li>
+	</ol>
+	<div class="carousel-inner">
+		<div class="item active" style=" width:1000px; height:326px;">
+			<a href="/XGDFZ/jdtp/1991.jhtml" title="西工大附中刘晓桐斩获三项世界冠军" target="_blank">
+			<img src="/XGDFZ/u/cms/www/202504/230913275jfj.jpg"style=" width:1000px; height:326px;"/></a>
+		</div>
+		<div class="item " style=" width:1000px; height:326px;">
+			<a href="http://www.xgdfz.com/XGDFZ/xiaoyxw/1500.jhtml" title="热烈祝贺我校王泽宇同学荣获国际数学奥赛金牌" target="_blank">
+			<img src="/XGDFZ/u/cms/www/201807/20111451arru.jpg"style=" width:1000px; height:326px;"/></a>
+		</div>
+
+	</div>
+	<a class="carousel-control left"
+		href="/demo/bootstrap3-plugin-carousal-simple.htm#myCarousel"
+		data-slide="prev"> </a> <a class="carousel-control right"
+		href="/demo/bootstrap3-plugin-carousal-simple.htm#myCarousel"
+		data-slide="next"> </a>
+</div>
+
+<script src="/XGDFZ/r/cms/www/red/js/bootstrap.min.js" type="text/javascript"></script><!---banner end--->
+
+<div class="content">
+	<div class="content_left fl">
+		<!---新闻中心start--->
+		<div class="news fl">
+			<div class="title">
+				<p class="fl">
+					<img src="/XGDFZ/r/cms/www/red/images/xinwen.png" alt="新闻中心" title="新闻中心" />
+				</p>
+				<i class="fr"><a href="/XGDFZ/xiaoyxw/index.jhtml"><img src="/XGDFZ/r/cms/www/red/images/more.png"
+						alt="更多" title="更多" />
+				</a>
+				</i>
+			</div>
+			
+						  <!---轮播 start--->
+				         <div id="myCarousel2" class="carousel slide" data-ride="carousel" data-interval="6000">
+					         <div class=" carousel-inner" style="width:315px;">
+						          <div class="news_head item  active" >
+						               <p class="fl" ><a target="_blank" href="/XGDFZ/xiaoyxw/1977.jhtml"><img src="/r/cms/www/no_picture.gif" width="122px" height="81px"/>
+										</a></p>
+						               <dl class="carousel-caption" style="position:absolute; width:180px;left:132px;top: 8px;">
+						                   <dt><a class="" target="_blank" href="/XGDFZ/xiaoyxw/1977.jhtml" title="正确认识肺结核，可防可治不可怕">正确认识肺结核，可防可...</a></dt>
+						                   <dd class="textoverflow"><a class="" target="_blank" href="/XGDFZ/xiaoyxw/1977.jhtml"></a> <a class="orange"  target="_blank" href="/XGDFZ/xiaoyxw/1977.jhtml">详情 >> </a></dd>
+						               </dl>
+						          </div>
+						          <div class="news_head item " >
+						               <p class="fl" ><a target="_blank" href="/XGDFZ/xiaoyxw/1978.jhtml"><img src="/r/cms/www/no_picture.gif" width="122px" height="81px"/>
+										</a></p>
+						               <dl class="carousel-caption" style="position:absolute; width:180px;left:132px;top: 8px;">
+						                   <dt><a class="" target="_blank" href="/XGDFZ/xiaoyxw/1978.jhtml" title="“流感”高发期，“消杀”工作我们应该这么做">“流感”高发期，“消杀...</a></dt>
+						                   <dd class="textoverflow"><a class="" target="_blank" href="/XGDFZ/xiaoyxw/1978.jhtml"></a> <a class="orange"  target="_blank" href="/XGDFZ/xiaoyxw/1978.jhtml">详情 >> </a></dd>
+						               </dl>
+						          </div>
+						          <div class="news_head item " >
+						               <p class="fl" ><a target="_blank" href="/XGDFZ/xiaoyxw/1979.jhtml"><img src="/r/cms/www/no_picture.gif" width="122px" height="81px"/>
+										</a></p>
+						               <dl class="carousel-caption" style="position:absolute; width:180px;left:132px;top: 8px;">
+						                   <dt><a class="" target="_blank" href="/XGDFZ/xiaoyxw/1979.jhtml" title="诺如病毒感染、流感如何预防？遇到哪些情况需要就医？">诺如病毒感染、流感如何...</a></dt>
+						                   <dd class="textoverflow"><a class="" target="_blank" href="/XGDFZ/xiaoyxw/1979.jhtml"></a> <a class="orange"  target="_blank" href="/XGDFZ/xiaoyxw/1979.jhtml">详情 >> </a></dd>
+						               </dl>
+						          </div>
+						          <div class="news_head item " >
+						               <p class="fl" ><a target="_blank" href="/XGDFZ/xiaoyxw/1951.jhtml"><img src="/XGDFZ/u/cms/www/202204/02162110tx1o.jpg" width="122px" height="81px"/>
+										</a></p>
+						               <dl class="carousel-caption" style="position:absolute; width:180px;left:132px;top: 8px;">
+						                   <dt><a class="" target="_blank" href="/XGDFZ/xiaoyxw/1951.jhtml" title="北京大学发来喜报：西工大附中毕业生65人获奖">北京大学发来喜报：西工...</a></dt>
+						                   <dd class="textoverflow"><a class="" target="_blank" href="/XGDFZ/xiaoyxw/1951.jhtml"></a> <a class="orange"  target="_blank" href="/XGDFZ/xiaoyxw/1951.jhtml">详情 >> </a></dd>
+						               </dl>
+						          </div>
+				          </div>
+			          </div>
+			          <!---轮播 end--->			
+							<div class="news_list">
+								<ul>								
+						<li><i class="dib fl"> </i><a target="_blank" href="/XGDFZ/xiaoyxw/1944.jhtml" title="我校学生在第四届全国中学生网络安全竞赛中取得佳绩">我校学生在第四届全国中学生网络安全竞赛中...</a></li>
+						<li><i class="dib fl"> </i><a target="_blank" href="/XGDFZ/xiaoyxw/1933.jhtml" title="卓越联盟校老高考研讨会在我校举行">卓越联盟校老高考研讨会在我校举行</a></li>
+						<li><i class="dib fl"> </i><a target="_blank" href="/XGDFZ/xiaoyxw/1926.jhtml" title="商洛中学来我校交流研讨">商洛中学来我校交流研讨</a></li>
+						<li><i class="dib fl"> </i><a target="_blank" href="/XGDFZ/xiaoyxw/1930.jhtml" title="西工大附中“名校+”教育联合体开展名师送教活动（物理学科）">西工大附中“名校+”教育联合体开展名师送...</a></li>
+						<li><i class="dib fl"> </i><a target="_blank" href="/XGDFZ/xiaoyxw/1931.jhtml" title="西工大附中“名校+”教育联合体开展名师送教活动（数学学科）">西工大附中“名校+”教育联合体开展名师送...</a></li>
+						<li><i class="dib fl"> </i><a target="_blank" href="/XGDFZ/xiaoyxw/1929.jhtml" title="西工大附中“名校+”教育联合体开展名师送教活动（英语学科）">西工大附中“名校+”教育联合体开展名师送...</a></li>
+							</ul>
+						</div>
+		</div>
+		<!---新闻中心 end--->
+<!---校园文化start--->
+		<div class="news_two fr">
+			<div class="title">
+				<p class="fl">
+					<img src="/XGDFZ/r/cms/www/red/images/wenhua.png" alt="校园文化" title="校园文化" />
+				</p>
+				<i class="fr"><a href="/XGDFZ/xywh/index.jhtml"><img src="/XGDFZ/r/cms/www/red/images/more.png"
+						alt="更多" title="更多" />
+				</a>
+				</i>
+			</div>
+					  <!---轮播 start--->
+			         <div id="myCarousel" class="carousel slide" data-ride="carousel">
+				         <div class=" carousel-inner">
+					          <div class="news_head item  active">
+					               <p class="fl"><a target="_blank" href="/XGDFZ/xywh/1969.jhtml"><img src="/u/cms/www/202409/05154805v8w1.jpg" width="122px" height="81px"/>
+									</a></p>
+					               <dl class="fr w220 carousel-caption">
+					                   <dt><a class="" target="_blank" href="/XGDFZ/xywh/1969.jhtml" title="国家网络安全宣传周">国家网络安全宣传周</a></dt>
+					                   <dd class="textoverflow"><a class="" target="_blank" href="/XGDFZ/xywh/1969.jhtml">国家网络安全宣传周</a> <a class="orange"  target="_blank" href="/XGDFZ/xywh/1969.jhtml">详情 >> </a></dd>
+					               </dl>
+					          </div>
+					          <div class="news_head item ">
+					               <p class="fl"><a target="_blank" href="/XGDFZ/xywh/1738.jhtml"><img src="/u/cms/www/201909/12163641kmmf.jpg" width="122px" height="81px"/>
+									</a></p>
+					               <dl class="fr w220 carousel-caption">
+					                   <dt><a class="" target="_blank" href="/XGDFZ/xywh/1738.jhtml" title="如何应对常见网络安全风险">如何应对常见网络安全风险</a></dt>
+					                   <dd class="textoverflow"><a class="" target="_blank" href="/XGDFZ/xywh/1738.jhtml"></a> <a class="orange"  target="_blank" href="/XGDFZ/xywh/1738.jhtml">详情 >> </a></dd>
+					               </dl>
+					          </div>
+					          <div class="news_head item ">
+					               <p class="fl"><a target="_blank" href="/XGDFZ/xywh/1737.jhtml"><img src="/XGDFZ/u/cms/www/201909/1216283689hv.jpg" width="122px" height="81px"/>
+									</a></p>
+					               <dl class="fr w220 carousel-caption">
+					                   <dt><a class="" target="_blank" href="/XGDFZ/xywh/1737.jhtml" title="2021年陕西省第八届国家网络安全宣传周">2021年陕西省第八届国家网络...</a></dt>
+					                   <dd class="textoverflow"><a class="" target="_blank" href="/XGDFZ/xywh/1737.jhtml"></a> <a class="orange"  target="_blank" href="/XGDFZ/xywh/1737.jhtml">详情 >> </a></dd>
+					               </dl>
+					          </div>
+					          <div class="news_head item ">
+					               <p class="fl"><a target="_blank" href="http://www.626china.org/"><img src="/u/cms/www/201712/06094445tkhj.png" width="122px" height="81px"/>
+									</a></p>
+					               <dl class="fr w220 carousel-caption">
+					                   <dt><a class="" target="_blank" href="http://www.626china.org/" title="珍爱生命   拒绝毒品">珍爱生命   拒绝毒品</a></dt>
+					                   <dd class="textoverflow"><a class="" target="_blank" href="http://www.626china.org/">点击进入中国禁毒展览馆</a> <a class="orange"  target="_blank" href="http://www.626china.org/">详情 >> </a></dd>
+					               </dl>
+					          </div>
+				          </div>
+			          </div>
+			          <!---轮播 end--->			
+							<div class="news_list">
+								<ul>								
+						<li><i class="dib fl"></i><a class="w245" target="_blank" href="/XGDFZ/xywh/1420.jhtml" title="低碳生活-衣食住行">低碳生活-衣食住行</a>
+						<em	class="date">2017-05-16</em>
+						</li>	
+						<li><i class="dib fl"></i><a class="w245" target="_blank" href="/XGDFZ/xywh/1415.jhtml" title="西工大附中图书馆社团捐赠户县纸房学校图书爱心手拉手活动">西工大附中图书馆社团捐赠户县纸房学校图书</a>
+						<em	class="date">2017-05-10</em>
+						</li>	
+							</ul>
+						</div>
+		</div>
+		<!---校园文化 end--->
+		
+
+		<!---校园专题start--->
+		<div class="news fl mt20">
+			<div class="title">
+				<p class="fl">
+					<img src="/XGDFZ/r/cms/www/red/images/zhuanti.png" alt="校园专题" title="校园专题" />
+				</p>
+				<i class="fr"><a href="/XGDFZ/tt/index.jhtml"><img src="/XGDFZ/r/cms/www/red/images/more.png"
+						alt="更多" title="更多" />
+				</a>
+				</i>
+			</div>
+			<div class="news_list">
+				<ul>
+						<li><i class="dib fl"></i><a class="w210" target="_blank" href="/XGDFZ/yws/1919.jhtml" title="预防新冠肺炎及各种传染病">预防新冠肺炎及各种传染病</a>
+						<em	class="date">2020-08-31</em>
+						</li>
+						<li><i class="dib fl"></i><a class="w210" target="_blank" href="/XGDFZ/yws/1886.jhtml" title="六月健康信息提示">六月健康信息提示</a>
+						<em	class="date">2020-06-03</em>
+						</li>
+						<li><i class="dib fl"></i><a class="w210" target="_blank" href="/XGDFZ/yws/1522.jhtml" title="四月健康信息提示">四月健康信息提示</a>
+						<em	class="date">2019-04-01</em>
+						</li>
+						<li><i class="dib fl"></i><a class="w210" target="_blank" href="/XGDFZ/yws/1506.jhtml" title="西安市疾控中心给全市学校、托幼机构的一封公开信">西安市疾控中心给全市学校、托幼机构</a>
+						<em	class="date">2018-09-12</em>
+						</li>
+						<li><i class="dib fl"></i><a class="w210" target="_blank" href="/XGDFZ/yws/1505.jhtml" title="九月健康信息提示">九月健康信息提示</a>
+						<em	class="date">2018-09-12</em>
+						</li>
+						<li><i class="dib fl"></i><a class="w210" target="_blank" href="/XGDFZ/sztsg/1497.jhtml" title="2018年世界读书日西工大附中图书角表彰">2018年世界读书日西工大附中图书角表</a>
+						<em	class="date">2018-06-22</em>
+						</li>
+						<li><i class="dib fl"></i><a class="w210" target="_blank" href="/XGDFZ/yws/1489.jhtml" title="六月健康信息提示">六月健康信息提示</a>
+						<em	class="date">2018-06-01</em>
+						</li>
+						<li><i class="dib fl"></i><a class="w210" target="_blank" href="/XGDFZ/szh/1486.jhtml" title="全国红十字防灾避险知识竞赛图片展">全国红十字防灾避险知识竞赛图片展</a>
+						<em	class="date">2018-05-25</em>
+						</li>
+						<li><i class="dib fl"></i><a class="w210" target="_blank" href="/XGDFZ/szh/1471.jhtml" title="西安市红十字会关于表彰先进集体和先进个人的决定">西安市红十字会关于表彰先进集体和先</a>
+						<em	class="date">2018-02-03</em>
+						</li>
+				</ul>
+			</div>
+		</div>
+		<!---校园专题 end--->
+
+		<!---教学研究start--->
+		<div class="news_two fr mt20">
+			<div class="title">
+				<p class="fl">
+					<img src="/XGDFZ/r/cms/www/red/images/jiaoxue.png" alt="教学研究" title="教学研究" />
+				</p>
+				<i class="fr"><a href="/XGDFZ/xbyj/index.jhtml"><img src="/XGDFZ/r/cms/www/red/images/more.png"
+						alt="更多" title="更多" />
+				</a>
+				</i>
+			</div>
+
+			<div class="news_list">
+				<ul>
+				</ul>
+			</div>
+
+		</div>
+		<!---教学研究 end--->
+	</div>
+
+	<div class="content_right fr">
+		<!---通知公告 start--->
+		<div class="border_box">
+			<p class="notice_title_bg">
+				<a href="/XGDFZ/tzgg/index.jhtml">更多</a>
+			</p>
+			<ul class="notice">
+					<li><i class="pad6">2025-08-01</i><a target="_blank" href="/XGDFZ/tzgg/2004.jhtml" title="领取初一新生录取通知书的通知">领取初一新生录取通知</a>
+					</li>
+					<li><i class="pad6">2025-05-30</i><a target="_blank" href="/XGDFZ/tzgg/2003.jhtml" title="西工大附中“丘成桐少年班” 2025年报名信息登记公告">西工大附中“丘成桐少</a>
+					</li>
+					<li><i class="pad6">2025-08-27</i><a target="_blank" href="/XGDFZ/tzgg/2008.jhtml" title="高2025级新生办理住校手续须知">高2025级新生办理住校</a>
+					</li>
+					<li><i class="pad6">2025-05-16</i><a target="_blank" href="/XGDFZ/tzgg/2001.jhtml" title=" 关于2025年西北工业大学正式事业编制教职工子女高中入学资格审查的通知"> 关于2025年西北工业</a>
+					</li>
+					<li><i class="pad6">2024-09-14</i><a target="_blank" href="/XGDFZ/tzgg/1998.jhtml" title="公  示">公  示</a>
+					</li>
+			</ul>
+		</div>
+		<!---通知公告 end--->
+		
+		
+		<!---学生天地 start--->
+		<div class="border_box mt16">
+			<p class="student_title_bg">
+				<a href="/XGDFZ/xshd/index.jhtml">更多</a>
+			</p>
+			<ul class="notice">
+			</ul>
+		</div>
+		<!---学生天地 end--->
+		<!---文件下载 start--->
+		<div class="border_box mt16">
+			<p class="files_title_bg">
+				<a href="/XGDFZ/wjxz/index.jhtml">更多</a>
+			</p>
+			<ul class="notice">
+					<li><i class="download"></i><a target="_blank" href="/XGDFZ/wjxz/1999.jhtml" title="第39届青少年科技创新大赛通知">第39届青少年科技创新大赛通知</a>
+					</li>
+					<li><i class="download"></i><a target="_blank" href="/XGDFZ/wjxz/1934.jhtml" title="关于2021年西工大在编在职教职工子女高中入学资格审核的通知">关于2021年西工大在编在职教职</a>
+					</li>
+					<li><i class="download"></i><a target="_blank" href="/XGDFZ/wjxz/1921.jhtml" title="第36届科技创新大赛附件">第36届科技创新大赛附件</a>
+					</li>
+					<li><i class="download"></i><a target="_blank" href="/XGDFZ/wjxz/1885.jhtml" title="学生综合素质评价样表">学生综合素质评价样表</a>
+					</li>
+					<li><i class="download"></i><a target="_blank" href="/XGDFZ/wjxz/1739.jhtml" title="第35届科技创新大赛通知（高中）">第35届科技创新大赛通知（高中</a>
+					</li>
+			</ul>
+		</div>
+		<!---文件下载 end--->
+		
+	</div>
+</div>
+
+
+<!---foooter start--->
+<div class="ziyuan">
+	<p>资源共享</p>
+	<ul>
+		<li><a target="_blank" href="http://www.ziyuanku.com/"><img src="/XGDFZ/r/cms/www/red/images/ziyuan1.jpg" />
+		</a>
+		</li>
+		<li><a target="_blank" href="http://res.kingsunsoft.com/"><img src="/XGDFZ/r/cms/www/red/images/ziyuan2.jpg" />
+		</a>
+		</li>
+		<li><a target="_blank" href="http://www.sneduyun.com/ "><img src="/XGDFZ/r/cms/www/red/images/ziyuan3.jpg" /></a></li> 
+
+		 <li><a target="_blank" href="http://www.xaeduyun.cn/"><img src="/XGDFZ/r/cms/www/red/images/ziyuan4.jpg" /></a></li> 
+		  <li style="border:0px"><a target="_blank" href="ftp://192.168.1.249/"><img src="/XGDFZ/r/cms/www/red/images/ziyuanftp.jpg"  width="165px" height="49px"/></a></li>
+         
+	</ul>
+
+</div>
+
+<div class="w100">
+	<div class="links">
+		常用链接：
+						<a href="http://www.moe.gov.cn"  onclick="$.get('/XGDFZ/friendlink_view.jspx?id=1')" target="_blank">　教 育 部</a>
+				<a href="http://www.ict.edu.cn"  onclick="$.get('/XGDFZ/friendlink_view.jspx?id=10')" target="_blank">教育信息化网</a>
+				<a href="http://www.snedu.gov.cn"  onclick="$.get('/XGDFZ/friendlink_view.jspx?id=2')" target="_blank">陕西省教育厅</a>
+				<a href="http://www.xaedu.gov.cn"  onclick="$.get('/XGDFZ/friendlink_view.jspx?id=3')" target="_blank">西安市教育局</a>
+				<a href="http://www.bledu.gov.cn"  onclick="$.get('/XGDFZ/friendlink_view.jspx?id=5')" target="_blank">碑林区教育局</a>
+				<a href="http://www.bljy.com.cn"  onclick="$.get('/XGDFZ/friendlink_view.jspx?id=6')" target="_blank">碑林教研网</a>
+				<a href="http://www.nwpu.edu.cn"  onclick="$.get('/XGDFZ/friendlink_view.jspx?id=9')" target="_blank">西北工业大学</a>
+				<a href="http://www.xyqdzx.com"  onclick="$.get('/XGDFZ/friendlink_view.jspx?id=7')" target="_blank">咸阳启迪中学</a>
+	</div>
+</div>
+
+<div class="footer">
+	<p>学校地址：西安市碑林区友谊西路127号 电话：029-88492401 88494872
+		传真：029-88495842 邮政编码：710072
+		</p>
+		<p>陕ICP备14002685号 Copyright © 2000-2016 xgdfz.com All Rights
+		Reserved.</p>
+</div>
+
+<div class="pop_2weima">
+	<ul>
+		<li><a style="cursor: pointer;"><img src="/XGDFZ/r/cms/www/red/images/weixin.jpg" />
+		</a>
+			<div class="dropdown_pop">
+				<img src="/XGDFZ/r/cms/www/red/images/2weima.png" />
+			</div></li>
+		<li><a style="cursor: pointer;"><img src="/XGDFZ/r/cms/www/red/images/weibo.jpg" />
+		</a>
+		</li>
+
+	</ul>
+
+</div><!---foooter end--->
+
+
+
+<script src="/XGDFZ/r/cms/www/red/js/a.js" type="text/javascript"></script>
+
+ <script type="text/javascript">
+    /*
+    scrollx参数说明
+
+    id：浮动对象的id
+    r：右边距（窗口右边距，不写为靠左浮动）
+    l：左边距（距离父级对象的左边距） “r”和“l”只能有其中一个参数
+    t：上边距（默认贴着底边，0是贴着顶边）
+    f：1表示固定（不写或者0表示滚动）
+    */
+    //左右侧固定浮动的div建议放在html的最低部
+	ie6 = /msie 6/i.test(navigator.userAgent)
+	var advt=25;
+ </script>
+   
+</body>
+</html>
