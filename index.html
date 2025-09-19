@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MingDynasty的个人主页 | 明朝风韵</title>
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <style>
+        /* 全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'SimSun', '宋体', serif;
+            background-color: #f8f3e6;
+            color: #333;
+            line-height: 1.6;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill-opacity="0.05" fill="%23000" width="100" height="100"/></svg>');
+            padding: 0;
+            margin: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* 页眉样式 */
+        header {
+            background: linear-gradient(to right, #8b0000, #a52a2a);
+            color: #f8f3e6;
+            padding: 20px 0;
+            border-bottom: 5px solid #d4af37;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            position: relative;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
+            letter-spacing: 5px;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* 导航样式 */
+        nav {
+            background-color: #8b0000;
+            padding: 15px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #d4af37;
+        }
+        
+        nav a {
+            color: #f8f3e6;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1.1rem;
+            padding: 5px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* 主要内容区 */
+        .main-content {
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        /* 卡片样式 */
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid #8b0000;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(to right, #8b0000, #d4af37);
+        }
+        
+        .card h2 {
+            color: #8b0000;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed #e0c987;
+            font-size: 1.5rem;
+        }
+        
+        /* 图片容器 */
+        .image-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .image-container img {
+            width: 100%;
+            border: 3px solid #d4af37;
+            border-radius: 5px;
+            transition: transform 0.3s;
+        }
+        
+        .image-container img:hover {
+            transform: scale(1.03);
+        }
+        
+        /* 链接样式 */
+        a {
+            color: #8b0000;
+            text-decoration: none;
+            transition: color 0.3s;
+            position: relative;
+        }
+        
+        a:hover {
+            color: #d4af37;
+        }
+        
+        a::after {
+            content: "";
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: #d4af37;
+            transition: width 0.3s;
+        }
+        
+        a:hover::after {
+            width: 100%;
+        }
+        
+        /* 代码块样式 */
+        pre {
+            background: #2b2b2b;
+            color: #f8f3e6;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            border-left: 5px solid #d4af37;
+            font-family: 'Consolas', 'Monaco', monospace;
+            margin: 20px 0;
+        }
+        
+        /* 侧边栏样式 */
+        .sidebar {
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid #d4af37;
+        }
+        
+        .sidebar h3 {
+            color: #8b0000;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed #e0c987;
+            text-align: center;
+        }
+        
+        .sidebar ul {
+            list-style: none;
+        }
+        
+        .sidebar li {
+            padding: 8px 0;
+            border-bottom: 1px dotted #e0c987;
+        }
+        
+        .sidebar li:last-child {
+            border-bottom: none;
+        }
+        
+        /* 页脚样式 */
+        footer {
+            background: linear-gradient(to right, #8b0000, #a52a2a);
+            color: #f8f3e6;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+            border-top: 5px solid #d4af37;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            nav a {
+                display: block;
+                margin: 10px 0;
+            }
+        }
+        
+        /* 明朝特色装饰 */
+        .ming-decoration {
+            font-family: 'KaiTi', '楷体', serif;
+            color: #8b0000;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .chinese-pattern {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"><path fill="%238b0000" fill-opacity="0.1" d="M0 0h60v60H0z"/><path fill="%23d4af37" fill-opacity="0.1" d="M0 0h30v30H0z"/></svg>');
+            background-size: 60px 60px;
+        }
+        
+        /* 游戏卡片样式 */
+        .game-card {
+            background: linear-gradient(135deg, #f8f3e6 0%, #e0c987 100%);
+            border: 2px solid #8b0000;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(139, 0, 0, 0.2);
+        }
+        
+        .game-card h3 {
+            color: #8b0000;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .game-card p {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .game-btn {
+            display: inline-block;
+            background: #8b0000;
+            color: #f8f3e6;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        .game-btn:hover {
+            background: #a52a2a;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 class="ming-decoration">MingDynasty 的个人主页</h1>
+            <p>传承明朝风韵，展现编程之美</p>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="container">
+            <a href="https://mingdynasty1.github.io/OImap.html">主页导航</a>
+            <a href="https://mingdynasty1.github.io/friends/friends.md">友链</a>
+            <a href="https://mingdynasty1.github.io/cbpan_help/MingDynasty_cbpan_help.html">网盘帮助中心</a>
+            <a href="https://www.luogu.com.cn/contest/247666">比赛宣传</a>
+            <a href="https://mingdynasty1.github.io/game.html">益智小游戏</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="main-content">
+            <div class="content">
+                <div class="card chinese-pattern">
+                    <h2>置顶公告</h2>
+                    <p>宣 <a href="https://www.luogu.com.cn/contest/247666">https://www.luogu.com.cn/contest/247666</a></p>
+                </div>
+                
+                <div class="card">
+                    <h2>个人成就展示</h2>
+                    <div class="image-container">
+                        <img src="https://atrating.baoshuo.dev/rating?username=MingDynasty1" alt="洛谷评级">
+                        <img src="https://atcoder.junah.dev/v2/generate_badge?name=MingDynasty1" alt="AtCoder评级">
+                        <img src="https://api.jerryz.com.cn/about?id=1015347&dark_mode=true&disable_cache=true" alt="洛谷信息">
+                        <img src="https://api.jerryz.com.cn/shield?id=1015347&dark_mode=true&disable_cache=true" alt="洛谷盾牌">
+                        <img src="https://api.jerryz.com.cn/guzhi?id=1015347&scores=100,68,44,88,30&dark_mode=true&disable_cache=true" alt="估值信息">
+                        <img src="https://api.jerryz.com.cn/practice?id=1015347&dark_mode=true&disable_cache=true" alt="练习情况">
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2>益智小游戏</h2>
+                    <div class="game-card">
+                        <h3>明朝华容道</h3>
+                        <p>体验传统益智游戏，挑战你的逻辑思维！</p>
+                        <a href="https://mingdynasty1.github.io/game.html" class="game-btn">开始游戏</a>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2>如何在估值榜上找到我?</h2>
+                    <p>1.点击<a href="https://www.luogu.com.cn/ranking?orderBy=social&order=desc&page=8">这个</a>,找到第386名.</p>
+                    <p>2.点击<a href="https://www.luogu.com.cn/ranking?orderBy=practice&order=desc&page=8">这个</a>,找到第359名。</p>
+                    <p>3.点击<a href="https://www.luogu.com.cn/ranking?page=11">这个</a>,找到第537名。</p>
+                </div>
+                
+                <div class="card">
+                    <h2>冲900个AC</h2>
+                    <p>真正个性签名（地方写不下，很久以前的）：</p>
+                    <pre><code class="lang-cpp">最后在线时间|<span class="hljs-string">https://www.luogu.com.cn/team/76415欢迎加入</span>|<span class="hljs-string">小升初蒟蒻,欢迎吊打</span>|<span class="hljs-string">开局一个碗,结局一根绳</span>|<span class="hljs-string">最高排名807</span>|<span class="hljs-string">坐标:陕西宝鸡</span>|<span class="hljs-string">互关忘私(实名,3天內),误杀私</span>|<span class="hljs-string">禁止炸铃,炸铃杀</span>|<span class="hljs-string">题解不懂可私信</span>|<span class="hljs-string">删display none看主页</span>|<span class="hljs-string">估值前500进度:302-&gt;322</span>|<span class="hljs-string">已完成目标！(前1000）</span>|<span class="hljs-string">Even if the finish line is far away, we must walk to the end.</span></code></pre>
+                    <p><a href="https://www.luogu.me/article/hu9a8skr">放不下的东西（主页链接）</a></p>
+                </div>
+                
+                <div class="card">
+                    <h2>重要更新</h2>
+                    <h3>upd on 2025.6.16 22:14 注意！MingDynasty_xiaohao2不是MingDynasty的小号</h3>
+                    <p>这里是MingDynasty的洛谷主页。</p>
+                </div>
+            </div>
+            
+            <div class="sidebar">
+                <h3>快速导航</h3>
+                <ul>
+                    <li><a href="https://mingdynasty1.github.io/OImap.html">主页地图</a></li>
+                    <li><a href="https://www.luogu.com.cn/user/361537">洛谷主页</a></li>
+                    <li><a href="https://github.com/MingDynasty1">GitHub主页</a></li>
+                    <li><a href="https://mingdynasty1.github.io/friends/friends.md">友情链接</a></li>
+                    <li><a href="https://mingdynasty1.github.io/cbpan_help/MingDynasty_cbpan_help.html">网盘帮助</a></li>
+                    <li><a href="https://mingdynasty1.github.io/game.html">益智小游戏</a></li>
+                </ul>
+                
+                <h3>个人简介</h3>
+                <p>小升初蒟蒻,欢迎吊打</p>
+                <p>坐标: 陕西宝鸡</p>
+                <p>最高排名: 807</p>
+                
+                <h3>座右铭</h3>
+                <p class="ming-decoration">Even if the finish line is far away, we must walk to the end.</p>
+                
+                <div class="game-card">
+                    <h3>明朝华容道</h3>
+                    <p>挑战传统智力游戏</p>
+                    <a href="https://mingdynasty1.github.io/game.html" class="game-btn">开始游戏</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>© 2013-2025 MingDynasty,Inc. MingDynasty 的个人主页 | 灵感源于明朝美学</p>
+            <p>开局一个碗，结局一根绳 | 传承与创新</p>
+        </div>
+    </footer>
+</body>
+</html>

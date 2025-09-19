@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>寿司派对 By MgDy</title>
+<link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background: linear-gradient(to bottom, #f8f3e6, #e8d5c0);
+            color: #3a2615;
+            min-height: 100vh;
+            padding: 20px;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20,20 L80,20 L80,80 L20,80 Z' stroke='%23b38e5f' stroke-width='1' fill='none'/%3E%3C/svg%3E");
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 249, 239, 0.9);
+            border: 8px double #9e2b2b;
+            border-radius: 4px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 12px;
+            background: linear-gradient(90deg, #9e2b2b 0%, #d9a466 50%, #9e2b2b 100%);
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 20px 20px;
+            background: linear-gradient(to bottom, #fff, #f9e5c8);
+            border-bottom: 2px solid #d9a466;
+        }
+        
+        h1 {
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 3.5rem;
+            color: #9e2b2b;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            margin-bottom: 10px;
+            letter-spacing: 4px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7a5c39;
+            margin-bottom: 20px;
+        }
+        
+        .game-container {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+        
+        .game-board {
+            flex: 2;
+            min-width: 300px;
+            background: #fef8ec;
+            border: 4px solid #d9a466;
+            border-radius: 8px;
+            padding: 20px;
+            margin-right: 20px;
+            margin-bottom: 20px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .game-ui {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .score-board {
+            background: linear-gradient(to bottom, #9e2b2b, #7a1f1f);
+            color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 2px solid #d9a466;
+        }
+        
+        .score-title {
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 15px;
+            color: #f9d99d;
+        }
+        
+        .score-value {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #fff;
+        }
+        
+        .controls {
+            background: linear-gradient(to bottom, #f9e5c8, #e8d5c0);
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #d9a466;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .control-title {
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 15px;
+            color: #9e2b2b;
+        }
+        
+        button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            background: linear-gradient(to bottom, #9e2b2b, #7a1f1f);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid #d9a466;
+        }
+        
+        button:hover {
+            background: linear-gradient(to bottom, #b53c3c, #8e2525);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .sushi-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .sushi-item {
+            background: linear-gradient(to bottom, #fff, #f9d99d);
+            height: 100px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #d9a466;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 2.5rem;
+        }
+        
+        .sushi-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            border-top: 2px solid #d9a466;
+            background: linear-gradient(to bottom, #f9e5c8, #e8d5c0);
+            color: #7a5c39;
+            font-size: 0.9rem;
+        }
+        
+        .decoration {
+            position: absolute;
+            font-size: 8rem;
+            opacity: 0.1;
+            color: #9e2b2b;
+            z-index: 0;
+        }
+        
+        .dec-left {
+            left: 20px;
+            top: 100px;
+            transform: rotate(-15deg);
+        }
+        
+        .dec-right {
+            right: 20px;
+            top: 100px;
+            transform: rotate(15deg);
+        }
+        
+        @media (max-width: 768px) {
+            .game-container {
+                flex-direction: column;
+            }
+            
+            .game-board {
+                margin-right: 0;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="decoration dec-left">寿</div>
+        <div class="decoration dec-right">司</div>
+        
+        <header>
+            <h1>寿司派对</h1>
+            <div class="subtitle">传统风味与现代游戏的完美融合</div>
+        </header>
+        
+        <div class="game-container">
+            <div class="game-board">
+                <h2>游戏区域</h2>
+                <p>匹配相同类型的寿司获得分数，连续匹配可获得额外奖励！</p>
+                
+                <div class="sushi-grid">
+                    <div class="sushi-item">🍣</div>
+                    <div class="sushi-item">🍤</div>
+                    <div class="sushi-item">🍙</div>
+                    <div class="sushi-item">🍘</div>
+                    <div class="sushi-item">🍥</div>
+                    <div class="sushi-item">🍣</div>
+                    <div class="sushi-item">🍱</div>
+                    <div class="sushi-item">🍙</div>
+                    <div class="sushi-item">🍘</div>
+                    <div class="sushi-item">🍥</div>
+                    <div class="sushi-item">🍣</div>
+                    <div class="sushi-item">🍤</div>
+                    <div class="sushi-item">🍱</div>
+                    <div class="sushi-item">🍘</div>
+                    <div class="sushi-item">🍥</div>
+                </div>
+            </div>
+            
+            <div class="game-ui">
+                <div class="score-board">
+                    <div class="score-title">当前分数</div>
+                    <div class="score-value">1,250</div>
+                </div>
+                
+                <div class="controls">
+                    <div class="control-title">游戏控制</div>
+                    <button>开始游戏</button>
+                    <button>游戏说明</button>
+                    <button>排行榜</button>
+                    <button>设置</button>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2013-2025 MingDynasty,Inc. | 融合明朝艺术风格的现代游戏体验</p>
+            <p>本版本仅供展示，实际效果请访问 sushiparty.io</p>
+        </footer>
+    </div>
+
+    <script>
+        // 简单的交互效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const sushiItems = document.querySelectorAll('.sushi-item');
+            const scoreValue = document.querySelector('.score-value');
+            
+            // 添加点击效果
+            sushiItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // 添加动画效果
+                    this.style.transform = 'scale(0.9)';
+                    this.style.background = 'linear-gradient(to bottom, #f9d99d, #e8c97a)';
+                    
+                    // 随机增加分数
+                    const currentScore = parseInt(scoreValue.textContent.replace(/,/g, ''));
+                    const pointsToAdd = Math.floor(Math.random() * 100) + 10;
+                    const newScore = currentScore + pointsToAdd;
+                    
+                    scoreValue.textContent = newScore.toLocaleString();
+                    
+                    // 恢复原状
+                    setTimeout(() => {
+                        this.style.transform = '';
+                        this.style.background = '';
+                    }, 200);
+                });
+            });
+            
+            // 按钮效果
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    alert('游戏功能将在完整版中提供！');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
