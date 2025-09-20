@@ -281,6 +281,30 @@
         .game-btn:hover {
             background: #a52a2a;
         }
+        
+        /* 时间报时器样式 */
+        .time-display {
+            background: linear-gradient(135deg, #8b0000, #d4af37);
+            color: #f8f3e6;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px 0;
+            font-family: 'KaiTi', '楷体', serif;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .time-display #current-time {
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        .time-display #current-date {
+            font-size: 1.1rem;
+            margin-top: 5px;
+            opacity: 0.9;
+        }
     </style>
 </head>
 <body>
@@ -298,10 +322,17 @@
             <a href="https://mingdynasty1.github.io/cbpan_help/MingDynasty_cbpan_help.html">网盘帮助中心</a>
             <a href="https://www.luogu.com.cn/contest/247666">比赛宣传</a>
             <a href="https://mingdynasty1.github.io/game.html">益智小游戏</a>
+            <a href="https://mingdynasty1.github.io/2048.html">2048游戏</a>
         </div>
     </nav>
     
     <div class="container">
+        <!-- 时间报时器 -->
+        <div class="time-display">
+            <div id="current-time">00:00:00</div>
+            <div id="current-date">0000年00月00日 星期X</div>
+        </div>
+        
         <div class="main-content">
             <div class="content">
                 <div class="card chinese-pattern">
@@ -328,6 +359,11 @@
                         <p>体验传统益智游戏，挑战你的逻辑思维！</p>
                         <a href="https://mingdynasty1.github.io/game.html" class="game-btn">开始游戏</a>
                     </div>
+                    <div class="game-card">
+                        <h3>2048数字游戏</h3>
+                        <p>挑战你的数字组合能力，创造更高的分数！</p>
+                        <a href="https://mingdynasty1.github.io/2048.html" class="game-btn">开始游戏</a>
+                    </div>
                 </div>
                 
                 <div class="card">
@@ -346,8 +382,7 @@
                 
                 <div class="card">
                     <h2>重要更新</h2>
-                    <h3>upd on 2025.6.16 22:14 注意！MingDynasty_xiaohao2不是MingDynasty的小号</h3>
-                    <p>这里是MingDynasty的洛谷主页。</p>
+                    <h3>upd on 2025.9.20 MgDy Round 2 已经开始了，欢迎报名！</h3>
                 </div>
             </div>
             
@@ -360,12 +395,13 @@
                     <li><a href="https://mingdynasty1.github.io/friends/friends.md">友情链接</a></li>
                     <li><a href="https://mingdynasty1.github.io/cbpan_help/MingDynasty_cbpan_help.html">网盘帮助</a></li>
                     <li><a href="https://mingdynasty1.github.io/game.html">益智小游戏</a></li>
+                    <li><a href="https://mingdynasty1.github.io/2048.html">2048游戏</a></li>
                 </ul>
                 
                 <h3>个人简介</h3>
                 <p>小升初蒟蒻,欢迎吊打</p>
                 <p>坐标: 陕西宝鸡</p>
-                <p>最高排名: 807</p>
+                <p>最高排名: 304</p>
                 
                 <h3>座右铭</h3>
                 <p class="ming-decoration">Even if the finish line is far away, we must walk to the end.</p>
@@ -374,6 +410,12 @@
                     <h3>明朝华容道</h3>
                     <p>挑战传统智力游戏</p>
                     <a href="https://mingdynasty1.github.io/game.html" class="game-btn">开始游戏</a>
+                </div>
+                
+                <div class="game-card">
+                    <h3>2048数字游戏</h3>
+                    <p>挑战数字组合能力</p>
+                    <a href="https://mingdynasty1.github.io/2048.html" class="game-btn">开始游戏</a>
                 </div>
             </div>
         </div>
@@ -385,5 +427,36 @@
             <p>开局一个碗，结局一根绳 | 传承与创新</p>
         </div>
     </footer>
+
+    <script>
+        // 时间报时器功能
+        function updateTime() {
+            const now = new Date();
+            
+            // 格式化时间
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            // 格式化日期
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            
+            // 星期几
+            const weekdays = ["日", "一", "二", "三", "四", "五", "六"];
+            const weekday = weekdays[now.getDay()];
+            
+            // 更新显示
+            document.getElementById('current-time').textContent = `${hours}:${minutes}:${seconds}`;
+            document.getElementById('current-date').textContent = `${year}年${month}月${day}日 星期${weekday}`;
+        }
+        
+        // 初始更新一次
+        updateTime();
+        
+        // 每秒更新一次
+        setInterval(updateTime, 1000);
+    </script>
 </body>
 </html>
