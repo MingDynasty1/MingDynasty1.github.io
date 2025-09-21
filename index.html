@@ -11,14 +11,47 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+        
+        :root {
+            /* 亮色主题变量 */
+            --bg-color: #f8f3e6;
+            --text-color: #333;
+            --card-bg: #fff;
+            --header-bg: linear-gradient(to right, #8b0000, #a52a2a);
+            --nav-bg: #8b0000;
+            --accent-color: #8b0000;
+            --gold-color: #d4af37;
+            --border-color: #e0c987;
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --code-bg: #2b2b2b;
+            --time-bg: linear-gradient(135deg, #8b0000, #d4af37);
+            --pattern-opacity: 0.05;
+        }
+        
+        .dark-mode {
+            /* 暗色主题变量 */
+            --bg-color: #1a1a1a;
+            --text-color: #e6e6e6;
+            --card-bg: #2d2d2d;
+            --header-bg: linear-gradient(to right, #600000, #7a1f1f);
+            --nav-bg: #600000;
+            --accent-color: #cc0000;
+            --gold-color: #c19b30;
+            --border-color: #5c4c1a;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --code-bg: #3d3d3d;
+            --time-bg: linear-gradient(135deg, #600000, #9b7a1f);
+            --pattern-opacity: 0.1;
         }
         
         body {
             font-family: 'SimSun', '宋体', serif;
-            background-color: #f8f3e6;
-            color: #333;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             line-height: 1.6;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill-opacity="0.05" fill="%23000" width="100" height="100"/></svg>');
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill-opacity="' + var(--pattern-opacity) + '" fill="%23000" width="100" height="100"/></svg>');
             padding: 0;
             margin: 0;
         }
@@ -31,10 +64,10 @@
         
         /* 页眉样式 */
         header {
-            background: linear-gradient(to right, #8b0000, #a52a2a);
+            background: var(--header-bg);
             color: #f8f3e6;
             padding: 20px 0;
-            border-bottom: 5px solid #d4af37;
+            border-bottom: 5px solid var(--gold-color);
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
             text-align: center;
             position: relative;
@@ -55,11 +88,15 @@
         
         /* 导航样式 */
         nav {
-            background-color: #8b0000;
+            background-color: var(--nav-bg);
             padding: 15px 0;
             text-align: center;
             margin-bottom: 30px;
-            border-bottom: 3px solid #d4af37;
+            border-bottom: 3px solid var(--gold-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
         }
         
         nav a {
@@ -76,6 +113,71 @@
             background-color: rgba(255, 255, 255, 0.1);
         }
         
+        /* 主题切换按钮 */
+        .theme-switch {
+            margin-left: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .theme-switch-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            color: #f8f3e6;
+            font-size: 0.9rem;
+        }
+        
+        .theme-switch-label i {
+            margin-right: 5px;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+            margin-left: 10px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--gold-color);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
         /* 主要内容区 */
         .main-content {
             display: grid;
@@ -86,12 +188,12 @@
         
         /* 卡片样式 */
         .card {
-            background: #fff;
+            background: var(--card-bg);
             border-radius: 8px;
             padding: 25px;
             margin-bottom: 25px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            border-left: 5px solid #8b0000;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            border-left: 5px solid var(--accent-color);
             position: relative;
             overflow: hidden;
         }
@@ -103,14 +205,14 @@
             left: 0;
             right: 0;
             height: 5px;
-            background: linear-gradient(to right, #8b0000, #d4af37);
+            background: linear-gradient(to right, var(--accent-color), var(--gold-color));
         }
         
         .card h2 {
-            color: #8b0000;
+            color: var(--accent-color);
             margin-bottom: 15px;
             padding-bottom: 10px;
-            border-bottom: 2px dashed #e0c987;
+            border-bottom: 2px dashed var(--border-color);
             font-size: 1.5rem;
         }
         
@@ -124,7 +226,7 @@
         
         .image-container img {
             width: 100%;
-            border: 3px solid #d4af37;
+            border: 3px solid var(--gold-color);
             border-radius: 5px;
             transition: transform 0.3s;
         }
@@ -135,14 +237,14 @@
         
         /* 链接样式 */
         a {
-            color: #8b0000;
+            color: var(--accent-color);
             text-decoration: none;
             transition: color 0.3s;
             position: relative;
         }
         
         a:hover {
-            color: #d4af37;
+            color: var(--gold-color);
         }
         
         a::after {
@@ -152,7 +254,7 @@
             left: 0;
             width: 0;
             height: 1px;
-            background-color: #d4af37;
+            background-color: var(--gold-color);
             transition: width 0.3s;
         }
         
@@ -162,30 +264,30 @@
         
         /* 代码块样式 */
         pre {
-            background: #2b2b2b;
+            background: var(--code-bg);
             color: #f8f3e6;
             padding: 15px;
             border-radius: 5px;
             overflow-x: auto;
-            border-left: 5px solid #d4af37;
+            border-left: 5px solid var(--gold-color);
             font-family: 'Consolas', 'Monaco', monospace;
             margin: 20px 0;
         }
         
         /* 侧边栏样式 */
         .sidebar {
-            background: #fff;
+            background: var(--card-bg);
             border-radius: 8px;
             padding: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            border-left: 5px solid #d4af37;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            border-left: 5px solid var(--gold-color);
         }
         
         .sidebar h3 {
-            color: #8b0000;
+            color: var(--accent-color);
             margin-bottom: 15px;
             padding-bottom: 10px;
-            border-bottom: 2px dashed #e0c987;
+            border-bottom: 2px dashed var(--border-color);
             text-align: center;
         }
         
@@ -195,7 +297,7 @@
         
         .sidebar li {
             padding: 8px 0;
-            border-bottom: 1px dotted #e0c987;
+            border-bottom: 1px dotted var(--border-color);
         }
         
         .sidebar li:last-child {
@@ -204,12 +306,12 @@
         
         /* 页脚样式 */
         footer {
-            background: linear-gradient(to right, #8b0000, #a52a2a);
+            background: var(--header-bg);
             color: #f8f3e6;
             text-align: center;
             padding: 20px 0;
             margin-top: 40px;
-            border-top: 5px solid #d4af37;
+            border-top: 5px solid var(--gold-color);
         }
         
         /* 响应式设计 */
@@ -226,24 +328,28 @@
                 display: block;
                 margin: 10px 0;
             }
+            
+            .theme-switch {
+                margin: 10px 0;
+            }
         }
         
         /* 明朝特色装饰 */
         .ming-decoration {
             font-family: 'KaiTi', '楷体', serif;
-            color: #8b0000;
+            color: var(--accent-color);
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
         }
         
         .chinese-pattern {
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"><path fill="%238b0000" fill-opacity="0.1" d="M0 0h60v60H0z"/><path fill="%23d4af37" fill-opacity="0.1" d="M0 0h30v30H0z"/></svg>');
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"><path fill="' + var(--accent-color) + '" fill-opacity="0.1" d="M0 0h60v60H0z"/><path fill="' + var(--gold-color) + '" fill-opacity="0.1" d="M0 0h30v30H0z"/></svg>');
             background-size: 60px 60px;
         }
         
         /* 游戏卡片样式 */
         .game-card {
-            background: linear-gradient(135deg, #f8f3e6 0%, #e0c987 100%);
-            border: 2px solid #8b0000;
+            background: linear-gradient(135deg, var(--bg-color) 0%, var(--border-color) 100%);
+            border: 2px solid var(--accent-color);
             border-radius: 10px;
             padding: 20px;
             text-align: center;
@@ -257,19 +363,19 @@
         }
         
         .game-card h3 {
-            color: #8b0000;
+            color: var(--accent-color);
             margin-bottom: 15px;
             font-size: 1.5rem;
         }
         
         .game-card p {
             margin-bottom: 15px;
-            color: #333;
+            color: var(--text-color);
         }
         
         .game-btn {
             display: inline-block;
-            background: #8b0000;
+            background: var(--accent-color);
             color: #f8f3e6;
             padding: 10px 20px;
             border-radius: 5px;
@@ -279,12 +385,12 @@
         }
         
         .game-btn:hover {
-            background: #a52a2a;
+            background: var(--nav-bg);
         }
         
         /* 时间报时器样式 */
         .time-display {
-            background: linear-gradient(135deg, #8b0000, #d4af37);
+            background: var(--time-bg);
             color: #f8f3e6;
             padding: 15px;
             border-radius: 8px;
@@ -323,6 +429,17 @@
             <a href="https://www.luogu.com.cn/contest/247666">比赛宣传</a>
             <a href="https://mingdynasty1.github.io/game.html">益智小游戏</a>
             <a href="https://mingdynasty1.github.io/2048.html">2048游戏</a>
+            
+            <div class="theme-switch">
+                <label class="theme-switch-label">
+                    <i class="fas fa-moon"></i>
+                    <span class="switch">
+                        <input type="checkbox" id="theme-toggle">
+                        <span class="slider"></span>
+                    </span>
+                    <i class="fas fa-sun"></i>
+                </label>
+            </div>
         </div>
     </nav>
     
@@ -344,9 +461,9 @@
                     <h2>个人成就展示</h2>
                     <div class="image-container">
                         <img src="https://atrating.baoshuo.dev/rating?username=MingDynasty1" alt="洛谷评级">
-                        <img src="https://cdn.luogu.com.cn/upload/image_hosting/x699deqh.png" alt="AT评级">
+                        <img src="https://atcoder.junah.dev/v2/generate_badge?name=MingDynasty1" alt="AtCoder评级">
                         <img src="https://api.jerryz.com.cn/about?id=1015347&dark_mode=true&disable_cache=true" alt="洛谷信息">
-                        <img src="https://api.jerryz.com.cn/shield?id=1015347&dark_mode=true&disable_cache=true" alt="洛谷">
+                        <img src="https://api.jerryz.com.cn/shield?id=1015347&dark_mode=true&disable_cache=true" alt="洛谷盾牌">
                         <img src="https://api.jerryz.com.cn/guzhi?id=1015347&scores=100,68,44,88,30&dark_mode=true&disable_cache=true" alt="估值信息">
                         <img src="https://api.jerryz.com.cn/practice?id=1015347&dark_mode=true&disable_cache=true" alt="练习情况">
                     </div>
@@ -382,7 +499,8 @@
                 
                 <div class="card">
                     <h2>重要更新</h2>
-                    <h3>upd on 2025.9.20 MgDy Round 2 已经开始了，欢迎报名！</h3>
+                    <h3>upd on 2025.6.16 22:14 注意！MingDynasty_xiaohao2不是MingDynasty的小号</h3>
+                    <p>这里是MingDynasty的洛谷主页。</p>
                 </div>
             </div>
             
@@ -390,7 +508,7 @@
                 <h3>快速导航</h3>
                 <ul>
                     <li><a href="https://mingdynasty1.github.io/OImap.html">主页地图</a></li>
-                    <li><a href="https://www.luogu.com.cn/user/1015347">洛谷主页</a></li>
+                    <li><a href="https://www.luogu.com.cn/user/361537">洛谷主页</a></li>
                     <li><a href="https://github.com/MingDynasty1">GitHub主页</a></li>
                     <li><a href="https://mingdynasty1.github.io/friends/friends.md">友情链接</a></li>
                     <li><a href="https://mingdynasty1.github.io/cbpan_help/MingDynasty_cbpan_help.html">网盘帮助</a></li>
@@ -401,7 +519,7 @@
                 <h3>个人简介</h3>
                 <p>小升初蒟蒻,欢迎吊打</p>
                 <p>坐标: 陕西宝鸡</p>
-                <p>最高排名: 304</p>
+                <p>最高排名: 807</p>
                 
                 <h3>座右铭</h3>
                 <p class="ming-decoration">Even if the finish line is far away, we must walk to the end.</p>
@@ -427,6 +545,9 @@
             <p>开局一个碗，结局一根绳 | 传承与创新</p>
         </div>
     </footer>
+
+    <!-- Font Awesome 图标 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 
     <script>
         // 时间报时器功能
@@ -457,8 +578,34 @@
         
         // 每秒更新一次
         setInterval(updateTime, 1000);
+        
+        // 主题切换功能
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        
+        // 检查本地存储的主题偏好
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            body.classList.add('dark-mode');
+            themeToggle.checked = true;
+        }
+        
+        // 切换主题
+        themeToggle.addEventListener('change', function() {
+            if (this.checked) {
+                body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+        
+        // 根据系统偏好设置初始主题
+        if (!savedTheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            body.classList.add('dark-mode');
+            themeToggle.checked = true;
+        }
     </script>
 </body>
 </html>
-
-
