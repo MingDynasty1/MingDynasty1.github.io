@@ -4,19 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>寿司派对 By MgDy</title>
-<link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+        
+        :root {
+            --bg-color: linear-gradient(to bottom, #f8f3e6, #e8d5c0);
+            --text-color: #3a2615;
+            --container-bg: rgba(255, 249, 239, 0.9);
+            --border-color: #9e2b2b;
+            --accent-color: #d9a466;
+            --header-bg: linear-gradient(to bottom, #fff, #f9e5c8);
+            --score-bg: linear-gradient(to bottom, #9e2b2b, #7a1f1f);
+            --score-title-color: #f9d99d;
+            --controls-bg: linear-gradient(to bottom, #f9e5c8, #e8d5c0);
+            --sushi-bg: linear-gradient(to bottom, #fff, #f9d99d);
+            --footer-bg: linear-gradient(to bottom, #f9e5c8, #e8d5c0);
+            --decoration-color: #9e2b2b;
+            --button-bg: linear-gradient(to bottom, #9e2b2b, #7a1f1f);
+            --button-hover: linear-gradient(to bottom, #b53c3c, #8e2525);
+        }
+        
+        .dark-mode {
+            --bg-color: linear-gradient(to bottom, #2a2118, #1a130d);
+            --text-color: #e8d5c0;
+            --container-bg: rgba(50, 40, 30, 0.9);
+            --border-color: #c46b6b;
+            --accent-color: #b58c4e;
+            --header-bg: linear-gradient(to bottom, #3a2e20, #2a2118);
+            --score-bg: linear-gradient(to bottom, #6d2b2b, #4d1f1f);
+            --score-title-color: #d9b878;
+            --controls-bg: linear-gradient(to bottom, #3a2e20, #2a2118);
+            --sushi-bg: linear-gradient(to bottom, #3a2e20, #4a3c28);
+            --footer-bg: linear-gradient(to bottom, #3a2e20, #2a2118);
+            --decoration-color: #c46b6b;
+            --button-bg: linear-gradient(to bottom, #6d2b2b, #4d1f1f);
+            --button-hover: linear-gradient(to bottom, #8d3c3c, #6e2525);
         }
         
         body {
             font-family: 'Noto Serif SC', serif;
-            background: linear-gradient(to bottom, #f8f3e6, #e8d5c0);
-            color: #3a2615;
+            background: var(--bg-color);
+            color: var(--text-color);
             min-height: 100vh;
             padding: 20px;
             background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20,20 L80,20 L80,80 L20,80 Z' stroke='%23b38e5f' stroke-width='1' fill='none'/%3E%3C/svg%3E");
@@ -25,8 +60,8 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            background: rgba(255, 249, 239, 0.9);
-            border: 8px double #9e2b2b;
+            background: var(--container-bg);
+            border: 8px double var(--border-color);
             border-radius: 4px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
             position: relative;
@@ -40,20 +75,21 @@
             left: 0;
             right: 0;
             height: 12px;
-            background: linear-gradient(90deg, #9e2b2b 0%, #d9a466 50%, #9e2b2b 100%);
+            background: linear-gradient(90deg, var(--border-color) 0%, var(--accent-color) 50%, var(--border-color) 100%);
         }
         
         header {
             text-align: center;
             padding: 30px 20px 20px;
-            background: linear-gradient(to bottom, #fff, #f9e5c8);
-            border-bottom: 2px solid #d9a466;
+            background: var(--header-bg);
+            border-bottom: 2px solid var(--accent-color);
+            position: relative;
         }
         
         h1 {
             font-family: 'Ma Shan Zheng', cursive;
             font-size: 3.5rem;
-            color: #9e2b2b;
+            color: var(--border-color);
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
             margin-bottom: 10px;
             letter-spacing: 4px;
@@ -61,8 +97,71 @@
         
         .subtitle {
             font-size: 1.2rem;
-            color: #7a5c39;
+            color: var(--text-color);
             margin-bottom: 20px;
+        }
+        
+        .theme-switch-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 10px;
+            border-radius: 20px;
+            border: 1px solid var(--accent-color);
+        }
+        
+        .theme-label {
+            font-size: 0.9rem;
+            margin: 0 8px;
+            color: var(--text-color);
+        }
+        
+        .theme-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .theme-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--border-color);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
         }
         
         .game-container {
@@ -74,8 +173,8 @@
         .game-board {
             flex: 2;
             min-width: 300px;
-            background: #fef8ec;
-            border: 4px solid #d9a466;
+            background: var(--container-bg);
+            border: 4px solid var(--accent-color);
             border-radius: 8px;
             padding: 20px;
             margin-right: 20px;
@@ -89,13 +188,13 @@
         }
         
         .score-board {
-            background: linear-gradient(to bottom, #9e2b2b, #7a1f1f);
+            background: var(--score-bg);
             color: #fff;
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            border: 2px solid #d9a466;
+            border: 2px solid var(--accent-color);
         }
         
         .score-title {
@@ -103,7 +202,7 @@
             font-size: 1.8rem;
             text-align: center;
             margin-bottom: 15px;
-            color: #f9d99d;
+            color: var(--score-title-color);
         }
         
         .score-value {
@@ -114,10 +213,10 @@
         }
         
         .controls {
-            background: linear-gradient(to bottom, #f9e5c8, #e8d5c0);
+            background: var(--controls-bg);
             padding: 20px;
             border-radius: 8px;
-            border: 2px solid #d9a466;
+            border: 2px solid var(--accent-color);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
@@ -126,7 +225,7 @@
             font-size: 1.8rem;
             text-align: center;
             margin-bottom: 15px;
-            color: #9e2b2b;
+            color: var(--border-color);
         }
         
         button {
@@ -134,7 +233,7 @@
             width: 100%;
             padding: 15px;
             margin: 10px 0;
-            background: linear-gradient(to bottom, #9e2b2b, #7a1f1f);
+            background: var(--button-bg);
             color: white;
             border: none;
             border-radius: 6px;
@@ -142,11 +241,11 @@
             font-size: 1.2rem;
             cursor: pointer;
             transition: all 0.3s;
-            border: 2px solid #d9a466;
+            border: 2px solid var(--accent-color);
         }
         
         button:hover {
-            background: linear-gradient(to bottom, #b53c3c, #8e2525);
+            background: var(--button-hover);
             transform: translateY(-2px);
             box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
         }
@@ -159,13 +258,13 @@
         }
         
         .sushi-item {
-            background: linear-gradient(to bottom, #fff, #f9d99d);
+            background: var(--sushi-bg);
             height: 100px;
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 2px solid #d9a466;
+            border: 2px solid var(--accent-color);
             cursor: pointer;
             transition: all 0.2s;
             font-size: 2.5rem;
@@ -179,9 +278,9 @@
         footer {
             text-align: center;
             padding: 20px;
-            border-top: 2px solid #d9a466;
-            background: linear-gradient(to bottom, #f9e5c8, #e8d5c0);
-            color: #7a5c39;
+            border-top: 2px solid var(--accent-color);
+            background: var(--footer-bg);
+            color: var(--text-color);
             font-size: 0.9rem;
         }
         
@@ -189,7 +288,7 @@
             position: absolute;
             font-size: 8rem;
             opacity: 0.1;
-            color: #9e2b2b;
+            color: var(--decoration-color);
             z-index: 0;
         }
         
@@ -217,6 +316,15 @@
             h1 {
                 font-size: 2.5rem;
             }
+            
+            .theme-switch-container {
+                position: relative;
+                top: 0;
+                right: 0;
+                justify-content: center;
+                margin: 10px auto;
+                width: fit-content;
+            }
         }
     </style>
 </head>
@@ -228,6 +336,15 @@
         <header>
             <h1>寿司派对</h1>
             <div class="subtitle">传统风味与现代游戏的完美融合</div>
+            
+            <div class="theme-switch-container">
+                <span class="theme-label">亮色</span>
+                <label class="theme-switch">
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="slider"></span>
+                </label>
+                <span class="theme-label">暗色</span>
+            </div>
         </header>
         
         <div class="game-container">
@@ -281,6 +398,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             const sushiItems = document.querySelectorAll('.sushi-item');
             const scoreValue = document.querySelector('.score-value');
+            const themeToggle = document.getElementById('theme-toggle');
             
             // 添加点击效果
             sushiItems.forEach(item => {
@@ -311,6 +429,36 @@
                     alert('游戏功能将在完整版中提供！');
                 });
             });
+            
+            // 主题切换功能
+            function setupThemeToggle() {
+                // 检查本地存储的主题偏好
+                const savedTheme = localStorage.getItem('sushi_party_theme');
+                if (savedTheme === 'dark') {
+                    document.body.classList.add('dark-mode');
+                    themeToggle.checked = true;
+                }
+                
+                // 切换主题
+                themeToggle.addEventListener('change', function() {
+                    if (this.checked) {
+                        document.body.classList.add('dark-mode');
+                        localStorage.setItem('sushi_party_theme', 'dark');
+                    } else {
+                        document.body.classList.remove('dark-mode');
+                        localStorage.setItem('sushi_party_theme', 'light');
+                    }
+                });
+                
+                // 根据系统偏好设置初始主题
+                if (!savedTheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.body.classList.add('dark-mode');
+                    themeToggle.checked = true;
+                }
+            }
+            
+            // 初始化主题切换
+            setupThemeToggle();
         });
     </script>
 </body>
