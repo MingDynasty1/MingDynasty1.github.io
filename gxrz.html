@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>更新日志 | MingDynasty的个人主页</title>
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <style>
+        /* 全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+        
+        :root {
+            /* 亮色主题变量 */
+            --bg-color: #f8f3e6;
+            --text-color: #333;
+            --card-bg: #fff;
+            --header-bg: linear-gradient(to right, #8b0000, #a52a2a);
+            --nav-bg: #8b0000;
+            --accent-color: #8b0000;
+            --gold-color: #d4af37;
+            --border-color: #e0c987;
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --code-bg: #2b2b2b;
+            --time-bg: linear-gradient(135deg, #8b0000, #d4af37);
+            --pattern-opacity: 0.05;
+        }
+        
+        .dark-mode {
+            /* 暗色主题变量 */
+            --bg-color: #1a1a1a;
+            --text-color: #e6e6e6;
+            --card-bg: #2d2d2d;
+            --header-bg: linear-gradient(to right, #600000, #7a1f1f);
+            --nav-bg: #600000;
+            --accent-color: #cc0000;
+            --gold-color: #c19b30;
+            --border-color: #5c4c1a;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --code-bg: #3d3d3d;
+            --time-bg: linear-gradient(135deg, #600000, #9b7a1f);
+            --pattern-opacity: 0.1;
+        }
+        
+        body {
+            font-family: 'SimSun', '宋体', serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill-opacity="' + var(--pattern-opacity) + '" fill="%23000" width="100" height="100"/></svg>');
+            padding: 0;
+            margin: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* 页眉样式 */
+        header {
+            background: var(--header-bg);
+            color: #f8f3e6;
+            padding: 20px 0;
+            border-bottom: 5px solid var(--gold-color);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            position: relative;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
+            letter-spacing: 5px;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* 导航样式 */
+        nav {
+            background-color: var(--nav-bg);
+            padding: 15px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid var(--gold-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        nav a {
+            color: #f8f3e6;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1.1rem;
+            padding: 5px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* 主题切换按钮 */
+        .theme-switch {
+            margin-left: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .theme-switch-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            color: #f8f3e6;
+            font-size: 0.9rem;
+        }
+        
+        .theme-switch-label i {
+            margin-right: 5px;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+            margin-left: 10px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--gold-color);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        /* 更新日志特定样式 */
+        .changelog-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .changelog-year {
+            margin: 40px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--accent-color);
+            color: var(--accent-color);
+            font-family: 'KaiTi', '楷体', serif;
+        }
+        
+        .changelog-item {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            border-left: 5px solid var(--gold-color);
+            position: relative;
+        }
+        
+        .changelog-date {
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .changelog-date::before {
+            content: "📅";
+            margin-right: 8px;
+        }
+        
+        .changelog-content {
+            margin-left: 25px;
+        }
+        
+        .changelog-content h3 {
+            color: var(--accent-color);
+            margin: 10px 0 5px;
+            font-size: 1.2rem;
+        }
+        
+        .changelog-content ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        .changelog-content li {
+            margin-bottom: 8px;
+            position: relative;
+        }
+        
+        .changelog-content li::before {
+            content: "•";
+            color: var(--gold-color);
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+        
+        .update-type {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+            background: var(--gold-color);
+            color: #fff;
+        }
+        
+        .type-feature {
+            background: #28a745;
+        }
+        
+        .type-fix {
+            background: #dc3545;
+        }
+        
+        .type-improvement {
+            background: #17a2b8;
+        }
+        
+        /* 时间线样式 */
+        .changelog-item::after {
+            content: "";
+            position: absolute;
+            top: 30px;
+            left: -3px;
+            height: calc(100% - 30px);
+            width: 2px;
+            background: var(--gold-color);
+            z-index: 1;
+        }
+        
+        .changelog-item:last-child::after {
+            display: none;
+        }
+        
+        .changelog-item::before {
+            content: "";
+            position: absolute;
+            top: 25px;
+            left: -8px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--gold-color);
+            z-index: 2;
+        }
+        
+        /* 页脚样式 */
+        footer {
+            background: var(--header-bg);
+            color: #f8f3e6;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+            border-top: 5px solid var(--gold-color);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            nav a {
+                display: block;
+                margin: 10px 0;
+            }
+            
+            .theme-switch {
+                margin: 10px 0;
+            }
+            
+            .changelog-content {
+                margin-left: 15px;
+            }
+        }
+        
+        /* 明朝特色装饰 */
+        .ming-decoration {
+            font-family: 'KaiTi', '楷体', serif;
+            color: var(--accent-color);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .back-btn {
+            display: inline-block;
+            background: var(--accent-color);
+            color: #f8f3e6;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s;
+            margin: 20px 0;
+        }
+        
+        .back-btn:hover {
+            background: var(--nav-bg);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 class="ming-decoration">更新日志</h1>
+            <p>记录MingDynasty个人主页的演变与改进</p>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="container">
+            <a href="https://mingdynasty1.github.io/">返回主页</a>
+            <a href="https://mingdynasty1.github.io/OImap.html">主页导航</a>
+            <a href="https://mingdynasty1.github.io/friends/friends.md">友链</a>
+            
+            <div class="theme-switch">
+                <label class="theme-switch-label">
+                    <i class="fas fa-moon"></i>
+                    <span class="switch">
+                        <input type="checkbox" id="theme-toggle">
+                        <span class="slider"></span>
+                    </span>
+                    <i class="fas fa-sun"></i>
+                </label>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <a href="https://mingdynasty1.github.io/" class="back-btn">← 返回主页</a>
+        
+        <div class="changelog-container">
+            <h2 class="changelog-year">2025年</h2>
+            
+            <div class="changelog-item">
+                <div class="changelog-date">2025年7月18日 <span class="update-type type-feature">新功能</span></div>
+                <div class="changelog-content">
+                    <h3>主题系统大更新</h3>
+                    <ul>
+                        <li>新增亮色/暗色主题切换功能</li>
+                        <li>添加主题偏好本地存储，记住用户选择</li>
+                        <li>支持系统主题偏好检测</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="changelog-item">
+                <div class="changelog-date">2025年7月15日 <span class="update-type type-improvement">改进</span></div>
+                <div class="changelog-content">
+                    <h3>页面功能增强</h3>
+                    <ul>
+                        <li>添加实时时间显示功能</li>
+                        <li>新增2048小游戏链接</li>
+                        <li>优化移动端响应式布局</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="changelog-item">
+                <div class="changelog-date">2025年7月10日 <span class="update-type type-feature">新功能</span></div>
+                <div class="changelog-content">
+                    <h3>个人主页上线</h3>
+                    <ul>
+                        <li>初版个人主页正式发布</li>
+                        <li>集成洛谷、AtCoder等OJ平台数据展示</li>
+                        <li>添加明朝华容道小游戏</li>
+                        <li>实现明朝风格UI设计</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h2 class="changelog-year">2024年</h2>
+            
+            <div class="changelog-item">
+                <div class="changelog-date">2024年12月5日 <span class="update-type type-improvement">改进</span></div>
+                <div class="changelog-content">
+                    <h3>项目筹备阶段</h3>
+                    <ul>
+                        <li>开始规划个人主页设计</li>
+                        <li>收集明朝风格设计元素</li>
+                        <li>确定网站色彩方案和布局</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="changelog-item">
+                <div class="changelog-date">2024年10月20日 <span class="update-type type-fix">修复</span></div>
+                <div class="changelog-content">
+                    <h3>问题修复与优化</h3>
+                    <ul>
+                        <li>修复API接口调用问题</li>
+                        <li>优化图片加载性能</li>
+                        <li>解决移动端显示错位问题</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h2 class="changelog-year">2023年</h2>
+            
+            <div class="changelog-item">
+                <div class="changelog-date">2023年8月12日 <span class="update-type type-feature">新功能</span></div>
+                <div class="changelog-content">
+                    <h3>项目启动</h3>
+                    <ul>
+                        <li>确定"MingDynasty"品牌标识</li>
+                        <li>注册相关平台账号</li>
+                        <li>规划网站内容结构</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>© 2013-2025 MingDynasty,Inc. MingDynasty 的个人主页 | 灵感源于明朝美学</p>
+            <p>开局一个碗，结局一根绳 | 传承与创新</p>
+        </div>
+    </footer>
+
+    <!-- Font Awesome 图标 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+
+    <script>
+        // 主题切换功能
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        
+        // 检查本地存储的主题偏好
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            body.classList.add('dark-mode');
+            themeToggle.checked = true;
+        }
+        
+        // 切换主题
+        themeToggle.addEventListener('change', function() {
+            if (this.checked) {
+                body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+        
+        // 根据系统偏好设置初始主题
+        if (!savedTheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            body.classList.add('dark-mode');
+            themeToggle.checked = true;
+        }
+    </script>
+</body>
+</html>
