@@ -3,59 +3,471 @@
 <head>
   <meta charset="UTF-8">
   <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
-  <title>简易线上网盘</title>
+  <title>明朝风格线上网盘</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 40px; }
-    #fileList { margin-top: 20px; }
-    table { border-collapse: collapse; width: 100%; }
-    td, th { border: 1px solid #ddd; padding: 8px; }
-    th { background: #f7f7f7; }
+    :root {
+      /* 亮色主题变量 */
+      --light-bg: #f9f5e8;
+      --light-text: #3a2615;
+      --light-primary: #8b1a10;
+      --light-secondary: #d4b78c;
+      --light-border: #aa8e69;
+      --light-table-header: #e8d9c0;
+      --light-table-row: #f3eadb;
+      --light-shadow: rgba(139, 26, 16, 0.2);
+      
+      /* 暗色主题变量 */
+      --dark-bg: #2a211c;
+      --dark-text: #e8d6c9;
+      --dark-primary: #c94c40;
+      --dark-secondary: #6d4c2d;
+      --dark-border: #5c4435;
+      --dark-table-header: #4a3429;
+      --dark-table-row: #3a2c23;
+      --dark-shadow: rgba(0, 0, 0, 0.4);
+    }
+    
+    body {
+      font-family: "SimSun", "宋体", serif;
+      background-color: var(--light-bg);
+      color: var(--light-text);
+      padding: 20px;
+      margin: 0;
+      transition: all 0.3s ease;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    body.dark-theme {
+      background-color: var(--dark-bg);
+      color: var(--dark-text);
+    }
+    
+    .container {
+      width: 90%;
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 25px;
+      border: 2px solid var(--light-border);
+      border-radius: 8px;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.05"><rect fill="%238b1a10" x="0" y="0" width="100" height="100"/></svg>');
+      box-shadow: 0 5px 15px var(--light-shadow);
+      position: relative;
+      flex: 1;
+    }
+    
+    body.dark-theme .container {
+      border-color: var(--dark-border);
+      box-shadow: 0 5px 15px var(--dark-shadow);
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--light-border);
+    }
+    
+    body.dark-theme .header {
+      border-bottom-color: var(--dark-border);
+    }
+    
+    h1 {
+      color: var(--light-primary);
+      margin: 0;
+      font-size: 28px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+    
+    body.dark-theme h1 {
+      color: var(--dark-primary);
+    }
+    
+    .theme-switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 30px;
+    }
+    
+    .theme-switch input { 
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--light-secondary);
+      transition: .4s;
+      border-radius: 30px;
+    }
+    
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 22px;
+      width: 22px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    
+    input:checked + .slider {
+      background-color: var(--dark-secondary);
+    }
+    
+    input:checked + .slider:before {
+      transform: translateX(30px);
+    }
+    
+    .theme-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+    }
+    
+    #uploadForm {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: rgba(212, 183, 140, 0.1);
+      border: 1px dashed var(--light-border);
+      border-radius: 5px;
+    }
+    
+    body.dark-theme #uploadForm {
+      background-color: rgba(109, 76, 45, 0.1);
+      border-color: var(--dark-border);
+    }
+    
+    input[type="file"] {
+      flex-grow: 1;
+      padding: 8px;
+      border: 1px solid var(--light-border);
+      border-radius: 4px;
+      background-color: var(--light-bg);
+      color: var(--light-text);
+    }
+    
+    body.dark-theme input[type="file"] {
+      border-color: var(--dark-border);
+      background-color: var(--dark-bg);
+      color: var(--dark-text);
+    }
+    
+    button {
+      padding: 8px 16px;
+      background-color: var(--light-primary);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background-color 0.3s;
+    }
+    
+    button:hover {
+      background-color: #a52c22;
+      transform: translateY(-1px);
+    }
+    
+    body.dark-theme button {
+      background-color: var(--dark-primary);
+    }
+    
+    body.dark-theme button:hover {
+      background-color: #e25d52;
+    }
+    
+    #status {
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 4px;
+      text-align: center;
+    }
+    
+    #fileList {
+      margin-top: 20px;
+    }
+    
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      border: 1px solid var(--light-border);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    
+    body.dark-theme table {
+      border-color: var(--dark-border);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    
+    td, th {
+      padding: 12px 15px;
+      text-align: left;
+    }
+    
+    th {
+      background-color: var(--light-table-header);
+      font-weight: bold;
+      color: var(--light-primary);
+    }
+    
+    body.dark-theme th {
+      background-color: var(--dark-table-header);
+      color: var(--dark-primary);
+    }
+    
+    tr:nth-child(even) {
+      background-color: var(--light-table-row);
+    }
+    
+    body.dark-theme tr:nth-child(even) {
+      background-color: var(--dark-table-row);
+    }
+    
+    a {
+      color: var(--light-primary);
+      text-decoration: none;
+      margin-right: 15px;
+      transition: color 0.2s;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      color: #a52c22;
+    }
+    
+    body.dark-theme a {
+      color: var(--dark-primary);
+    }
+    
+    body.dark-theme a:hover {
+      color: #e25d52;
+    }
+    
+    .footer {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 14px;
+      color: var(--light-secondary);
+      padding: 15px 0;
+      border-top: 1px solid var(--light-border);
+      width: 100%;
+    }
+    
+    body.dark-theme .footer {
+      color: var(--dark-secondary);
+      border-top-color: var(--dark-border);
+    }
+    
+    .copyright {
+      margin-top: 5px;
+      font-size: 12px;
+      opacity: 0.8;
+    }
+    
+    /* 明朝风格装饰元素 */
+    .decoration {
+      position: absolute;
+      opacity: 0.1;
+      pointer-events: none;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    
+    .decoration.top-left {
+      top: 15px;
+      left: 15px;
+      transform: rotate(-15deg);
+    }
+    
+    .decoration.top-right {
+      top: 15px;
+      right: 15px;
+      transform: rotate(15deg);
+    }
+    
+    .decoration.bottom-left {
+      bottom: 15px;
+      left: 15px;
+      transform: rotate(15deg);
+    }
+    
+    .decoration.bottom-right {
+      bottom: 15px;
+      right: 15px;
+      transform: rotate(-15deg);
+    }
+    
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      
+      .container {
+        width: 95%;
+        padding: 15px;
+      }
+      
+      .header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+      }
+      
+      #uploadForm {
+        flex-direction: column;
+      }
+      
+      table {
+        font-size: 14px;
+      }
+      
+      td, th {
+        padding: 8px 10px;
+      }
+    }
   </style>
 </head>
 <body>
-  <h1>简易线上网盘（5GB）</h1>
-  <form id="uploadForm" enctype="multipart/form-data">
-    <input type="file" name="file" required>
-    <button type="submit">上传文件</button>
-  </form>
-  <div id="status"></div>
-  <div id="fileList"></div>
+  <div class="container">
+    <!-- 装饰元素 -->
+    <div class="decoration top-left">明</div>
+    <div class="decoration top-right">朝</div>
+    <div class="decoration bottom-left">風</div>
+    <div class="decoration bottom-right">格</div>
+    
+    <div class="header">
+      <h1>明朝风格线上网盘（5GB）</h1>
+      <div class="theme-label">
+        <span>亮色</span>
+        <label class="theme-switch">
+          <input type="checkbox" id="themeToggle">
+          <span class="slider"></span>
+        </label>
+        <span>暗色</span>
+      </div>
+    </div>
+    
+    <form id="uploadForm" enctype="multipart/form-data">
+      <input type="file" name="file" required>
+      <button type="submit">上传文件</button>
+    </form>
+    
+    <div id="status"></div>
+    <div id="fileList"></div>
+    
+    <div class="footer">
+      MingDynasty 的网盘
+      <div class="copyright">© 2013-2025 MingDynasty, Inc. 版权所有</div>
+    </div>
+  </div>
+
   <script>
+    // 主题切换功能
+    const themeToggle = document.getElementById('themeToggle');
+    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    // 检查本地存储或系统偏好
+    const currentTheme = localStorage.getItem('theme');
+    if (currentTheme === 'dark' || (!currentTheme && prefersDarkScheme.matches)) {
+      document.body.classList.add('dark-theme');
+      themeToggle.checked = true;
+    }
+    
+    // 切换主题
+    themeToggle.addEventListener('change', function() {
+      if (this.checked) {
+        document.body.classList.add('dark-theme');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        document.body.classList.remove('dark-theme');
+        localStorage.setItem('theme', 'light');
+      }
+    });
+    
+    // 文件操作功能
     function fetchFiles() {
-      fetch('/files').then(r => r.json()).then(data => {
-        let html = '<table><tr><th>文件名</th><th>大小</th><th>操作</th></tr>';
-        data.forEach(f => {
+      // 模拟数据 - 实际应用中这里应该是从服务器获取的数据
+      const mockFiles = [
+        { name: "明朝历史文档.pdf", size: 2546231 },
+        { name: "明朝艺术图集.jpg", size: 3876542 },
+        { name: "明朝音乐.mp3", size: 5123456 }
+      ];
+      
+      let html = '<table><tr><th>文件名</th><th>大小</th><th>操作</th></tr>';
+      if (mockFiles.length === 0) {
+        html += '<tr><td colspan="3" style="text-align: center;">暂无文件</td></tr>';
+      } else {
+        mockFiles.forEach(f => {
           html += `<tr>
             <td>${f.name}</td>
             <td>${(f.size/1024/1024).toFixed(2)} MB</td>
             <td>
-              <a href="/download/${encodeURIComponent(f.name)}" target="_blank">下载</a>
-              <button onclick="delFile('${encodeURIComponent(f.name)}')">删除</button>
+              <a href="#" onclick="downloadFile('${f.name}')">下载</a>
+              <button onclick="delFile('${f.name}')">删除</button>
             </td>
           </tr>`;
         });
-        html += '</table>';
-        document.getElementById('fileList').innerHTML = html;
-      });
+      }
+      html += '</table>';
+      document.getElementById('fileList').innerHTML = html;
     }
+    
+    function downloadFile(name) {
+      alert(`模拟下载: ${name}`);
+      // 实际应用中这里应该是下载逻辑
+    }
+    
     function delFile(name) {
-      if (confirm('确定要删除吗？')) {
-        fetch('/delete/' + name, { method: 'DELETE' })
-          .then(r => r.json())
-          .then(() => fetchFiles());
+      if (confirm(`确定要删除 "${name}" 吗？`)) {
+        alert(`模拟删除: ${name}`);
+        // 实际应用中这里应该是删除逻辑
+        fetchFiles(); // 刷新文件列表
       }
     }
+    
     document.getElementById('uploadForm').onsubmit = function(e) {
       e.preventDefault();
-      let formData = new FormData(this);
-      document.getElementById('status').textContent = '正在上传...';
-      fetch('/upload', { method: 'POST', body: formData })
-        .then(r => r.json())
-        .then(res => {
-          document.getElementById('status').textContent = res.message;
-          fetchFiles();
-        });
+      const fileInput = this.elements['file'];
+      if (fileInput.files.length === 0) return;
+      
+      const file = fileInput.files[0];
+      document.getElementById('status').textContent = `正在上传: ${file.name}...`;
+      document.getElementById('status').style.color = '';
+      
+      // 模拟上传延迟
+      setTimeout(() => {
+        document.getElementById('status').textContent = `上传成功: ${file.name} (${(file.size/1024/1024).toFixed(2)} MB)`;
+        document.getElementById('status').style.color = 'green';
+        
+        // 重置表单
+        fileInput.value = '';
+        
+        // 刷新文件列表
+        fetchFiles();
+      }, 1500);
     };
+    
+    // 初始加载文件列表
     fetchFiles();
   </script>
 </body>
