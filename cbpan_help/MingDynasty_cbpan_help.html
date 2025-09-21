@@ -1,6 +1,184 @@
-<h1 id="-mingdynasty-">这里是MingDynasty的网盘帮助中心。所有文件的链接都在这里。</h1>
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
-  <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MingDynasty 网盘帮助中心</title>
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <style>
+        :root {
+            --primary-color: #8b0000;
+            --secondary-color: #d4af37;
+            --background-light: #f9f3e9;
+            --text-light: #333;
+            --background-dark: #1a1a1a;
+            --text-dark: #e6e6e6;
+            --border-color: #8b4513;
+        }
+
+        body {
+            font-family: 'SimSun', '宋体', serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--background-light);
+            color: var(--text-light);
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode {
+            background-color: var(--background-dark);
+            color: var(--text-dark);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            border: 2px solid var(--border-color);
+            padding: 30px;
+            position: relative;
+            background-image: linear-gradient(rgba(249, 243, 233, 0.9), rgba(249, 243, 233, 0.9)), 
+                              url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill="none" stroke="%238b4513" stroke-width="0.5" x="0" y="0" width="100" height="100"/></svg>');
+            background-size: cover;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark-mode .container {
+            background-image: linear-gradient(rgba(26, 26, 26, 0.9), rgba(26, 26, 26, 0.9)), 
+                              url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill="none" stroke="%23654321" stroke-width="0.5" x="0" y="0" width="100" height="100"/></svg>');
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            font-size: 2.2em;
+            margin-bottom: 30px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        h1:after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 25%;
+            width: 50%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--primary-color), transparent);
+        }
+
+        .ming-pattern {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 60px;
+            height: 60px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50,0 L60,40 L100,50 L60,60 L50,100 L40,60 L0,50 L40,40 Z" fill="%238b0000"/></svg>');
+            opacity: 0.2;
+        }
+
+        .file-link {
+            display: block;
+            padding: 12px 20px;
+            margin: 15px 0;
+            background-color: rgba(139, 0, 0, 0.1);
+            border-left: 4px solid var(--primary-color);
+            text-decoration: none;
+            color: var(--text-light);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        body.dark-mode .file-link {
+            background-color: rgba(139, 0, 0, 0.2);
+            color: var(--text-dark);
+        }
+
+        .file-link:hover {
+            background-color: rgba(139, 0, 0, 0.2);
+            transform: translateX(5px);
+        }
+
+        .file-link:before {
+            content: "📄 ";
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 30px;
+            background-color: var(--primary-color);
+            border-radius: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 0 5px;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .toggle-knob {
+            width: 24px;
+            height: 24px;
+            background-color: var(--secondary-color);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            transform: translateX(0);
+        }
+
+        body.dark-mode .toggle-knob {
+            transform: translateX(30px);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.9em;
+            color: #777;
+        }
+
+        body.dark-mode .footer {
+            color: #999;
+        }
+    </style>
 </head>
-<p><a href="https://MingDynasty1.github.io/cbpan/000000000000000000.png">洛谷头像</a></p>
-<p>暂时就这些。</p>
+<body>
+    <div class="theme-toggle" id="themeToggle">
+        <div class="toggle-knob"></div>
+    </div>
+
+    <div class="container">
+        <div class="ming-pattern"></div>
+        <h1>这里是MingDynasty的网盘帮助中心。所有文件的链接都在这里。</h1>
+        
+        <a href="https://MingDynasty1.github.io/cbpan/000000000000000000.png" class="file-link">洛谷头像</a>
+        
+        <p>暂时就这些。</p>
+        
+        <div class="footer">
+            <p>© 2013-2025 MingDynasty,Inc. | MingDynasty 的网盘帮助中心</p>
+        </div>
+    </div>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            
+            // 保存用户偏好
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode);
+        });
+        
+        // 检查本地存储中的用户偏好
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+            if (savedDarkMode) {
+                document.body.classList.add('dark-mode');
+            }
+        });
+    </script>
+</body>
+</html>
