@@ -12,15 +12,50 @@
             padding: 0;
         }
         
+        :root {
+            --bg-color: #f8f4e9;
+            --text-color: #5c3317;
+            --grid-bg: #BB8B5E;
+            --cell-bg: #C9AD92;
+            --header-bg: rgba(255, 248, 240, 0.8);
+            --header-border: #8B4513;
+            --score-bg: #8B4513;
+            --score-text: #F8F4E9;
+            --score-title: #F8D568;
+            --intro-bg: rgba(255, 248, 240, 0.8);
+            --intro-border: #8B4513;
+            --btn-bg: #8B0000;
+            --btn-hover: #A52A2A;
+            --pattern-opacity: 0.1;
+        }
+        
+        .dark-mode {
+            --bg-color: #2c2c2c;
+            --text-color: #e8e1d5;
+            --grid-bg: #5a4a3a;
+            --cell-bg: #6d5d4b;
+            --header-bg: rgba(60, 55, 50, 0.9);
+            --header-border: #8B4513;
+            --score-bg: #8B4513;
+            --score-text: #F8F4E9;
+            --score-title: #F8D568;
+            --intro-bg: rgba(60, 55, 50, 0.9);
+            --intro-border: #8B4513;
+            --btn-bg: #8B0000;
+            --btn-hover: #A52A2A;
+            --pattern-opacity: 0.05;
+        }
+        
         body {
             font-family: 'SimSun', '宋体', serif;
-            background: #f8f4e9 url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23c9ad92' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
-            color: #5c3317;
+            background: var(--bg-color) url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23c9ad92' fill-opacity='var(--pattern-opacity)' fill-rule='evenodd'/%3E%3C/svg%3E");
+            color: var(--text-color);
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
             padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
         }
         
         .container {
@@ -34,9 +69,9 @@
             margin-bottom: 30px;
             position: relative;
             padding: 15px;
-            border: 2px solid #8B4513;
+            border: 2px solid var(--header-border);
             border-radius: 5px;
-            background: rgba(255, 248, 240, 0.8);
+            background: var(--header-bg);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
@@ -45,7 +80,7 @@
             position: absolute;
             width: 30px;
             height: 30px;
-            border: 2px solid #8B4513;
+            border: 2px solid var(--header-border);
             top: -2px;
         }
         
@@ -69,6 +104,65 @@
             letter-spacing: 5px;
         }
         
+        .theme-switch-container {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .theme-label {
+            font-size: 0.9rem;
+            margin-right: 8px;
+            color: var(--text-color);
+        }
+        
+        .theme-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .theme-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: #8B4513;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
         .scores-container {
             display: flex;
             justify-content: space-between;
@@ -76,8 +170,8 @@
         }
         
         .score-box {
-            background: #8B4513;
-            color: #F8F4E9;
+            background: var(--score-bg);
+            color: var(--score-text);
             padding: 10px 15px;
             border-radius: 3px;
             font-weight: bold;
@@ -101,7 +195,7 @@
         .score-title {
             font-size: 0.9rem;
             margin-bottom: 5px;
-            color: #F8D568;
+            color: var(--score-title);
         }
         
         .score-value {
@@ -112,16 +206,16 @@
             text-align: center;
             margin-bottom: 20px;
             line-height: 1.6;
-            color: #5c3317;
-            background: rgba(255, 248, 240, 0.8);
+            color: var(--text-color);
+            background: var(--intro-bg);
             padding: 15px;
             border-radius: 5px;
-            border: 1px dashed #8B4513;
+            border: 1px dashed var(--intro-border);
         }
         
         .game-container {
             position: relative;
-            background: #BB8B5E;
+            background: var(--grid-bg);
             padding: 15px;
             border-radius: 6px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
@@ -141,7 +235,7 @@
             width: 100%;
             height: 0;
             padding-bottom: 100%;
-            background: #C9AD92;
+            background: var(--cell-bg);
             border-radius: 3px;
         }
         
@@ -210,7 +304,7 @@
         }
         
         .btn {
-            background: #8B0000;
+            background: var(--btn-bg);
             color: #F8F4E9;
             border: none;
             padding: 12px 24px;
@@ -224,7 +318,7 @@
         }
         
         .btn:hover {
-            background: #A52A2A;
+            background: var(--btn-hover);
             transform: translateY(-2px);
         }
         
@@ -235,7 +329,7 @@
         .footer {
             text-align: center;
             margin-top: 20px;
-            color: #5c3317;
+            color: var(--text-color);
             font-size: 0.9rem;
         }
         
@@ -246,6 +340,14 @@
             
             h1 {
                 font-size: 2.2rem;
+            }
+            
+            .theme-switch-container {
+                position: relative;
+                top: 0;
+                right: 0;
+                justify-content: center;
+                margin-bottom: 10px;
             }
             
             .tile {
@@ -266,6 +368,16 @@
     <div class="container">
         <div class="header">
             <h1>大明2048</h1>
+            
+            <div class="theme-switch-container">
+                <span class="theme-label">亮色</span>
+                <label class="theme-switch">
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="slider"></span>
+                </label>
+                <span class="theme-label">暗色</span>
+            </div>
+            
             <div class="scores-container">
                 <div class="score-box">
                     <div class="score-title">分数</div>
@@ -315,6 +427,7 @@
             const bestScoreDisplay = document.getElementById('best-score');
             const gameMessage = document.querySelector('.game-message');
             const retryButton = document.getElementById('retry-button');
+            const themeToggle = document.getElementById('theme-toggle');
             
             // 从cookie加载最佳分数
             function getBestScore() {
@@ -606,8 +719,36 @@
             // 重试按钮事件
             retryButton.addEventListener('click', initGame);
             
-            // 初始化游戏
+            // 主题切换功能
+            function setupThemeToggle() {
+                // 检查本地存储的主题偏好
+                const savedTheme = localStorage.getItem('2048_theme');
+                if (savedTheme === 'dark') {
+                    document.body.classList.add('dark-mode');
+                    themeToggle.checked = true;
+                }
+                
+                // 切换主题
+                themeToggle.addEventListener('change', function() {
+                    if (this.checked) {
+                        document.body.classList.add('dark-mode');
+                        localStorage.setItem('2048_theme', 'dark');
+                    } else {
+                        document.body.classList.remove('dark-mode');
+                        localStorage.setItem('2048_theme', 'light');
+                    }
+                });
+                
+                // 根据系统偏好设置初始主题
+                if (!savedTheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.body.classList.add('dark-mode');
+                    themeToggle.checked = true;
+                }
+            }
+            
+            // 初始化游戏和主题切换
             initGame();
+            setupThemeToggle();
         });
     </script>
 </body>
