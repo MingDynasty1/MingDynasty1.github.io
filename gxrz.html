@@ -178,6 +178,89 @@
             transform: translateX(26px);
         }
         
+        /* 个人信息卡片样式 */
+        .profile-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            border: 2px solid var(--border-color);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid var(--gold-color);
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        
+        .profile-info {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .profile-name {
+            font-size: 1.8rem;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+            font-family: 'KaiTi', '楷体', serif;
+        }
+        
+        .profile-bio {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .profile-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .stat-item {
+            display: flex;
+            align-items: center;
+            background: rgba(139, 0, 0, 0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .stat-item i {
+            margin-right: 5px;
+            color: var(--accent-color);
+        }
+        
+        .profile-links {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .profile-link {
+            display: inline-block;
+            padding: 8px 15px;
+            background: var(--accent-color);
+            color: #f8f3e6;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+        }
+        
+        .profile-link:hover {
+            background: var(--nav-bg);
+        }
+        
         /* 更新日志特定样式 */
         .changelog-container {
             max-width: 900px;
@@ -322,6 +405,15 @@
             .changelog-content {
                 margin-left: 15px;
             }
+            
+            .profile-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .profile-info {
+                min-width: auto;
+            }
         }
         
         /* 明朝特色装饰 */
@@ -378,8 +470,48 @@
     <div class="container">
         <a href="https://mingdynasty1.github.io/" class="back-btn">← 返回主页</a>
         
+        <!-- 个人信息卡片 -->
+        <div class="profile-card">
+            <img src="https://image.wsq127.top/file/AgACAgUAAyEGAASTTk8KAAP1aNPoRCx-Xz0M26wnvXCJ-FTzj3sAAvLNMRs4MqBWQUjOS1PVfsUBAAMCAAN5AAM2BA.png" alt="MingDynasty头像" class="profile-avatar">
+            <div class="profile-info">
+                <h2 class="profile-name">MingDynasty</h2>
+                <p class="profile-bio">算法竞赛爱好者 | 前端开发者 | 明朝文化传承者</p>
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <i class="fas fa-code"></i>
+                        <span>编程经验: 1年</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-trophy"></i>
+                        <span>竞赛排名: 前40%</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>加入时间: 2024.3.13</span>
+                    </div>
+                </div>
+                <div class="profile-links">
+                    <a href="https://luogu.com.cn/user/MingDynasty" class="profile-link" target="_blank">洛谷</a>
+                    <a href="https://atcoder.jp/users/MingDynasty" class="profile-link" target="_blank">AtCoder</a>
+                    <a href="https://github.com/MingDynasty1" class="profile-link" target="_blank">GitHub</a>
+                </div>
+            </div>
+        </div>
+        
         <div class="changelog-container">
             <h2 class="changelog-year">2025年</h2>
+            
+            <div class="changelog-item">
+                <div class="changelog-date">2025年9月24日 <span class="update-type type-feature">新功能</span></div>
+                <div class="changelog-content">
+                    <h3>个人信息页面更新</h3>
+                    <ul>
+                        <li>在更新日志页面添加个人信息卡片</li>
+                        <li>展示个人简介、技能和社交链接</li>
+                        <li>优化页面布局和响应式设计</li>
+                    </ul>
+                </div>
+            </div>
             
             <div class="changelog-item">
                 <div class="changelog-date">2025年7月18日 <span class="update-type type-feature">新功能</span></div>
