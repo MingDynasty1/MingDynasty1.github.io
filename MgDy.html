@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <title>本人的个人信息</title>
+    <style>
+        :root {
+            /* 亮色主题变量 */
+            --primary-color: #c62828; /* 朱红 */
+            --secondary-color: #f5f5f5; /* 米白 */
+            --text-color: #333333; /* 墨黑 */
+            --accent-color: #d4af37; /* 金色 */
+            --border-color: #8d6e63; /* 棕色 */
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --card-bg: #ffffff;
+        }
+
+        .dark-theme {
+            /* 暗色主题变量 */
+            --primary-color: #b71c1c;
+            --secondary-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --accent-color: #ffd54f;
+            --border-color: #5d4037;
+            --shadow-color: rgba(0, 0, 0, 0.5);
+            --card-bg: #2d2d2d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            font-family: "SimSun", "宋体", serif;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23c62828' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: inherit;
+            box-shadow: 0 2px 5px var(--shadow-color);
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-color);
+            color: var(--text-color);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px var(--shadow-color);
+            position: relative;
+            display: inline-block;
+        }
+
+        h1:before, h1:after {
+            content: "❖";
+            color: var(--accent-color);
+            margin: 0 15px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-color);
+            margin-bottom: 20px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px var(--shadow-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--primary-color);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .card-icon {
+            font-size: 1.8rem;
+            margin-right: 10px;
+            color: var(--accent-color);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .info-item {
+            margin-bottom: 10px;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .rank-badge {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            margin-left: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        tr:hover {
+            background-color: rgba(198, 40, 40, 0.1);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: var(--text-color);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .decoration {
+            position: fixed;
+            width: 150px;
+            height: 150px;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .decoration-1 {
+            top: 10%;
+            left: 5%;
+            background: radial-gradient(circle, var(--primary-color) 0%, transparent 70%);
+        }
+
+        .decoration-2 {
+            bottom: 10%;
+            right: 5%;
+            background: radial-gradient(circle, var(--accent-color) 0%, transparent 70%);
+        }
+    </style>
+</head>
+<body>
+    <div class="decoration decoration-1"></div>
+    <div class="decoration decoration-2"></div>
+    
+    <div class="container">
+        <header>
+            <button class="theme-toggle" id="themeToggle">切换暗色主题</button>
+            <h1>商君宇</h1>
+            <p class="subtitle">选手信息展示</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon">⛩️</span>
+                    <h2 class="card-title">基本信息</h2>
+                </div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">当前年级:</span> 初一
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">OIerDb 排名:</span> 28322
+                        <span class="rank-badge">711.51 分</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">CCF 等级:</span> 5 级
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">省份:</span> 陕西
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">就读学校:</span> 宝鸡高新第三小学（小学），西北工业大学附属中学（初中）
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon">🏆</span>
+                    <h2 class="card-title">获奖信息</h2>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>奖项</th>
+                            <th>分数</th>
+                            <th>排名</th>
+                            <th>年级</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>CSP2024 入门 一等奖</td>
+                            <td>260 / 400</td>
+                            <td>4492 / 40430</td>
+                            <td>六年级</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon">📊</span>
+                    <h2 class="card-title">能力分析</h2>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">程序设计能力:</span> 
+                    <div style="background: #e0e0e0; height: 20px; border-radius: 10px; margin-top: 5px;">
+                        <div style="background: var(--primary-color); height: 100%; width: 80%; border-radius: 10px;"></div>
+                    </div>
+                    <div style="text-align: right; font-size: 0.9rem; margin-top: 5px;">5级 (CCF认证)</div>
+                </div>
+                <div class="info-item" style="margin-top: 15px;">
+                    <span class="info-label">算法掌握程度:</span> 
+                    <div style="background: #e0e0e0; height: 20px; border-radius: 10px; margin-top: 5px;">
+                        <div style="background: var(--accent-color); height: 100%; width: 70%; border-radius: 10px;"></div>
+                    </div>
+                    <div style="text-align: right; font-size: 0.9rem; margin-top: 5px;">良好</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon">🎯</span>
+                    <h2 class="card-title">近期目标</h2>
+                </div>
+                <ul style="padding-left: 20px;">
+                    <li style="margin-bottom: 10px;">提升算法能力，准备参加更高级别的竞赛</li>
+                    <li style="margin-bottom: 10px;">提高OIerDb排名至前20000名</li>
+                    <li style="margin-bottom: 10px;">准备CSP-J/S提高组比赛</li>
+                    <li>学习更复杂的数据结构和算法</li>
+                </ul>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2013-2025 MingDynasty,Inc. | 盒一下我自己 | 明朝风格设计</p>
+        </footer>
+    </div>
+
+    <script>
+        // 主题切换功能
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        // 检查本地存储的主题偏好
+        if (localStorage.getItem('theme') === 'dark') {
+            body.classList.add('dark-theme');
+            themeToggle.textContent = '切换亮色主题';
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-theme');
+            
+            if (body.classList.contains('dark-theme')) {
+                localStorage.setItem('theme', 'dark');
+                themeToggle.textContent = '切换亮色主题';
+            } else {
+                localStorage.setItem('theme', 'light');
+                themeToggle.textContent = '切换暗色主题';
+            }
+        });
+    </script>
+</body>
+</html>
