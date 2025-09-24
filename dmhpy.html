@@ -1,0 +1,130 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+<title>祝贺大明国庆节！  |  番外的MgDy </title>
+<style>
+    body {
+        margin: 0;
+        overflow: hidden;
+        background-color: #000;
+        color: #fff;
+        font-family: Arial, sans-serif;
+    }
+    canvas {
+        display: block;
+    }
+    #mothersDayMessage {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 40px;
+        text-align: center;
+        display: none;
+    }
+    h3{
+                text-align:center;
+                font:bold 100px Helvetica,arial,sans-serif;
+                color:red;
+                text-shadow: 0.1em 0.1em gold;
+    }
+</style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<div id="mothersDayMessage"><h3>祝贺大明国庆节！</h3></div>
+
+<script>
+    // 获取画布
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+
+    // 设置画布尺寸为窗口大小
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // 下雨的长方形的参数
+    var rainWidth = 2; // 长方形的宽度
+    var rainHeight = 10; // 长方形的高度
+    var rainSpeed = 3; // 长方形下落的速度
+
+    // 创建一个随机颜色
+    function randomColor() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    // 长方形的数组，用于存储下雨的长方形
+    var raindrops = [];
+
+    // 创建一个长方形对象
+    function createRaindrop() {
+        var x = Math.random() * canvas.width; // 随机生成x坐标
+        var y = -rainHeight; // 长方形初始位置在画布顶部之外
+        var speed = Math.random() * rainSpeed + 1; // 随机生成下落速度
+        var color = randomColor(); // 随机生成长方形颜色
+        return { x: x, y: y, speed: speed, color: color };
+    }
+
+    // 初始化下雨动画
+    function init() {
+        // 创建一定数量的长方形，并存储在数组中
+        for (var i = 0; i < 100; i++) {
+            raindrops.push(createRaindrop());
+        }
+    }
+
+    // 绘制下雨的长方形
+    function drawRain() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // 清除画布
+
+        // 遍历下雨的长方形数组
+        for (var i = 0; i < raindrops.length; i++) {
+            var raindrop = raindrops[i];
+            ctx.fillStyle = raindrop.color; // 设置长方形颜色
+            ctx.fillRect(raindrop.x, raindrop.y, rainWidth, rainHeight); // 绘制长方形
+
+            // 更新长方形的位置，使其下落
+            raindrop.y += raindrop.speed;
+
+            // 长方形到达画布底部时，重新回到顶部继续下落
+            if (raindrop.y > canvas.height) {
+                raindrop.y = -rainHeight;
+            }
+        }
+    }
+
+    // 显示母亲节快乐的信息
+    function showMothersDayMessage() {
+        var message = document.getElementById('mothersDayMessage');
+        message.style.display = 'block';
+    }
+
+    // 检查是否需要显示母亲节快乐的信息
+    function checkMothersDay() {
+        if (canvas.height >= window.innerHeight) {
+            showMothersDayMessage();
+        }
+    }
+
+    // 动画循环
+    function animate() {
+        drawRain(); // 绘制下雨的长方形
+        checkMothersDay(); // 检查是否需要显示母亲节快乐的信息
+        requestAnimationFrame(animate); // 循环调用动画函数
+    }
+
+    // 初始化并开始动画
+    init();
+    animate();
+</script>
+</body>
+</html>
