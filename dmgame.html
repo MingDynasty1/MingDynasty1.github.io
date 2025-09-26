@@ -4,18 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>明朝皇帝日常模拟器 | MingDynasty</title>
-     <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'SimSun', '宋体', serif;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+        
+        :root {
+            --bg-color: #f5e8c8;
+            --container-bg: rgba(255, 248, 225, 0.9);
+            --text-color: #3a2615;
+            --header-bg: linear-gradient(to right, #8b0000, #b22222, #8b0000);
+            --header-color: #ffd700;
+            --panel-bg: #f9f2e3;
+            --border-color: #8b4513;
+            --accent-color: #d4a76a;
+            --button-bg: #8b0000;
+            --button-color: #ffd700;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+        }
+        
+        .dark-theme {
+            --bg-color: #1a1a1a;
+            --container-bg: rgba(40, 40, 40, 0.95);
+            --text-color: #e0d6c8;
+            --header-bg: linear-gradient(to right, #4a0000, #6a2222, #4a0000);
+            --header-color: #d4b300;
+            --panel-bg: #2a2a2a;
+            --border-color: #6b4c33;
+            --accent-color: #8b7355;
+            --button-bg: #6a0000;
+            --button-color: #d4b300;
+            --shadow-color: rgba(0, 0, 0, 0.6);
         }
         
         body {
-            background: #f5e8c8 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.1"><rect fill="%23d4a76a" width="100" height="100"/><path d="M0 0L100 100M100 0L0 100" stroke="%23b8945f" stroke-width="1"/></svg>');
-            color: #3a2615;
+            background: var(--bg-color) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.1"><rect fill="%23d4a76a" width="100" height="100"/><path d="M0 0L100 100M100 0L0 100" stroke="%23b8945f" stroke-width="1"/></svg>');
+            color: var(--text-color);
             padding: 20px;
             min-height: 100vh;
             display: flex;
@@ -25,21 +54,35 @@
         .container {
             max-width: 1000px;
             margin: 0 auto;
-            background: rgba(255, 248, 225, 0.9);
+            background: var(--container-bg);
             border: 15px solid transparent;
             border-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect x="0" y="0" width="100" height="100" fill="%23d4a76a" stroke="%23b8945f" stroke-width="5"/><path d="M20,20 L80,20 L80,80 L20,80 Z" fill="none" stroke="%23b8945f" stroke-width="2"/></svg>') 30 round;
             padding: 20px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 20px var(--shadow-color);
             flex: 1;
+            position: relative;
+        }
+        
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--button-bg);
+            color: var(--button-color);
+            border: 2px solid var(--button-color);
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
         }
         
         header {
             text-align: center;
             margin-bottom: 20px;
             padding: 15px;
-            background: linear-gradient(to right, #8b0000, #b22222, #8b0000);
-            color: #ffd700;
-            border: 3px double #ffd700;
+            background: var(--header-bg);
+            color: var(--header-color);
+            border: 3px double var(--header-color);
             position: relative;
         }
         
@@ -65,8 +108,8 @@
         .status-panel {
             flex: 1;
             min-width: 300px;
-            background: #f9f2e3;
-            border: 5px double #8b4513;
+            background: var(--panel-bg);
+            border: 5px double var(--border-color);
             padding: 15px;
             box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
         }
@@ -75,7 +118,7 @@
             text-align: center;
             color: #8b0000;
             margin-bottom: 15px;
-            border-bottom: 2px solid #d4a76a;
+            border-bottom: 2px solid var(--accent-color);
             padding-bottom: 5px;
         }
         
@@ -84,7 +127,7 @@
             justify-content: space-between;
             margin-bottom: 10px;
             padding: 5px;
-            background: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 3px;
         }
         
@@ -110,8 +153,8 @@
         .event-panel {
             flex: 2;
             min-width: 300px;
-            background: #f9f2e3;
-            border: 5px double #8b4513;
+            background: var(--panel-bg);
+            border: 5px double var(--border-color);
             padding: 15px;
             box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
         }
@@ -120,14 +163,14 @@
             text-align: center;
             color: #8b0000;
             margin-bottom: 15px;
-            border-bottom: 2px solid #d4a76a;
+            border-bottom: 2px solid var(--accent-color);
             padding-bottom: 5px;
         }
         
         .event-content {
             min-height: 200px;
-            background: rgba(255, 255, 255, 0.7);
-            border: 1px solid #d4a76a;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid var(--accent-color);
             padding: 15px;
             margin-bottom: 15px;
             border-radius: 5px;
@@ -143,9 +186,9 @@
         
         button {
             padding: 10px 20px;
-            background: #8b0000;
-            color: #ffd700;
-            border: 2px solid #ffd700;
+            background: var(--button-bg);
+            color: var(--button-color);
+            border: 2px solid var(--button-color);
             border-radius: 5px;
             cursor: pointer;
             font-size: 1rem;
@@ -165,8 +208,8 @@
         }
         
         .history-panel {
-            background: #f9f2e3;
-            border: 5px double #8b4513;
+            background: var(--panel-bg);
+            border: 5px double var(--border-color);
             padding: 15px;
             margin-top: 20px;
             box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
@@ -176,7 +219,7 @@
             text-align: center;
             color: #8b0000;
             margin-bottom: 15px;
-            border-bottom: 2px solid #d4a76a;
+            border-bottom: 2px solid var(--accent-color);
             padding-bottom: 5px;
         }
         
@@ -184,14 +227,14 @@
             max-height: 150px;
             overflow-y: auto;
             padding: 10px;
-            background: rgba(255, 255, 255, 0.7);
-            border: 1px solid #d4a76a;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid var(--accent-color);
             border-radius: 5px;
         }
         
         .history-item {
             padding: 5px 0;
-            border-bottom: 1px dashed #d4a76a;
+            border-bottom: 1px dashed var(--accent-color);
         }
         
         .history-item:last-child {
@@ -225,9 +268,9 @@
             text-align: center;
             margin-top: 20px;
             padding: 10px;
-            color: #8b4513;
+            color: var(--border-color);
             font-size: 0.9rem;
-            border-top: 1px solid #d4a76a;
+            border-top: 1px solid var(--accent-color);
         }
         
         @media (max-width: 768px) {
@@ -238,11 +281,19 @@
             h1 {
                 font-size: 1.8rem;
             }
+            
+            .theme-toggle {
+                position: static;
+                margin-bottom: 10px;
+                align-self: flex-end;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <button class="theme-toggle" id="theme-toggle">切换暗色模式</button>
+        
         <header>
             <h1>明朝皇帝日常模拟器</h1>
             <div class="subtitle">体验九五之尊的荣耀与挑战</div>
@@ -295,7 +346,7 @@
                 <div class="decision-buttons">
                     <button id="decision-1">上朝理政</button>
                     <button id="decision-2">微服私访</button>
-                    <button id="decision-3">后宫休憩</button>
+                    <button id="decision-3">后宫休息</button>
                     <button id="decision-4">召见重臣</button>
                 </div>
             </div>
@@ -325,7 +376,7 @@
             emperorName: "朱棣"
         };
 
-        // 事件库
+        // 事件库 - 已添加更多事件
         const events = [
             {
                 title: "北方边境急报",
@@ -398,6 +449,161 @@
                     { text: "隔离患者", effects: { health: -5 } },
                     { text: "移居行宫", effects: { health: +10, stability: -5 } }
                 ]
+            },
+            // 新增事件
+            {
+                title: "宦官干政",
+                description: "陛下，司礼监太监王振权势日盛，干预朝政，引起文官集团不满。如何处理此事？",
+                decisions: [
+                    { text: "限制宦官权力", effects: { stability: +5, popularity: +5 } },
+                    { text: "保持现状", effects: { stability: -5 } },
+                    { text: "重用宦官制衡文官", effects: { stability: -10, popularity: -5 } }
+                ]
+            },
+            {
+                title: "农田改革",
+                description: "陛下，户部提出改革农田制度，重新丈量土地，抑制土地兼并。此举可能触动权贵利益。",
+                decisions: [
+                    { text: "推行改革", effects: { wealth: +5, popularity: +10, stability: -5 } },
+                    { text: "暂缓推行", effects: { popularity: -5 } },
+                    { text: "否决提议", effects: { popularity: -10, stability: +5 } }
+                ]
+            },
+            {
+                title: "海上贸易争议",
+                description: "陛下，沿海官员奏报民间私自出海贸易者日增，有违海禁政策。是否应放宽海禁？",
+                decisions: [
+                    { text: "放宽海禁", effects: { wealth: +10, stability: -5 } },
+                    { text: "维持海禁", effects: { wealth: -5, popularity: -5 } },
+                    { text: "严厉打击走私", effects: { stability: +5, popularity: -5 } }
+                ]
+            },
+            {
+                title: "宗室俸禄问题",
+                description: "陛下，宗室人口日益增多，俸禄支出已占国库三成。是否应削减宗室待遇？",
+                decisions: [
+                    { text: "削减宗室俸禄", effects: { wealth: +10, stability: -10 } },
+                    { text: "维持现状", effects: { wealth: -5 } },
+                    { text: "鼓励宗室自谋生计", effects: { wealth: +5, stability: -5 } }
+                ]
+            },
+            {
+                title: "边疆屯田政策",
+                description: "陛下，兵部提议在边疆实行屯田政策，既可巩固边防，又能减少军费开支。",
+                decisions: [
+                    { text: "大力推行", effects: { wealth: +5, stability: +5 } },
+                    { text: "小规模试行", effects: { } },
+                    { text: "暂不推行", effects: { wealth: -5 } }
+                ]
+            },
+            {
+                title: "文字狱案",
+                description: "陛下，有官员举报某文人诗作中有影射朝廷之嫌。是否应追究其罪？",
+                decisions: [
+                    { text: "严惩不贷", effects: { stability: +5, popularity: -10 } },
+                    { text: "从轻发落", effects: { stability: -5, popularity: +5 } },
+                    { text: "查无实据，不予追究", effects: { popularity: +5 } }
+                ]
+            },
+            {
+                title: "皇子封王",
+                description: "陛下，诸位皇子已成年，按祖制应封王就藩。但太子担忧藩王势力过大。",
+                decisions: [
+                    { text: "按制封王", effects: { stability: -5 } },
+                    { text: "削减藩王权力", effects: { stability: +5 } },
+                    { text: "暂缓封王", effects: { stability: -10 } }
+                ]
+            },
+            {
+                title: "天象异常",
+                description: "陛下，钦天监奏报近日天象异常，彗星现于东方。民间议论纷纷，认为是不祥之兆。",
+                decisions: [
+                    { text: "下罪己诏", effects: { popularity: +10, stability: -5 } },
+                    { text: "祭祀天地", effects: { wealth: -5, popularity: +5 } },
+                    { text: "斥为无稽之谈", effects: { popularity: -10 } }
+                ]
+            },
+            {
+                title: "军制改革",
+                description: "陛下，兵部提出改革军制，建立精锐部队，但需要增加军费开支。",
+                decisions: [
+                    { text: "批准改革", effects: { wealth: -10, stability: +10 } },
+                    { text: "部分采纳", effects: { wealth: -5, stability: +5 } },
+                    { text: "维持现状", effects: { stability: -5 } }
+                ]
+            },
+            {
+                title: "太子监国",
+                description: "陛下，您近日龙体欠安，内阁建议让太子监国，处理日常政务。",
+                decisions: [
+                    { text: "准太子监国", effects: { health: +10, stability: -5 } },
+                    { text: "部分政务交太子", effects: { health: +5 } },
+                    { text: "朕尚能理政", effects: { health: -10, stability: +5 } }
+                ]
+            },
+            {
+                title: "对外贸易争端",
+                description: "陛下，葡萄牙商船在沿海与当地商人发生冲突，造成人员伤亡。如何处置？",
+                decisions: [
+                    { text: "严惩外商", effects: { wealth: -5, popularity: +5 } },
+                    { text: "双方各打五十大板", effects: { } },
+                    { text: "安抚外商，维持贸易", effects: { wealth: +5, popularity: -5 } }
+                ]
+            },
+            // 更多新增事件
+            {
+                title: "修建长城",
+                description: "陛下，北方边境屡遭侵扰，工部提议增修长城以巩固边防，但工程浩大，耗资甚巨。",
+                decisions: [
+                    { text: "拨款修建", effects: { wealth: -15, stability: +10 } },
+                    { text: "部分修缮", effects: { wealth: -8, stability: +5 } },
+                    { text: "暂不修建", effects: { stability: -5 } }
+                ]
+            },
+            {
+                title: "编纂典籍",
+                description: "陛下，翰林院提议编纂一部集大成的典籍，以彰显我朝文治之功。",
+                decisions: [
+                    { text: "全力支持", effects: { wealth: -10, popularity: +10 } },
+                    { text: "有限支持", effects: { wealth: -5, popularity: +5 } },
+                    { text: "暂缓进行", effects: { popularity: -5 } }
+                ]
+            },
+            {
+                title: "盐铁专卖",
+                description: "陛下，盐铁专卖收入占国库重要部分，但有官员提议放开部分管制以利民生。",
+                decisions: [
+                    { text: "维持专卖", effects: { wealth: +5, popularity: -5 } },
+                    { text: "部分放开", effects: { wealth: -3, popularity: +5 } },
+                    { text: "全面放开", effects: { wealth: -10, popularity: +10 } }
+                ]
+            },
+            {
+                title: "皇庄扩张",
+                description: "陛下，内务府奏请扩张皇庄范围，以增加皇室收入，但可能侵占民田。",
+                decisions: [
+                    { text: "批准扩张", effects: { wealth: +8, popularity: -10 } },
+                    { text: "有限扩张", effects: { wealth: +3, popularity: -5 } },
+                    { text: "不予批准", effects: { popularity: +5 } }
+                ]
+            },
+            {
+                title: "对外征战",
+                description: "陛下，边疆将领请求对北方部落用兵，以彻底解决边患问题。",
+                decisions: [
+                    { text: "准予出征", effects: { wealth: -15, stability: +5, popularity: +5 } },
+                    { text: "小规模出击", effects: { wealth: -8, stability: +2 } },
+                    { text: "维持现状", effects: { stability: -5 } }
+                ]
+            },
+            {
+                title: "宗教政策",
+                description: "陛下，佛道两教势力日盛，占用大量土地和劳动力，是否应加以限制？",
+                decisions: [
+                    { text: "限制宗教势力", effects: { wealth: +5, popularity: -5 } },
+                    { text: "维持现状", effects: { } },
+                    { text: "扶持宗教", effects: { wealth: -5, popularity: +5 } }
+                ]
             }
         ];
 
@@ -419,6 +625,7 @@
             document.getElementById('decision-3'),
             document.getElementById('decision-4')
         ];
+        const themeToggle = document.getElementById('theme-toggle');
 
         // 更新状态显示
         function updateStatusDisplay() {
@@ -565,6 +772,16 @@
             }
         }
 
+        // 主题切换功能
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            const isDarkMode = document.body.classList.contains('dark-theme');
+            themeToggle.textContent = isDarkMode ? '切换亮色模式' : '切换暗色模式';
+            
+            // 保存主题偏好
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+        }
+
         // 初始化游戏
         function initGame() {
             updateStatusDisplay();
@@ -572,6 +789,16 @@
             // 为决策按钮添加事件监听器
             for (let i = 0; i < decisionButtons.length; i++) {
                 decisionButtons[i].addEventListener('click', () => makeDecision(i));
+            }
+            
+            // 主题切换按钮
+            themeToggle.addEventListener('click', toggleTheme);
+            
+            // 加载保存的主题
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                themeToggle.textContent = '切换亮色模式';
             }
         }
 
