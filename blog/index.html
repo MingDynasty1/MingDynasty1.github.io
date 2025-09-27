@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>blog's index page | MingDynasty 的博客主页</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "SimSun", "宋体", serif;
+            background-color: #f8f4e9; /* 宣纸色调 */
+            color: #3a2615; /* 墨色 */
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.8) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.6) 0%, transparent 20%);
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: rgba(255, 253, 245, 0.95);
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+            border: 1px solid #d4c5a8;
+            position: relative;
+            padding: 50px 40px;
+            margin-top: 30px;
+        }
+        
+        /* 顶部装饰 */
+        .top-decoration {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 30px;
+            background: #8b1a1a; /* 朱红色 */
+            clip-path: polygon(0 0, 100% 0, 90% 100%, 10% 100%);
+            z-index: 2;
+        }
+        
+        .top-decoration::before {
+            content: "";
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            background: #f8f4e9;
+            clip-path: polygon(0 0, 100% 0, 90% 100%, 10% 100%);
+        }
+        
+        /* 页眉样式 */
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #8b1a1a;
+            position: relative;
+        }
+        
+        .site-title {
+            font-size: 3.2rem;
+            color: #8b1a1a;
+            margin-bottom: 15px;
+            letter-spacing: 8px;
+            text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.1);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .site-title::before, .site-title::after {
+            content: "❖";
+            color: #8b1a1a;
+            font-size: 1.8rem;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .site-title::before {
+            left: -50px;
+        }
+        
+        .site-title::after {
+            right: -50px;
+        }
+        
+        .site-subtitle {
+            font-size: 1.3rem;
+            color: #7a5c3c;
+            font-style: italic;
+            letter-spacing: 2px;
+        }
+        
+        /* 印章效果 */
+        .seal {
+            position: absolute;
+            right: 40px;
+            top: -30px;
+            width: 100px;
+            height: 100px;
+            border: 3px solid #8b1a1a;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(5deg);
+            font-family: "楷体", "KaiTi", serif;
+            font-size: 1.5rem;
+            color: #8b1a1a;
+            background: rgba(255, 253, 245, 0.95);
+            z-index: 3;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .seal::before {
+            content: "";
+            position: absolute;
+            width: 90%;
+            height: 90%;
+            border: 1px solid #8b1a1a;
+        }
+        
+        /* 博文列表样式 */
+        .blog-list {
+            margin: 40px 0;
+            min-height: 200px;
+        }
+        
+        .blog-item {
+            margin-bottom: 30px;
+            padding: 25px;
+            border-left: 5px solid #8b1a1a;
+            background: linear-gradient(to right, rgba(139, 26, 26, 0.03), transparent);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .blog-item:hover {
+            transform: translateX(8px);
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .blog-title {
+            font-size: 1.6rem;
+            color: #8b1a1a;
+            margin-bottom: 12px;
+            text-decoration: none;
+            display: block;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        
+        .blog-title:hover {
+            text-decoration: underline;
+            color: #6a0f0f;
+        }
+        
+        .blog-meta {
+            font-size: 1rem;
+            color: #7a5c3c;
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+        
+        .blog-desc {
+            color: #5a4a30;
+            line-height: 1.7;
+        }
+        
+        /* 页脚样式 */
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 25px;
+            border-top: 1px solid #d4c5a8;
+            color: #7a5c3c;
+            font-size: 1rem;
+            letter-spacing: 1px;
+        }
+        
+        /* 装饰元素 */
+        .side-decoration {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 15px;
+            background: #8b1a1a;
+        }
+        
+        .side-decoration.left {
+            left: 0;
+        }
+        
+        .side-decoration.right {
+            right: 0;
+        }
+        
+        .side-decoration::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 80%;
+            background: 
+                repeating-linear-gradient(
+                    to bottom,
+                    #f8f4e9,
+                    #f8f4e9 10px,
+                    transparent 10px,
+                    transparent 20px
+                );
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            .site-title {
+                font-size: 2.2rem;
+                letter-spacing: 5px;
+            }
+            
+            .site-title::before, .site-title::after {
+                display: none;
+            }
+            
+            .seal {
+                position: static;
+                margin: 0 auto 20px;
+                transform: rotate(0);
+            }
+            
+            .blog-item {
+                padding: 20px 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 20px 10px;
+            }
+            
+            .site-title {
+                font-size: 1.8rem;
+            }
+            
+            .site-subtitle {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-decoration"></div>
+    <div class="container">
+        <div class="side-decoration left"></div>
+        <div class="side-decoration right"></div>
+        
+        <header>
+            <h1 class="site-title">MingDynasty的博客</h1>
+            <p class="site-subtitle">灵感源于明朝美学</p>
+        </header>
+        
+        <main>
+            <section class="blog-list">
+                <article class="blog-item">
+                    <a href="https://MingDynasty1.github.io/blog/MingDynasty/B4311.html" class="blog-title">B4311题解</a>
+                    <p class="blog-meta">2025年5月21日 | 算法解析</p>
+                    <p class="blog-desc">对B4311问题的详细解析与解决方案，结合数学思想进行探讨。</p>
+                </article>
+            </section>
+        </main>
+        
+        <footer>
+            <p>© 2013-2025 MingDynasty,Inc. MingDynasty 的博客主页 | 灵感源于明朝美学</p>
+        </footer>
+    </div>
+</body>
+</html>
