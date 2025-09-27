@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>blog's index page | MingDynasty 的博客主页</title>
+    <title>MingDynasty 的博客主页 | 灵感源于明朝美学</title>
     <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
     <style>
         * {
@@ -124,6 +124,12 @@
             background: rgba(255, 253, 245, 0.95);
             z-index: 3;
             box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+            animation: seal-pulse 4s infinite ease-in-out;
+        }
+        
+        @keyframes seal-pulse {
+            0%, 100% { transform: rotate(5deg) scale(1); }
+            50% { transform: rotate(5deg) scale(1.05); }
         }
         
         .seal::before {
@@ -147,6 +153,22 @@
             background: linear-gradient(to right, rgba(139, 26, 26, 0.03), transparent);
             transition: all 0.3s ease;
             position: relative;
+            opacity: 0;
+            animation: fadeInUp 0.6s forwards;
+        }
+        
+        .blog-item:nth-child(1) { animation-delay: 0.2s; }
+        .blog-item:nth-child(2) { animation-delay: 0.4s; }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .blog-item:hover {
@@ -162,6 +184,16 @@
             display: block;
             font-weight: bold;
             letter-spacing: 1px;
+            position: relative;
+            padding-left: 25px;
+        }
+        
+        .blog-title::before {
+            content: "»";
+            position: absolute;
+            left: 0;
+            color: #8b1a1a;
+            transition: all 0.3s ease;
         }
         
         .blog-title:hover {
@@ -169,16 +201,30 @@
             color: #6a0f0f;
         }
         
+        .blog-title:hover::before {
+            transform: translateX(5px);
+        }
+        
         .blog-meta {
             font-size: 1rem;
             color: #7a5c3c;
             font-style: italic;
             margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .blog-meta::before {
+            content: "📅";
+            margin-right: 8px;
         }
         
         .blog-desc {
             color: #5a4a30;
             line-height: 1.7;
+            padding-left: 25px;
+            border-left: 2px dotted #d4c5a8;
+            margin-left: 5px;
         }
         
         /* 页脚样式 */
@@ -190,6 +236,14 @@
             color: #7a5c3c;
             font-size: 1rem;
             letter-spacing: 1px;
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+            animation-delay: 0.8s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         
         /* 装饰元素 */
@@ -251,6 +305,14 @@
             .blog-item {
                 padding: 20px 15px;
             }
+            
+            .blog-title {
+                padding-left: 20px;
+            }
+            
+            .blog-desc {
+                padding-left: 20px;
+            }
         }
         
         @media (max-width: 480px) {
@@ -265,6 +327,10 @@
             .site-subtitle {
                 font-size: 1.1rem;
             }
+            
+            .blog-title {
+                font-size: 1.4rem;
+            }
         }
     </style>
 </head>
@@ -277,12 +343,19 @@
         <header>
             <h1 class="site-title">MingDynasty的博客</h1>
             <p class="site-subtitle">灵感源于明朝美学</p>
+            <div class="seal">明</div>
         </header>
         
         <main>
             <section class="blog-list">
                 <article class="blog-item">
-                    <a href="https://MingDynasty1.github.io/blog/MingDynasty/B4311.html" class="blog-title">B4311题解</a>
+                    <a href="https://MingDynasty1.github.io/blog/MingDynasty/P10702.html" class="blog-title">P10702 题解</a>
+                    <p class="blog-meta">2025年4月12日 | 算法解析</p>
+                    <p class="blog-desc">对P10702问题的题解</p>
+                </article>
+                
+                <article class="blog-item">
+                    <a href="https://MingDynasty1.github.io/blog/MingDynasty/B4311.html" class="blog-title">B4311 题解</a>
                     <p class="blog-meta">2025年5月21日 | 算法解析</p>
                     <p class="blog-desc">对B4311问题的详细解析与解决方案，结合数学思想进行探讨。</p>
                 </article>
@@ -290,7 +363,7 @@
         </main>
         
         <footer>
-            <p>© 2013-2025 MingDynasty,Inc. MingDynasty 的博客主页 | 灵感源于明朝美学</p>
+            <p>© 2013-2025 MingDynasty,Inc. MingDynasty's blog | 灵感源于明朝美学</p>
         </footer>
     </div>
 </body>
