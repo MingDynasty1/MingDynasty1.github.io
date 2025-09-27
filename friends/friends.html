@@ -1,1 +1,362 @@
-
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <title>MingDynasty 友链 - 明朝风格设计</title>
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=ZCOOL+QingKe+HuangYou&display=swap" rel="stylesheet">
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "ZCOOL QingKe HuangYou", "宋体", serif;
+            background-color: #f8f3e6;
+            color: #333;
+            line-height: 1.6;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.05"><path d="M20,20 Q40,10 60,20 T100,20" stroke="%23a52a2a" fill="none" stroke-width="1"/></svg>');
+            padding: 20px;
+        }
+        
+        /* 明朝风格容器 */
+        .ming-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 8px double #a52a2a;
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        /* 装饰边框 */
+        .border-decoration {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .border-decoration::before, .border-decoration::after {
+            content: "";
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border: 2px solid #a52a2a;
+        }
+        
+        .border-decoration::before {
+            top: 10px;
+            left: 10px;
+            border-right: none;
+            border-bottom: none;
+        }
+        
+        .border-decoration::after {
+            bottom: 10px;
+            right: 10px;
+            border-left: none;
+            border-top: none;
+        }
+        
+        .border-decoration .corner-tr, .border-decoration .corner-bl {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border: 2px solid #a52a2a;
+        }
+        
+        .border-decoration .corner-tr {
+            top: 10px;
+            right: 10px;
+            border-left: none;
+            border-bottom: none;
+        }
+        
+        .border-decoration .corner-bl {
+            bottom: 10px;
+            left: 10px;
+            border-right: none;
+            border-top: none;
+        }
+        
+        /* 头部样式 */
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            border-bottom: 3px double #a52a2a;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-family: "Ma Shan Zheng", cursive;
+            font-size: 3.5rem;
+            color: #a52a2a;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            letter-spacing: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            color: #8b4513;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* 装饰元素 */
+        .decoration {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            opacity: 0.3;
+        }
+        
+        .decoration.top-left {
+            top: 10px;
+            left: 10px;
+            transform: rotate(0deg);
+        }
+        
+        .decoration.top-right {
+            top: 10px;
+            right: 10px;
+            transform: rotate(90deg);
+        }
+        
+        .decoration.bottom-left {
+            bottom: 10px;
+            left: 10px;
+            transform: rotate(270deg);
+        }
+        
+        .decoration.bottom-right {
+            bottom: 10px;
+            right: 10px;
+            transform: rotate(180deg);
+        }
+        
+        /* 友链网格 */
+        .friend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* 友链卡片 */
+        .friend-card {
+            background: linear-gradient(to bottom, #fffaf0, #f8f3e6);
+            border: 2px solid #a52a2a;
+            border-radius: 5px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .friend-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            border-color: #8b0000;
+        }
+        
+        .friend-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, #a52a2a, #d2691e, #a52a2a);
+        }
+        
+        .friend-card h3 {
+            color: #a52a2a;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+            border-bottom: 1px solid #d2691e;
+            padding-bottom: 5px;
+            font-family: "Ma Shan Zheng", cursive;
+        }
+        
+        .friend-card p {
+            color: #555;
+            margin-bottom: 15px;
+        }
+        
+        .friend-link {
+            display: inline-block;
+            background-color: #a52a2a;
+            color: white;
+            padding: 8px 15px;
+            text-decoration: none;
+            border-radius: 3px;
+            transition: background-color 0.3s;
+            font-family: "Ma Shan Zheng", cursive;
+        }
+        
+        .friend-link:hover {
+            background-color: #8b0000;
+            transform: scale(1.05);
+        }
+        
+        /* 底部样式 */
+        .footer {
+            text-align: center;
+            padding: 30px 0;
+            border-top: 3px double #a52a2a;
+            margin-top: 50px;
+            color: #8b4513;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .footer p {
+            margin-bottom: 10px;
+        }
+        
+        .footer .copyright {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .friend-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .ming-container {
+                padding: 10px;
+            }
+        }
+        
+        /* 印章效果 */
+        .seal {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            opacity: 0.1;
+            z-index: 1;
+        }
+        
+        .seal.left {
+            bottom: 50px;
+            left: 50px;
+        }
+        
+        .seal.right {
+            top: 50px;
+            right: 50px;
+        }
+        
+        /* 云纹背景 */
+        .cloud-pattern {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" opacity="0.03"><path d="M50,50 C70,30 90,50 110,30 S150,50 170,30" stroke="%23a52a2a" fill="none" stroke-width="2"/></svg>');
+            z-index: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="ming-container">
+        <!-- 装饰边框 -->
+        <div class="border-decoration">
+            <div class="corner-tr"></div>
+            <div class="corner-bl"></div>
+        </div>
+        
+        <!-- 云纹背景 -->
+        <div class="cloud-pattern"></div>
+        
+        <!-- 印章 -->
+        <svg class="seal left" viewBox="0 0 100 100">
+            <rect x="10" y="10" width="80" height="80" fill="none" stroke="#a52a2a" stroke-width="2"/>
+            <text x="50" y="50" text-anchor="middle" dominant-baseline="middle" font-family="Ma Shan Zheng" font-size="12" fill="#a52a2a" transform="rotate(45 50 50)">大明友链</text>
+        </svg>
+        
+        <svg class="seal right" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="40" fill="none" stroke="#a52a2a" stroke-width="2"/>
+            <text x="50" y="50" text-anchor="middle" dominant-baseline="middle" font-family="Ma Shan Zheng" font-size="10" fill="#a52a2a">MingDynasty</text>
+        </svg>
+        
+        <!-- 头部 -->
+        <header class="header">
+            <!-- 装饰元素 -->
+            <svg class="decoration top-left" viewBox="0 0 100 100">
+                <path d="M20,20 Q40,10 60,20 T100,20" stroke="#a52a2a" fill="none" stroke-width="2"/>
+                <path d="M20,40 Q40,30 60,40 T100,40" stroke="#a52a2a" fill="none" stroke-width="2"/>
+                <path d="M20,60 Q40,50 60,60 T100,60" stroke="#a52a2a" fill="none" stroke-width="2"/>
+                <path d="M20,80 Q40,70 60,80 T100,80" stroke="#a52a2a" fill="none" stroke-width="2"/>
+            </svg>
+            
+            <svg class="decoration top-right" viewBox="0 0 100 100">
+                <path d="M20,20 Q40,10 60,20 T100,20" stroke="#a52a2a" fill="none" stroke-width="2"/>
+                <path d="M20,40 Q40,30 60,40 T100,40" stroke="#a52a2a" fill="none" stroke-width="2"/>
+                <path d="M20,60 Q40,50 60,60 T100,60" stroke="#a52a2a" fill="none" stroke-width="2"/>
+                <path d="M20,80 Q40,70 60,80 T100,80" stroke="#a52a2a" fill="none" stroke-width="2"/>
+            </svg>
+            
+            <h1>MingDynasty 友链</h1>
+            <p>欢迎来到明朝风格的友链页面，这里汇集了洛谷上的朋友们。如果您也想加入，欢迎私信 MingDynasty。</p>
+            
+            <svg class="decoration bottom-left" viewBox="0 0 100 100">
+                <path d="M20,20 Q40,10 60,20 T100,20" stroke="#a52a2a" fill="none" stroke-width="2"/>
+                <path d="M20,40 Q40,30 60,40 T100,40" stroke="#a52a2a" fill="none" stroke-width="2"/>
+                <path d="M20,60 Q40,50 60,60 T100,60" stroke="#a52a2a" fill="none" stroke-width="2"/>
+                <path d="M20,80 Q40,70 60,80 T100,80" stroke="#a52a2a" fill="none" stroke-width="2"/>
+            </svg>
+            
+            <svg class="decoration bottom-right" viewBox="0 0 100 100">
+                <path d="M20,20 Q40,10 60,20 T100,20" stroke="#a52a2a" fill="none" stroke-width="2"/>
+                <path d="M20,40 Q40,30 60,40 T100,40" stroke="#a52a2a" fill="none" stroke-width="2"/>
+                <path d="M20,60 Q40,50 60,60 T100,60" stroke="#a52a2a" fill="none" stroke-width="2"/>
+                <path d="M20,80 Q40,70 60,80 T100,80" stroke="#a52a2a" fill="none" stroke-width="2"/>
+            </svg>
+        </header>
+        
+        <!-- 友链内容 -->
+        <main>
+            <div class="friend-grid">
+                <!-- libu2333 友链卡片 -->
+                <div class="friend-card">
+                    <h3>libu2333</h3>
+                    <p>洛谷用户，用户ID: 1475943。欢迎访问他的洛谷主页。</p>
+                    <a href="https://www.luogu.com.cn/user/1475943" class="friend-link" target="_blank">访问主页</a>
+                </div>
+                
+                <!-- 可以在这里添加更多友链 -->
+            </div>
+        </main>
+        
+        <!-- 底部 -->
+        <footer class="footer">
+            <p>MingDynasty 友链页面 - 明朝风格设计</p>
+            <p>如果您也想加入，欢迎私信 MingDynasty</p>
+            <p class="copyright">© 2013-2025 MingDynasty,Inc.  |  MingDynasty 的友情链接</p>
+        </footer>
+    </div>
+</body>
+</html>
