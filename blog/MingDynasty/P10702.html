@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
         <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
     <title>P10702 题解 | 明朝美学风格</title> <style> * { margin: 0; padding: 0; box-sizing: border-box; } body { font-family: "SimSun", "宋体", serif; background: #f5f1e6 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.05"><rect fill="%23d4a76a" width="100" height="100"/></svg>'); color: #3a2615; line-height: 1.6; padding: 20px; } .container { max-width: 900px; margin: 0 auto; background: #fff9e6; border: 2px solid #d4a76a; border-radius: 5px; padding: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); } h1 { text-align: center; color: #8c2c10; font-size: 2.2em; margin-bottom: 20px; border-bottom: 2px solid #d4a76a; padding-bottom: 10px; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); } h2 { color: #8c2c10; font-size: 1.6em; margin: 25px 0 15px; border-left: 4px solid #d4a76a; padding-left: 10px; } p { margin-bottom: 15px; text-indent: 2em; text-align: justify; } a { color: #8c2c10; text-decoration: none; border-bottom: 1px dotted #d4a76a; } a:hover { color: #d4a76a; } .code-block { background: #2d2d2d; color: #f8f8f2; padding: 20px; border-radius: 5px; margin: 20px 0; overflow-x: auto; font-family: "Courier New", monospace; border-left: 4px solid #d4a76a; } .copyright { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #d4a76a; color: #7a6a52; font-size: 0.9em; } .important { background: #fff0d0; border: 1px solid #d4a76a; padding: 15px; border-radius: 5px; margin: 15px 0; } .keyword { color: #8c2c10; font-weight: bold; } </style> </head> <body> <div class="container"> <h1>P10702 题解思路分析</h1>
-text
+
     <p>题目链接：<a href="https://www.luogu.com.cn/problem/P10702" target="_blank">洛谷 P10702</a></p>
     
     <h2>解题思路</h2>
@@ -22,26 +22,29 @@ text
 using namespace std;
 #define int long long
 inline int ans(int x){
-for(int i=2;i<=x;i++){
-if(x%i!=0) return i;
-}
-return -1;
+  for(int i=2;i<=x;i++){
+    if(x%i!=0) return i;
+  }
+  return -1;
 }
 signed main(){
-cin.tie(0)->sync_with_stdio(0);
-int k;
-cin>>k;
-while(k--){
-int x;
-cin>>x;
-cout<<ans(x)<<'\n';
+  cin.tie(0)->sync_with_stdio(0);
+  int k;
+  cin>>k;
+  while(k--){
+    int x;
+    cin>>x;
+    cout<<ans(x)<<'\n';
+  }
+  return 0;
 }
-return 0;
-}</code></pre>
+</code>
+</pre>
 </div>
 
     <div class="copyright">
         © 2013-2025 MingDynasty,Inc. P10702 题解 | 灵感源于明朝美学
     </div>
 </div>
-</body> </html>
+</body>
+</html>
