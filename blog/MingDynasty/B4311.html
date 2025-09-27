@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <title>B4311 题解（树形DP） | MingDynasty</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "SimSun", "宋体", serif;
+        }
+        
+        body {
+            background: linear-gradient(to bottom, #f9f2e8, #e8dfd1);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            border-left: 8px solid #8B0000;
+            border-right: 8px solid #8B0000;
+            position: relative;
+        }
+        
+        body::before, body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            width: 50px;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="50" height="100" viewBox="0 0 50 100"><path d="M25,10 C30,15 35,20 35,30 C35,40 30,45 25,50 C20,45 15,40 15,30 C15,20 20,15 25,10 Z" fill="%238B0000" opacity="0.1"/></svg>');
+            z-index: -1;
+        }
+        
+        body::before {
+            left: 0;
+        }
+        
+        body::after {
+            right: 0;
+            transform: scaleX(-1);
+        }
+        
+        .header {
+            text-align: center;
+            padding: 30px 0;
+            border-bottom: 3px double #8B0000;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .header h1 {
+            color: #8B0000;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            letter-spacing: 5px;
+        }
+        
+        .header h2 {
+            color: #B8860B;
+            font-size: 1.5rem;
+            margin-top: 10px;
+            font-weight: normal;
+        }
+        
+        .decoration {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50,10 C70,10 90,30 90,50 C90,70 70,90 50,90 C30,90 10,70 10,50 C10,30 30,10 50,10 Z" fill="none" stroke="%238B0000" stroke-width="2"/><path d="M30,30 L70,30 L70,70 L30,70 Z" fill="none" stroke="%23B8860B" stroke-width="2"/><circle cx="50" cy="50" r="15" fill="%238B0000" opacity="0.3"/></svg>');
+            opacity: 0.7;
+        }
+        
+        .decoration.top-left {
+            top: 10px;
+            left: 10px;
+        }
+        
+        .decoration.top-right {
+            top: 10px;
+            right: 10px;
+            transform: scaleX(-1);
+        }
+        
+        .decoration.bottom-left {
+            bottom: 10px;
+            left: 10px;
+            transform: scaleY(-1);
+        }
+        
+        .decoration.bottom-right {
+            bottom: 10px;
+            right: 10px;
+            transform: scale(-1, -1);
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .problem-section, .solution-section {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 25px;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid #d4b78c;
+        }
+        
+        .section-title {
+            color: #8B0000;
+            border-left: 5px solid #B8860B;
+            padding-left: 15px;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: monospace;
+            border: 2px solid #8B0000;
+        }
+        
+        .tree-visualization {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+            text-align: center;
+            border: 1px solid #d4b78c;
+        }
+        
+        .tree-node {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            border-radius: 50%;
+            background: #8B0000;
+            color: white;
+            margin: 10px;
+            position: relative;
+        }
+        
+        .tree-node.monitored {
+            background: #B8860B;
+        }
+        
+        .tree-connector {
+            position: absolute;
+            background: #8B0000;
+            height: 2px;
+            transform-origin: left center;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            border-top: 3px double #8B0000;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .copyright {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #8B0000;
+            color: #f9f2e8;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="decoration top-left"></div>
+    <div class="decoration top-right"></div>
+    <div class="decoration bottom-left"></div>
+    <div class="decoration bottom-right"></div>
+    
+    <div class="header">
+        <h1>树形监控系统</h1>
+        <h2>树形DP解决方案</h2>
+    </div>
+    
+    <div class="content">
+        <div class="problem-section">
+            <h3 class="section-title">题目描述</h3>
+            <p>在一个树形结构的区域中安装监控设备，每个节点安装监控都有一定的成本。要求如果某个节点不安装监控，则其所有相邻节点必须安装监控。求覆盖整个树形区域的最小成本。</p>
+            
+            <h3 class="section-title">输入格式</h3>
+            <p>第一行包含一个整数 n，表示树中节点的数量。</p>
+            <p>第二行包含 n 个整数，表示每个节点安装监控的成本。</p>
+            <p>接下来 n-1 行，每行包含两个整数 u 和 v，表示树中的一条边。</p>
+            
+            <h3 class="section-title">输出格式</h3>
+            <p>输出一个整数，表示最小总成本。</p>
+        </div>
+        
+        <div class="solution-section">
+            <h3 class="section-title">解决方案</h3>
+            <p>使用树形动态规划（DP）解决此问题：</p>
+            <ul>
+                <li>设 dp[i][0] 表示不在节点 i 安装监控的最小成本</li>
+                <li>设 dp[i][1] 表示在节点 i 安装监控的最小成本</li>
+                <li>如果节点 i 不安装监控，则其所有子节点必须安装监控</li>
+                <li>如果节点 i 安装监控，则其子节点可以安装也可以不安装</li>
+            </ul>
+            
+            <h3 class="section-title">核心代码</h3>
+            <div class="code-block">
+<pre><code>#include&lt;bits/stdc++.h&gt;
+using namespace std;
+int n,a[323232],dp[323232][2];
+vector&lt;int&gt; e[323232];
+inline void dfs(int x,int fa){
+    for(int i=0;i&lt;(int)e[x].size();i++){
+        if(e[x][i]==fa) continue;
+        dfs(e[x][i],x);
+        dp[x][0]+=dp[e[x][i]][1];
+        dp[x][1]+=min(dp[e[x][i]][0],dp[e[x][i]][1]);
+    }
+}
+int main(){
+    cin.tie(0)-&gt;sync_with_stdio(0);
+    cin&gt;&gt;n;
+    for(int i=1;i&lt;=n;i++) cin&gt;&gt;dp[i][1];
+    for(int i=1,u,v;i&lt;n;i++){
+        cin&gt;&gt;u&gt;&gt;v;
+        e[u].push_back(v);
+        e[v].push_back(u);
+    }
+    dfs(1,-1);
+    cout&lt;&lt;min(dp[1][1],dp[1][0]);
+    return 0;
+}</code></pre>
+            </div>
+            
+            <h3 class="section-title">树形结构示例</h3>
+            <div class="tree-visualization" id="treeVisualization">
+                <!-- 树形结构将通过JavaScript动态生成 -->
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <div class="copyright">© 2013-2025 MingDynasty,Inc. B4311题解 | 灵感源于明朝美学</div>
+    </div>
+
+    <script>
+        // 树形结构可视化
+        function createTreeVisualization() {
+            const container = document.getElementById('treeVisualization');
+            
+            // 创建根节点
+            const root = document.createElement('div');
+            root.className = 'tree-node';
+            root.textContent = '1';
+            root.style.margin = '20px auto';
+            container.appendChild(root);
+            
+            // 创建第二层节点
+            const level2 = document.createElement('div');
+            level2.style.display = 'flex';
+            level2.style.justifyContent = 'center';
+            level2.style.marginTop = '30px';
+            
+            const node2 = document.createElement('div');
+            node2.className = 'tree-node';
+            node2.textContent = '2';
+            
+            const node3 = document.createElement('div');
+            node3.className = 'tree-node monitored';
+            node3.textContent = '3';
+            
+            const node4 = document.createElement('div');
+            node4.className = 'tree-node';
+            node4.textContent = '4';
+            
+            level2.appendChild(node2);
+            level2.appendChild(node3);
+            level2.appendChild(node4);
+            container.appendChild(level2);
+            
+            // 创建连接线
+            createConnector(root, node2, 90, 40);
+            createConnector(root, node3, 0, 40);
+            createConnector(root, node4, -90, 40);
+            
+            // 创建第三层节点
+            const level3 = document.createElement('div');
+            level3.style.display = 'flex';
+            level3.style.justifyContent = 'space-around';
+            level3.style.marginTop = '30px';
+            level3.style.width = '80%';
+            level3.style.marginLeft = '10%';
+            
+            const node5 = document.createElement('div');
+            node5.className = 'tree-node monitored';
+            node5.textContent = '5';
+            
+            const node6 = document.createElement('div');
+            node6.className = 'tree-node';
+            node6.textContent = '6';
+            
+            const node7 = document.createElement('div');
+            node7.className = 'tree-node monitored';
+            node7.textContent = '7';
+            
+            const node8 = document.createElement('div');
+            node8.className = 'tree-node';
+            node8.textContent = '8';
+            
+            level3.appendChild(node5);
+            level3.appendChild(node6);
+            level3.appendChild(node7);
+            level3.appendChild(node8);
+            container.appendChild(level3);
+            
+            // 创建连接线
+            createConnector(node2, node5, 90, 40);
+            createConnector(node2, node6, -90, 40);
+            createConnector(node4, node7, 90, 40);
+            createConnector(node4, node8, -90, 40);
+            
+            // 添加图例
+            const legend = document.createElement('div');
+            legend.style.marginTop = '30px';
+            legend.style.display = 'flex';
+            legend.style.justifyContent = 'center';
+            legend.style.gap = '20px';
+            
+            const legend1 = document.createElement('div');
+            legend1.style.display = 'flex';
+            legend1.style.alignItems = 'center';
+            legend1.innerHTML = '<div class="tree-node" style="margin-right:10px;"></div> 未安装监控';
+            
+            const legend2 = document.createElement('div');
+            legend2.style.display = 'flex';
+            legend2.style.alignItems = 'center';
+            legend2.innerHTML = '<div class="tree-node monitored" style="margin-right:10px;"></div> 已安装监控';
+            
+            legend.appendChild(legend1);
+            legend.appendChild(legend2);
+            container.appendChild(legend);
+        }
+        
+        function createConnector(from, to, angle, length) {
+            const connector = document.createElement('div');
+            connector.className = 'tree-connector';
+            
+            const fromRect = from.getBoundingClientRect();
+            const toRect = to.getBoundingClientRect();
+            const containerRect = document.getElementById('treeVisualization').getBoundingClientRect();
+            
+            const fromX = fromRect.left + fromRect.width/2 - containerRect.left;
+            const fromY = fromRect.top + fromRect.height - containerRect.top;
+            const toX = toRect.left + toRect.width/2 - containerRect.left;
+            const toY = toRect.top - containerRect.top;
+            
+            const deltaX = toX - fromX;
+            const deltaY = toY - fromY;
+            const distance = Math.sqrt(deltaX*deltaX + deltaY*deltaY);
+            
+            connector.style.width = distance + 'px';
+            connector.style.left = fromX + 'px';
+            connector.style.top = fromY + 'px';
+            
+            const rotation = Math.atan2(deltaY, deltaX) * 180 / Math.PI;
+            connector.style.transform = `rotate(${rotation}deg)`;
+            
+            document.getElementById('treeVisualization').appendChild(connector);
+        }
+        
+        // 页面加载完成后创建树形可视化
+        window.addEventListener('load', createTreeVisualization);
+    </script>
+</body>
+</html>
