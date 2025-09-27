@@ -23,6 +23,7 @@
             border-left: 8px solid #8B0000;
             border-right: 8px solid #8B0000;
             position: relative;
+            min-height: 100vh;
         }
         
         body::before, body::after {
@@ -64,6 +65,24 @@
             font-size: 1.5rem;
             margin-top: 10px;
             font-weight: normal;
+        }
+        
+        .problem-link {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #8B0000;
+            color: #f9f2e8;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+        
+        .problem-link:hover {
+            background: #B8860B;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
         
         .decoration {
@@ -120,6 +139,27 @@
             padding-left: 15px;
             margin-bottom: 20px;
             font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title::before {
+            content: "◆";
+            margin-right: 10px;
+            color: #B8860B;
+        }
+        
+        .dp-explanation {
+            background: #f9f2e8;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #B8860B;
+        }
+        
+        .dp-explanation h4 {
+            color: #8B0000;
+            margin-bottom: 10px;
         }
         
         .code-block {
@@ -129,8 +169,54 @@
             border-radius: 5px;
             overflow-x: auto;
             margin: 20px 0;
-            font-family: monospace;
+            font-family: 'Courier New', monospace;
             border: 2px solid #8B0000;
+            position: relative;
+        }
+        
+        .code-header {
+            background: #8B0000;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 5px 5px 0 0;
+            margin: -20px -20px 15px -20px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .code-lang {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .code-block pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+        
+        .code-keyword {
+            color: #f92672;
+        }
+        
+        .code-type {
+            color: #66d9ef;
+        }
+        
+        .code-function {
+            color: #a6e22e;
+        }
+        
+        .code-variable {
+            color: #fd971f;
+        }
+        
+        .code-number {
+            color: #ae81ff;
+        }
+        
+        .code-comment {
+            color: #75715e;
         }
         
         .tree-visualization {
@@ -140,6 +226,9 @@
             margin: 20px 0;
             text-align: center;
             border: 1px solid #d4b78c;
+            position: relative;
+            min-height: 400px;
+            overflow: auto;
         }
         
         .tree-node {
@@ -152,6 +241,15 @@
             color: white;
             margin: 10px;
             position: relative;
+            z-index: 2;
+            font-weight: bold;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+        }
+        
+        .tree-node:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
         }
         
         .tree-node.monitored {
@@ -163,6 +261,21 @@
             background: #8B0000;
             height: 2px;
             transform-origin: left center;
+            z-index: 1;
+        }
+        
+        .tree-level {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        
+        .tree-level:first-child {
+            margin-top: 0;
+        }
+        
+        .tree-level:last-child {
+            margin-bottom: 0;
         }
         
         .footer {
@@ -192,6 +305,15 @@
             .header h1 {
                 font-size: 2rem;
             }
+            
+            .tree-level {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .tree-node {
+                margin: 5px;
+            }
         }
     </style>
 </head>
@@ -203,7 +325,8 @@
     
     <div class="header">
         <h1>树形监控系统</h1>
-        <h2>树形DP解决方案</h2>
+        <h2>B4311 树形DP解决方案</h2>
+        <a href="https://www.luogu.com.cn/problem/B4311" class="problem-link" target="_blank">查看原题 - 洛谷 B4311</a>
     </div>
     
     <div class="content">
@@ -218,46 +341,88 @@
             
             <h3 class="section-title">输出格式</h3>
             <p>输出一个整数，表示最小总成本。</p>
+            
+            <h3 class="section-title">样例输入</h3>
+            <div class="code-block">
+                <div class="code-header">输入样例 <span class="code-lang">Input</span></div>
+                <pre>5
+1 2 3 4 5
+1 2
+1 3
+2 4
+2 5</pre>
+            </div>
+            
+            <h3 class="section-title">样例输出</h3>
+            <div class="code-block">
+                <div class="code-header">输出样例 <span class="code-lang">Output</span></div>
+                <pre>4</pre>
+            </div>
         </div>
         
         <div class="solution-section">
             <h3 class="section-title">解决方案</h3>
             <p>使用树形动态规划（DP）解决此问题：</p>
-            <ul>
-                <li>设 dp[i][0] 表示不在节点 i 安装监控的最小成本</li>
-                <li>设 dp[i][1] 表示在节点 i 安装监控的最小成本</li>
-                <li>如果节点 i 不安装监控，则其所有子节点必须安装监控</li>
-                <li>如果节点 i 安装监控，则其子节点可以安装也可以不安装</li>
-            </ul>
+            
+            <div class="dp-explanation">
+                <h4>状态定义</h4>
+                <ul>
+                    <li>设 dp[i][0] 表示不在节点 i 安装监控的最小成本</li>
+                    <li>设 dp[i][1] 表示在节点 i 安装监控的最小成本</li>
+                </ul>
+            </div>
+            
+            <div class="dp-explanation">
+                <h4>状态转移</h4>
+                <ul>
+                    <li>如果节点 i 不安装监控，则其所有子节点必须安装监控</li>
+                    <li>如果节点 i 安装监控，则其子节点可以安装也可以不安装</li>
+                </ul>
+            </div>
+            
+            <div class="dp-explanation">
+                <h4>转移方程</h4>
+                <ul>
+                    <li>dp[u][0] = Σ dp[v][1] (v是u的子节点)</li>
+                    <li>dp[u][1] = cost[u] + Σ min(dp[v][0], dp[v][1]) (v是u的子节点)</li>
+                </ul>
+            </div>
             
             <h3 class="section-title">核心代码</h3>
             <div class="code-block">
-<pre><code>#include&lt;bits/stdc++.h&gt;
-using namespace std;
-int n,a[323232],dp[323232][2];
-vector&lt;int&gt; e[323232];
-inline void dfs(int x,int fa){
-    for(int i=0;i&lt;(int)e[x].size();i++){
-        if(e[x][i]==fa) continue;
-        dfs(e[x][i],x);
-        dp[x][0]+=dp[e[x][i]][1];
-        dp[x][1]+=min(dp[e[x][i]][0],dp[e[x][i]][1]);
+                <div class="code-header">C++ 代码 <span class="code-lang">C++</span></div>
+                <pre><code><span class="code-keyword">#include</span><span class="code-type">&lt;bits/stdc++.h&gt;</span>
+<span class="code-keyword">using namespace</span> std;
+<span class="code-type">int</span> n, a[<span class="code-number">323232</span>], dp[<span class="code-number">323232</span>][<span class="code-number">2</span>];
+vector&lt;<span class="code-type">int</span>&gt; e[<span class="code-number">323232</span>];
+
+<span class="code-keyword">inline</span> <span class="code-type">void</span> <span class="code-function">dfs</span>(<span class="code-type">int</span> x, <span class="code-type">int</span> fa) {
+    <span class="code-keyword">for</span>(<span class="code-type">int</span> i = <span class="code-number">0</span>; i &lt; (<span class="code-type">int</span>)e[x].size(); i++) {
+        <span class="code-keyword">if</span>(e[x][i] == fa) <span class="code-keyword">continue</span>;
+        <span class="code-function">dfs</span>(e[x][i], x);
+        dp[x][<span class="code-number">0</span>] += dp[e[x][i]][<span class="code-number">1</span>];
+        dp[x][<span class="code-number">1</span>] += <span class="code-function">min</span>(dp[e[x][i]][<span class="code-number">0</span>], dp[e[x][i]][<span class="code-number">1</span>]);
     }
 }
-int main(){
-    cin.tie(0)-&gt;sync_with_stdio(0);
-    cin&gt;&gt;n;
-    for(int i=1;i&lt;=n;i++) cin&gt;&gt;dp[i][1];
-    for(int i=1,u,v;i&lt;n;i++){
-        cin&gt;&gt;u&gt;&gt;v;
-        e[u].push_back(v);
-        e[v].push_back(u);
+
+<span class="code-type">int</span> <span class="code-function">main</span>() {
+    cin.<span class="code-function">tie</span>(<span class="code-number">0</span>)-&gt;<span class="code-function">sync_with_stdio</span>(<span class="code-number">0</span>);
+    cin &gt;&gt; n;
+    <span class="code-keyword">for</span>(<span class="code-type">int</span> i = <span class="code-number">1</span>; i &lt;= n; i++) cin &gt;&gt; dp[i][<span class="code-number">1</span>];
+    <span class="code-keyword">for</span>(<span class="code-type">int</span> i = <span class="code-number">1</span>, u, v; i &lt; n; i++) {
+        cin &gt;&gt; u &gt;&gt; v;
+        e[u].<span class="code-function">push_back</span>(v);
+        e[v].<span class="code-function">push_back</span>(u);
     }
-    dfs(1,-1);
-    cout&lt;&lt;min(dp[1][1],dp[1][0]);
-    return 0;
+    <span class="code-function">dfs</span>(<span class="code-number">1</span>, -<span class="code-number">1</span>);
+    cout &lt;&lt; <span class="code-function">min</span>(dp[<span class="code-number">1</span>][<span class="code-number">1</span>], dp[<span class="code-number">1</span>][<span class="code-number">0</span>]);
+    <span class="code-keyword">return</span> <span class="code-number">0</span>;
 }</code></pre>
             </div>
+            
+            <h3 class="section-title">算法复杂度</h3>
+            <p>时间复杂度：O(n)，其中 n 是节点数量，因为每个节点只需访问一次。</p>
+            <p>空间复杂度：O(n)，用于存储树结构和DP数组。</p>
             
             <h3 class="section-title">树形结构示例</h3>
             <div class="tree-visualization" id="treeVisualization">
@@ -274,31 +439,37 @@ int main(){
         // 树形结构可视化
         function createTreeVisualization() {
             const container = document.getElementById('treeVisualization');
+            container.innerHTML = '';
             
-            // 创建根节点
+            // 创建根节点层
+            const level1 = document.createElement('div');
+            level1.className = 'tree-level';
+            
             const root = document.createElement('div');
-            root.className = 'tree-node';
+            root.className = 'tree-node monitored';
             root.textContent = '1';
-            root.style.margin = '20px auto';
-            container.appendChild(root);
+            root.title = '节点1 (安装监控)';
+            level1.appendChild(root);
+            container.appendChild(level1);
             
             // 创建第二层节点
             const level2 = document.createElement('div');
-            level2.style.display = 'flex';
-            level2.style.justifyContent = 'center';
-            level2.style.marginTop = '30px';
+            level2.className = 'tree-level';
             
             const node2 = document.createElement('div');
             node2.className = 'tree-node';
             node2.textContent = '2';
+            node2.title = '节点2 (未安装监控)';
             
             const node3 = document.createElement('div');
             node3.className = 'tree-node monitored';
             node3.textContent = '3';
+            node3.title = '节点3 (安装监控)';
             
             const node4 = document.createElement('div');
             node4.className = 'tree-node';
             node4.textContent = '4';
+            node4.title = '节点4 (未安装监控)';
             
             level2.appendChild(node2);
             level2.appendChild(node3);
@@ -312,27 +483,27 @@ int main(){
             
             // 创建第三层节点
             const level3 = document.createElement('div');
-            level3.style.display = 'flex';
-            level3.style.justifyContent = 'space-around';
-            level3.style.marginTop = '30px';
-            level3.style.width = '80%';
-            level3.style.marginLeft = '10%';
+            level3.className = 'tree-level';
             
             const node5 = document.createElement('div');
             node5.className = 'tree-node monitored';
             node5.textContent = '5';
+            node5.title = '节点5 (安装监控)';
             
             const node6 = document.createElement('div');
             node6.className = 'tree-node';
             node6.textContent = '6';
+            node6.title = '节点6 (未安装监控)';
             
             const node7 = document.createElement('div');
             node7.className = 'tree-node monitored';
             node7.textContent = '7';
+            node7.title = '节点7 (安装监控)';
             
             const node8 = document.createElement('div');
             node8.className = 'tree-node';
             node8.textContent = '8';
+            node8.title = '节点8 (未安装监控)';
             
             level3.appendChild(node5);
             level3.appendChild(node6);
@@ -351,6 +522,7 @@ int main(){
             legend.style.marginTop = '30px';
             legend.style.display = 'flex';
             legend.style.justifyContent = 'center';
+            legend.style.flexWrap = 'wrap';
             legend.style.gap = '20px';
             
             const legend1 = document.createElement('div');
@@ -366,6 +538,14 @@ int main(){
             legend.appendChild(legend1);
             legend.appendChild(legend2);
             container.appendChild(legend);
+            
+            // 添加说明
+            const explanation = document.createElement('div');
+            explanation.style.marginTop = '15px';
+            explanation.style.fontSize = '0.9rem';
+            explanation.style.color = '#666';
+            explanation.innerHTML = '<p>提示：将鼠标悬停在节点上查看状态信息</p>';
+            container.appendChild(explanation);
         }
         
         function createConnector(from, to, angle, length) {
@@ -397,6 +577,53 @@ int main(){
         
         // 页面加载完成后创建树形可视化
         window.addEventListener('load', createTreeVisualization);
+        
+        // 添加代码高亮功能
+        function highlightCode() {
+            const codeBlocks = document.querySelectorAll('.code-block code');
+            codeBlocks.forEach(block => {
+                let code = block.innerHTML;
+                
+                // 高亮C++关键字
+                const keywords = ['include', 'using', 'namespace', 'int', 'void', 'for', 'if', 'else', 'return', 'inline', 'continue'];
+                keywords.forEach(keyword => {
+                    const regex = new RegExp(`\\b${keyword}\\b`, 'g');
+                    code = code.replace(regex, `<span class="code-keyword">${keyword}</span>`);
+                });
+                
+                // 高亮类型
+                const types = ['vector', 'cin', 'cout', 'min'];
+                types.forEach(type => {
+                    const regex = new RegExp(`\\b${type}\\b`, 'g');
+                    code = code.replace(regex, `<span class="code-type">${type}</span>`);
+                });
+                
+                // 高亮函数
+                const functions = ['dfs', 'main', 'push_back', 'tie', 'sync_with_stdio'];
+                functions.forEach(func => {
+                    const regex = new RegExp(`\\b${func}\\b`, 'g');
+                    code = code.replace(regex, `<span class="code-function">${func}</span>`);
+                });
+                
+                // 高亮变量
+                const variables = ['n', 'a', 'dp', 'e', 'x', 'fa', 'i', 'u', 'v'];
+                variables.forEach(variable => {
+                    const regex = new RegExp(`\\b${variable}\\b`, 'g');
+                    code = code.replace(regex, `<span class="code-variable">${variable}</span>`);
+                });
+                
+                // 高亮数字
+                code = code.replace(/(\b\d+\b)/g, '<span class="code-number">$1</span>');
+                
+                // 高亮注释
+                code = code.replace(/(\/\/.*)/g, '<span class="code-comment">$1</span>');
+                
+                block.innerHTML = code;
+            });
+        }
+        
+        // 页面加载完成后高亮代码
+        window.addEventListener('load', highlightCode);
     </script>
 </body>
 </html>
