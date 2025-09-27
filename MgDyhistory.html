@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <title>大明风华 - 明朝历史介绍  |  MingDynasty</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "SimSun", "宋体", serif;
+            background-color: #f8f3e6;
+            color: #333;
+            line-height: 1.6;
+            background-image: url('https://www.transparenttextures.com/patterns/paper.png');
+        }
+        
+        /* 明朝特色颜色 */
+        :root {
+            --ming-red: #c03a2b;
+            --ming-gold: #d4af37;
+            --ming-blue: #2a5d84;
+            --ming-white: #f8f3e6;
+            --ming-dark: #3a2615;
+        }
+        
+        /* 顶部导航 */
+        header {
+            background: linear-gradient(to bottom, var(--ming-red), #a52a1f);
+            color: var(--ming-white);
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+            border-bottom: 5px solid var(--ming-gold);
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            letter-spacing: 5px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            color: var(--ming-gold);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav li {
+            margin-left: 2rem;
+        }
+        
+        nav a {
+            color: var(--ming-white);
+            text-decoration: none;
+            font-size: 1.2rem;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        
+        nav a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* 主横幅 */
+        .banner {
+            height: 500px;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                        url('https://images.unsplash.com/photo-1601132359864-ae4ed8b2c340?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') center/cover no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--ming-white);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .banner::before, .banner::after {
+            content: "";
+            position: absolute;
+            height: 30px;
+            width: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10'%3E%3Cpath d='M0,5 Q25,0 50,5 T100,5' stroke='%23d4af37' fill='none' stroke-width='2'/%3E%3C/svg%3E");
+            background-repeat: repeat-x;
+        }
+        
+        .banner::before {
+            top: 0;
+        }
+        
+        .banner::after {
+            bottom: 0;
+            transform: rotate(180deg);
+        }
+        
+        .banner-content {
+            max-width: 800px;
+            padding: 0 2rem;
+            z-index: 1;
+        }
+        
+        .banner h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+            letter-spacing: 8px;
+        }
+        
+        .banner p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: var(--ming-gold);
+            color: var(--ming-dark);
+            padding: 0.8rem 2rem;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .btn:hover {
+            background: transparent;
+            border-color: var(--ming-gold);
+            color: var(--ming-gold);
+        }
+        
+        /* 主要内容区域 */
+        .container {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+        
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--ming-red);
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--ming-red);
+            margin-bottom: 0.5rem;
+        }
+        
+        /* 时间线 */
+        .timeline {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: var(--ming-red);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+        
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            box-sizing: border-box;
+        }
+        
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+        
+        .timeline-item:nth-child(even) {
+            left: 50%;
+        }
+        
+        .timeline-content {
+            padding: 20px 30px;
+            background-color: white;
+            position: relative;
+            border-radius: 6px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid var(--ming-blue);
+        }
+        
+        .timeline-item:nth-child(even) .timeline-content {
+            border-left: none;
+            border-right: 5px solid var(--ming-gold);
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            right: -13px;
+            background-color: var(--ming-white);
+            border: 4px solid var(--ming-red);
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        
+        .timeline-item:nth-child(even)::after {
+            left: -13px;
+        }
+        
+        /* 特色板块 */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .feature-img {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .feature-content {
+            padding: 1.5rem;
+        }
+        
+        .feature-content h3 {
+            color: var(--ming-red);
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--ming-gold);
+            padding-bottom: 0.5rem;
+        }
+        
+        /* 明朝大事件部分 */
+        .events {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .event-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .event-img {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .event-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .event-content h3 {
+            color: var(--ming-blue);
+            margin-bottom: 0.5rem;
+        }
+        
+        .event-date {
+            color: var(--ming-red);
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        
+        /* 页脚 */
+        footer {
+            background: var(--ming-dark);
+            color: var(--ming-white);
+            padding: 3rem 0 1rem;
+            margin-top: 3rem;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-section h3 {
+            color: var(--ming-gold);
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 0.5rem;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            nav li {
+                margin: 0.5rem;
+            }
+            
+            .banner h1 {
+                font-size: 2.5rem;
+            }
+            
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-item:nth-child(even) {
+                left: 0;
+            }
+            
+            .timeline-item::after {
+                left: 18px;
+            }
+            
+            .timeline-item:nth-child(even)::after {
+                left: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <header>
+        <div class="header-content">
+            <div class="logo"><i class="fas fa-landmark"></i>大明风华</div>
+            <nav>
+                <ul>
+                    <li><a href="#overview">明朝概述</a></li>
+                    <li><a href="#timeline">历史时间线</a></li>
+                    <li><a href="#events">重大事件</a></li>
+                    <li><a href="#culture">文化与科技</a></li>
+                    <li><a href="#emperors">历代皇帝</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 主横幅 -->
+    <section class="banner">
+        <div class="banner-content">
+            <h1>大明王朝</h1>
+            <p>1368年 - 1644年 | 中国历史上最后一个由汉族建立的封建王朝</p>
+            <a href="#overview" class="btn">探索明朝历史</a>
+        </div>
+    </section>
+
+    <!-- 主要内容 -->
+    <main class="container">
+        <!-- 概述部分 -->
+        <section id="overview" class="section">
+            <div class="section-title">
+                <h2>明朝概述</h2>
+                <p>从洪武到崇祯，大明王朝的兴衰历程</p>
+            </div>
+            <div style="text-align: center; max-width: 800px; margin: 0 auto;">
+                <p>明朝（1368年―1644年）是中国历史上一个重要的朝代，由明太祖朱元璋建立，共传十六帝，享国276年。明代初期历经洪武之治、永乐盛世、仁宣之治等治世，国力强盛。中期经土木之变由盛转衰，后经弘治中兴、嘉靖中兴、万历中兴国势复振。晚明因政治腐败、东林党争和天灾外患导致国力衰退，最终被李自成领导的农民起义推翻。</p>
+                <p>明代疆域囊括汉地，东北抵日本海、外兴安岭，后缩至辽河流域；北达戈壁沙漠一带，后撤至明长城；西北至新疆哈密，后退守嘉峪关；西南临孟加拉湾，后折回约今云南境；并在青藏地区设有羁縻卫所，还曾收复安南。</p>
+            </div>
+        </section>
+
+        <!-- 时间线部分 -->
+        <section id="timeline" class="section" style="margin-top: 5rem;">
+            <div class="section-title">
+                <h2>明朝历史时间线</h2>
+                <p>重要历史事件与转折点</p>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>1368年 - 明朝建立</h3>
+                        <p>朱元璋在应天府（今南京）称帝，国号大明，年号洪武，开启了明朝的历史。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>1380年 - 废除丞相制</h3>
+                        <p>朱元璋废除中书省和丞相制，加强了皇权，使六部直接对皇帝负责。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>1402年 - 靖难之役</h3>
+                        <p>燕王朱棣发动靖难之役，攻占南京，夺取皇位，成为明成祖。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>1405年 - 郑和下西洋</h3>
+                        <p>明成祖朱棣派郑和率领庞大船队首次下西洋，开启了中国古代规模最大、船只和海员最多、时间最久的海上航行。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>1421年 - 迁都北京</h3>
+                        <p>明成祖朱棣正式迁都北京，以南京为留都，奠定了北京作为中国政治中心的基础。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>1449年 - 土木堡之变</h3>
+                        <p>明英宗朱祁镇亲征蒙古瓦剌部，在土木堡被俘，明朝由盛转衰。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>1560年代 - 戚继光抗倭</h3>
+                        <p>戚继光在东南沿海抗击倭寇，组建戚家军，取得多次胜利。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>1583年 - 张居正改革</h3>
+                        <p>张居正推行一条鞭法等改革措施，试图挽救明朝财政危机。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>1619年 - 萨尔浒之战</h3>
+                        <p>明朝与后金在萨尔浒进行决战，明军大败，后金势力迅速壮大。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>1644年 - 明朝灭亡</h3>
+                        <p>李自成攻破北京，崇祯帝自缢于煤山，明朝灭亡。随后清军入关，建立清朝。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 重大事件部分 -->
+        <section id="events" class="section" style="margin-top: 5rem;">
+            <div class="section-title">
+                <h2>明朝重大历史事件</h2>
+                <p>影响明朝命运的关键时刻</p>
+            </div>
+            <div class="events">
+                <div class="event-card">
+                    <div class="event-img" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/%E6%9C%B1%E5%85%83%E7%92%8B%E5%BD%A2%E8%B1%A1%E5%9B%BE.jpg/800px-%E6%9C%B1%E5%85%83%E7%92%8B%E5%BD%A2%E8%B1%A1%E5%9B%BE.jpg');"></div>
+                    <div class="event-content">
+                        <h3>明朝建立</h3>
+                        <div class="event-date">1368年</div>
+                        <p>朱元璋在应天府（今南京）称帝，建立明朝，年号洪武。他出身贫寒，曾为和尚和乞丐，最终统一中国，开创了大明王朝。</p>
+                    </div>
+                </div>
+                <div class="event-card">
+                    <div class="event-img" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/%E9%9D%96%E9%9A%BE%E4%B9%8B%E5%BD%B9.jpg/800px-%E9%9D%96%E9%9A%BE%E4%B9%8B%E5%BD%B9.jpg');"></div>
+                    <div class="event-content">
+                        <h3>靖难之役</h3>
+                        <div class="event-date">1399-1402年</div>
+                        <p>燕王朱棣发动叛乱，推翻其侄建文帝的统治，自立为帝，即明成祖。这场内战改变了明朝的政治格局。</p>
+                    </div>
+                </div>
+                <div class="event-card">
+                    <div class="event-img" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Zheng_He.jpg/800px-Zheng_He.jpg');"></div>
+                    <div class="event-content">
+                        <h3>郑和下西洋</h3>
+                        <div class="event-date">1405-1433年</div>
+                        <p>明成祖派遣郑和七次下西洋，船队规模庞大，最远到达非洲东海岸，促进了中外文化交流和贸易往来。</p>
+                    </div>
+                </div>
+                <div class="event-card">
+                    <div class="event-img" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/%E5%9C%9F%E6%9C%A8%E5%A0%A1%E4%B9%8B%E5%8F%98.jpg/800px-%E5%9C%9F%E6%9C%A8%E5%A0%A1%E4%B9%8B%E5%8F%98.jpg');"></div>
+                    <div class="event-content">
+                        <h3>土木堡之变</h3>
+                        <div class="event-date">1449年</div>
+                        <p>明英宗亲征蒙古瓦剌部，在土木堡被俘，明军惨败。这一事件标志着明朝由盛转衰。</p>
+                    </div>
+                </div>
+                <div class="event-card">
+                    <div class="event-img" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/%E5%BC%84%E5%8D%8E%E5%BA%AD%E5%9B%BE.jpg/800px-%E5%BC%84%E5%8D%8E%E5%BA%AD%E5%9B%BE.jpg');"></div>
+                    <div class="event-content">
+                        <h3>张居正改革</h3>
+                        <div class="event-date">1573-1582年</div>
+                        <p>张居正担任首辅期间推行一系列改革，包括一条鞭法等，试图挽救明朝的财政危机。</p>
+                    </div>
+                </div>
+                <div class="event-card">
+                    <div class="event-img" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/%E6%B2%88%E9%98%B3%E5%86%85%E5%9F%8E.jpg/800px-%E6%B2%88%E9%98%B3%E5%86%85%E5%9F%8E.jpg');"></div>
+                    <div class="event-content">
+                        <h3>明朝灭亡</h3>
+                        <div class="event-date">1644年</div>
+                        <p>李自成攻破北京，崇祯帝自缢于煤山，明朝灭亡。随后清军入关，建立清朝，中国历史进入新的时期。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 特色部分 -->
+        <section id="culture" class="section" style="margin-top: 5rem;">
+            <div class="section-title">
+                <h2>明朝文化与科技</h2>
+                <p>辉煌的文化成就与科技创新</p>
+            </div>
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-img" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Ming_dynasty_blue_and_white_porcelain.jpg/800px-Ming_dynasty_blue_and_white_porcelain.jpg');"></div>
+                    <div class="feature-content">
+                        <h3>青花瓷艺术</h3>
+                        <p>明代青花瓷达到工艺顶峰，以其优雅的造型和精美的纹饰闻名于世，成为中外贸易的重要商品。景德镇成为全国制瓷中心，青花瓷远销海外。</p>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-img" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Yongle_Encyclopedia.jpg/800px-Yongle_Encyclopedia.jpg');"></div>
+                    <div class="feature-content">
+                        <h3>《永乐大典》</h3>
+                        <p>明成祖时期编纂的类书，是中国古代最大的百科全书，收录了先秦至明初的各类典籍。全书共22,937卷，约3.7亿字，是中华文化的瑰宝。</p>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-img" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Ming_cannon.jpg/800px-Ming_cannon.jpg');"></div>
+                    <div class="feature-content">
+                        <h3>火器技术</h3>
+                        <p>明代火器制造技术达到很高水平，神机营是世界上最早的独立火器部队，在军事上具有重要地位。明朝还引进了西方火器技术并进行改良。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>关于本站</h3>
+                <p>本网站致力于介绍明朝历史、文化与艺术，展示大明王朝的辉煌成就与深远影响。</p>
+            </div>
+            <div class="footer-section">
+                <h3>相关资源</h3>
+                <ul style="list-style: none;">
+                    <li><a href="#" style="color: #ccc;">明朝历史文献</a></li>
+                    <li><a href="#" style="color: #ccc;">明代艺术品鉴赏</a></li>
+                    <li><a href="#" style="color: #ccc;">明朝历史地图</a></li>
+                    <li><a href="#" style="color: #ccc;">明朝皇帝世系表</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 大明风华 - 明朝历史介绍 | 设计灵感源于明代美学</p>
+        </div>
+    </footer>
+
+    <script>
+        // 平滑滚动效果
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // 时间线动画效果
+        function animateTimeline() {
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if(entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            timelineItems.forEach(item => {
+                item.style.opacity = 0;
+                item.style.transform = 'translateY(20px)';
+                item.style.transition = 'opacity 0.5s, transform 0.5s';
+                observer.observe(item);
+            });
+        }
+        
+        // 页面加载完成后执行
+        window.addEventListener('DOMContentLoaded', () => {
+            animateTimeline();
+        });
+    </script>
+</body>
+</html>
