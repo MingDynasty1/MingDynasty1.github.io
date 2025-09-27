@@ -631,6 +631,33 @@
             color: var(--accent-color);
             margin-bottom: 10px;
         }
+        
+        /* 访问量统计样式 */
+        .visitor-counter {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            font-family: 'KaiTi', '楷体', serif;
+        }
+        
+        .dark-mode .visitor-counter {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        .visitor-counter span {
+            margin-right: 10px;
+            color: var(--gold-color);
+            font-weight: bold;
+        }
+        
+        .visitor-counter img {
+            height: 20px;
+            vertical-align: middle;
+        }
     </style>
 </head>
 <body class="light-mode">
@@ -638,6 +665,11 @@
         <div class="container">
             <h1 class="ming-decoration">MingDynasty 的个人主页</h1>
             <p>传承明朝风韵，展现编程之美</p>
+            <!-- 访问量统计 -->
+            <div class="visitor-counter">
+                <span>主页访问量：</span>
+                <img src="https://w.saobby.com/w/egtt98hj" alt="访问量统计">
+            </div>
         </div>
     </header>
     
