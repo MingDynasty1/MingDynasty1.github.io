@@ -438,6 +438,52 @@
         .back-btn:hover {
             background: var(--nav-bg);
         }
+        
+        /* 新功能预览样式 */
+        .feature-preview {
+            margin-top: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .feature-preview-header {
+            background: var(--accent-color);
+            color: #f8f3e6;
+            padding: 10px 15px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        
+        .feature-preview-header i {
+            margin-right: 8px;
+        }
+        
+        .feature-preview-content {
+            padding: 15px;
+            background: rgba(139, 0, 0, 0.05);
+        }
+        
+        .feature-preview-content p {
+            margin-bottom: 10px;
+        }
+        
+        .feature-link {
+            display: inline-block;
+            background: var(--gold-color);
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        
+        .feature-link:hover {
+            background: #b8941f;
+        }
     </style>
 </head>
 <body>
@@ -500,6 +546,31 @@
         
         <div class="changelog-container">
             <h2 class="changelog-year">2025年</h2>
+            
+            <!-- 新增的大明历史&模拟器条目 -->
+            <div class="changelog-item">
+                <div class="changelog-date">2025年9月27日 <span class="update-type type-feature">新功能</span></div>
+                <div class="changelog-content">
+                    <h3>大明历史&模拟器</h3>
+                    <ul>
+                        <li>新增大明历史时间线展示，涵盖明朝276年历史</li>
+                        <li>添加明朝皇帝世系图，展示16位皇帝传承关系</li>
+                        <li>开发明朝经济模拟器，可模拟不同政策对经济的影响</li>
+                        <li>集成明朝疆域变化地图，展示不同时期的版图变化</li>
+                        <li>添加明朝文化成就展示，包括文学、艺术和科技</li>
+                    </ul>
+                    
+                    <div class="feature-preview">
+                        <div class="feature-preview-header">
+                            <i class="fas fa-history"></i> 功能预览
+                        </div>
+                        <div class="feature-preview-content">
+                            <p>大明历史&模拟器是一个交互式功能，让用户可以探索明朝的兴衰历程，并通过模拟器体验不同历史决策的影响。</p>
+                            <a href="#" class="feature-link">体验大明历史&模拟器</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
             <div class="changelog-item">
                 <div class="changelog-date">2025年9月24日 <span class="update-type type-feature">新功能</span></div>
