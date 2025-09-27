@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
-    <title>B4311 题解（树形DP） | MingDynasty</title>
+    <title>B4311 题解（树形DP） | MingDynasty's blog</title>
     <style>
+        /* 原有样式保持不变 */
         * {
             margin: 0;
             padding: 0;
@@ -24,8 +25,82 @@
             border-right: 8px solid #8B0000;
             position: relative;
             min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
         }
         
+        /* 暗色主题样式 */
+        body.dark-theme {
+            background: linear-gradient(to bottom, #1a1a1a, #2d2d2d);
+            color: #e0e0e0;
+            border-left: 8px solid #a83232;
+            border-right: 8px solid #a83232;
+        }
+        
+        body.dark-theme .header h1 {
+            color: #a83232;
+        }
+        
+        body.dark-theme .header h2 {
+            color: #d4af37;
+        }
+        
+        body.dark-theme .problem-section, 
+        body.dark-theme .solution-section {
+            background: rgba(40, 40, 40, 0.9);
+            border: 1px solid #555;
+        }
+        
+        body.dark-theme .dp-explanation {
+            background: #2a2a2a;
+            border-left: 4px solid #d4af37;
+        }
+        
+        body.dark-theme .tree-visualization {
+            background: #2a2a2a;
+            border: 1px solid #555;
+        }
+        
+        body.dark-theme .footer {
+            color: #aaa;
+        }
+        
+        body.dark-theme::before, 
+        body.dark-theme::after {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="50" height="100" viewBox="0 0 50 100"><path d="M25,10 C30,15 35,20 35,30 C35,40 30,45 25,50 C20,45 15,40 15,30 C15,20 20,15 25,10 Z" fill="%23a83232" opacity="0.1"/></svg>');
+        }
+        
+        /* 主题切换按钮样式 */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #8B0000;
+            color: #f9f2e8;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            z-index: 1000;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+        }
+        
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        body.dark-theme .theme-toggle {
+            background: #d4af37;
+            color: #1a1a1a;
+        }
+        
+        /* 其余原有样式保持不变 */
         body::before, body::after {
             content: "";
             position: fixed;
@@ -314,10 +389,21 @@
             .tree-node {
                 margin: 5px;
             }
+            
+            .theme-toggle {
+                top: 10px;
+                right: 10px;
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- 主题切换按钮 -->
+    <button class="theme-toggle" id="themeToggle" title="切换主题">🌙</button>
+    
     <div class="decoration top-left"></div>
     <div class="decoration top-right"></div>
     <div class="decoration bottom-left"></div>
@@ -436,6 +522,53 @@ vector&lt;<span class="code-type">int</span>&gt; e[<span class="code-number">323
     </div>
 
     <script>
+        // 主题切换功能
+        function initThemeToggle() {
+            const themeToggle = document.getElementById('themeToggle');
+            const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+            
+            // 从localStorage获取保存的主题设置
+            const savedTheme = localStorage.getItem('theme');
+            
+            // 设置初始主题
+            if (savedTheme === 'dark' || (!savedTheme && prefersDarkScheme.matches)) {
+                document.body.classList.add('dark-theme');
+                themeToggle.textContent = '☀️';
+            } else {
+                document.body.classList.remove('dark-theme');
+                themeToggle.textContent = '🌙';
+            }
+            
+            // 切换主题
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-theme');
+                
+                if (document.body.classList.contains('dark-theme')) {
+                    themeToggle.textContent = '☀️';
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    themeToggle.textContent = '🌙';
+                    localStorage.setItem('theme', 'light');
+                }
+                
+                // 重新绘制树形结构，确保连接线位置正确
+                createTreeVisualization();
+            });
+            
+            // 监听系统主题变化
+            prefersDarkScheme.addEventListener('change', (e) => {
+                if (!localStorage.getItem('theme')) {
+                    if (e.matches) {
+                        document.body.classList.add('dark-theme');
+                        themeToggle.textContent = '☀️';
+                    } else {
+                        document.body.classList.remove('dark-theme');
+                        themeToggle.textContent = '🌙';
+                    }
+                }
+            });
+        }
+        
         // 树形结构可视化
         function createTreeVisualization() {
             const container = document.getElementById('treeVisualization');
@@ -575,9 +708,6 @@ vector&lt;<span class="code-type">int</span>&gt; e[<span class="code-number">323
             document.getElementById('treeVisualization').appendChild(connector);
         }
         
-        // 页面加载完成后创建树形可视化
-        window.addEventListener('load', createTreeVisualization);
-        
         // 添加代码高亮功能
         function highlightCode() {
             const codeBlocks = document.querySelectorAll('.code-block code');
@@ -622,8 +752,12 @@ vector&lt;<span class="code-type">int</span>&gt; e[<span class="code-number">323
             });
         }
         
-        // 页面加载完成后高亮代码
-        window.addEventListener('load', highlightCode);
+        // 页面加载完成后初始化
+        window.addEventListener('load', () => {
+            initThemeToggle();
+            createTreeVisualization();
+            highlightCode();
+        });
     </script>
 </body>
 </html>
