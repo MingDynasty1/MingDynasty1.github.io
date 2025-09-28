@@ -484,6 +484,54 @@
         .feature-link:hover {
             background: #b8941f;
         }
+        
+        /* 博客预览样式 */
+        .blog-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .blog-item-preview {
+            flex: 1;
+            min-width: 200px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 15px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .blog-item-preview:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px var(--shadow-color);
+        }
+        
+        .blog-item-preview h4 {
+            color: var(--accent-color);
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+        
+        .blog-item-preview p {
+            font-size: 0.9rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+        
+        .blog-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: var(--accent-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        
+        .blog-link:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -547,7 +595,51 @@
         <div class="changelog-container">
             <h2 class="changelog-year">2025年</h2>
             
-            <!-- 新增的大明历史&模拟器条目 -->
+            <!-- 新增的皇帝的博客条目 -->
+            <div class="changelog-item">
+                <div class="changelog-date">2025年9月28日 <span class="update-type type-feature">新功能</span></div>
+                <div class="changelog-content">
+                    <h3>创建皇帝的博客并搬运3篇题解</h3>
+                    <ul>
+                        <li>创建全新博客页面，采用明朝美学设计风格</li>
+                        <li>添加P10702题解，包含详细算法解析</li>
+                        <li>添加B4311题解，结合数学思想进行探讨</li>
+                        <li>添加CF366B题解，深入分析与多种解法比较</li>
+                        <li>优化博客响应式设计，适配各种设备</li>
+                        <li>添加优雅的动画效果和交互体验</li>
+                    </ul>
+                    
+                    <div class="feature-preview">
+                        <div class="feature-preview-header">
+                            <i class="fas fa-blog"></i> 博客预览
+                        </div>
+                        <div class="feature-preview-content">
+                            <p>皇帝的博客采用明朝美学设计，包含优雅的排版、传统印章元素和宣纸色调背景，提供优质的阅读体验。</p>
+                            
+                            <div class="blog-preview">
+                                <div class="blog-item-preview">
+                                    <h4>P10702 题解</h4>
+                                    <p>对P10702问题的题解</p>
+                                    <a href="https://MingDynasty1.github.io/blog/MingDynasty/P10702.html" class="blog-link">阅读全文 →</a>
+                                </div>
+                                <div class="blog-item-preview">
+                                    <h4>B4311 题解</h4>
+                                    <p>对B4311问题的详细解析与解决方案</p>
+                                    <a href="https://MingDynasty1.github.io/blog/MingDynasty/B4311.html" class="blog-link">阅读全文 →</a>
+                                </div>
+                                <div class="blog-item-preview">
+                                    <h4>CF366B 题解</h4>
+                                    <p>对CF366B问题的深入分析与多种解法比较</p>
+                                    <a href="https://MingDynasty1.github.io/blog/MingDynasty/CF366B.html" class="blog-link">阅读全文 →</a>
+                                </div>
+                            </div>
+                            
+                            <a href="https://MingDynasty1.github.io/blog/" class="feature-link">访问皇帝的博客</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <div class="changelog-item">
                 <div class="changelog-date">2025年9月27日 <span class="update-type type-feature">新功能</span></div>
                 <div class="changelog-content">
