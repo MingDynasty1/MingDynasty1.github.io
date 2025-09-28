@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <title>CF366B 题解 | MingDynasty's blog</title>
+    <style>
+        :root {
+            /* 亮色主题变量 */
+            --bg-color: #f8f4e9;
+            --text-color: #3a2615;
+            --primary-color: #8c1515;
+            --secondary-color: #d4b78c;
+            --border-color: #c9a86a;
+            --code-bg: #f0e6d2;
+            --header-bg: #e8d9bc;
+        }
+
+        [data-theme="dark"] {
+            /* 暗色主题变量 */
+            --bg-color: #2a1f14;
+            --text-color: #e8d9bc;
+            --primary-color: #c97a7a;
+            --secondary-color: #8c6d46;
+            --border-color: #5d4a30;
+            --code-bg: #3a2c1c;
+            --header-bg: #3a2c1c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            font-family: "SimSun", "STSong", serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50,50 L100,0 L100,100 L0,100 L0,0 Z' fill='%23" + (document.documentElement.getAttribute('data-theme') === 'dark' ? '3a2c1c' : 'e8d9bc') + "' opacity='0.05'/%3E%3C/svg%3E");
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            border-bottom: 2px solid var(--border-color);
+            position: relative;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--secondary-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .content {
+            background-color: var(--header-bg);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+            padding-left: 10px;
+            margin: 20px 0 15px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-indent: 2em;
+        }
+
+        pre {
+            background-color: var(--code-bg);
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 15px 0;
+            border: 1px solid var(--border-color);
+            font-family: 'Courier New', monospace;
+        }
+
+        code {
+            background-color: var(--code-bg);
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+        }
+
+        .decoration {
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--primary-color));
+            margin: 10px 0;
+            border-radius: 2px;
+        }
+
+        .problem-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: var(--primary-color);
+            text-decoration: none;
+            border-bottom: 1px dashed var(--primary-color);
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .theme-toggle {
+                position: static;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <header>
+        <h1>CF366B 题解</h1>
+        <div class="subtitle">灵感源于明朝美学</div>
+        <button class="theme-toggle" id="themeToggle">切换暗色模式</button>
+        <div class="decoration"></div>
+    </header>
+
+    <div class="content">
+        <h2>题目思路</h2>
+        <p>设我们从第 pos 个任务开干。</p>
+        <p>那么，责备发生的时刻就是 pos, pos+k, pos+2k, pos+3k, pos+4k，每次加 k。所以我们只需要记录每一组的责备力度和，再找出力度最小的答案即可。</p>
+        <p><strong>时间复杂度 O(n)。</strong></p>
+
+        <h2>代码实现</h2>
+        <pre><code>#include&lt;bits/stdc++.h&gt;
+using namespace std;
+int s[323232],a[323232],n,k,mp;
+int main(){
+    cin.tie(0)-&gt;sync_with_stdio(0);
+    cin&gt;&gt;n&gt;&gt;k;
+    for(int i=0;i&lt;n;i++){
+        cin&gt;&gt;a[i];
+        s[i%k]+=a[i];
+    }
+    int ms=s[0];
+    for(int i=1;i&lt;k;i++){
+        if(s[i]&lt;ms) ms=s[i],mp=i;
+    }
+    cout&lt;&lt;mp+1;
+    return 0;
+}</code></pre>
+        
+        <p>祝通过！</p>
+        <a href="https://codeforces.com/problemset/problem/366/B" class="problem-link" target="_blank">查看原题链接</a>
+    </div>
+
+    <footer>
+        <div class="decoration"></div>
+        <p>© 2013-2025 MingDynasty, Inc. CF366B 题解 | 灵感源于明朝美学</p>
+    </footer>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        // 检查本地存储的主题偏好
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        body.setAttribute('data-theme', currentTheme);
+        updateButtonText();
+        
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateButtonText();
+            
+            // 更新背景图案颜色
+            updateBackgroundPattern(newTheme);
+        });
+        
+        function updateButtonText() {
+            const currentTheme = body.getAttribute('data-theme');
+            themeToggle.textContent = currentTheme === 'light' ? '切换暗色模式' : '切换亮色模式';
+        }
+        
+        function updateBackgroundPattern(theme) {
+            const color = theme === 'dark' ? '3a2c1c' : 'e8d9bc';
+            body.style.backgroundImage = `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50,50 L100,0 L100,100 L0,100 L0,0 Z' fill='%23${color}' opacity='0.05'/%3E%3C/svg%3E")`;
+        }
+    </script>
+</body>
+</html>
