@@ -658,6 +658,99 @@
             height: 20px;
             vertical-align: middle;
         }
+        
+        /* 贪吃蛇游戏样式 */
+        .snake-game-container {
+            background: linear-gradient(135deg, var(--bg-color) 0%, var(--border-color) 100%);
+            border: 3px solid var(--accent-color);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            box-shadow: 0 8px 16px rgba(139, 0, 0, 0.15);
+        }
+        
+        .snake-game-container h3 {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+            text-align: center;
+            border-bottom: 2px solid var(--gold-color);
+            padding-bottom: 10px;
+        }
+        
+        .snake-game-board {
+            display: inline-block;
+            border: 3px solid var(--border-color);
+            border-radius: 5px;
+            background-color: var(--card-bg);
+            box-shadow: 0 4px 8px var(--shadow-color);
+            margin: 15px 0;
+        }
+        
+        .snake-game-info {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            font-family: 'KaiTi', '楷体', serif;
+        }
+        
+        .snake-game-score {
+            background: var(--accent-color);
+            color: #f8f3e6;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .snake-game-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .snake-game-btn {
+            background: var(--accent-color);
+            color: #f8f3e6;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+            font-family: 'SimSun', '宋体', serif;
+        }
+        
+        .snake-game-btn:hover {
+            background: var(--nav-bg);
+        }
+        
+        .snake-game-instructions {
+            margin-top: 15px;
+            text-align: left;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 3px solid var(--gold-color);
+        }
+        
+        .dark-mode .snake-game-instructions {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        
+        .snake-game-instructions h4 {
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+        
+        .snake-game-instructions ul {
+            padding-left: 20px;
+        }
+        
+        .snake-game-instructions li {
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 <body class="light-mode">
@@ -690,6 +783,8 @@
             <a href="https://MingDynasty1.github.io/MgDyhistory.html">大明历史</a>
             <!-- 添加人生模拟器链接 -->
             <a href="https://MingDynasty1.github.io/People-Remake-Life.html">人生模拟器</a>
+            <!-- 添加贪吃蛇游戏链接 -->
+            <a href="https://MingDynasty1.github.io/snakegame.html">贪吃蛇游戏</a>
             <!-- 添加博客主页链接 -->
             <a href="https://MingDynasty1.github.io/blog/index.html" style="background-color: rgba(255,255,255,0.2);">博客主页</a>
             
@@ -746,6 +841,33 @@
                 <div class="card chinese-pattern">
                     <h2>置顶公告</h2>
                     <p>宣 <a href="https://www.luogu.com.cn/contest/247666">https://www.luogu.com.cn/contest/247666</a></p>
+                </div>
+                
+                <!-- 贪吃蛇游戏 -->
+                <div class="card">
+                    <h2>大明贪吃蛇</h2>
+                    <div class="snake-game-container">
+                        <h3>大明贪吃蛇</h3>
+                        <div class="snake-game-info">
+                            <div class="snake-game-score">得分: <span id="snake-score">0</span></div>
+                            <div class="snake-game-score">最高分: <span id="snake-high-score">0</span></div>
+                        </div>
+                        <canvas id="snake-game-board" width="400" height="400" class="snake-game-board"></canvas>
+                        <div class="snake-game-controls">
+                            <button class="snake-game-btn" id="snake-start-btn">开始游戏</button>
+                            <button class="snake-game-btn" id="snake-pause-btn">暂停</button>
+                            <button class="snake-game-btn" id="snake-reset-btn">重新开始</button>
+                        </div>
+                        <div class="snake-game-instructions">
+                            <h4>游戏说明：</h4>
+                            <ul>
+                                <li>使用键盘方向键或WASD控制蛇的移动方向</li>
+                                <li>吃到红色食物可以增加长度和得分</li>
+                                <li>撞到墙壁或自己的身体会导致游戏结束</li>
+                                <li>每吃到一个食物得10分</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="card">
@@ -829,6 +951,12 @@
                         <p>体验不同的人生轨迹，探索命运的可能性！</p>
                         <a href="https://MingDynasty1.github.io/People-Remake-Life.html" class="game-btn">开始体验</a>
                     </div>
+                    <!-- 新增贪吃蛇游戏卡片 -->
+                    <div class="game-card">
+                        <h3>贪吃蛇游戏</h3>
+                        <p>经典贪吃蛇游戏，挑战你的反应速度！</p>
+                        <a href="https://MingDynasty1.github.io/snakegame.html" class="game-btn">开始游戏</a>
+                    </div>
                 </div>
                 
                 <div class="card">
@@ -871,6 +999,8 @@
                     <li><a href="https://mingdynasty1.github.io/dmhpy.html">大明国庆</a></li>
                     <!-- 添加人生模拟器链接 -->
                     <li><a href="https://MingDynasty1.github.io/People-Remake-Life.html">人生模拟器</a></li>
+                    <!-- 添加贪吃蛇游戏链接 -->
+                    <li><a href="https://MingDynasty1.github.io/snakegame.html">贪吃蛇游戏</a></li>
                     <!-- 添加博客主页链接 -->
                     <li><a href="https://MingDynasty1.github.io/blog/index.html" style="font-weight: bold; color: var(--accent-color);">博客主页</a></li>
                 </ul>
@@ -930,6 +1060,13 @@
                     <h3>人生模拟器</h3>
                     <p>体验不同的人生轨迹</p>
                     <a href="https://MingDynasty1.github.io/People-Remake-Life.html" class="game-btn">开始体验</a>
+                </div>
+                
+                <!-- 新增贪吃蛇游戏卡片 -->
+                <div class="game-card">
+                    <h3>贪吃蛇游戏</h3>
+                    <p>经典贪吃蛇游戏</p>
+                    <a href="https://MingDynasty1.github.io/snakegame.html" class="game-btn">开始游戏</a>
                 </div>
                 
                 <div class="game-card">
@@ -1053,6 +1190,205 @@
         
         // 初始化计算器显示
         updateCalcDisplay();
+        
+        // 贪吃蛇游戏功能
+        const canvas = document.getElementById('snake-game-board');
+        const ctx = canvas.getContext('2d');
+        const scoreElement = document.getElementById('snake-score');
+        const highScoreElement = document.getElementById('snake-high-score');
+        const startBtn = document.getElementById('snake-start-btn');
+        const pauseBtn = document.getElementById('snake-pause-btn');
+        const resetBtn = document.getElementById('snake-reset-btn');
+        
+        // 游戏变量
+        const gridSize = 20;
+        const tileCount = canvas.width / gridSize;
+        
+        let snake = [
+            {x: 10, y: 10}
+        ];
+        let food = {};
+        let dx = 0;
+        let dy = 0;
+        let score = 0;
+        let highScore = localStorage.getItem('snakeHighScore') || 0;
+        let gameRunning = false;
+        let gameLoop;
+        
+        // 初始化游戏
+        function initGame() {
+            snake = [{x: 10, y: 10}];
+            generateFood();
+            dx = 0;
+            dy = 0;
+            score = 0;
+            updateScore();
+            highScoreElement.textContent = highScore;
+        }
+        
+        // 生成食物
+        function generateFood() {
+            food = {
+                x: Math.floor(Math.random() * tileCount),
+                y: Math.floor(Math.random() * tileCount)
+            };
+            
+            // 确保食物不会生成在蛇身上
+            for (let segment of snake) {
+                if (segment.x === food.x && segment.y === food.y) {
+                    generateFood();
+                    return;
+                }
+            }
+        }
+        
+        // 绘制游戏
+        function drawGame() {
+            // 清空画布
+            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--card-bg');
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // 绘制蛇
+            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-color');
+            for (let segment of snake) {
+                ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize - 2, gridSize - 2);
+            }
+            
+            // 绘制蛇头（不同颜色）
+            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--nav-bg');
+            ctx.fillRect(snake[0].x * gridSize, snake[0].y * gridSize, gridSize - 2, gridSize - 2);
+            
+            // 绘制食物
+            ctx.fillStyle = '#ff0000';
+            ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize - 2, gridSize - 2);
+        }
+        
+        // 更新游戏状态
+        function updateGame() {
+            // 移动蛇
+            const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+            snake.unshift(head);
+            
+            // 检查是否吃到食物
+            if (head.x === food.x && head.y === food.y) {
+                score += 10;
+                updateScore();
+                generateFood();
+            } else {
+                snake.pop();
+            }
+            
+            // 检查游戏结束条件
+            if (
+                head.x < 0 || 
+                head.x >= tileCount || 
+                head.y < 0 || 
+                head.y >= tileCount ||
+                checkCollision(head)
+            ) {
+                gameOver();
+                return;
+            }
+            
+            drawGame();
+        }
+        
+        // 检查碰撞
+        function checkCollision(head) {
+            for (let i = 1; i < snake.length; i++) {
+                if (head.x === snake[i].x && head.y === snake[i].y) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        // 更新分数
+        function updateScore() {
+            scoreElement.textContent = score;
+            if (score > highScore) {
+                highScore = score;
+                highScoreElement.textContent = highScore;
+                localStorage.setItem('snakeHighScore', highScore);
+            }
+        }
+        
+        // 游戏结束
+        function gameOver() {
+            gameRunning = false;
+            clearInterval(gameLoop);
+            alert(`游戏结束！你的得分是: ${score}`);
+        }
+        
+        // 开始游戏
+        function startGame() {
+            if (!gameRunning) {
+                gameRunning = true;
+                gameLoop = setInterval(updateGame, 150);
+                startBtn.textContent = "游戏中...";
+            }
+        }
+        
+        // 暂停游戏
+        function pauseGame() {
+            if (gameRunning) {
+                gameRunning = false;
+                clearInterval(gameLoop);
+                startBtn.textContent = "继续游戏";
+            } else {
+                startGame();
+            }
+        }
+        
+        // 重置游戏
+        function resetGame() {
+            gameRunning = false;
+            clearInterval(gameLoop);
+            initGame();
+            drawGame();
+            startBtn.textContent = "开始游戏";
+        }
+        
+        // 键盘控制
+        document.addEventListener('keydown', (e) => {
+            // 防止按键滚动页面
+            if ([37, 38, 39, 40, 65, 87, 68, 83].includes(e.keyCode)) {
+                e.preventDefault();
+            }
+            
+            // 方向键控制
+            if (e.keyCode === 37 || e.keyCode === 65) { // 左箭头或A
+                if (dx !== 1) {
+                    dx = -1;
+                    dy = 0;
+                }
+            } else if (e.keyCode === 38 || e.keyCode === 87) { // 上箭头或W
+                if (dy !== 1) {
+                    dx = 0;
+                    dy = -1;
+                }
+            } else if (e.keyCode === 39 || e.keyCode === 68) { // 右箭头或D
+                if (dx !== -1) {
+                    dx = 1;
+                    dy = 0;
+                }
+            } else if (e.keyCode === 40 || e.keyCode === 83) { // 下箭头或S
+                if (dy !== -1) {
+                    dx = 0;
+                    dy = 1;
+                }
+            }
+        });
+        
+        // 按钮事件监听
+        startBtn.addEventListener('click', startGame);
+        pauseBtn.addEventListener('click', pauseGame);
+        resetBtn.addEventListener('click', resetGame);
+        
+        // 初始化游戏
+        initGame();
+        drawGame();
+        highScoreElement.textContent = highScore;
     </script>
 </body>
 </html>
