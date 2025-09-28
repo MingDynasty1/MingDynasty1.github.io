@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P12887 题解 | 明朝风格设计</title>
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <style>
+        /* 全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+        
+        :root {
+            /* 亮色主题变量 */
+            --bg-color: #f8f4e9;
+            --text-color: #3a2615;
+            --card-bg: #fffdf5;
+            --header-bg: linear-gradient(to right, #8b1a1a, #a52a2a);
+            --nav-bg: #8b1a1a;
+            --accent-color: #8b1a1a;
+            --gold-color: #d4af37;
+            --border-color: #d4c5a8;
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --code-bg: #2b2b2b;
+            --code-text: #f8f4e9;
+            --pattern-opacity: 0.05;
+            --seal-color: #8b1a1a;
+        }
+        
+        .dark-mode {
+            /* 暗色主题变量 */
+            --bg-color: #1a1a1a;
+            --text-color: #e6e6e6;
+            --card-bg: #2d2d2d;
+            --header-bg: linear-gradient(to right, #600000, #7a1f1f);
+            --nav-bg: #600000;
+            --accent-color: #cc0000;
+            --gold-color: #c19b30;
+            --border-color: #5c4c1a;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --code-bg: #3d3d3d;
+            --code-text: #f8f4e9;
+            --pattern-opacity: 0.1;
+            --seal-color: #cc0000;
+        }
+        
+        body {
+            font-family: 'SimSun', '宋体', serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.8) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.6) 0%, transparent 20%);
+            padding: 0;
+            margin: 0;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+        }
+        
+        /* 顶部装饰 */
+        .top-decoration {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 30px;
+            background: var(--seal-color);
+            clip-path: polygon(0 0, 100% 0, 90% 100%, 10% 100%);
+            z-index: 2;
+        }
+        
+        .top-decoration::before {
+            content: "";
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            background: var(--bg-color);
+            clip-path: polygon(0 0, 100% 0, 90% 100%, 10% 100%);
+        }
+        
+        /* 页眉样式 */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--accent-color);
+            position: relative;
+        }
+        
+        .site-title {
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+            letter-spacing: 5px;
+            text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.1);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .site-title::before, .site-title::after {
+            content: "❖";
+            color: var(--accent-color);
+            font-size: 1.5rem;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .site-title::before {
+            left: -40px;
+        }
+        
+        .site-title::after {
+            right: -40px;
+        }
+        
+        .site-subtitle {
+            font-size: 1.2rem;
+            color: #7a5c3c;
+            font-style: italic;
+            letter-spacing: 2px;
+        }
+        
+        /* 印章效果 */
+        .seal {
+            position: absolute;
+            right: 20px;
+            top: -30px;
+            width: 80px;
+            height: 80px;
+            border: 3px solid var(--seal-color);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(5deg);
+            font-family: "楷体", "KaiTi", serif;
+            font-size: 1.3rem;
+            color: var(--seal-color);
+            background: var(--card-bg);
+            z-index: 3;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+            animation: seal-pulse 4s infinite ease-in-out;
+        }
+        
+        @keyframes seal-pulse {
+            0%, 100% { transform: rotate(5deg) scale(1); }
+            50% { transform: rotate(5deg) scale(1.05); }
+        }
+        
+        .seal::before {
+            content: "";
+            position: absolute;
+            width: 90%;
+            height: 90%;
+            border: 1px solid var(--seal-color);
+        }
+        
+        /* 导航样式 */
+        nav {
+            background-color: var(--nav-bg);
+            padding: 10px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid var(--gold-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        nav a {
+            color: #f8f4e9;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1rem;
+            padding: 5px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* 主题切换按钮 */
+        .theme-switch {
+            margin-left: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .theme-switch-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            color: #f8f4e9;
+            font-size: 0.9rem;
+        }
+        
+        .theme-switch-label i {
+            margin-right: 5px;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+            margin-left: 10px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--gold-color);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        /* 内容卡片样式 */
+        .content-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+        
+        /* 题目信息样式 */
+        .problem-info {
+            background: rgba(139, 26, 26, 0.05);
+            border-left: 5px solid var(--accent-color);
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .problem-title {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+            font-family: 'KaiTi', '楷体', serif;
+        }
+        
+        .problem-link {
+            display: inline-block;
+            background: var(--accent-color);
+            color: #f8f4e9;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+        
+        .problem-link:hover {
+            background: var(--nav-bg);
+        }
+        
+        /* 内容区域样式 */
+        .content-section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid var(--gold-color);
+            font-family: 'KaiTi', '楷体', serif;
+        }
+        
+        /* 代码块样式 */
+        pre {
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 15px 0;
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+        
+        code {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+        
+        .code-lang {
+            background: var(--accent-color);
+            color: #fff;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+        }
+        
+        /* 装饰元素 */
+        .side-decoration {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 15px;
+            background: var(--seal-color);
+        }
+        
+        .side-decoration.left {
+            left: 0;
+        }
+        
+        .side-decoration.right {
+            right: 0;
+        }
+        
+        .side-decoration::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 80%;
+            background: 
+                repeating-linear-gradient(
+                    to bottom,
+                    var(--bg-color),
+                    var(--bg-color) 10px,
+                    transparent 10px,
+                    transparent 20px
+                );
+        }
+        
+        /* 页脚样式 */
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            color: #7a5c3c;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .site-title {
+                font-size: 1.8rem;
+                letter-spacing: 3px;
+            }
+            
+            .site-title::before, .site-title::after {
+                display: none;
+            }
+            
+            .seal {
+                position: static;
+                margin: 0 auto 20px;
+                transform: rotate(0);
+            }
+            
+            nav {
+                flex-direction: column;
+            }
+            
+            nav a {
+                margin: 5px 0;
+            }
+            
+            .theme-switch {
+                margin: 10px 0;
+            }
+            
+            .content-card {
+                padding: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .site-title {
+                font-size: 1.5rem;
+            }
+            
+            .site-subtitle {
+                font-size: 1rem;
+            }
+        }
+        
+        /* 明朝特色装饰 */
+        .ming-decoration {
+            font-family: 'KaiTi', '楷体', serif;
+            color: var(--accent-color);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .back-btn {
+            display: inline-block;
+            background: var(--accent-color);
+            color: #f8f4e9;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s;
+            margin: 20px 0;
+        }
+        
+        .back-btn:hover {
+            background: var(--nav-bg);
+        }
+    </style>
+</head>
+<body>
+    <div class="top-decoration"></div>
+    <div class="container">
+        <div class="side-decoration left"></div>
+        <div class="side-decoration right"></div>
+        
+        <header>
+            <h1 class="site-title">P12887 题解</h1>
+            <p class="site-subtitle">明朝风格设计 | 算法解析</p>
+            <div class="seal">明</div>
+        </header>
+        
+        <nav>
+            <a href="https://mingdynasty1.github.io/">返回主页</a>
+            <a href="https://mingdynasty1.github.io/blog/">博客首页</a>
+            <a href="https://mingdynasty1.github.io/OImap.html">OJ导航</a>
+            
+            <div class="theme-switch">
+                <label class="theme-switch-label">
+                    <i class="fas fa-moon"></i>
+                    <span class="switch">
+                        <input type="checkbox" id="theme-toggle">
+                        <span class="slider"></span>
+                    </span>
+                    <i class="fas fa-sun"></i>
+                </label>
+            </div>
+        </nav>
+        
+        <main>
+            <div class="content-card">
+                <div class="problem-info">
+                    <h2 class="problem-title">P12887 题目解析</h2>
+                    <p>思维题。我们知道，小蓝和朋友答案相同时肯定是正确的，所以剩下不相同的数值就是 N 减去相同的数值。而在正确的数量中，还有一部分未被判定正确与否，所以这里可以用到容斥原理的思想。未判定的量中，只有不同的字符数减去 M 的差才是小蓝还可以判对的数量。所以我们按照这个思路模拟即可。</p>
+                    <a href="https://www.luogu.com.cn/problem/P12887" class="problem-link" target="_blank">题目传送门</a>
+                </div>
+                
+                <div class="content-section">
+                    <h3 class="section-title">题目思路</h3>
+                    <p>我们知道，小蓝和朋友答案相同时肯定是正确的，所以剩下不相同的数值就是 N 减去相同的数值。而在正确的数量中，还有一部分未被判定正确与否，所以这里可以用到容斥原理的思想。未判定的量中，只有不同的字符数减去 M 的差才是小蓝还可以判对的数量。所以我们按照这个思路模拟即可。</p>
+                </div>
+                
+                <div class="content-section">
+                    <h3 class="section-title">代码实现</h3>
+                    
+                    <div class="code-header">
+                        <span>C++ 代码</span>
+                        <span class="code-lang">C++</span>
+                    </div>
+                    <pre><code class="cpp">#include&lt;iostream&gt;
+#include&lt;cmath&gt;
+#define ll long long
+using namespace std;
+int maxn=-1e9,sum,a;
+int main(){
+    ll n,m;
+    cin.tie(0)-&gt;sync_with_stdio(0);
+    cin&gt;&gt;n&gt;&gt;m;
+    string w,q;
+    cin&gt;&gt;w&gt;&gt;q;
+    for(int i=0;i&lt;w.size();i++){
+        if(q[i]==w[i]) a++;
+    }
+    int b=n-a,same=min(a*1ll,m),ans=2*same+b-m;
+    cout&lt;&lt;ans;
+    return 0;
+}</code></pre>
+                    
+                    <div class="code-header">
+                        <span>Java 代码</span>
+                        <span class="code-lang">Java</span>
+                    </div>
+                    <pre><code class="java">import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        long n = scanner.nextLong();
+        long m = scanner.nextLong();
+        scanner.nextLine(); // consume the remaining newline
+
+        String w = scanner.nextLine();
+        String q = scanner.nextLine();
+
+        int a = 0;
+        for (int i = 0; i &lt; w.length(); i++) {
+            if (q.charAt(i) == w.charAt(i)) {
+                a++;
+            }
+        }
+
+        long b = n - a;
+        long same = Math.min(a, m);
+        long ans = 2 * same + b - m;
+
+        System.out.println(ans);
+    }
+}</code></pre>
+                </div>
+                
+                <div class="content-section">
+                    <h3 class="section-title">算法分析</h3>
+                    <p>本题的核心思路是利用容斥原理的思想解决问题。具体步骤如下：</p>
+                    <ol>
+                        <li>计算小蓝和朋友答案相同的数量 a</li>
+                        <li>计算答案不同的数量 b = n - a</li>
+                        <li>确定可以正确判定的相同答案数量 same = min(a, m)</li>
+                        <li>最终答案为 2*same + b - m</li>
+                    </ol>
+                    <p>这个算法的时间复杂度为 O(n)，空间复杂度为 O(1)，非常高效。</p>
+                </div>
+                
+                <div class="content-section">
+                    <h3 class="section-title">总结</h3>
+                    <p>这道题考察了对问题的抽象能力和容斥原理的应用。通过分析题目中的条件，我们可以将问题转化为简单的数学计算，从而得到高效的解决方案。</p>
+                    <p>祝各位通过本题！</p>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>© 2013-2025 MingDynasty,Inc. P12887 题解 | 明朝风格设计</p>
+        </footer>
+    </div>
+
+    <!-- Font Awesome 图标 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+
+    <script>
+        // 主题切换功能
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        
+        // 检查本地存储的主题偏好
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            body.classList.add('dark-mode');
+            themeToggle.checked = true;
+        }
+        
+        // 切换主题
+        themeToggle.addEventListener('change', function() {
+            if (this.checked) {
+                body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+        
+        // 根据系统偏好设置初始主题
+        if (!savedTheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            body.classList.add('dark-mode');
+            themeToggle.checked = true;
+        }
+        
+        // 代码高亮（简化版）
+        document.addEventListener('DOMContentLoaded', function() {
+            const codeBlocks = document.querySelectorAll('pre code');
+            codeBlocks.forEach(block => {
+                // 简单的关键字高亮
+                const code = block.textContent;
+                const highlighted = code
+                    .replace(/\b(int|long|string|void|main|if|for|while|return|import|public|static|class)\b/g, '<span style="color: #ff79c6;">$1</span>')
+                    .replace(/\b(cin|cout|Scanner|System|Math)\b/g, '<span style="color: #8be9fd;">$1</span>')
+                    .replace(/\b(true|false|null)\b/g, '<span style="color: #bd93f9;">$1</span>')
+                    .replace(/(\d+)/g, '<span style="color: #bd93f9;">$1</span>')
+                    .replace(/(\/\/.*)/g, '<span style="color: #6272a4;">$1</span>');
+                
+                block.innerHTML = highlighted;
+            });
+        });
+    </script>
+</body>
+</html>
