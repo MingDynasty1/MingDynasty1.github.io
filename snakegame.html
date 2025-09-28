@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大明贪吃蛇 | MingDynasty</title>
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "楷体", "SimKai", serif;
+            background-color: #f5e8c8;
+            color: #333;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23f5e8c8"/><path d="M20,20 L80,20 L80,80 L20,80 Z" fill="none" stroke="%23d4b483" stroke-width="1" opacity="0.2"/></svg>');
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        .title {
+            font-size: 3rem;
+            color: #8b1a1a;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            margin-bottom: 10px;
+            letter-spacing: 5px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #5d4037;
+            margin-bottom: 20px;
+        }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            width: 100%;
+            max-width: 1000px;
+        }
+        
+        .auth-section {
+            background: linear-gradient(to bottom, #f9f4e6, #e8d9b0);
+            border: 2px solid #8b1a1a;
+            border-radius: 5px;
+            padding: 20px;
+            width: 300px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .auth-title {
+            font-size: 1.5rem;
+            color: #8b1a1a;
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #8b1a1a;
+            padding-bottom: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #5d4037;
+        }
+        
+        input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #8b1a1a;
+            border-radius: 3px;
+            background-color: #f9f4e6;
+            font-family: "楷体", "SimKai", serif;
+        }
+        
+        button {
+            background-color: #8b1a1a;
+            color: #f9f4e6;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-family: "楷体", "SimKai", serif;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            background-color: #a52a2a;
+        }
+        
+        .game-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .game-info {
+            background: linear-gradient(to bottom, #f9f4e6, #e8d9b0);
+            border: 2px solid #8b1a1a;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .user-info {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #5d4037;
+        }
+        
+        .score {
+            font-size: 1.5rem;
+            color: #8b1a1a;
+            font-weight: bold;
+        }
+        
+        .game-board {
+            width: 400px;
+            height: 400px;
+            background-color: #e8d9b0;
+            border: 3px solid #8b1a1a;
+            border-radius: 5px;
+            display: grid;
+            grid-template-rows: repeat(20, 1fr);
+            grid-template-columns: repeat(20, 1fr);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .snake {
+            background-color: #8b1a1a;
+            border-radius: 2px;
+        }
+        
+        .food {
+            background-color: #1a5d8b;
+            border-radius: 50%;
+        }
+        
+        .game-over {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 2rem;
+            display: none;
+        }
+        
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .instructions {
+            background: linear-gradient(to bottom, #f9f4e6, #e8d9b0);
+            border: 2px solid #8b1a1a;
+            border-radius: 5px;
+            padding: 20px;
+            width: 300px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .instructions h3 {
+            color: #8b1a1a;
+            margin-bottom: 15px;
+            text-align: center;
+            border-bottom: 1px solid #8b1a1a;
+            padding-bottom: 10px;
+        }
+        
+        .instructions p {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .message {
+            margin-top: 10px;
+            padding: 8px;
+            border-radius: 3px;
+            text-align: center;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #5d4037;
+            font-size: 0.9rem;
+            width: 100%;
+            max-width: 800px;
+            border-top: 1px solid #8b1a1a;
+            padding-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="title">大明贪吃蛇</h1>
+        <p class="subtitle">传统韵味，经典游戏</p>
+    </div>
+    
+    <div class="container">
+        <div class="auth-section">
+            <h2 class="auth-title">用户登录</h2>
+            <div id="login-form">
+                <div class="form-group">
+                    <label for="login-username">用户名</label>
+                    <input type="text" id="login-username" placeholder="请输入用户名">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">密码</label>
+                    <input type="password" id="login-password" placeholder="请输入密码">
+                </div>
+                <button id="login-btn">登录</button>
+                <p style="text-align: center; margin-top: 15px;">还没有账号？<a href="#" id="show-register">立即注册</a></p>
+                <div id="login-message" class="message"></div>
+            </div>
+            
+            <div id="register-form" class="hidden">
+                <div class="form-group">
+                    <label for="register-username">用户名</label>
+                    <input type="text" id="register-username" placeholder="请输入用户名">
+                </div>
+                <div class="form-group">
+                    <label for="register-password">密码</label>
+                    <input type="password" id="register-password" placeholder="请输入密码">
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">确认密码</label>
+                    <input type="password" id="confirm-password" placeholder="请再次输入密码">
+                </div>
+                <button id="register-btn">注册</button>
+                <p style="text-align: center; margin-top: 15px;">已有账号？<a href="#" id="show-login">立即登录</a></p>
+                <div id="register-message" class="message"></div>
+            </div>
+        </div>
+        
+        <div class="game-section">
+            <div class="game-info">
+                <div class="user-info" id="user-info">请先登录</div>
+                <div class="score">得分: <span id="score">0</span></div>
+            </div>
+            
+            <div class="game-board" id="game-board">
+                <div class="game-over" id="game-over">
+                    <div>游戏结束</div>
+                    <div>最终得分: <span id="final-score">0</span></div>
+                    <button id="restart-btn" style="margin-top: 20px; width: auto;">重新开始</button>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button id="start-btn">开始游戏</button>
+                <button id="logout-btn">退出登录</button>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h3>游戏说明</h3>
+            <p>使用键盘方向键控制蛇的移动方向</p>
+            <p>↑ 向上移动</p>
+            <p>↓ 向下移动</p>
+            <p>← 向左移动</p>
+            <p>→ 向右移动</p>
+            <p>吃到蓝色食物可以增加得分</p>
+            <p>撞到墙壁或自己的身体游戏结束</p>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>© 2013-2025 MingDynasty,Inc. | 大明贪吃蛇 - 融合传统美学与现代游戏体验</p>
+    </div>
+
+    <script>
+        // 用户认证功能
+        document.addEventListener('DOMContentLoaded', function() {
+            // 检查是否已登录
+            checkLoginStatus();
+            
+            // 登录/注册表单切换
+            document.getElementById('show-register').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('login-form').classList.add('hidden');
+                document.getElementById('register-form').classList.remove('hidden');
+            });
+            
+            document.getElementById('show-login').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('register-form').classList.add('hidden');
+                document.getElementById('login-form').classList.remove('hidden');
+            });
+            
+            // 登录功能
+            document.getElementById('login-btn').addEventListener('click', function() {
+                const username = document.getElementById('login-username').value;
+                const password = document.getElementById('login-password').value;
+                const messageEl = document.getElementById('login-message');
+                
+                if (!username || !password) {
+                    showMessage(messageEl, '请输入用户名和密码', 'error');
+                    return;
+                }
+                
+                // 简单的用户验证（实际应用中应使用后端验证）
+                const users = getUsers();
+                const user = users.find(u => u.username === username && u.password === password);
+                
+                if (user) {
+                    // 登录成功，设置Cookie
+                    setCookie('loggedInUser', username, 7);
+                    showMessage(messageEl, '登录成功！', 'success');
+                    updateUIAfterLogin(username);
+                } else {
+                    showMessage(messageEl, '用户名或密码错误', 'error');
+                }
+            });
+            
+            // 注册功能
+            document.getElementById('register-btn').addEventListener('click', function() {
+                const username = document.getElementById('register-username').value;
+                const password = document.getElementById('register-password').value;
+                const confirmPassword = document.getElementById('confirm-password').value;
+                const messageEl = document.getElementById('register-message');
+                
+                if (!username || !password || !confirmPassword) {
+                    showMessage(messageEl, '请填写所有字段', 'error');
+                    return;
+                }
+                
+                if (password !== confirmPassword) {
+                    showMessage(messageEl, '两次输入的密码不一致', 'error');
+                    return;
+                }
+                
+                // 检查用户名是否已存在
+                const users = getUsers();
+                if (users.find(u => u.username === username)) {
+                    showMessage(messageEl, '用户名已存在', 'error');
+                    return;
+                }
+                
+                // 注册新用户
+                users.push({ username, password });
+                localStorage.setItem('snakeUsers', JSON.stringify(users));
+                
+                showMessage(messageEl, '注册成功！请登录', 'success');
+                
+                // 切换到登录表单
+                setTimeout(() => {
+                    document.getElementById('register-form').classList.add('hidden');
+                    document.getElementById('login-form').classList.remove('hidden');
+                    document.getElementById('login-username').value = username;
+                    document.getElementById('login-password').value = '';
+                }, 1500);
+            });
+            
+            // 退出登录
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                deleteCookie('loggedInUser');
+                updateUIAfterLogout();
+            });
+        });
+        
+        // 检查登录状态
+        function checkLoginStatus() {
+            const username = getCookie('loggedInUser');
+            if (username) {
+                updateUIAfterLogin(username);
+            }
+        }
+        
+        // 更新登录后的UI
+        function updateUIAfterLogin(username) {
+            document.getElementById('user-info').textContent = `欢迎，${username}`;
+            document.getElementById('start-btn').disabled = false;
+        }
+        
+        // 更新退出登录后的UI
+        function updateUIAfterLogout() {
+            document.getElementById('user-info').textContent = '请先登录';
+            document.getElementById('start-btn').disabled = true;
+            resetGame();
+        }
+        
+        // 显示消息
+        function showMessage(element, message, type) {
+            element.textContent = message;
+            element.className = 'message ' + type;
+            setTimeout(() => {
+                element.textContent = '';
+                element.className = 'message';
+            }, 3000);
+        }
+        
+        // 获取用户列表
+        function getUsers() {
+            const users = localStorage.getItem('snakeUsers');
+            return users ? JSON.parse(users) : [];
+        }
+        
+        // Cookie操作函数
+        function setCookie(name, value, days) {
+            const expires = new Date();
+            expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+            document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+        }
+        
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for(let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+        
+        function deleteCookie(name) {
+            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+        }
+        
+        // 贪吃蛇游戏逻辑
+        const gameBoard = document.getElementById('game-board');
+        const scoreElement = document.getElementById('score');
+        const finalScoreElement = document.getElementById('final-score');
+        const gameOverElement = document.getElementById('game-over');
+        const startButton = document.getElementById('start-btn');
+        const restartButton = document.getElementById('restart-btn');
+        
+        const gridSize = 20;
+        let snake = [{x: 10, y: 10}];
+        let food = {};
+        let direction = 'right';
+        let gameInterval;
+        let score = 0;
+        let gameRunning = false;
+        
+        // 初始化游戏
+        function initGame() {
+            createFood();
+            draw();
+        }
+        
+        // 创建食物
+        function createFood() {
+            food = {
+                x: Math.floor(Math.random() * gridSize),
+                y: Math.floor(Math.random() * gridSize)
+            };
+            
+            // 确保食物不会出现在蛇身上
+            for (let segment of snake) {
+                if (segment.x === food.x && segment.y === food.y) {
+                    return createFood();
+                }
+            }
+        }
+        
+        // 绘制游戏
+        function draw() {
+            gameBoard.innerHTML = '';
+            
+            // 绘制蛇
+            snake.forEach(segment => {
+                const snakeElement = document.createElement('div');
+                snakeElement.style.gridRowStart = segment.y + 1;
+                snakeElement.style.gridColumnStart = segment.x + 1;
+                snakeElement.classList.add('snake');
+                gameBoard.appendChild(snakeElement);
+            });
+            
+            // 绘制食物
+            const foodElement = document.createElement('div');
+            foodElement.style.gridRowStart = food.y + 1;
+            foodElement.style.gridColumnStart = food.x + 1;
+            foodElement.classList.add('food');
+            gameBoard.appendChild(foodElement);
+        }
+        
+        // 移动蛇
+        function moveSnake() {
+            const head = {...snake[0]};
+            
+            switch(direction) {
+                case 'up':
+                    head.y--;
+                    break;
+                case 'down':
+                    head.y++;
+                    break;
+                case 'left':
+                    head.x--;
+                    break;
+                case 'right':
+                    head.x++;
+                    break;
+            }
+            
+            // 检查是否撞墙
+            if (head.x < 0 || head.x >= gridSize || head.y < 0 || head.y >= gridSize) {
+                gameOver();
+                return;
+            }
+            
+            // 检查是否撞到自己
+            for (let segment of snake) {
+                if (segment.x === head.x && segment.y === head.y) {
+                    gameOver();
+                    return;
+                }
+            }
+            
+            snake.unshift(head);
+            
+            // 检查是否吃到食物
+            if (head.x === food.x && head.y === food.y) {
+                score += 10;
+                scoreElement.textContent = score;
+                createFood();
+            } else {
+                snake.pop();
+            }
+            
+            draw();
+        }
+        
+        // 游戏结束
+        function gameOver() {
+            clearInterval(gameInterval);
+            gameRunning = false;
+            finalScoreElement.textContent = score;
+            gameOverElement.style.display = 'flex';
+            startButton.textContent = '开始游戏';
+        }
+        
+        // 重置游戏
+        function resetGame() {
+            clearInterval(gameInterval);
+            snake = [{x: 10, y: 10}];
+            direction = 'right';
+            score = 0;
+            scoreElement.textContent = score;
+            gameOverElement.style.display = 'none';
+            gameRunning = false;
+            startButton.textContent = '开始游戏';
+            initGame();
+        }
+        
+        // 开始游戏
+        function startGame() {
+            if (!getCookie('loggedInUser')) {
+                alert('请先登录再开始游戏');
+                return;
+            }
+            
+            if (gameRunning) {
+                clearInterval(gameInterval);
+                gameRunning = false;
+                startButton.textContent = '继续游戏';
+            } else {
+                gameInterval = setInterval(moveSnake, 150);
+                gameRunning = true;
+                startButton.textContent = '暂停游戏';
+            }
+        }
+        
+        // 事件监听
+        startButton.addEventListener('click', startGame);
+        restartButton.addEventListener('click', resetGame);
+        
+        // 键盘控制
+        document.addEventListener('keydown', (event) => {
+            if (!gameRunning) return;
+            
+            switch(event.key) {
+                case 'ArrowUp':
+                    if (direction !== 'down') direction = 'up';
+                    break;
+                case 'ArrowDown':
+                    if (direction !== 'up') direction = 'down';
+                    break;
+                case 'ArrowLeft':
+                    if (direction !== 'right') direction = 'left';
+                    break;
+                case 'ArrowRight':
+                    if (direction !== 'left') direction = 'right';
+                    break;
+            }
+        });
+        
+        // 初始化游戏
+        initGame();
+    </script>
+</body>
+</html>
