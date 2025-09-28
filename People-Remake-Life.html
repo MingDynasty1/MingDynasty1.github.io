@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <title>大明人生模拟器 | MingDynasty</title>
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "SimSun", "宋体", serif;
+        }
+        
+        body {
+            background-color: #f5f1e6;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.1"><path fill="%23a52a2a" d="M20,20 L80,20 L80,80 L20,80 Z" stroke="%23a52a2a" stroke-width="2"/></svg>');
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* 标题样式 */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(to right, #8B0000, #B22222);
+            color: #FFD700;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before, .header::after {
+            content: "";
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%23FFD700" d="M50,10 L60,40 L90,40 L65,60 L75,90 L50,70 L25,90 L35,60 L10,40 L40,40 Z"/></svg>');
+            background-size: contain;
+            opacity: 0.3;
+        }
+        
+        .header::before {
+            top: 10px;
+            left: 10px;
+        }
+        
+        .header::after {
+            bottom: 10px;
+            right: 10px;
+            transform: rotate(180deg);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            letter-spacing: 5px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #FFEBCD;
+        }
+        
+        /* 主内容区 */
+        .main-content {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        /* 左侧面板 */
+        .left-panel {
+            flex: 1;
+            background-color: #f9f4e6;
+            border: 2px solid #8B0000;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* 右侧面板 */
+        .right-panel {
+            flex: 2;
+            background-color: #f9f4e6;
+            border: 2px solid #8B0000;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* 角色信息样式 */
+        .character-info {
+            margin-bottom: 20px;
+        }
+        
+        .character-info h2 {
+            color: #8B0000;
+            border-bottom: 2px solid #8B0000;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .character-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .stat {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px dashed #ccc;
+        }
+        
+        .stat-name {
+            font-weight: bold;
+        }
+        
+        .stat-value {
+            color: #8B0000;
+        }
+        
+        /* 行动按钮 */
+        .actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .action-btn {
+            background: linear-gradient(to bottom, #8B0000, #A52A2A);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .action-btn:hover {
+            background: linear-gradient(to bottom, #A52A2A, #8B0000);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .action-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* 事件日志 */
+        .event-log {
+            height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+            background-color: #f5f1e6;
+            border: 1px solid #8B0000;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        
+        .event {
+            padding: 8px;
+            margin-bottom: 10px;
+            border-left: 3px solid #8B0000;
+            background-color: #f9f4e6;
+        }
+        
+        .event-time {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .event-content {
+            margin-top: 5px;
+        }
+        
+        /* 角色创建界面 */
+        .character-creation {
+            background-color: #f9f4e6;
+            border: 2px solid #8B0000;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .creation-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #8B0000;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #8B0000;
+            border-radius: 4px;
+            background-color: #f5f1e6;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .points-allocation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        
+        .point-control {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .point-btn {
+            width: 25px;
+            height: 25px;
+            background-color: #8B0000;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .point-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        
+        .point-value {
+            min-width: 30px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .start-btn {
+            background: linear-gradient(to bottom, #8B0000, #A52A2A);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            margin-top: 15px;
+            width: 100%;
+        }
+        
+        .start-btn:hover {
+            background: linear-gradient(to bottom, #A52A2A, #8B0000);
+        }
+        
+        /* 底部样式 */
+        .footer {
+            text-align: center;
+            padding: 15px;
+            background-color: #8B0000;
+            color: #FFD700;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .actions {
+                grid-template-columns: 1fr;
+            }
+            
+            .creation-form {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* 隐藏类 */
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>大明人生模拟器</h1>
+            <div class="subtitle">体验明朝百姓的悲欢离合，书写你的历史篇章</div>
+        </header>
+        
+        <!-- 角色创建界面 -->
+        <div class="character-creation" id="character-creation">
+            <h2>创建你的角色</h2>
+            <div class="creation-form">
+                <div class="form-group">
+                    <label for="char-name-input">姓名</label>
+                    <input type="text" id="char-name-input" placeholder="请输入姓名" value="王明">
+                </div>
+                
+                <div class="form-group">
+                    <label for="start-year">起始年份</label>
+                    <select id="start-year">
+                        <option value="0">洪武元年 (1368)</option>
+                        <option value="1">建文元年 (1399)</option>
+                        <option value="2">永乐元年 (1402)</option>
+                        <option value="3">洪熙元年 (1424)</option>
+                        <option value="4">宣德元年 (1425)</option>
+                        <option value="5">正统元年 (1436)</option>
+                        <option value="6">景泰元年 (1450)</option>
+                        <option value="7">天顺元年 (1457)</option>
+                        <option value="8">成化元年 (1465)</option>
+                        <option value="9">弘治元年 (1488)</option>
+                        <option value="10">正德元年 (1506)</option>
+                        <option value="11">嘉靖元年 (1522)</option>
+                        <option value="12">隆庆元年 (1567)</option>
+                        <option value="13">万历元年 (1573)</option>
+                        <option value="14">泰昌元年 (1620)</option>
+                        <option value="15">天启元年 (1621)</option>
+                        <option value="16">崇祯元年 (1628)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group full-width">
+                    <label>属性分配 (剩余点数: <span id="points-remaining">20</span>)</label>
+                    <div class="points-allocation">
+                        <div class="point-control">
+                            <label>健康:</label>
+                            <button class="point-btn" id="health-decrease">-</button>
+                            <span class="point-value" id="health-value">50</span>
+                            <button class="point-btn" id="health-increase">+</button>
+                        </div>
+                        <div class="point-control">
+                            <label>学识:</label>
+                            <button class="point-btn" id="knowledge-decrease">-</button>
+                            <span class="point-value" id="knowledge-value">50</span>
+                            <button class="point-btn" id="knowledge-increase">+</button>
+                        </div>
+                        <div class="point-control">
+                            <label>财富:</label>
+                            <button class="point-btn" id="wealth-decrease">-</button>
+                            <span class="point-value" id="wealth-value">50</span>
+                            <button class="point-btn" id="wealth-increase">+</button>
+                        </div>
+                        <div class="point-control">
+                            <label>声望:</label>
+                            <button class="point-btn" id="reputation-decrease">-</button>
+                            <span class="point-value" id="reputation-value">50</span>
+                            <button class="point-btn" id="reputation-increase">+</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group full-width">
+                    <button class="start-btn" id="start-game">开始游戏</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 游戏主界面 -->
+        <div class="main-content hidden" id="game-interface">
+            <div class="left-panel">
+                <div class="character-info">
+                    <h2>人物信息</h2>
+                    <div class="character-stats">
+                        <div class="stat">
+                            <span class="stat-name">姓名:</span>
+                            <span class="stat-value" id="char-name">王明</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-name">年龄:</span>
+                            <span class="stat-value" id="char-age">16</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-name">身份:</span>
+                            <span class="stat-value" id="char-status">平民</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-name">健康:</span>
+                            <span class="stat-value" id="char-health">85</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-name">学识:</span>
+                            <span class="stat-value" id="char-knowledge">45</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-name">财富:</span>
+                            <span class="stat-value" id="char-wealth">30</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-name">声望:</span>
+                            <span class="stat-value" id="char-reputation">25</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-name">年份:</span>
+                            <span class="stat-value" id="game-year">洪武十年</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="actions">
+                    <button class="action-btn" id="btn-study">读书求学</button>
+                    <button class="action-btn" id="btn-work">务工经商</button>
+                    <button class="action-btn" id="btn-social">社交往来</button>
+                    <button class="action-btn" id="btn-rest">休养生息</button>
+                    <button class="action-btn" id="btn-next">度过一年</button>
+                    <button class="action-btn" id="btn-reset">重新开始</button>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <h2>人生历程</h2>
+                <div class="event-log" id="event-log">
+                    <!-- 事件将通过JavaScript动态添加 -->
+                </div>
+            </div>
+        </div>
+        
+        <footer class="footer">
+            <p> © 2013-2025 MingDynasty,Inc. 大明人生模拟器| 体验明朝百姓生活，感受历史变迁</p>
+        </footer>
+    </div>
+
+    <script>
+        // 明朝年号数据 - 包含正确使用年限
+        const yearTitles = [
+            { name: "洪武", startYear: 1368, endYear: 1398, duration: 31 },
+            { name: "建文", startYear: 1399, endYear: 1402, duration: 4 },
+            { name: "永乐", startYear: 1403, endYear: 1424, duration: 22 },
+            { name: "洪熙", startYear: 1425, endYear: 1425, duration: 1 },
+            { name: "宣德", startYear: 1426, endYear: 1435, duration: 10 },
+            { name: "正统", startYear: 1436, endYear: 1449, duration: 14 },
+            { name: "景泰", startYear: 1450, endYear: 1456, duration: 7 },
+            { name: "天顺", startYear: 1457, endYear: 1464, duration: 8 },
+            { name: "成化", startYear: 1465, endYear: 1487, duration: 23 },
+            { name: "弘治", startYear: 1488, endYear: 1505, duration: 18 },
+            { name: "正德", startYear: 1506, endYear: 1521, duration: 16 },
+            { name: "嘉靖", startYear: 1522, endYear: 1566, duration: 45 },
+            { name: "隆庆", startYear: 1567, endYear: 1572, duration: 6 },
+            { name: "万历", startYear: 1573, endYear: 1620, duration: 48 },
+            { name: "泰昌", startYear: 1620, endYear: 1620, duration: 1 },
+            { name: "天启", startYear: 1621, endYear: 1627, duration: 7 },
+            { name: "崇祯", startYear: 1628, endYear: 1644, duration: 17 }
+        ];
+        
+        // 游戏状态
+        let gameState = {
+            name: "王明",
+            age: 16,
+            status: "平民",
+            health: 85,
+            knowledge: 45,
+            wealth: 30,
+            reputation: 25,
+            yearIndex: 0, // 当前年号索引
+            yearNum: 10,  // 当前年号内的年份
+            events: []
+        };
+        
+        // 角色创建状态
+        let creationState = {
+            health: 50,
+            knowledge: 50,
+            wealth: 50,
+            reputation: 50,
+            points: 20
+        };
+
+        // DOM元素
+        const charCreation = document.getElementById('character-creation');
+        const gameInterface = document.getElementById('game-interface');
+        
+        // 角色创建元素
+        const charNameInput = document.getElementById('char-name-input');
+        const startYearSelect = document.getElementById('start-year');
+        const pointsRemaining = document.getElementById('points-remaining');
+        
+        const healthValue = document.getElementById('health-value');
+        const knowledgeValue = document.getElementById('knowledge-value');
+        const wealthValue = document.getElementById('wealth-value');
+        const reputationValue = document.getElementById('reputation-value');
+        
+        const healthDecrease = document.getElementById('health-decrease');
+        const healthIncrease = document.getElementById('health-increase');
+        const knowledgeDecrease = document.getElementById('knowledge-decrease');
+        const knowledgeIncrease = document.getElementById('knowledge-increase');
+        const wealthDecrease = document.getElementById('wealth-decrease');
+        const wealthIncrease = document.getElementById('wealth-increase');
+        const reputationDecrease = document.getElementById('reputation-decrease');
+        const reputationIncrease = document.getElementById('reputation-increase');
+        
+        const startGameBtn = document.getElementById('start-game');
+        
+        // 游戏界面元素
+        const charName = document.getElementById('char-name');
+        const charAge = document.getElementById('char-age');
+        const charStatus = document.getElementById('char-status');
+        const charHealth = document.getElementById('char-health');
+        const charKnowledge = document.getElementById('char-knowledge');
+        const charWealth = document.getElementById('char-wealth');
+        const charReputation = document.getElementById('char-reputation');
+        const gameYear = document.getElementById('game-year');
+        const eventLog = document.getElementById('event-log');
+        
+        // 按钮
+        const btnStudy = document.getElementById('btn-study');
+        const btnWork = document.getElementById('btn-work');
+        const btnSocial = document.getElementById('btn-social');
+        const btnRest = document.getElementById('btn-rest');
+        const btnNext = document.getElementById('btn-next');
+        const btnReset = document.getElementById('btn-reset');
+
+        // 更新角色创建界面
+        function updateCreationDisplay() {
+            healthValue.textContent = creationState.health;
+            knowledgeValue.textContent = creationState.knowledge;
+            wealthValue.textContent = creationState.wealth;
+            reputationValue.textContent = creationState.reputation;
+            pointsRemaining.textContent = creationState.points;
+            
+            // 更新按钮状态
+            healthDecrease.disabled = creationState.health <= 10;
+            healthIncrease.disabled = creationState.points <= 0 || creationState.health >= 90;
+            
+            knowledgeDecrease.disabled = creationState.knowledge <= 10;
+            knowledgeIncrease.disabled = creationState.points <= 0 || creationState.knowledge >= 90;
+            
+            wealthDecrease.disabled = creationState.wealth <= 10;
+            wealthIncrease.disabled = creationState.points <= 0 || creationState.wealth >= 90;
+            
+            reputationDecrease.disabled = creationState.reputation <= 10;
+            reputationIncrease.disabled = creationState.points <= 0 || creationState.reputation >= 90;
+        }
+
+        // 属性调整函数
+        function adjustStat(stat, amount) {
+            if (amount > 0 && creationState.points <= 0) return;
+            if (amount < 0 && creationState[stat] <= 10) return;
+            if (amount > 0 && creationState[stat] >= 90) return;
+            
+            creationState[stat] += amount;
+            creationState.points -= amount;
+            updateCreationDisplay();
+        }
+
+        // 开始游戏
+        function startGame() {
+            // 获取起始年份
+            const startYearIndex = parseInt(startYearSelect.value);
+            const startYear = yearTitles[startYearIndex];
+            
+            // 设置游戏状态
+            gameState = {
+                name: charNameInput.value || "王明",
+                age: 16,
+                status: "平民",
+                health: creationState.health,
+                knowledge: creationState.knowledge,
+                wealth: creationState.wealth,
+                reputation: creationState.reputation,
+                yearIndex: startYearIndex,
+                yearNum: 1,
+                events: [
+                    { 
+                        year: `${startYear.name}元年`, 
+                        content: `你出生在${startYear.name}年间，父母为你取名${charNameInput.value || "王明"}。` 
+                    }
+                ]
+            };
+            
+            // 切换到游戏界面
+            charCreation.classList.add('hidden');
+            gameInterface.classList.remove('hidden');
+            
+            // 更新游戏显示
+            updateGameDisplay();
+        }
+
+        // 更新游戏显示
+        function updateGameDisplay() {
+            charName.textContent = gameState.name;
+            charAge.textContent = gameState.age;
+            charStatus.textContent = gameState.status;
+            charHealth.textContent = gameState.health;
+            charKnowledge.textContent = gameState.knowledge;
+            charWealth.textContent = gameState.wealth;
+            charReputation.textContent = gameState.reputation;
+            
+            // 更新年份显示
+            const currentYear = yearTitles[gameState.yearIndex];
+            gameYear.textContent = `${currentYear.name}${gameState.yearNum}年`;
+            
+            // 更新事件日志
+            eventLog.innerHTML = '';
+            gameState.events.forEach(event => {
+                const eventElement = document.createElement('div');
+                eventElement.className = 'event';
+                eventElement.innerHTML = `
+                    <div class="event-time">${event.year}</div>
+                    <div class="event-content">${event.content}</div>
+                `;
+                eventLog.appendChild(eventElement);
+            });
+            
+            // 滚动到最新事件
+            eventLog.scrollTop = eventLog.scrollHeight;
+        }
+
+        // 添加事件
+        function addEvent(content) {
+            const currentYear = yearTitles[gameState.yearIndex];
+            gameState.events.push({
+                year: `${currentYear.name}${gameState.yearNum}年`,
+                content: content
+            });
+            updateGameDisplay();
+        }
+
+        // 更新年份
+        function updateYear() {
+            gameState.yearNum++;
+            gameState.age++;
+            
+            // 检查是否需要切换到下一个年号
+            const currentYear = yearTitles[gameState.yearIndex];
+            if (gameState.yearNum > currentYear.duration) {
+                gameState.yearIndex++;
+                gameState.yearNum = 1;
+                
+                // 如果所有年号都用完，游戏结束
+                if (gameState.yearIndex >= yearTitles.length) {
+                    addEvent("明朝灭亡，你的故事也随之结束。");
+                    disableButtons();
+                    return;
+                }
+            }
+        }
+
+        // 行动函数
+        function study() {
+            if (gameState.health < 10) {
+                addEvent("你身体欠佳，无法专心读书。");
+                return;
+            }
+            
+            const knowledgeGain = Math.floor(Math.random() * 10) + 5;
+            const healthCost = Math.floor(Math.random() * 5) + 1;
+            
+            gameState.knowledge += knowledgeGain;
+            gameState.health -= healthCost;
+            
+            addEvent(`你专心读书，学识增加了${knowledgeGain}点，但健康下降了${healthCost}点。`);
+            
+            // 学识达到一定水平可能触发事件
+            if (gameState.knowledge >= 80 && gameState.status === "平民") {
+                gameState.status = "秀才";
+                addEvent("恭喜！你通过了科举考试，成为了一名秀才！");
+            }
+            
+            updateGameDisplay();
+        }
+
+        function work() {
+            if (gameState.health < 15) {
+                addEvent("你身体欠佳，无法从事繁重工作。");
+                return;
+            }
+            
+            const wealthGain = Math.floor(Math.random() * 15) + 5;
+            const healthCost = Math.floor(Math.random() * 8) + 2;
+            
+            gameState.wealth += wealthGain;
+            gameState.health -= healthCost;
+            
+            addEvent(`你努力工作，财富增加了${wealthGain}点，但健康下降了${healthCost}点。`);
+            
+            // 财富达到一定水平可能触发事件
+            if (gameState.wealth >= 100 && gameState.status === "平民") {
+                gameState.status = "商人";
+                addEvent("你的生意越做越大，成为了一名成功的商人！");
+            }
+            
+            updateGameDisplay();
+        }
+
+        function social() {
+            if (gameState.wealth < 5) {
+                addEvent("你囊中羞涩，无法进行社交活动。");
+                return;
+            }
+            
+            const reputationGain = Math.floor(Math.random() * 10) + 5;
+            const wealthCost = Math.floor(Math.random() * 5) + 1;
+            
+            gameState.reputation += reputationGain;
+            gameState.wealth -= wealthCost;
+            
+            addEvent(`你参与社交活动，声望增加了${reputationGain}点，但花费了${wealthCost}点财富。`);
+            
+            // 声望达到一定水平可能触发事件
+            if (gameState.reputation >= 80 && gameState.status === "平民") {
+                gameState.status = "乡绅";
+                addEvent("你在当地声望卓著，成为了一名受人尊敬的乡绅！");
+            }
+            
+            updateGameDisplay();
+        }
+
+        function rest() {
+            const healthGain = Math.floor(Math.random() * 15) + 10;
+            const wealthCost = Math.floor(Math.random() * 3) + 1;
+            
+            // 确保健康不超过100
+            gameState.health = Math.min(100, gameState.health + healthGain);
+            
+            // 休息也需要基本开销
+            gameState.wealth = Math.max(0, gameState.wealth - wealthCost);
+            
+            addEvent(`你好好休息了一段时间，健康恢复了${healthGain}点，花费了${wealthCost}点财富。`);
+            
+            updateGameDisplay();
+        }
+
+        function nextYear() {
+            updateYear();
+            
+            // 每年自动消耗财富
+            const livingCost = Math.floor(Math.random() * 5) + 5;
+            gameState.wealth = Math.max(0, gameState.wealth - livingCost);
+            
+            addEvent(`又过了一年，生活开销花费了${livingCost}点财富。`);
+            
+            // 随机事件
+            const randomEvent = Math.random();
+            
+            if (randomEvent < 0.2) {
+                // 健康相关事件
+                if (Math.random() < 0.5) {
+                    const healthChange = Math.floor(Math.random() * 10) + 5;
+                    gameState.health = Math.min(100, gameState.health + healthChange);
+                    addEvent(`今年风调雨顺，你身体健康状况良好，健康增加了${healthChange}点。`);
+                } else {
+                    const healthChange = Math.floor(Math.random() * 15) + 5;
+                    gameState.health = Math.max(0, gameState.health - healthChange);
+                    addEvent(`今年遭遇瘟疫，你不幸染病，健康下降了${healthChange}点。`);
+                }
+            } else if (randomEvent < 0.4) {
+                // 财富相关事件
+                if (Math.random() < 0.5) {
+                    const wealthChange = Math.floor(Math.random() * 20) + 10;
+                    gameState.wealth += wealthChange;
+                    addEvent(`你意外获得了一笔遗产，财富增加了${wealthChange}点。`);
+                } else {
+                    const wealthChange = Math.floor(Math.random() * 15) + 5;
+                    gameState.wealth = Math.max(0, gameState.wealth - wealthChange);
+                    addEvent(`家中遭遇盗窃，损失了${wealthChange}点财富。`);
+                }
+            }
+            
+            // 检查游戏结束条件
+            if (gameState.health <= 0) {
+                addEvent("你因健康问题不幸离世，游戏结束。");
+                disableButtons();
+            } else if (gameState.age >= 80) {
+                addEvent("你寿终正寝，游戏结束。");
+                disableButtons();
+            } else if (gameState.wealth <= 0 && gameState.status === "平民") {
+                addEvent("你因贫困潦倒，无法维持生计，游戏结束。");
+                disableButtons();
+            }
+            
+            updateGameDisplay();
+        }
+
+        function resetGame() {
+            // 重置创建状态
+            creationState = {
+                health: 50,
+                knowledge: 50,
+                wealth: 50,
+                reputation: 50,
+                points: 20
+            };
+            
+            // 切换到角色创建界面
+            gameInterface.classList.add('hidden');
+            charCreation.classList.remove('hidden');
+            
+            // 更新创建界面显示
+            updateCreationDisplay();
+        }
+
+        function disableButtons() {
+            btnStudy.disabled = true;
+            btnWork.disabled = true;
+            btnSocial.disabled = true;
+            btnRest.disabled = true;
+            btnNext.disabled = true;
+        }
+
+        function enableButtons() {
+            btnStudy.disabled = false;
+            btnWork.disabled = false;
+            btnSocial.disabled = false;
+            btnRest.disabled = false;
+            btnNext.disabled = false;
+        }
+
+        // 事件监听 - 角色创建
+        healthDecrease.addEventListener('click', () => adjustStat('health', -1));
+        healthIncrease.addEventListener('click', () => adjustStat('health', 1));
+        knowledgeDecrease.addEventListener('click', () => adjustStat('knowledge', -1));
+        knowledgeIncrease.addEventListener('click', () => adjustStat('knowledge', 1));
+        wealthDecrease.addEventListener('click', () => adjustStat('wealth', -1));
+        wealthIncrease.addEventListener('click', () => adjustStat('wealth', 1));
+        reputationDecrease.addEventListener('click', () => adjustStat('reputation', -1));
+        reputationIncrease.addEventListener('click', () => adjustStat('reputation', 1));
+        
+        startGameBtn.addEventListener('click', startGame);
+
+        // 事件监听 - 游戏界面
+        btnStudy.addEventListener('click', study);
+        btnWork.addEventListener('click', work);
+        btnSocial.addEventListener('click', social);
+        btnRest.addEventListener('click', rest);
+        btnNext.addEventListener('click', nextYear);
+        btnReset.addEventListener('click', resetGame);
+
+        // 初始化显示
+        updateCreationDisplay();
+    </script>
+</body>
+</html>
