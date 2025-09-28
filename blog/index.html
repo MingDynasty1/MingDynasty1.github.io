@@ -6,6 +6,32 @@
     <title>MingDynasty 的博客主页 | 灵感源于明朝美学</title>
     <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
     <style>
+        :root {
+            /* 亮色主题变量 */
+            --bg-color: #f8f4e9;
+            --container-bg: rgba(255, 253, 245, 0.95);
+            --text-color: #3a2615;
+            --accent-color: #8b1a1a;
+            --secondary-color: #7a5c3c;
+            --border-color: #d4c5a8;
+            --blog-bg: linear-gradient(to right, rgba(139, 26, 26, 0.03), transparent);
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --seal-bg: rgba(255, 253, 245, 0.95);
+        }
+
+        [data-theme="dark"] {
+            /* 暗色主题变量 */
+            --bg-color: #1a1a1a;
+            --container-bg: rgba(30, 25, 20, 0.95);
+            --text-color: #e0d6c8;
+            --accent-color: #c44d4d;
+            --secondary-color: #a88c6c;
+            --border-color: #4a3c2a;
+            --blog-bg: linear-gradient(to right, rgba(196, 77, 77, 0.08), transparent);
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --seal-bg: rgba(30, 25, 20, 0.95);
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -14,8 +40,8 @@
         
         body {
             font-family: "SimSun", "宋体", serif;
-            background-color: #f8f4e9; /* 宣纸色调 */
-            color: #3a2615; /* 墨色 */
+            background-color: var(--bg-color);
+            color: var(--text-color);
             line-height: 1.6;
             min-height: 100vh;
             display: flex;
@@ -23,19 +49,21 @@
             align-items: center;
             padding: 40px 20px;
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.8) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.6) 0%, transparent 20%);
+                radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 20%);
+            transition: background-color 0.5s ease, color 0.5s ease;
         }
         
         .container {
             max-width: 800px;
             width: 100%;
-            background-color: rgba(255, 253, 245, 0.95);
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
-            border: 1px solid #d4c5a8;
+            background-color: var(--container-bg);
+            box-shadow: 0 5px 25px var(--shadow-color);
+            border: 1px solid var(--border-color);
             position: relative;
             padding: 50px 40px;
             margin-top: 30px;
+            transition: all 0.5s ease;
         }
         
         /* 顶部装饰 */
@@ -46,9 +74,10 @@
             transform: translateX(-50%);
             width: 120px;
             height: 30px;
-            background: #8b1a1a; /* 朱红色 */
+            background: var(--accent-color);
             clip-path: polygon(0 0, 100% 0, 90% 100%, 10% 100%);
             z-index: 2;
+            transition: background-color 0.5s ease;
         }
         
         .top-decoration::before {
@@ -58,8 +87,9 @@
             left: 5px;
             right: 5px;
             bottom: 5px;
-            background: #f8f4e9;
+            background: var(--bg-color);
             clip-path: polygon(0 0, 100% 0, 90% 100%, 10% 100%);
+            transition: background-color 0.5s ease;
         }
         
         /* 页眉样式 */
@@ -67,27 +97,30 @@
             text-align: center;
             margin-bottom: 50px;
             padding-bottom: 30px;
-            border-bottom: 2px solid #8b1a1a;
+            border-bottom: 2px solid var(--accent-color);
             position: relative;
+            transition: border-color 0.5s ease;
         }
         
         .site-title {
             font-size: 3.2rem;
-            color: #8b1a1a;
+            color: var(--accent-color);
             margin-bottom: 15px;
             letter-spacing: 8px;
-            text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.1);
+            text-shadow: 2px 2px 3px var(--shadow-color);
             position: relative;
             display: inline-block;
+            transition: color 0.5s ease;
         }
         
         .site-title::before, .site-title::after {
             content: "❖";
-            color: #8b1a1a;
+            color: var(--accent-color);
             font-size: 1.8rem;
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
+            transition: color 0.5s ease;
         }
         
         .site-title::before {
@@ -100,9 +133,10 @@
         
         .site-subtitle {
             font-size: 1.3rem;
-            color: #7a5c3c;
+            color: var(--secondary-color);
             font-style: italic;
             letter-spacing: 2px;
+            transition: color 0.5s ease;
         }
         
         /* 印章效果 */
@@ -112,7 +146,7 @@
             top: -30px;
             width: 100px;
             height: 100px;
-            border: 3px solid #8b1a1a;
+            border: 3px solid var(--accent-color);
             border-radius: 5px;
             display: flex;
             align-items: center;
@@ -120,11 +154,12 @@
             transform: rotate(5deg);
             font-family: "楷体", "KaiTi", serif;
             font-size: 1.5rem;
-            color: #8b1a1a;
-            background: rgba(255, 253, 245, 0.95);
+            color: var(--accent-color);
+            background: var(--seal-bg);
             z-index: 3;
-            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 3px 3px 10px var(--shadow-color);
             animation: seal-pulse 4s infinite ease-in-out;
+            transition: all 0.5s ease;
         }
         
         @keyframes seal-pulse {
@@ -137,7 +172,8 @@
             position: absolute;
             width: 90%;
             height: 90%;
-            border: 1px solid #8b1a1a;
+            border: 1px solid var(--accent-color);
+            transition: border-color 0.5s ease;
         }
         
         /* 博文列表样式 */
@@ -149,8 +185,8 @@
         .blog-item {
             margin-bottom: 30px;
             padding: 25px;
-            border-left: 5px solid #8b1a1a;
-            background: linear-gradient(to right, rgba(139, 26, 26, 0.03), transparent);
+            border-left: 5px solid var(--accent-color);
+            background: var(--blog-bg);
             transition: all 0.3s ease;
             position: relative;
             opacity: 0;
@@ -175,12 +211,12 @@
         
         .blog-item:hover {
             transform: translateX(8px);
-            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.08);
+            box-shadow: 5px 5px 15px var(--shadow-color);
         }
         
         .blog-title {
             font-size: 1.6rem;
-            color: #8b1a1a;
+            color: var(--accent-color);
             margin-bottom: 12px;
             text-decoration: none;
             display: block;
@@ -188,19 +224,21 @@
             letter-spacing: 1px;
             position: relative;
             padding-left: 25px;
+            transition: color 0.3s ease;
         }
         
         .blog-title::before {
             content: "»";
             position: absolute;
             left: 0;
-            color: #8b1a1a;
+            color: var(--accent-color);
             transition: all 0.3s ease;
         }
         
         .blog-title:hover {
             text-decoration: underline;
-            color: #6a0f0f;
+            color: var(--accent-color);
+            filter: brightness(0.8);
         }
         
         .blog-title:hover::before {
@@ -209,11 +247,12 @@
         
         .blog-meta {
             font-size: 1rem;
-            color: #7a5c3c;
+            color: var(--secondary-color);
             font-style: italic;
             margin-bottom: 10px;
             display: flex;
             align-items: center;
+            transition: color 0.5s ease;
         }
         
         .blog-meta::before {
@@ -222,11 +261,12 @@
         }
         
         .blog-desc {
-            color: #5a4a30;
+            color: var(--text-color);
             line-height: 1.7;
             padding-left: 25px;
-            border-left: 2px dotted #d4c5a8;
+            border-left: 2px dotted var(--border-color);
             margin-left: 5px;
+            transition: color 0.5s ease, border-color 0.5s ease;
         }
         
         /* 页脚样式 */
@@ -234,13 +274,14 @@
             text-align: center;
             margin-top: 60px;
             padding-top: 25px;
-            border-top: 1px solid #d4c5a8;
-            color: #7a5c3c;
+            border-top: 1px solid var(--border-color);
+            color: var(--secondary-color);
             font-size: 1rem;
             letter-spacing: 1px;
             opacity: 0;
             animation: fadeIn 1s forwards;
             animation-delay: 1s;
+            transition: color 0.5s ease, border-color 0.5s ease;
         }
         
         @keyframes fadeIn {
@@ -254,7 +295,8 @@
             top: 0;
             bottom: 0;
             width: 15px;
-            background: #8b1a1a;
+            background: var(--accent-color);
+            transition: background-color 0.5s ease;
         }
         
         .side-decoration.left {
@@ -276,11 +318,63 @@
             background: 
                 repeating-linear-gradient(
                     to bottom,
-                    #f8f4e9,
-                    #f8f4e9 10px,
+                    var(--bg-color),
+                    var(--bg-color) 10px,
                     transparent 10px,
                     transparent 20px
                 );
+            transition: background-color 0.5s ease;
+        }
+        
+        /* 主题切换按钮 */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            color: var(--container-bg);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 3px 10px var(--shadow-color);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+        
+        .theme-toggle .sun-icon, 
+        .theme-toggle .moon-icon {
+            position: absolute;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        
+        .theme-toggle .sun-icon {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .theme-toggle .moon-icon {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+        
+        [data-theme="dark"] .theme-toggle .sun-icon {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+        
+        [data-theme="dark"] .theme-toggle .moon-icon {
+            opacity: 1;
+            transform: scale(1);
         }
         
         /* 响应式设计 */
@@ -315,6 +409,14 @@
             .blog-desc {
                 padding-left: 20px;
             }
+            
+            .theme-toggle {
+                top: 10px;
+                right: 10px;
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
         }
         
         @media (max-width: 480px) {
@@ -337,6 +439,11 @@
     </style>
 </head>
 <body>
+    <button class="theme-toggle" id="themeToggle" aria-label="切换主题">
+        <span class="sun-icon">☀️</span>
+        <span class="moon-icon">🌙</span>
+    </button>
+    
     <div class="top-decoration"></div>
     <div class="container">
         <div class="side-decoration left"></div>
@@ -384,5 +491,26 @@
             <p>© 2013-2025 MingDynasty,Inc. MingDynasty's blog | 灵感源于明朝美学</p>
         </footer>
     </div>
+
+    <script>
+        // 主题切换功能
+        const themeToggle = document.getElementById('themeToggle');
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        
+        // 设置初始主题
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        
+        // 切换主题函数
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+        
+        // 添加点击事件
+        themeToggle.addEventListener('click', toggleTheme);
+    </script>
 </body>
 </html>
