@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>明风论坛 - 传承中华文化 | MingDynasty</title>
+      <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <style>
+        :root {
+            --primary-color: #c62f2f; /* 朱红色 */
+            --secondary-color: #d4af37; /* 金色 */
+            --bg-color: #f5f1e6; /* 米白色 */
+            --text-color: #333333; /* 墨黑色 */
+            --border-color: #8b4513; /* 棕色 */
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-theme {
+            --primary-color: #c62f2f;
+            --secondary-color: #d4af37;
+            --bg-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --border-color: #8b4513;
+            --shadow-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            font-family: "SimSun", "宋体", serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* 头部样式 */
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 0;
+            border-bottom: 3px solid var(--secondary-color);
+            position: relative;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo h1 {
+            font-size: 28px;
+            margin-left: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background-color: var(--secondary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 24px;
+            color: var(--primary-color);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        nav ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 2px solid white;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 15px;
+            font-family: inherit;
+        }
+
+        .theme-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* 主内容区样式 */
+        main {
+            padding: 30px 0;
+            min-height: calc(100vh - 150px);
+        }
+
+        .forum-section {
+            background-color: var(--bg-color);
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title::before {
+            content: "「";
+            margin-right: 5px;
+        }
+
+        .section-title::after {
+            content: "」";
+            margin-left: 5px;
+        }
+
+        /* 表单样式 */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: inherit;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #a02626;
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background-color: #b8941f;
+        }
+
+        /* 帖子样式 */
+        .post {
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: var(--bg-color);
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .post-author {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .post-date {
+            color: #666;
+        }
+
+        .post-content {
+            margin-bottom: 10px;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* 页脚样式 */
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            border-top: 3px solid var(--secondary-color);
+        }
+
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: var(--bg-color);
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            border: 2px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                margin-top: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 5px;
+            }
+            
+            .user-info {
+                margin-top: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">明</div>
+                    <h1>明风论坛</h1>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#" id="home-link">首页</a></li>
+                        <li><a href="#" id="posts-link">帖子</a></li>
+                        <li><a href="#" id="profile-link">个人中心</a></li>
+                    </ul>
+                </nav>
+                <div class="user-info">
+                    <button class="theme-toggle" id="theme-toggle">切换主题</button>
+                    <button class="btn" id="login-btn">登录</button>
+                    <button class="btn btn-secondary" id="register-btn">注册</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- 首页内容 -->
+        <section id="home-section" class="forum-section">
+            <h2 class="section-title">欢迎来到明风论坛</h2>
+            <p>明风论坛是一个以明朝文化为主题的交流平台，在这里您可以分享关于明朝历史、文化、艺术等方面的见解，与其他同好交流心得。</p>
+            <div class="recent-posts">
+                <h3>最新帖子</h3>
+                <div id="posts-container">
+                    <!-- 帖子将通过JavaScript动态加载 -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 登录模态框 -->
+        <div id="login-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>用户登录</h2>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="login-username">用户名</label>
+                        <input type="text" id="login-username" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">密码</label>
+                        <input type="password" id="login-password" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn">登录</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 注册模态框 -->
+        <div id="register-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>用户注册</h2>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <form id="register-form">
+                    <div class="form-group">
+                        <label for="register-username">用户名</label>
+                        <input type="text" id="register-username" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">密码</label>
+                        <input type="password" id="register-password" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-email">电子邮箱</label>
+                        <input type="email" id="register-email" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn">注册</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 发帖模态框 -->
+        <div id="post-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>发表新帖</h2>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <form id="post-form">
+                    <div class="form-group">
+                        <label for="post-title">标题</label>
+                        <input type="text" id="post-title" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="post-content">内容</label>
+                        <textarea id="post-content" class="form-control" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn">发表</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 个人设置模态框 -->
+        <div id="profile-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>个人设置</h2>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <form id="profile-form">
+                    <div class="form-group">
+                        <label for="profile-username">用户名</label>
+                        <input type="text" id="profile-username" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="profile-email">电子邮箱</label>
+                        <input type="email" id="profile-email" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="profile-password">新密码</label>
+                        <input type="password" id="profile-password" class="form-control">
+                    </div>
+                    <button type="submit" class="btn">保存设置</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2013-2025 MingDynasty,Inc. | 传承中华文化，弘扬明朝风韵</p>
+        </div>
+    </footer>
+
+    <script>
+        // 全局变量
+        let currentUser = null;
+        let posts = [];
+
+        // DOM元素
+        const themeToggle = document.getElementById('theme-toggle');
+        const loginBtn = document.getElementById('login-btn');
+        const registerBtn = document.getElementById('register-btn');
+        const loginModal = document.getElementById('login-modal');
+        const registerModal = document.getElementById('register-modal');
+        const postModal = document.getElementById('post-modal');
+        const profileModal = document.getElementById('profile-modal');
+        const closeModalBtns = document.querySelectorAll('.close-modal');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const postForm = document.getElementById('post-form');
+        const profileForm = document.getElementById('profile-form');
+        const postsContainer = document.getElementById('posts-container');
+        const homeLink = document.getElementById('home-link');
+        const postsLink = document.getElementById('posts-link');
+        const profileLink = document.getElementById('profile-link');
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 检查Cookie中的用户信息
+            checkUserCookie();
+            
+            // 加载帖子
+            loadPosts();
+            
+            // 设置事件监听器
+            setupEventListeners();
+        });
+
+        // 检查用户Cookie
+        function checkUserCookie() {
+            const name = getCookie('name');
+            const uid = getCookie('uid');
+            const password = getCookie('password');
+            
+            if (name && uid && password) {
+                currentUser = {
+                    name: name,
+                    uid: uid,
+                    password: password,
+                    email: getCookie('email') || ''
+                };
+                updateUIForLoggedInUser();
+            }
+        }
+
+        // 获取Cookie
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+
+        // 设置Cookie
+        function setCookie(name, value, days = 30) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            const expires = `expires=${date.toUTCString()}`;
+            document.cookie = `${name}=${value}; ${expires}; path=/`;
+        }
+
+        // 删除Cookie
+        function deleteCookie(name) {
+            document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+        }
+
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 主题切换
+            themeToggle.addEventListener('click', toggleTheme);
+            
+            // 登录/注册按钮
+            loginBtn.addEventListener('click', () => showModal(loginModal));
+            registerBtn.addEventListener('click', () => showModal(registerModal));
+            
+            // 关闭模态框
+            closeModalBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    hideAllModals();
+                });
+            });
+            
+            // 表单提交
+            loginForm.addEventListener('submit', handleLogin);
+            registerForm.addEventListener('submit', handleRegister);
+            postForm.addEventListener('submit', handlePost);
+            profileForm.addEventListener('submit', handleProfileUpdate);
+            
+            // 导航链接
+            homeLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                showHomeSection();
+            });
+            
+            postsLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (currentUser) {
+                    showPostModal();
+                } else {
+                    showModal(loginModal);
+                }
+            });
+            
+            profileLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (currentUser) {
+                    showProfileModal();
+                } else {
+                    showModal(loginModal);
+                }
+            });
+            
+            // 点击模态框外部关闭
+            window.addEventListener('click', (e) => {
+                if (e.target.classList.contains('modal')) {
+                    hideAllModals();
+                }
+            });
+        }
+
+        // 切换主题
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            const isDark = document.body.classList.contains('dark-theme');
+            setCookie('theme', isDark ? 'dark' : 'light', 365);
+        }
+
+        // 显示模态框
+        function showModal(modal) {
+            hideAllModals();
+            modal.style.display = 'flex';
+        }
+
+        // 隐藏所有模态框
+        function hideAllModals() {
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.style.display = 'none';
+            });
+        }
+
+        // 显示首页
+        function showHomeSection() {
+            // 实现首页显示逻辑
+        }
+
+        // 显示发帖模态框
+        function showPostModal() {
+            showModal(postModal);
+        }
+
+        // 显示个人设置模态框
+        function showProfileModal() {
+            document.getElementById('profile-username').value = currentUser.name;
+            document.getElementById('profile-email').value = currentUser.email || '';
+            document.getElementById('profile-password').value = '';
+            showModal(profileModal);
+        }
+
+        // 处理登录
+        function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            
+            // 简单验证
+            if (username && password) {
+                // 在实际应用中，这里应该与服务器验证
+                // 这里我们简单模拟验证过程
+                const storedPassword = getCookie('password');
+                const storedUsername = getCookie('name');
+                
+                if (username === storedUsername && password === storedPassword) {
+                    currentUser = {
+                        name: username,
+                        uid: getCookie('uid'),
+                        password: password,
+                        email: getCookie('email') || ''
+                    };
+                    
+                    updateUIForLoggedInUser();
+                    hideAllModals();
+                    alert('登录成功！');
+                } else {
+                    alert('用户名或密码错误！');
+                }
+            }
+        }
+
+        // 处理注册
+        function handleRegister(e) {
+            e.preventDefault();
+            const username = document.getElementById('register-username').value;
+            const password = document.getElementById('register-password').value;
+            const email = document.getElementById('register-email').value;
+            
+            // 简单验证
+            if (username && password && email) {
+                // 在实际应用中，这里应该与服务器通信
+                // 这里我们简单模拟注册过程
+                const uid = 'user_' + Date.now();
+                
+                // 保存用户信息到Cookie
+                setCookie('name', username);
+                setCookie('uid', uid);
+                setCookie('password', password);
+                setCookie('email', email);
+                
+                currentUser = {
+                    name: username,
+                    uid: uid,
+                    password: password,
+                    email: email
+                };
+                
+                updateUIForLoggedInUser();
+                hideAllModals();
+                alert('注册成功！');
+            }
+        }
+
+        // 处理发帖
+        function handlePost(e) {
+            e.preventDefault();
+            const title = document.getElementById('post-title').value;
+            const content = document.getElementById('post-content').value;
+            
+            if (title && content) {
+                const post = {
+                    id: 'post_' + Date.now(),
+                    title: title,
+                    content: content,
+                    author: currentUser.name,
+                    date: new Date().toLocaleString()
+                };
+                
+                posts.unshift(post); // 添加到帖子列表开头
+                savePosts();
+                loadPosts();
+                hideAllModals();
+                document.getElementById('post-form').reset();
+                alert('帖子发表成功！');
+            }
+        }
+
+        // 处理个人设置更新
+        function handleProfileUpdate(e) {
+            e.preventDefault();
+            const email = document.getElementById('profile-email').value;
+            const password = document.getElementById('profile-password').value;
+            
+            if (email) {
+                currentUser.email = email;
+                setCookie('email', email);
+            }
+            
+            if (password) {
+                currentUser.password = password;
+                setCookie('password', password);
+            }
+            
+            hideAllModals();
+            alert('设置已保存！');
+        }
+
+        // 更新UI以显示已登录用户
+        function updateUIForLoggedInUser() {
+            loginBtn.textContent = '退出';
+            loginBtn.removeEventListener('click', () => showModal(loginModal));
+            loginBtn.addEventListener('click', handleLogout);
+            
+            registerBtn.style.display = 'none';
+        }
+
+        // 处理退出
+        function handleLogout() {
+            currentUser = null;
+            deleteCookie('name');
+            deleteCookie('uid');
+            deleteCookie('password');
+            deleteCookie('email');
+            
+            loginBtn.textContent = '登录';
+            loginBtn.removeEventListener('click', handleLogout);
+            loginBtn.addEventListener('click', () => showModal(loginModal));
+            
+            registerBtn.style.display = 'inline-block';
+            
+            alert('已退出登录！');
+        }
+
+        // 加载帖子
+        function loadPosts() {
+            // 从本地存储加载帖子
+            const savedPosts = localStorage.getItem('mingForumPosts');
+            if (savedPosts) {
+                posts = JSON.parse(savedPosts);
+            } else {
+                // 如果没有保存的帖子，使用示例帖子
+                posts = [
+                    {
+                        id: 'post_1',
+                        title: '明朝建筑艺术赏析',
+                        content: '明朝建筑以其独特的风格和精湛的工艺闻名于世，尤其是紫禁城的建筑群，体现了中国古代建筑的最高成就。',
+                        author: '历史爱好者',
+                        date: '2023-10-15 14:30'
+                    },
+                    {
+                        id: 'post_2',
+                        title: '论明朝科举制度的影响',
+                        content: '明朝科举制度对中国社会产生了深远影响，不仅选拔了大量人才，也促进了社会流动和文化发展。',
+                        author: '学者张明',
+                        date: '2023-10-14 09:45'
+                    }
+                ];
+                savePosts();
+            }
+            
+            displayPosts();
+        }
+
+        // 显示帖子
+        function displayPosts() {
+            postsContainer.innerHTML = '';
+            
+            if (posts.length === 0) {
+                postsContainer.innerHTML = '<p>暂无帖子，快来发表第一篇吧！</p>';
+                return;
+            }
+            
+            posts.forEach(post => {
+                const postElement = document.createElement('div');
+                postElement.className = 'post';
+                postElement.innerHTML = `
+                    <div class="post-header">
+                        <div class="post-author">${post.author}</div>
+                        <div class="post-date">${post.date}</div>
+                    </div>
+                    <h3>${post.title}</h3>
+                    <div class="post-content">${post.content}</div>
+                `;
+                postsContainer.appendChild(postElement);
+            });
+        }
+
+        // 保存帖子到本地存储
+        function savePosts() {
+            localStorage.setItem('mingForumPosts', JSON.stringify(posts));
+        }
+
+        // 检查保存的主题偏好
+        const savedTheme = getCookie('theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-theme');
+        }
+    </script>
+</body>
+</html>
