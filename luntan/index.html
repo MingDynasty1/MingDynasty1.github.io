@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>明风论坛 - 传承中华文化 | MingDynasty</title>
-      <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <title>明风论坛 - 传承中华文化</title>
     <style>
         :root {
             --primary-color: #c62f2f; /* 朱红色 */
@@ -325,7 +324,7 @@
                 <nav>
                     <ul>
                         <li><a href="#" id="home-link">首页</a></li>
-                        <li><a href="#" id="posts-link">帖子</a></li>
+                        <li><a href="#" id="posts-link">发帖</a></li>
                         <li><a href="#" id="profile-link">个人中心</a></li>
                     </ul>
                 </nav>
@@ -446,7 +445,7 @@
 
     <footer>
         <div class="container">
-            <p>&copy; 2013-2025 MingDynasty,Inc. | 传承中华文化，弘扬明朝风韵</p>
+            <p>明风论坛 &copy; 2023 - 传承中华文化，弘扬明朝风韵</p>
         </div>
     </footer>
 
@@ -483,6 +482,9 @@
             
             // 设置事件监听器
             setupEventListeners();
+            
+            // 设置定时刷新帖子
+            setInterval(loadPosts, 5000); // 每5秒刷新一次帖子
         });
 
         // 检查用户Cookie
@@ -692,9 +694,8 @@
                     date: new Date().toLocaleString()
                 };
                 
-                posts.unshift(post); // 添加到帖子列表开头
-                savePosts();
-                loadPosts();
+                // 保存帖子到"服务器"
+                savePostToServer(post);
                 hideAllModals();
                 document.getElementById('post-form').reset();
                 alert('帖子发表成功！');
@@ -749,32 +750,21 @@
 
         // 加载帖子
         function loadPosts() {
-            // 从本地存储加载帖子
-            const savedPosts = localStorage.getItem('mingForumPosts');
-            if (savedPosts) {
-                posts = JSON.parse(savedPosts);
-            } else {
-                // 如果没有保存的帖子，使用示例帖子
-                posts = [
-                    {
-                        id: 'post_1',
-                        title: '明朝建筑艺术赏析',
-                        content: '明朝建筑以其独特的风格和精湛的工艺闻名于世，尤其是紫禁城的建筑群，体现了中国古代建筑的最高成就。',
-                        author: '历史爱好者',
-                        date: '2023-10-15 14:30'
-                    },
-                    {
-                        id: 'post_2',
-                        title: '论明朝科举制度的影响',
-                        content: '明朝科举制度对中国社会产生了深远影响，不仅选拔了大量人才，也促进了社会流动和文化发展。',
-                        author: '学者张明',
-                        date: '2023-10-14 09:45'
+            // 从"服务器"加载帖子
+            fetchPostsFromServer()
+                .then(fetchedPosts => {
+                    posts = fetchedPosts;
+                    displayPosts();
+                })
+                .catch(error => {
+                    console.error('加载帖子失败:', error);
+                    // 如果无法从服务器获取，尝试从本地存储加载
+                    const savedPosts = localStorage.getItem('mingForumPosts');
+                    if (savedPosts) {
+                        posts = JSON.parse(savedPosts);
+                        displayPosts();
                     }
-                ];
-                savePosts();
-            }
-            
-            displayPosts();
+                });
         }
 
         // 显示帖子
@@ -801,9 +791,74 @@
             });
         }
 
-        // 保存帖子到本地存储
-        function savePosts() {
-            localStorage.setItem('mingForumPosts', JSON.stringify(posts));
+        // 模拟从服务器获取帖子
+        function fetchPostsFromServer() {
+            return new Promise((resolve, reject) => {
+                // 在实际应用中，这里应该是真正的API调用
+                // 这里我们模拟网络延迟
+                setTimeout(() => {
+                    try {
+                        // 尝试从localStorage获取帖子数据
+                        // 在实际应用中，这应该是一个真正的服务器API
+                        const serverPosts = localStorage.getItem('mingForumServerPosts');
+                        if (serverPosts) {
+                            resolve(JSON.parse(serverPosts));
+                        } else {
+                            // 如果没有帖子，返回示例帖子
+                            const examplePosts = [
+                                {
+                                    id: 'post_1',
+                                    title: '明朝建筑艺术赏析',
+                                    content: '明朝建筑以其独特的风格和精湛的工艺闻名于世，尤其是紫禁城的建筑群，体现了中国古代建筑的最高成就。',
+                                    author: '历史爱好者',
+                                    date: '2023-10-15 14:30'
+                                },
+                                {
+                                    id: 'post_2',
+                                    title: '论明朝科举制度的影响',
+                                    content: '明朝科举制度对中国社会产生了深远影响，不仅选拔了大量人才，也促进了社会流动和文化发展。',
+                                    author: '学者张明',
+                                    date: '2023-10-14 09:45'
+                                }
+                            ];
+                            // 保存示例帖子到"服务器"
+                            localStorage.setItem('mingForumServerPosts', JSON.stringify(examplePosts));
+                            resolve(examplePosts);
+                        }
+                    } catch (error) {
+                        reject(error);
+                    }
+                }, 500); // 模拟网络延迟
+            });
+        }
+
+        // 模拟保存帖子到服务器
+        function savePostToServer(post) {
+            // 在实际应用中，这里应该是真正的API调用
+            // 这里我们模拟网络延迟
+            setTimeout(() => {
+                try {
+                    // 从"服务器"获取当前帖子
+                    const serverPosts = localStorage.getItem('mingForumServerPosts');
+                    let posts = serverPosts ? JSON.parse(serverPosts) : [];
+                    
+                    // 添加新帖子
+                    posts.unshift(post);
+                    
+                    // 保存回"服务器"
+                    localStorage.setItem('mingForumServerPosts', JSON.stringify(posts));
+                    
+                    // 更新本地帖子列表
+                    loadPosts();
+                } catch (error) {
+                    console.error('保存帖子失败:', error);
+                    // 如果保存到服务器失败，保存到本地存储作为备份
+                    const localPosts = localStorage.getItem('mingForumPosts');
+                    let posts = localPosts ? JSON.parse(localPosts) : [];
+                    posts.unshift(post);
+                    localStorage.setItem('mingForumPosts', JSON.stringify(posts));
+                }
+            }, 300); // 模拟网络延迟
         }
 
         // 检查保存的主题偏好
