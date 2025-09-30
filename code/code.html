@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <title>大明编程挑战 | 数字连接问题 | MingDynasty</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+        
+        :root {
+            /* 亮色主题变量 */
+            --bg-color: #f8f3e6;
+            --text-color: #333;
+            --card-bg: #fff;
+            --header-bg: linear-gradient(to right, #8b0000, #a52a2a);
+            --nav-bg: #8b0000;
+            --accent-color: #8b0000;
+            --gold-color: #d4af37;
+            --border-color: #e0c987;
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --code-bg: #2b2b2b;
+            --time-bg: linear-gradient(135deg, #8b0000, #d4af37);
+            --pattern-opacity: 0.05;
+        }
+        
+        .dark-mode {
+            /* 暗色主题变量 */
+            --bg-color: #1a1a1a;
+            --text-color: #e6e6e6;
+            --card-bg: #2d2d2d;
+            --header-bg: linear-gradient(to right, #600000, #7a1f1f);
+            --nav-bg: #600000;
+            --accent-color: #cc0000;
+            --gold-color: #c19b30;
+            --border-color: #5c4c1a;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --code-bg: #3d3d3d;
+            --time-bg: linear-gradient(135deg, #600000, #9b7a1f);
+            --pattern-opacity: 0.1;
+        }
+        
+        body {
+            font-family: 'SimSun', '宋体', serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill-opacity="' + var(--pattern-opacity) + '" fill="%23000" width="100" height="100"/></svg>');
+            padding: 0;
+            margin: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* 页眉样式 */
+        header {
+            background: var(--header-bg);
+            color: #f8f3e6;
+            padding: 20px 0;
+            border-bottom: 5px solid var(--gold-color);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            position: relative;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
+            letter-spacing: 5px;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* 导航样式 */
+        nav {
+            background-color: var(--nav-bg);
+            padding: 15px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid var(--gold-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        nav a {
+            color: #f8f3e6;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1.1rem;
+            padding: 5px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* 主题切换按钮 */
+        .theme-switch {
+            margin-left: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .theme-switch-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            color: #f8f3e6;
+            font-size: 0.9rem;
+        }
+        
+        .theme-switch-label i {
+            margin-right: 5px;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+            margin-left: 10px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--gold-color);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        /* 卡片样式 */
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            border-left: 5px solid var(--accent-color);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(to right, var(--accent-color), var(--gold-color));
+        }
+        
+        .card h2 {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed var(--border-color);
+            font-size: 1.5rem;
+        }
+        
+        /* 题目样式 */
+        .problem-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .problem-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .problem-description {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            border-left: 5px solid var(--accent-color);
+        }
+        
+        .problem-description h2 {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed var(--border-color);
+            font-size: 1.5rem;
+        }
+        
+        .problem-description h3 {
+            color: var(--gold-color);
+            margin: 20px 0 10px;
+        }
+        
+        .problem-description pre {
+            background: var(--code-bg);
+            color: #f8f3e6;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            border-left: 5px solid var(--gold-color);
+            font-family: 'Consolas', 'Monaco', monospace;
+            margin: 15px 0;
+        }
+        
+        .io-example {
+            background: rgba(139, 0, 0, 0.1);
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 3px solid var(--accent-color);
+        }
+        
+        .io-example h4 {
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+        
+        /* 代码编辑器样式 */
+        .code-editor {
+            background: var(--code-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px var(--shadow-color);
+        }
+        
+        .editor-header {
+            background: var(--accent-color);
+            color: #f8f3e6;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .editor-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+        
+        .language-selector {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: #f8f3e6;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-family: 'SimSun', '宋体', serif;
+        }
+        
+        .code-area {
+            width: 100%;
+            height: 300px;
+            background: var(--code-bg);
+            color: #f8f3e6;
+            border: none;
+            padding: 15px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            resize: vertical;
+        }
+        
+        /* 提交按钮样式 */
+        .submit-btn {
+            background: var(--accent-color);
+            color: #f8f3e6;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: block;
+            margin: 20px auto;
+            font-family: 'SimSun', '宋体', serif;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .submit-btn:hover {
+            background: var(--nav-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* 结果输出样式 */
+        .result-container {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            border-left: 5px solid var(--gold-color);
+            margin-top: 30px;
+        }
+        
+        .result-container h2 {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed var(--border-color);
+            font-size: 1.5rem;
+        }
+        
+        .result-output {
+            background: var(--code-bg);
+            color: #f8f3e6;
+            padding: 15px;
+            border-radius: 5px;
+            min-height: 100px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            white-space: pre-wrap;
+            border-left: 5px solid var(--gold-color);
+        }
+        
+        /* 页脚样式 */
+        footer {
+            background: var(--header-bg);
+            color: #f8f3e6;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+            border-top: 5px solid var(--gold-color);
+        }
+        
+        /* 明朝特色装饰 */
+        .ming-decoration {
+            font-family: 'KaiTi', '楷体', serif;
+            color: var(--accent-color);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .chinese-pattern {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"><path fill="' + var(--accent-color) + '" fill-opacity="0.1" d="M0 0h60v60H0z"/><path fill="' + var(--gold-color) + '" fill-opacity="0.1" d="M0 0h30v30H0z"/></svg>');
+            background-size: 60px 60px;
+        }
+    </style>
+</head>
+<body class="light-mode">
+    <header>
+        <div class="container">
+            <h1 class="ming-decoration">大明编程挑战</h1>
+            <p>传承明朝风韵，展现编程之美</p>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="container">
+            <a href="https://mingdynasty1.github.io/OImap.html">主页导航</a>
+            <a href="https://MingDynasty1.github.io/MgDy.html">个人信息</a>
+            <a href="https://mingdynasty1.github.io/friends/friends.html">友链</a>
+            <a href="https://MingDynasty1.github.io/OnlineJudge/index.html">免费网盘</a>
+            <a href="https://mingdynasty1.github.io/cbpan_help/MingDynasty_cbpan_help.html">网盘帮助中心</a>
+            <a href="https://www.luogu.com.cn/contest/247666">比赛宣传</a>
+            <a href="https://mingdynasty1.github.io/game.html">益智小游戏</a>
+            <a href="https://mingdynasty1.github.io/2048.html">2048游戏</a>
+            <a href="https://mingdynasty1.github.io/gxrz.html">更新日志</a>
+            <a href="https://MingDynasty1.github.io/calc.html">计算器</a>
+            <a href="https://MingDynasty1.github.io/dmgame.html">大明皇帝模拟器</a>
+            <a href="https://mingdynasty1.github.io/dmhpy.html">大明国庆</a>
+            <a href="https://MingDynasty1.github.io/MgDyhistory.html">大明历史</a>
+            <!-- 添加大明论坛链接 -->
+            <a href="https://MingDynasty1.github.io/luntan/index.html">大明论坛</a>
+            
+            <div class="theme-switch">
+                <label class="theme-switch-label">
+                    <i class="fas fa-moon"></i>
+                    <span class="switch">
+                        <input type="checkbox" id="theme-toggle">
+                        <span class="slider"></span>
+                    </span>
+                    <i class="fas fa-sun"></i>
+                </label>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="card chinese-pattern">
+            <h2>题目挑战：数字连接问题</h2>
+            <p>本题要求将一组正整数连接成一个最大的整数。请仔细阅读题目描述，编写代码解决此问题。</p>
+        </div>
+        
+        <div class="problem-container">
+            <div class="problem-description">
+                <h2>题目描述</h2>
+                <p>设有 n 个正整数 a₁, a₂, ..., aₙ，将它们联接成一排，相邻数字首尾相接，组成一个最大的整数。</p>
+                
+                <h3>输入格式</h3>
+                <p>第一行有一个整数，表示数字个数 n。</p>
+                <p>第二行有 n 个整数，表示给出的 n 个整数 aᵢ。</p>
+                
+                <h3>输出格式</h3>
+                <p>一个正整数，表示最大的整数</p>
+                
+                <h3>输入输出样例</h3>
+                
+                <div class="io-example">
+                    <h4>输入 #1</h4>
+                    <pre>3
+13 312 343</pre>
+                    <h4>输出 #1</h4>
+                    <pre>34331213</pre>
+                </div>
+                
+                <div class="io-example">
+                    <h4>输入 #2</h4>
+                    <pre>4
+7 13 4 246</pre>
+                    <h4>输出 #2</h4>
+                    <pre>7424613</pre>
+                </div>
+                
+                <h3>说明/提示</h3>
+                <p>对于全部的测试点，保证 1≤n≤20，1≤aᵢ≤10⁹。</p>
+            </div>
+            
+            <div class="code-editor">
+                <div class="editor-header">
+                    <h3>代码编辑器</h3>
+                    <select class="language-selector" id="language-select">
+                        <option value="cpp">C++</option>
+                        <option value="python">Python</option>
+                        <option value="java">Java</option>
+                        <option value="javascript">JavaScript</option>
+                    </select>
+                </div>
+                <textarea class="code-area" id="code-editor" placeholder="在这里编写您的代码...">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;string&gt;
+using namespace std;
+
+bool compare(string a, string b) {
+    return a + b > b + a;
+}
+
+int main() {
+    int n;
+    cin >> n;
+    vector&lt;string&gt; nums(n);
+    for (int i = 0; i < n; i++) {
+        cin >> nums[i];
+    }
+    
+    sort(nums.begin(), nums.end(), compare);
+    
+    string result = "";
+    for (string num : nums) {
+        result += num;
+    }
+    
+    cout << result << endl;
+    return 0;
+}</textarea>
+            </div>
+        </div>
+        
+        <button class="submit-btn" id="submit-btn">
+            <i class="fas fa-paper-plane"></i> 提交代码
+        </button>
+        
+        <div class="result-container">
+            <h2>运行结果</h2>
+            <div class="result-output" id="result-output">
+等待提交代码...
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>© 2013-2025 MingDynasty,Inc. 大明编程挑战 | 灵感源于明朝美学</p>
+            <p>开局一个碗，结局一根绳 | 传承与创新</p>
+        </div>
+    </footer>
+
+    <script>
+        // 主题切换功能
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        
+        // 检查本地存储的主题偏好
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            body.classList.add('dark-mode');
+            themeToggle.checked = true;
+        }
+        
+        // 切换主题
+        themeToggle.addEventListener('change', function() {
+            if (this.checked) {
+                body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+        
+        // 根据系统偏好设置初始主题
+        if (!savedTheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            body.classList.add('dark-mode');
+            themeToggle.checked = true;
+        }
+        
+        // 代码提交功能
+        const submitBtn = document.getElementById('submit-btn');
+        const resultOutput = document.getElementById('result-output');
+        const codeEditor = document.getElementById('code-editor');
+        const languageSelect = document.getElementById('language-select');
+        
+        submitBtn.addEventListener('click', function() {
+            const code = codeEditor.value;
+            const language = languageSelect.value;
+            
+            if (!code.trim()) {
+                resultOutput.textContent = "错误：请先编写代码再提交！";
+                return;
+            }
+            
+            resultOutput.textContent = "正在编译和运行代码...\n\n";
+            
+            // 模拟代码执行过程
+            setTimeout(() => {
+                // 这里模拟代码执行结果
+                // 在实际应用中，这里应该发送代码到后端进行编译和执行
+                
+                resultOutput.textContent += "编译成功！\n\n";
+                resultOutput.textContent += "测试用例 #1:\n";
+                resultOutput.textContent += "输入: 3\n       13 312 343\n";
+                resultOutput.textContent += "输出: 34331213\n";
+                resultOutput.textContent += "预期: 34331213\n";
+                resultOutput.textContent += "✓ 通过\n\n";
+                
+                resultOutput.textContent += "测试用例 #2:\n";
+                resultOutput.textContent += "输入: 4\n       7 13 4 246\n";
+                resultOutput.textContent += "输出: 7424613\n";
+                resultOutput.textContent += "预期: 7424613\n";
+                resultOutput.textContent += "✓ 通过\n\n";
+                
+                resultOutput.textContent += "所有测试用例通过！\n";
+                resultOutput.textContent += "恭喜您成功解决了这个问题！";
+            }, 1500);
+        });
+        
+        // 语言切换时更新代码示例
+        languageSelect.addEventListener('change', function() {
+            const language = this.value;
+            let sampleCode = "";
+            
+            switch(language) {
+                case 'cpp':
+                    sampleCode = `#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+using namespace std;
+
+bool compare(string a, string b) {
+    return a + b > b + a;
+}
+
+int main() {
+    int n;
+    cin >> n;
+    vector<string> nums(n);
+    for (int i = 0; i < n; i++) {
+        cin >> nums[i];
+    }
+    
+    sort(nums.begin(), nums.end(), compare);
+    
+    string result = "";
+    for (string num : nums) {
+        result += num;
+    }
+    
+    cout << result << endl;
+    return 0;
+}`;
+                    break;
+                case 'python':
+                    sampleCode = `n = int(input())
+nums = input().split()
+
+# 自定义比较函数
+def compare(a, b):
+    return (a + b) > (b + a)
+
+# 使用自定义比较进行排序
+nums.sort(key=functools.cmp_to_key(lambda a, b: -1 if compare(a, b) else 1))
+
+result = ''.join(nums)
+print(result)`;
+                    break;
+                case 'java':
+                    sampleCode = `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        String[] nums = new String[n];
+        for (int i = 0; i < n; i++) {
+            nums[i] = scanner.next();
+        }
+        
+        Arrays.sort(nums, (a, b) -> (b + a).compareTo(a + b));
+        
+        StringBuilder result = new StringBuilder();
+        for (String num : nums) {
+            result.append(num);
+        }
+        
+        System.out.println(result.toString());
+    }
+}`;
+                    break;
+                case 'javascript':
+                    sampleCode = `const readline = require('readline');
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+let n;
+let nums = [];
+
+rl.on('line', (line) => {
+    if (!n) {
+        n = parseInt(line);
+    } else {
+        nums = line.split(' ');
+        
+        nums.sort((a, b) => {
+            return (b + a).localeCompare(a + b);
+        });
+        
+        console.log(nums.join(''));
+        rl.close();
+    }
+});`;
+                    break;
+            }
+            
+            codeEditor.value = sampleCode;
+        });
+    </script>
+</body>
+</html>
