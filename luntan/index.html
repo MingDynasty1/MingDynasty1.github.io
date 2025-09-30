@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>明风论坛 - 传承中华文化</title>
+    <title>明风论坛 - 传承中华文化 | MingDynasty</title>
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
     <style>
         :root {
             --primary-color: #c62f2f; /* 朱红色 */
@@ -205,6 +206,11 @@
             background-color: #b8941f;
         }
 
+        .btn-small {
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+
         /* 帖子样式 */
         .post {
             border: 1px solid var(--border-color);
@@ -238,6 +244,22 @@
         .post-actions {
             display: flex;
             gap: 10px;
+            margin-top: 10px;
+        }
+
+        /* 回复样式 */
+        .reply {
+            border-left: 3px solid var(--secondary-color);
+            padding-left: 15px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+
+        .reply-form {
+            margin-top: 15px;
+            padding: 10px;
+            border: 1px dashed var(--border-color);
+            border-radius: 5px;
         }
 
         /* 页脚样式 */
@@ -290,6 +312,26 @@
             color: var(--text-color);
         }
 
+        /* Bug提示样式 */
+        .bug-notice {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #856404;
+        }
+
+        .bug-notice a {
+            color: #c62f2f;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .bug-notice a:hover {
+            text-decoration: underline;
+        }
+
         /* 响应式设计 */
         @media (max-width: 768px) {
             .header-content {
@@ -338,6 +380,11 @@
     </header>
 
     <main class="container">
+        <!-- Bug提示 -->
+        <div class="bug-notice">
+            <strong>注意：</strong>当前版本存在一些Bug，正常版本请访问 <a href="https://mingdynasty1.freeflarum.com/" target="_blank">https://mingdynasty1.freeflarum.com/</a>
+        </div>
+
         <!-- 首页内容 -->
         <section id="home-section" class="forum-section">
             <h2 class="section-title">欢迎来到明风论坛</h2>
@@ -445,7 +492,7 @@
 
     <footer>
         <div class="container">
-            <p>明风论坛 &copy; 2023 - 传承中华文化，弘扬明朝风韵</p>
+            <p> &copy; 2013-2025 MingDynasty,Inc. 明风论坛 | 传承中华文化，弘扬明朝风韵</p>
         </div>
     </footer>
 
@@ -691,7 +738,9 @@
                     title: title,
                     content: content,
                     author: currentUser.name,
-                    date: new Date().toLocaleString()
+                    authorId: currentUser.uid,
+                    date: new Date().toLocaleString(),
+                    replies: []
                 };
                 
                 // 保存帖子到"服务器"
@@ -786,9 +835,124 @@
                     </div>
                     <h3>${post.title}</h3>
                     <div class="post-content">${post.content}</div>
+                    <div class="post-actions">
+                        <button class="btn btn-small reply-btn" data-post-id="${post.id}">回复</button>
+                        ${currentUser && (currentUser.uid === post.authorId || currentUser.uid === 'admin') ? 
+                            `<button class="btn btn-small delete-btn" data-post-id="${post.id}">删除</button>` : ''}
+                    </div>
+                    <div class="replies-container" id="replies-${post.id}">
+                        ${displayReplies(post.replies)}
+                    </div>
+                    <div class="reply-form" id="reply-form-${post.id}" style="display: none;">
+                        <textarea class="form-control reply-content" placeholder="请输入回复内容..." rows="3"></textarea>
+                        <button class="btn btn-small submit-reply" data-post-id="${post.id}" style="margin-top: 10px;">提交回复</button>
+                    </div>
                 `;
                 postsContainer.appendChild(postElement);
             });
+            
+            // 添加回复和删除事件监听器
+            document.querySelectorAll('.reply-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (!currentUser) {
+                        showModal(loginModal);
+                        return;
+                    }
+                    const postId = this.getAttribute('data-post-id');
+                    const replyForm = document.getElementById(`reply-form-${postId}`);
+                    replyForm.style.display = replyForm.style.display === 'none' ? 'block' : 'none';
+                });
+            });
+            
+            document.querySelectorAll('.submit-reply').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const postId = this.getAttribute('data-post-id');
+                    const replyContent = document.querySelector(`#reply-form-${postId} .reply-content`).value;
+                    
+                    if (replyContent.trim()) {
+                        submitReply(postId, replyContent);
+                    } else {
+                        alert('回复内容不能为空！');
+                    }
+                });
+            });
+            
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const postId = this.getAttribute('data-post-id');
+                    if (confirm('确定要删除这个帖子吗？')) {
+                        deletePost(postId);
+                    }
+                });
+            });
+        }
+
+        // 显示回复
+        function displayReplies(replies) {
+            if (!replies || replies.length === 0) {
+                return '<p>暂无回复</p>';
+            }
+            
+            return replies.map(reply => `
+                <div class="reply">
+                    <div class="post-header">
+                        <div class="post-author">${reply.author}</div>
+                        <div class="post-date">${reply.date}</div>
+                    </div>
+                    <div class="post-content">${reply.content}</div>
+                </div>
+            `).join('');
+        }
+
+        // 提交回复
+        function submitReply(postId, content) {
+            const reply = {
+                id: 'reply_' + Date.now(),
+                content: content,
+                author: currentUser.name,
+                date: new Date().toLocaleString()
+            };
+            
+            // 在实际应用中，这里应该与服务器通信
+            // 这里我们模拟保存回复
+            const postIndex = posts.findIndex(post => post.id === postId);
+            if (postIndex !== -1) {
+                if (!posts[postIndex].replies) {
+                    posts[postIndex].replies = [];
+                }
+                posts[postIndex].replies.push(reply);
+                
+                // 保存到"服务器"
+                localStorage.setItem('mingForumServerPosts', JSON.stringify(posts));
+                
+                // 更新显示
+                const repliesContainer = document.getElementById(`replies-${postId}`);
+                repliesContainer.innerHTML = displayReplies(posts[postIndex].replies);
+                
+                // 清空回复表单
+                document.querySelector(`#reply-form-${postId} .reply-content`).value = '';
+                document.getElementById(`reply-form-${postId}`).style.display = 'none';
+                
+                alert('回复成功！');
+            }
+        }
+
+        // 删除帖子
+        function deletePost(postId) {
+            // 在实际应用中，这里应该与服务器通信
+            // 这里我们模拟删除帖子
+            const postIndex = posts.findIndex(post => post.id === postId);
+            if (postIndex !== -1) {
+                posts.splice(postIndex, 1);
+                
+                // 保存到"服务器"
+                localStorage.setItem('mingForumServerPosts', JSON.stringify(posts));
+                
+                // 更新显示
+                loadPosts();
+                
+                alert('帖子删除成功！');
+            }
         }
 
         // 模拟从服务器获取帖子
@@ -811,14 +975,25 @@
                                     title: '明朝建筑艺术赏析',
                                     content: '明朝建筑以其独特的风格和精湛的工艺闻名于世，尤其是紫禁城的建筑群，体现了中国古代建筑的最高成就。',
                                     author: '历史爱好者',
-                                    date: '2023-10-15 14:30'
+                                    authorId: 'user_1',
+                                    date: '2023-10-15 14:30',
+                                    replies: [
+                                        {
+                                            id: 'reply_1',
+                                            content: '非常赞同！明朝建筑确实是中国建筑史上的瑰宝。',
+                                            author: '建筑学者',
+                                            date: '2023-10-15 16:20'
+                                        }
+                                    ]
                                 },
                                 {
                                     id: 'post_2',
                                     title: '论明朝科举制度的影响',
                                     content: '明朝科举制度对中国社会产生了深远影响，不仅选拔了大量人才，也促进了社会流动和文化发展。',
                                     author: '学者张明',
-                                    date: '2023-10-14 09:45'
+                                    authorId: 'user_2',
+                                    date: '2023-10-14 09:45',
+                                    replies: []
                                 }
                             ];
                             // 保存示例帖子到"服务器"
