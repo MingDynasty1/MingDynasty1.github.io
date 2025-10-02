@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <title>联系我们 | MingDynasty</title>
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background-color: #f8f3e6;
+            color: #333;
+            line-height: 1.6;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill="none" stroke="%23d4b483" stroke-width="0.5" x="10" y="10" width="80" height="80"/></svg>');
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+            position: relative;
+        }
+        
+        header::before, header::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 30%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #c12c1f, transparent);
+        }
+        
+        header::before {
+            left: 0;
+        }
+        
+        header::after {
+            right: 0;
+        }
+        
+        h1 {
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 3.5rem;
+            color: #8b1a1d;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            letter-spacing: 5px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #5e3719;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin: 40px 0;
+            gap: 30px;
+        }
+        
+        .contact-info {
+            flex: 1;
+            min-width: 300px;
+            background: #fff;
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid #d4b483;
+            position: relative;
+        }
+        
+        .contact-info::before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border: 1px solid #c12c1f;
+            border-radius: 8px;
+            z-index: -1;
+        }
+        
+        .contact-methods {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        h2 {
+            font-family: 'Ma Shan Zheng', cursive;
+            color: #5e3719;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #d4b483;
+            text-align: center;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f9f5eb;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            border-left: 4px solid #8b1a1d;
+        }
+        
+        .contact-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .icon {
+            width: 60px;
+            height: 60px;
+            background: #8b1a1d;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .contact-details h3 {
+            color: #5e3719;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+        }
+        
+        .contact-details p {
+            color: #777;
+            margin-bottom: 5px;
+        }
+        
+        .contact-link {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 8px 15px;
+            background: #8b1a1d;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+        
+        .contact-link:hover {
+            background: #5e3719;
+            transform: translateY(-2px);
+        }
+        
+        .decoration {
+            text-align: center;
+            margin: 40px 0;
+        }
+        
+        .decoration-line {
+            display: inline-block;
+            width: 100px;
+            height: 2px;
+            background: #c12c1f;
+            margin: 0 15px;
+            vertical-align: middle;
+        }
+        
+        .decoration-text {
+            font-family: 'Ma Shan Zheng', cursive;
+            color: #5e3719;
+            font-size: 1.5rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            color: #5e3719;
+            border-top: 1px solid #d4b483;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .contact-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .icon {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>联系我们</h1>
+            <p class="subtitle">有朋自远方来，不亦乐乎</p>
+        </header>
+        
+        <div class="content">
+            <div class="contact-info">
+                <h2>联系信息</h2>
+                <p>我们秉承明朝"以诚待人"的传统美德，期待与您建立真诚的联系。无论您有任何疑问、建议或合作意向，我们都将竭诚为您服务。</p>
+                <p>我们的团队将尽快回复您的信息，感谢您的关注与支持。</p>
+                
+                <div class="decoration">
+                    <span class="decoration-line"></span>
+                    <span class="decoration-text">明德惟馨</span>
+                    <span class="decoration-line"></span>
+                </div>
+                
+                <p><strong>服务时间：</strong>每日辰时至戌时 (上午7点至晚上9点)</p>
+                <p><strong>响应时间：</strong>我们将在12个时辰内回复您的信息</p>
+            </div>
+            
+            <div class="contact-methods">
+                <h2>联系方式</h2>
+                
+                <div class="contact-item">
+                    <div class="icon">洛</div>
+                    <div class="contact-details">
+                        <h3>在线沟通</h3>
+                        <p>通过洛谷聊天系统与我们直接交流</p>
+                        <a href="https://www.luogu.com.cn/chat?uid=1015347" class="contact-link" target="_blank">开始对话</a>
+                    </div>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="icon">邮</div>
+                    <div class="contact-details">
+                        <h3>电子邮件</h3>
+                        <p>发送邮件至我们的官方邮箱</p>
+                        <a href="mailto:wangzyy1368@163.com" class="contact-link">发送邮件</a>
+                    </div>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="icon">信</div>
+                    <div class="contact-details">
+                        <h3>传统书信</h3>
+                        <p>陕西省宝鸡市渭滨区</p>
+                        <p>邮编：721000/p>
+                    </div>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="icon">访</div>
+                    <div class="contact-details">
+                        <h3>亲临拜访</h3>
+                        <p>宝鸡市渭滨区华夏中央公园南区6号楼2单元楼下即可</p>
+                        <p>拜访前请提前预约</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2013-2025 MingDynasty,Inc. 大明文化传承 | 传承经典，创新未来</p>
+        </footer>
+    </div>
+</body>
+</html>
