@@ -532,6 +532,52 @@
         .blog-link:hover {
             text-decoration: underline;
         }
+        
+        /* 联系我们预览样式 */
+        .contact-preview {
+            margin-top: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .contact-preview-header {
+            background: var(--accent-color);
+            color: #f8f3e6;
+            padding: 10px 15px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        
+        .contact-preview-header i {
+            margin-right: 8px;
+        }
+        
+        .contact-preview-content {
+            padding: 15px;
+            background: rgba(139, 0, 0, 0.05);
+        }
+        
+        .contact-preview-content p {
+            margin-bottom: 10px;
+        }
+        
+        .contact-link {
+            display: inline-block;
+            background: var(--gold-color);
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        
+        .contact-link:hover {
+            background: #b8941f;
+        }
     </style>
 </head>
 <body>
@@ -547,6 +593,7 @@
             <a href="https://mingdynasty1.github.io/">返回主页</a>
             <a href="https://mingdynasty1.github.io/OImap.html">主页导航</a>
             <a href="https://mingdynasty1.github.io/friends/friends.md">友链</a>
+            <a href="https://MingDynasty1.github.io/contact-us-MgDy.html">联系我们</a>
             
             <div class="theme-switch">
                 <label class="theme-switch-label">
@@ -594,6 +641,32 @@
         
         <div class="changelog-container">
             <h2 class="changelog-year">2025年</h2>
+            
+            <!-- 新增联系我们条目 -->
+            <div class="changelog-item">
+                <div class="changelog-date">2025年10月2日 <span class="update-type type-feature">新功能</span></div>
+                <div class="changelog-content">
+                    <h3>添加联系我们页面</h3>
+                    <ul>
+                        <li>创建专门的"联系我们"页面，方便用户反馈与交流</li>
+                        <li>添加多种联系方式，包括邮件、社交媒体和在线表单</li>
+                        <li>集成反馈系统，收集用户建议和问题报告</li>
+                        <li>在主导航和侧边栏添加联系我们链接</li>
+                        <li>优化移动端联系表单体验</li>
+                        <li>添加常见问题解答(FAQ)部分</li>
+                    </ul>
+                    
+                    <div class="contact-preview">
+                        <div class="contact-preview-header">
+                            <i class="fas fa-envelope"></i> 联系我们预览
+                        </div>
+                        <div class="contact-preview-content">
+                            <p>新的联系我们页面提供了多种沟通渠道，让用户能够更方便地与我们取得联系，分享想法或报告问题。</p>
+                            <a href="https://MingDynasty1.github.io/contact-us-MgDy.html" class="contact-link">访问联系我们页面</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
             <!-- 新增的皇帝的博客条目 -->
             <div class="changelog-item">
