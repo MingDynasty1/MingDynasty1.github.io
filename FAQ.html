@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>常见问题解答FAQ | MingDynasty</title>
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+	<style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "SimSun", "宋体", serif;
+            background-color: #f5f1e6;
+            color: #333;
+            line-height: 1.6;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.05"><path d="M0,0 L100,0 L100,100 L0,100 Z" fill="%23a52a2a"/></svg>');
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background-color: #fff;
+            border: 8px double #a52a2a;
+            border-radius: 4px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 页眉样式 */
+        header {
+            background: linear-gradient(to right, #a52a2a, #8b0000);
+            color: #f5f1e6;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            border-bottom: 4px solid #d4af37;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            letter-spacing: 8px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        /* 装饰元素 */
+        .decoration {
+            position: absolute;
+            width: 100%;
+            height: 20px;
+            background: repeating-linear-gradient(
+                45deg,
+                #d4af37,
+                #d4af37 10px,
+                #a52a2a 10px,
+                #a52a2a 20px
+            );
+            bottom: -10px;
+            left: 0;
+            z-index: 10;
+        }
+        
+        /* 内容区域 */
+        .content {
+            padding: 30px;
+        }
+        
+        /* FAQ项目样式 */
+        .faq-item {
+            margin-bottom: 20px;
+            border: 1px solid #e0d6c3;
+            border-radius: 4px;
+            overflow: hidden;
+            background-color: #faf8f3;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .faq-question {
+            background-color: #e8e1d1;
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            border-left: 4px solid #a52a2a;
+            transition: all 0.3s ease;
+        }
+        
+        .faq-question:hover {
+            background-color: #e0d6c3;
+        }
+        
+        .faq-question::after {
+            content: "+";
+            font-size: 1.5rem;
+            color: #a52a2a;
+            transition: transform 0.3s ease;
+        }
+        
+        .faq-item.active .faq-question::after {
+            transform: rotate(45deg);
+        }
+        
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            border-top: 1px solid transparent;
+        }
+        
+        .faq-item.active .faq-answer {
+            padding: 20px;
+            max-height: 500px;
+            border-top: 1px solid #e0d6c3;
+        }
+        
+        /* 联系我们区域 */
+        .contact-section {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f0ebe0;
+            border-radius: 4px;
+            border: 1px dashed #a52a2a;
+        }
+        
+        .contact-section a {
+            color: #a52a2a;
+            text-decoration: none;
+            font-weight: bold;
+            border-bottom: 1px solid #a52a2a;
+            transition: all 0.3s ease;
+        }
+        
+        .contact-section a:hover {
+            color: #8b0000;
+            border-bottom: 1px solid #8b0000;
+        }
+        
+        /* 页脚样式 */
+        footer {
+            background-color: #2c2c2c;
+            color: #f5f1e6;
+            text-align: center;
+            padding: 15px;
+            font-size: 0.9rem;
+            border-top: 4px solid #d4af37;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+                letter-spacing: 4px;
+            }
+            
+            .content {
+                padding: 15px;
+            }
+            
+            .faq-question {
+                padding: 12px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>常见问题解答</h1>
+            <p>FAQ - 明朝风格设计</p>
+            <div class="decoration"></div>
+        </header>
+        
+        <div class="content">
+            <div class="faq-item">
+                <div class="faq-question">在注册论坛用户然后登出后为什么要重新注册？</div>
+                <div class="faq-answer">
+                    <p>由于本网站有点Bug，见谅。</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">博客为什么只有部分搬过来了？</div>
+                <div class="faq-answer">
+                    <p>搬运需要时间，敬请期待。</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">此设计采用了哪些明朝风格元素？</div>
+                <div class="faq-answer">
+                    <p>本设计融合了多种明朝美学元素：</p>
+                    <ul>
+                        <li>色彩方案：采用明朝官方的朱红、明黄和青花蓝色调</li>
+                        <li>装饰纹样：使用传统云纹和几何图案</li>
+                        <li>字体选择：优先使用宋体等传统中文字体</li>
+                        <li>布局结构：参考明代书籍和卷轴的排版方式</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">明朝设计风格的主要特点是什么？</div>
+                <div class="faq-answer">
+                    <p>明朝设计风格以简洁、典雅、对称和精致著称，主要特点包括：</p>
+                    <ul>
+                        <li>强调对称与平衡的布局</li>
+                        <li>使用自然元素如云、水、花鸟等作为装饰</li>
+                        <li>色彩鲜明但不失庄重</li>
+                        <li>注重细节和工艺的精湛表现</li>
+                        <li>融合实用性与美学价值</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">如何将传统元素与现代网页设计结合？</div>
+                <div class="faq-answer">
+                    <p>融合传统与现代设计需要注意以下几点：</p>
+                    <ul>
+                        <li>保留传统色彩和图案，但简化复杂细节</li>
+                        <li>使用现代布局和响应式设计确保可用性</li>
+                        <li>选择具有传统韵味但清晰易读的字体</li>
+                        <li>平衡装饰元素与内容空间，避免过度设计</li>
+                        <li>确保交互元素符合现代用户习惯</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="contact-section">
+                <p>欢迎通过<a href="https://MingDynasty1.github.io/contact-us-MgDy.html" target="_blank">联系我们</a>投入你的问题</p>
+            </div>
+        </div>
+        
+        <footer>
+            <p>©2013-2025 MingDynasty,Inc. 明朝风格设计展示 | 传统与现代的完美融合</p>
+        </footer>
+    </div>
+
+    <script>
+        // FAQ交互功能
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const item = question.parentNode;
+                item.classList.toggle('active');
+                
+                // 可选：关闭其他打开的FAQ
+                document.querySelectorAll('.faq-item').forEach(otherItem => {
+                    if (otherItem !== item && otherItem.classList.contains('active')) {
+                        otherItem.classList.remove('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
