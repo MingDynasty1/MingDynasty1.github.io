@@ -13,12 +13,43 @@
             box-sizing: border-box;
         }
         
+        :root {
+            --bg-color: #f8f3e6;
+            --text-color: #333;
+            --primary-color: #8b1a1d;
+            --secondary-color: #5e3719;
+            --accent-color: #d4b483;
+            --card-bg: #fff;
+            --card-hover-bg: #f9f5eb;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --border-color: #d4b483;
+            --decoration-color: #c12c1f;
+        }
+        
+        .dark-mode {
+            --bg-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --primary-color: #c94c4f;
+            --secondary-color: #b38b5d;
+            --accent-color: #8b7355;
+            --card-bg: #2d2d2d;
+            --card-hover-bg: #3a3a3a;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --border-color: #5e3719;
+            --decoration-color: #d45a4f;
+        }
+        
         body {
             font-family: 'Noto Serif SC', serif;
-            background-color: #f8f3e6;
-            color: #333;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             line-height: 1.6;
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill="none" stroke="%23d4b483" stroke-width="0.5" x="10" y="10" width="80" height="80"/></svg>');
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        .dark-mode body {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill="none" stroke="%238b7355" stroke-width="0.5" x="10" y="10" width="80" height="80"/></svg>');
         }
         
         .container {
@@ -39,7 +70,7 @@
             top: 50%;
             width: 30%;
             height: 2px;
-            background: linear-gradient(90deg, transparent, #c12c1f, transparent);
+            background: linear-gradient(90deg, transparent, var(--decoration-color), transparent);
         }
         
         header::before {
@@ -53,14 +84,14 @@
         h1 {
             font-family: 'Ma Shan Zheng', cursive;
             font-size: 3.5rem;
-            color: #8b1a1d;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            color: var(--primary-color);
+            text-shadow: 2px 2px 4px var(--shadow-color);
             letter-spacing: 5px;
         }
         
         .subtitle {
             font-size: 1.2rem;
-            color: #5e3719;
+            color: var(--secondary-color);
             margin-top: 10px;
             font-style: italic;
         }
@@ -76,12 +107,13 @@
         .contact-info {
             flex: 1;
             min-width: 300px;
-            background: #fff;
+            background: var(--card-bg);
             padding: 30px;
             border-radius: 5px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            border: 1px solid #d4b483;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            border: 1px solid var(--border-color);
             position: relative;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
         }
         
         .contact-info::before {
@@ -91,7 +123,7 @@
             left: -10px;
             right: -10px;
             bottom: -10px;
-            border: 1px solid #c12c1f;
+            border: 1px solid var(--decoration-color);
             border-radius: 8px;
             z-index: -1;
         }
@@ -103,11 +135,11 @@
         
         h2 {
             font-family: 'Ma Shan Zheng', cursive;
-            color: #5e3719;
+            color: var(--secondary-color);
             font-size: 2rem;
             margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #d4b483;
+            border-bottom: 2px solid var(--accent-color);
             text-align: center;
         }
         
@@ -116,21 +148,21 @@
             align-items: center;
             margin-bottom: 25px;
             padding: 15px;
-            background: #f9f5eb;
+            background: var(--card-hover-bg);
             border-radius: 5px;
             transition: all 0.3s ease;
-            border-left: 4px solid #8b1a1d;
+            border-left: 4px solid var(--primary-color);
         }
         
         .contact-item:hover {
             transform: translateX(5px);
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 10px var(--shadow-color);
         }
         
         .icon {
             width: 60px;
             height: 60px;
-            background: #8b1a1d;
+            background: var(--primary-color);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -141,13 +173,14 @@
         }
         
         .contact-details h3 {
-            color: #5e3719;
+            color: var(--secondary-color);
             margin-bottom: 5px;
             font-size: 1.3rem;
         }
         
         .contact-details p {
-            color: #777;
+            color: var(--text-color);
+            opacity: 0.8;
             margin-bottom: 5px;
         }
         
@@ -155,7 +188,7 @@
             display: inline-block;
             margin-top: 8px;
             padding: 8px 15px;
-            background: #8b1a1d;
+            background: var(--primary-color);
             color: white;
             text-decoration: none;
             border-radius: 4px;
@@ -164,7 +197,7 @@
         }
         
         .contact-link:hover {
-            background: #5e3719;
+            background: var(--secondary-color);
             transform: translateY(-2px);
         }
         
@@ -177,14 +210,14 @@
             display: inline-block;
             width: 100px;
             height: 2px;
-            background: #c12c1f;
+            background: var(--decoration-color);
             margin: 0 15px;
             vertical-align: middle;
         }
         
         .decoration-text {
             font-family: 'Ma Shan Zheng', cursive;
-            color: #5e3719;
+            color: var(--secondary-color);
             font-size: 1.5rem;
         }
         
@@ -192,9 +225,53 @@
             text-align: center;
             padding: 20px;
             margin-top: 40px;
-            color: #5e3719;
-            border-top: 1px solid #d4b483;
+            color: var(--secondary-color);
+            border-top: 1px solid var(--border-color);
             font-size: 0.9rem;
+        }
+        
+        /* 主题切换按钮样式 */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .toggle-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 2px 10px var(--shadow-color);
+            transition: all 0.3s ease;
+        }
+        
+        .toggle-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .toggle-btn .sun {
+            display: none;
+        }
+        
+        .toggle-btn .moon {
+            display: block;
+        }
+        
+        .dark-mode .toggle-btn .sun {
+            display: block;
+        }
+        
+        .dark-mode .toggle-btn .moon {
+            display: none;
         }
         
         @media (max-width: 768px) {
@@ -215,10 +292,28 @@
                 margin-right: 0;
                 margin-bottom: 15px;
             }
+            
+            .theme-toggle {
+                top: 10px;
+                right: 10px;
+            }
+            
+            .toggle-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="theme-toggle">
+        <button class="toggle-btn" id="themeToggle">
+            <span class="sun">☀️</span>
+            <span class="moon">🌙</span>
+        </button>
+    </div>
+    
     <div class="container">
         <header>
             <h1>联系我们</h1>
@@ -267,7 +362,7 @@
                     <div class="contact-details">
                         <h3>传统书信</h3>
                         <p>陕西省宝鸡市渭滨区</p>
-                        <p>邮编：721000/p>
+                        <p>邮编：721000</p>
                     </div>
                 </div>
                 
@@ -286,5 +381,29 @@
             <p>© 2013-2025 MingDynasty,Inc. 大明文化传承 | 传承经典，创新未来</p>
         </footer>
     </div>
+
+    <script>
+        // 主题切换功能
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        // 检查本地存储的主题设置
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme === 'dark') {
+            body.classList.add('dark-mode');
+        }
+        
+        // 切换主题
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            
+            // 保存用户选择
+            if (body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+        });
+    </script>
 </body>
 </html>
