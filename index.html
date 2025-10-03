@@ -179,6 +179,28 @@
             transform: translateX(26px);
         }
         
+        /* 语言切换按钮 */
+        .language-switch {
+            margin-left: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .language-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: #f8f3e6;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+        }
+        
+        .language-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
         /* 主要内容区 */
         .main-content {
             display: grid;
@@ -330,7 +352,7 @@
                 margin: 10px 0;
             }
             
-            .theme-switch {
+            .theme-switch, .language-switch {
                 margin: 10px 0;
             }
         }
@@ -756,11 +778,14 @@
 <body class="light-mode">
     <header>
         <div class="container">
-            <h1 class="ming-decoration">MingDynasty 的个人主页</h1>
-            <p>传承明朝风韵，展现编程之美</p>
+            <h1 class="ming-decoration" data-lang="zh">MingDynasty 的个人主页</h1>
+            <h1 class="ming-decoration" data-lang="en" style="display: none;">MingDynasty's Personal Homepage</h1>
+            <p data-lang="zh">传承明朝风韵，展现编程之美</p>
+            <p data-lang="en" style="display: none;">Inheriting the Charm of the Ming Dynasty, Showcasing the Beauty of Programming</p>
             <!-- 访问量统计 -->
             <div class="visitor-counter">
-                <span>主页访问量：</span>
+                <span data-lang="zh">主页访问量：</span>
+                <span data-lang="en" style="display: none;">Homepage Visits:</span>
                 <img src="https://w.saobby.com/w/egtt98hj" alt="访问量统计">
             </div>
         </div>
@@ -768,31 +793,70 @@
     
     <nav>
         <div class="container">
-            <a href="https://mingdynasty1.github.io/OImap.html">主页导航</a>
-            <a href="https://MingDynasty1.github.io/MgDy.html">个人信息</a>
-            <a href="https://mingdynasty1.github.io/friends/friends.html">友链</a>
-            <a href="https://MingDynasty1.github.io/OnlineJudge/index.html">免费网盘</a>
-            <a href="https://mingdynasty1.github.io/cbpan_help/MingDynasty_cbpan_help.html">网盘帮助中心</a>
-            <a href="https://www.luogu.com.cn/contest/247666">比赛宣传</a>
-            <a href="https://mingdynasty1.github.io/game.html">益智小游戏</a>
-            <a href="https://mingdynasty1.github.io/2048.html">2048游戏</a>
-            <a href="https://mingdynasty1.github.io/gxrz.html">更新日志</a>
-            <a href="https://MingDynasty1.github.io/calc.html">计算器</a>
-            <a href="https://MingDynasty1.github.io/dmgame.html">大明皇帝模拟器</a>
-            <a href="https://mingdynasty1.github.io/dmhpy.html">大明国庆</a>
-            <a href="https://MingDynasty1.github.io/MgDyhistory.html">大明历史</a>
+            <a href="https://mingdynasty1.github.io/OImap.html" data-lang="zh">主页导航</a>
+            <a href="https://mingdynasty1.github.io/OImap.html" data-lang="en" style="display: none;">Home Navigation</a>
+            
+            <a href="https://MingDynasty1.github.io/MgDy.html" data-lang="zh">个人信息</a>
+            <a href="https://MingDynasty1.github.io/MgDy.html" data-lang="en" style="display: none;">Personal Info</a>
+            
+            <a href="https://mingdynasty1.github.io/friends/friends.html" data-lang="zh">友链</a>
+            <a href="https://mingdynasty1.github.io/friends/friends.html" data-lang="en" style="display: none;">Friends</a>
+            
+            <a href="https://MingDynasty1.github.io/OnlineJudge/index.html" data-lang="zh">免费网盘</a>
+            <a href="https://MingDynasty1.github.io/OnlineJudge/index.html" data-lang="en" style="display: none;">Free Cloud Storage</a>
+            
+            <a href="https://mingdynasty1.github.io/cbpan_help/MingDynasty_cbpan_help.html" data-lang="zh">网盘帮助中心</a>
+            <a href="https://mingdynasty1.github.io/cbpan_help/MingDynasty_cbpan_help.html" data-lang="en" style="display: none;">Cloud Storage Help</a>
+            
+            <a href="https://www.luogu.com.cn/contest/247666" data-lang="zh">比赛宣传</a>
+            <a href="https://www.luogu.com.cn/contest/247666" data-lang="en" style="display: none;">Contest Promotion</a>
+            
+            <a href="https://mingdynasty1.github.io/game.html" data-lang="zh">益智小游戏</a>
+            <a href="https://mingdynasty1.github.io/game.html" data-lang="en" style="display: none;">Puzzle Games</a>
+            
+            <a href="https://mingdynasty1.github.io/2048.html" data-lang="zh">2048游戏</a>
+            <a href="https://mingdynasty1.github.io/2048.html" data-lang="en" style="display: none;">2048 Game</a>
+            
+            <a href="https://mingdynasty1.github.io/gxrz.html" data-lang="zh">更新日志</a>
+            <a href="https://mingdynasty1.github.io/gxrz.html" data-lang="en" style="display: none;">Update Log</a>
+            
+            <a href="https://MingDynasty1.github.io/calc.html" data-lang="zh">计算器</a>
+            <a href="https://MingDynasty1.github.io/calc.html" data-lang="en" style="display: none;">Calculator</a>
+            
+            <a href="https://MingDynasty1.github.io/dmgame.html" data-lang="zh">大明皇帝模拟器</a>
+            <a href="https://MingDynasty1.github.io/dmgame.html" data-lang="en" style="display: none;">Ming Emperor Simulator</a>
+            
+            <a href="https://mingdynasty1.github.io/dmhpy.html" data-lang="zh">大明国庆</a>
+            <a href="https://mingdynasty1.github.io/dmhpy.html" data-lang="en" style="display: none;">Ming National Day</a>
+            
+            <a href="https://MingDynasty1.github.io/MgDyhistory.html" data-lang="zh">大明历史</a>
+            <a href="https://MingDynasty1.github.io/MgDyhistory.html" data-lang="en" style="display: none;">Ming History</a>
+            
             <!-- 添加人生模拟器链接 -->
-            <a href="https://MingDynasty1.github.io/People-Remake-Life.html">人生模拟器</a>
+            <a href="https://MingDynasty1.github.io/People-Remake-Life.html" data-lang="zh">人生模拟器</a>
+            <a href="https://MingDynasty1.github.io/People-Remake-Life.html" data-lang="en" style="display: none;">Life Simulator</a>
+            
             <!-- 添加贪吃蛇游戏链接 -->
-            <a href="https://mingdynasty1.github.io/MapMgDy.html">大明导航</a>
-            <a href="https://MingDynasty1.github.io/snakegame.html">贪吃蛇游戏</a>
+            <a href="https://mingdynasty1.github.io/MapMgDy.html" data-lang="zh">大明导航</a>
+            <a href="https://mingdynasty1.github.io/MapMgDy.html" data-lang="en" style="display: none;">Ming Navigation</a>
+            
+            <a href="https://MingDynasty1.github.io/snakegame.html" data-lang="zh">贪吃蛇游戏</a>
+            <a href="https://MingDynasty1.github.io/snakegame.html" data-lang="en" style="display: none;">Snake Game</a>
+            
             <!-- 添加联系我们链接 -->
-            <a href="https://MingDynasty1.github.io/contact-us-MgDy.html">联系我们</a>
+            <a href="https://MingDynasty1.github.io/contact-us-MgDy.html" data-lang="zh">联系我们</a>
+            <a href="https://MingDynasty1.github.io/contact-us-MgDy.html" data-lang="en" style="display: none;">Contact Us</a>
+            
             <!-- 添加博客主页链接 -->
-            <a href="https://MingDynasty1.github.io/blog/index.html" style="background-color: rgba(255,255,255,0.2);">博客主页</a>
-            <a href="https://MingDynasty1.github.io/luntan/index.html">大明论坛</a>
+            <a href="https://MingDynasty1.github.io/blog/index.html" style="background-color: rgba(255,255,255,0.2);" data-lang="zh">博客主页</a>
+            <a href="https://MingDynasty1.github.io/blog/index.html" style="background-color: rgba(255,255,255,0.2); display: none;" data-lang="en">Blog Homepage</a>
+            
+            <a href="https://MingDynasty1.github.io/luntan/index.html" data-lang="zh">大明论坛</a>
+            <a href="https://MingDynasty1.github.io/luntan/index.html" data-lang="en" style="display: none;">Ming Forum</a>
+            
             <!-- 添加常见问题解答链接 -->
-            <a href="https://MingDynasty1.github.io/FAQ.html">常见问题解答</a>
+            <a href="https://MingDynasty1.github.io/FAQ.html" data-lang="zh">常见问题解答</a>
+            <a href="https://MingDynasty1.github.io/FAQ.html" data-lang="en" style="display: none;">FAQ</a>
 
             <div class="theme-switch">
                 <label class="theme-switch-label">
@@ -804,6 +868,13 @@
                     <i class="fas fa-sun"></i>
                 </label>
             </div>
+            
+            <div class="language-switch">
+                <button class="language-btn" id="language-toggle">
+                    <span data-lang="zh">EN</span>
+                    <span data-lang="en" style="display: none;">中文</span>
+                </button>
+            </div>
         </div>
     </nav>
     
@@ -811,73 +882,97 @@
         <!-- 时间报时器 -->
         <div class="time-display">
             <div id="current-time">00:00:00</div>
-            <div id="current-date">0000年00月00日 星期X</div>
+            <div id="current-date" data-lang="zh">0000年00月00日 星期X</div>
+            <div id="current-date-en" data-lang="en" style="display: none;">Monday, January 1, 2000</div>
         </div>
         
         <!-- 新增大明历史卡片 -->
         <div class="history-card">
-            <h3><i class="fas fa-landmark"></i> 探索大明历史</h3>
-            <p>大明王朝（1368年－1644年）是中国历史上一个辉煌的朝代，由明太祖朱元璋建立。明朝在政治、经济、文化、科技等方面都取得了巨大成就，留下了丰富的历史遗产。</p>
+            <h3><i class="fas fa-landmark"></i> <span data-lang="zh">探索大明历史</span><span data-lang="en" style="display: none;">Explore Ming Dynasty History</span></h3>
+            <p data-lang="zh">大明王朝（1368年－1644年）是中国历史上一个辉煌的朝代，由明太祖朱元璋建立。明朝在政治、经济、文化、科技等方面都取得了巨大成就，留下了丰富的历史遗产。</p>
+            <p data-lang="en" style="display: none;">The Ming Dynasty (1368-1644) was a glorious period in Chinese history, founded by Emperor Hongwu (Zhu Yuanzhang). The Ming Dynasty achieved great accomplishments in politics, economy, culture, and technology, leaving behind a rich historical legacy.</p>
             
             <div class="history-features">
                 <div class="history-feature">
                     <i class="fas fa-crown"></i>
-                    <h4>明朝皇帝</h4>
-                    <p>从朱元璋到崇祯帝，了解16位明朝皇帝的统治历程</p>
+                    <h4 data-lang="zh">明朝皇帝</h4>
+                    <h4 data-lang="en" style="display: none;">Ming Emperors</h4>
+                    <p data-lang="zh">从朱元璋到崇祯帝，了解16位明朝皇帝的统治历程</p>
+                    <p data-lang="en" style="display: none;">Learn about the reigns of 16 Ming emperors from Hongwu to Chongzhen</p>
                 </div>
                 <div class="history-feature">
                     <i class="fas fa-ship"></i>
-                    <h4>郑和下西洋</h4>
-                    <p>探索明朝航海技术的巅峰，郑和七次下西洋的壮举</p>
+                    <h4 data-lang="zh">郑和下西洋</h4>
+                    <h4 data-lang="en" style="display: none;">Zheng He's Voyages</h4>
+                    <p data-lang="zh">探索明朝航海技术的巅峰，郑和七次下西洋的壮举</p>
+                    <p data-lang="en" style="display: none;">Explore the peak of Ming maritime technology and Zheng He's seven voyages</p>
                 </div>
                 <div class="history-feature">
                     <i class="fas fa-paint-brush"></i>
-                    <h4>文化艺术</h4>
-                    <p>明代青花瓷、小说、绘画等文化艺术的辉煌成就</p>
+                    <h4 data-lang="zh">文化艺术</h4>
+                    <h4 data-lang="en" style="display: none;">Culture & Arts</h4>
+                    <p data-lang="zh">明代青花瓷、小说、绘画等文化艺术的辉煌成就</p>
+                    <p data-lang="en" style="display: none;">Brilliant achievements in Ming blue-and-white porcelain, literature, and painting</p>
                 </div>
             </div>
             
             <div style="text-align: center; margin-top: 20px;">
-                <a href="https://MingDynasty1.github.io/MgDyhistory.html" class="history-btn">探索大明历史</a>
+                <a href="https://MingDynasty1.github.io/MgDyhistory.html" class="history-btn" data-lang="zh">探索大明历史</a>
+                <a href="https://MingDynasty1.github.io/MgDyhistory.html" class="history-btn" data-lang="en" style="display: none;">Explore Ming History</a>
             </div>
         </div>
         
         <div class="main-content">
             <div class="content">
                 <div class="card chinese-pattern">
-                    <h2>置顶公告</h2>
-                    <p>宣 <a href="https://www.luogu.com.cn/contest/247666">https://www.luogu.com.cn/contest/247666</a></p>
+                    <h2 data-lang="zh">置顶公告</h2>
+                    <h2 data-lang="en" style="display: none;">Pinned Announcement</h2>
+                    <p data-lang="zh">宣 <a href="https://www.luogu.com.cn/contest/247666">https://www.luogu.com.cn/contest/247666</a></p>
+                    <p data-lang="en" style="display: none;">Announcement: <a href="https://www.luogu.com.cn/contest/247666">https://www.luogu.com.cn/contest/247666</a></p>
                 </div>
                 
                 <!-- 贪吃蛇游戏 -->
                 <div class="card">
-                    <h2>大明贪吃蛇</h2>
+                    <h2 data-lang="zh">大明贪吃蛇</h2>
+                    <h2 data-lang="en" style="display: none;">Ming Snake Game</h2>
                     <div class="snake-game-container">
-                        <h3>大明贪吃蛇</h3>
+                        <h3 data-lang="zh">大明贪吃蛇</h3>
+                        <h3 data-lang="en" style="display: none;">Ming Snake Game</h3>
                         <div class="snake-game-info">
-                            <div class="snake-game-score">得分: <span id="snake-score">0</span></div>
-                            <div class="snake-game-score">最高分: <span id="snake-high-score">0</span></div>
+                            <div class="snake-game-score" data-lang="zh">得分: <span id="snake-score">0</span></div>
+                            <div class="snake-game-score" data-lang="en" style="display: none;">Score: <span id="snake-score-en">0</span></div>
+                            <div class="snake-game-score" data-lang="zh">最高分: <span id="snake-high-score">0</span></div>
+                            <div class="snake-game-score" data-lang="en" style="display: none;">High Score: <span id="snake-high-score-en">0</span></div>
                         </div>
                         <canvas id="snake-game-board" width="400" height="400" class="snake-game-board"></canvas>
                         <div class="snake-game-controls">
-                            <button class="snake-game-btn" id="snake-start-btn">开始游戏</button>
-                            <button class="snake-game-btn" id="snake-pause-btn">暂停</button>
-                            <button class="snake-game-btn" id="snake-reset-btn">重新开始</button>
+                            <button class="snake-game-btn" id="snake-start-btn" data-lang="zh">开始游戏</button>
+                            <button class="snake-game-btn" id="snake-start-btn-en" data-lang="en" style="display: none;">Start Game</button>
+                            <button class="snake-game-btn" id="snake-pause-btn" data-lang="zh">暂停</button>
+                            <button class="snake-game-btn" id="snake-pause-btn-en" data-lang="en" style="display: none;">Pause</button>
+                            <button class="snake-game-btn" id="snake-reset-btn" data-lang="zh">重新开始</button>
+                            <button class="snake-game-btn" id="snake-reset-btn-en" data-lang="en" style="display: none;">Restart</button>
                         </div>
                         <div class="snake-game-instructions">
-                            <h4>游戏说明：</h4>
+                            <h4 data-lang="zh">游戏说明：</h4>
+                            <h4 data-lang="en" style="display: none;">Game Instructions:</h4>
                             <ul>
-                                <li>使用键盘方向键或WASD控制蛇的移动方向</li>
-                                <li>吃到红色食物可以增加长度和得分</li>
-                                <li>撞到墙壁或自己的身体会导致游戏结束</li>
-                                <li>每吃到一个食物得10分</li>
+                                <li data-lang="zh">使用键盘方向键或WASD控制蛇的移动方向</li>
+                                <li data-lang="en" style="display: none;">Use arrow keys or WASD to control the snake's direction</li>
+                                <li data-lang="zh">吃到红色食物可以增加长度和得分</li>
+                                <li data-lang="en" style="display: none;">Eat red food to increase length and score</li>
+                                <li data-lang="zh">撞到墙壁或自己的身体会导致游戏结束</li>
+                                <li data-lang="en" style="display: none;">Hitting walls or your own body ends the game</li>
+                                <li data-lang="zh">每吃到一个食物得10分</li>
+                                <li data-lang="en" style="display: none;">Each food gives 10 points</li>
                             </ul>
                         </div>
                     </div>
                 </div>
                 
                 <div class="card">
-                    <h2>个人成就展示</h2>
+                    <h2 data-lang="zh">个人成就展示</h2>
+                    <h2 data-lang="en" style="display: none;">Personal Achievements</h2>
                     <div class="image-container">
                         <img src="https://atrating.baoshuo.dev/rating?username=MingDynasty1" alt="洛谷评级">
                         <img src="https://cdn.luogu.com.cn/upload/image_hosting/x699deqh.png" alt="AT评级">
@@ -890,9 +985,11 @@
                 
                 <!-- 计算器 -->
                 <div class="card">
-                    <h2>明朝风格计算器</h2>
+                    <h2 data-lang="zh">明朝风格计算器</h2>
+                    <h2 data-lang="en" style="display: none;">Ming Style Calculator</h2>
                     <div class="calculator-container">
-                        <h3 class="calculator-title">大明算器</h3>
+                        <h3 class="calculator-title" data-lang="zh">大明算器</h3>
+                        <h3 class="calculator-title" data-lang="en" style="display: none;">Ming Calculator</h3>
                         
                         <div class="calculator-display" id="calc-display">0</div>
                         
@@ -930,179 +1027,253 @@
                 </div>
                 
                 <div class="card">
-                    <h2>益智小游戏</h2>
+                    <h2 data-lang="zh">益智小游戏</h2>
+                    <h2 data-lang="en" style="display: none;">Puzzle Games</h2>
                     <div class="game-card">
-                        <h3>明朝华容道</h3>
-                        <p>体验传统益智游戏，挑战你的逻辑思维！</p>
-                        <a href="https://mingdynasty1.github.io/game.html" class="game-btn">开始游戏</a>
+                        <h3 data-lang="zh">明朝华容道</h3>
+                        <h3 data-lang="en" style="display: none;">Ming Klotski</h3>
+                        <p data-lang="zh">体验传统益智游戏，挑战你的逻辑思维！</p>
+                        <p data-lang="en" style="display: none;">Experience traditional puzzle games, challenge your logical thinking!</p>
+                        <a href="https://mingdynasty1.github.io/game.html" class="game-btn" data-lang="zh">开始游戏</a>
+                        <a href="https://mingdynasty1.github.io/game.html" class="game-btn" data-lang="en" style="display: none;">Start Game</a>
                     </div>
                     <div class="game-card">
-                        <h3>2048数字游戏</h3>
-                        <p>挑战你的数字组合能力，创造更高的分数！</p>
-                        <a href="https://mingdynasty1.github.io/2048.html" class="game-btn">开始游戏</a>
+                        <h3 data-lang="zh">2048数字游戏</h3>
+                        <h3 data-lang="en" style="display: none;">2048 Number Game</h3>
+                        <p data-lang="zh">挑战你的数字组合能力，创造更高的分数！</p>
+                        <p data-lang="en" style="display: none;">Challenge your number combination skills, create higher scores!</p>
+                        <a href="https://mingdynasty1.github.io/2048.html" class="game-btn" data-lang="zh">开始游戏</a>
+                        <a href="https://mingdynasty1.github.io/2048.html" class="game-btn" data-lang="en" style="display: none;">Start Game</a>
                     </div>
                     <div class="game-card">
-                        <h3>大明皇帝模拟器</h3>
-                        <p>体验明朝皇帝的生活，治理国家，创造盛世！</p>
-                        <a href="https://MingDynasty1.github.io/dmgame.html" class="game-btn">开始游戏</a>
+                        <h3 data-lang="zh">大明皇帝模拟器</h3>
+                        <h3 data-lang="en" style="display: none;">Ming Emperor Simulator</h3>
+                        <p data-lang="zh">体验明朝皇帝的生活，治理国家，创造盛世！</p>
+                        <p data-lang="en" style="display: none;">Experience the life of a Ming emperor, govern the country, create prosperity!</p>
+                        <a href="https://MingDynasty1.github.io/dmgame.html" class="game-btn" data-lang="zh">开始游戏</a>
+                        <a href="https://MingDynasty1.github.io/dmgame.html" class="game-btn" data-lang="en" style="display: none;">Start Game</a>
                     </div>
                     <div class="game-card">
-                        <h3>大明国庆</h3>
-                        <p>庆祝大明国庆，体验明朝盛世的庆典活动！</p>
-                        <a href="https://mingdynasty1.github.io/dmhpy.html" class="game-btn">开始游戏</a>
+                        <h3 data-lang="zh">大明国庆</h3>
+                        <h3 data-lang="en" style="display: none;">Ming National Day</h3>
+                        <p data-lang="zh">庆祝大明国庆，体验明朝盛世的庆典活动！</p>
+                        <p data-lang="en" style="display: none;">Celebrate Ming National Day, experience the celebration of Ming prosperity!</p>
+                        <a href="https://mingdynasty1.github.io/dmhpy.html" class="game-btn" data-lang="zh">开始游戏</a>
+                        <a href="https://mingdynasty1.github.io/dmhpy.html" class="game-btn" data-lang="en" style="display: none;">Start Game</a>
                     </div>
                     <!-- 新增人生模拟器卡片 -->
                     <div class="game-card">
-                        <h3>人生模拟器</h3>
-                        <p>体验不同的人生轨迹，探索命运的可能性！</p>
-                        <a href="https://MingDynasty1.github.io/People-Remake-Life.html" class="game-btn">开始体验</a>
+                        <h3 data-lang="zh">人生模拟器</h3>
+                        <h3 data-lang="en" style="display: none;">Life Simulator</h3>
+                        <p data-lang="zh">体验不同的人生轨迹，探索命运的可能性！</p>
+                        <p data-lang="en" style="display: none;">Experience different life paths, explore the possibilities of fate!</p>
+                        <a href="https://MingDynasty1.github.io/People-Remake-Life.html" class="game-btn" data-lang="zh">开始体验</a>
+                        <a href="https://MingDynasty1.github.io/People-Remake-Life.html" class="game-btn" data-lang="en" style="display: none;">Start Experience</a>
                     </div>
                     <!-- 新增贪吃蛇游戏卡片 -->
                     <div class="game-card">
-                        <h3>贪吃蛇游戏</h3>
-                        <p>经典贪吃蛇游戏，挑战你的反应速度！</p>
-                        <a href="https://MingDynasty1.github.io/snakegame.html" class="game-btn">开始游戏</a>
+                        <h3 data-lang="zh">贪吃蛇游戏</h3>
+                        <h3 data-lang="en" style="display: none;">Snake Game</h3>
+                        <p data-lang="zh">经典贪吃蛇游戏，挑战你的反应速度！</p>
+                        <p data-lang="en" style="display: none;">Classic snake game, challenge your reaction speed!</p>
+                        <a href="https://MingDynasty1.github.io/snakegame.html" class="game-btn" data-lang="zh">开始游戏</a>
+                        <a href="https://MingDynasty1.github.io/snakegame.html" class="game-btn" data-lang="en" style="display: none;">Start Game</a>
                     </div>
                     <!-- 新增常见问题解答卡片 -->
                     <div class="game-card">
-                        <h3>常见问题解答</h3>
-                        <p>查看常见问题解答，解决使用中的疑问！</p>
-                        <a href="https://MingDynasty1.github.io/FAQ.html" class="game-btn">查看FAQ</a>
+                        <h3 data-lang="zh">常见问题解答</h3>
+                        <h3 data-lang="en" style="display: none;">FAQ</h3>
+                        <p data-lang="zh">查看常见问题解答，解决使用中的疑问！</p>
+                        <p data-lang="en" style="display: none;">Check frequently asked questions, solve usage doubts!</p>
+                        <a href="https://MingDynasty1.github.io/FAQ.html" class="game-btn" data-lang="zh">查看FAQ</a>
+                        <a href="https://MingDynasty1.github.io/FAQ.html" class="game-btn" data-lang="en" style="display: none;">View FAQ</a>
                     </div>
                 </div>
                 
                 <div class="card">
-                    <h2>如何在估值榜上找到我?</h2>
-                    <p>1.点击<a href="https://www.luogu.com.cn/ranking?orderBy=social&order=desc&page=8">这个</a>,找到第386名.</p>
-                    <p>2.点击<a href="https://www.luogu.com.cn/ranking?orderBy=practice&order=desc&page=8">这个</a>,找到第359名。</p>
-                    <p>3.点击<a href="https://www.luogu.com.cn/ranking?page=11">这个</a>,找到第537名。</p>
+                    <h2 data-lang="zh">如何在估值榜上找到我?</h2>
+                    <h2 data-lang="en" style="display: none;">How to Find Me in the Valuation Rankings?</h2>
+                    <p data-lang="zh">1.点击<a href="https://www.luogu.com.cn/ranking?orderBy=social&order=desc&page=8">这个</a>,找到第386名.</p>
+                    <p data-lang="en" style="display: none;">1. Click <a href="https://www.luogu.com.cn/ranking?orderBy=social&order=desc&page=8">here</a>, find rank 386.</p>
+                    <p data-lang="zh">2.点击<a href="https://www.luogu.com.cn/ranking?orderBy=practice&order=desc&page=8">这个</a>,找到第359名。</p>
+                    <p data-lang="en" style="display: none;">2. Click <a href="https://www.luogu.com.cn/ranking?orderBy=practice&order=desc&page=8">here</a>, find rank 359.</p>
+                    <p data-lang="zh">3.点击<a href="https://www.luogu.com.cn/ranking?page=11">这个</a>,找到第537名。</p>
+                    <p data-lang="en" style="display: none;">3. Click <a href="https://www.luogu.com.cn/ranking?page=11">here</a>, find rank 537.</p>
                 </div>
                 
                 <div class="card">
-                    <h2>冲900个AC</h2>
-                    <p>真正个性签名（地方写不下，很久以前的）：</p>
+                    <h2 data-lang="zh">冲900个AC</h2>
+                    <h2 data-lang="en" style="display: none;">Aiming for 900 AC</h2>
+                    <p data-lang="zh">真正个性签名（地方写不下，很久以前的）：</p>
+                    <p data-lang="en" style="display: none;">Real personal signature (not enough space, from long ago):</p>
                     <pre><code class="lang-cpp">最后在线时间|<span class="hljs-string">https://www.luogu.com.cn/team/76415欢迎加入</span>|<span class="hljs-string">小升初蒟蒻,欢迎吊打</span>|<span class="hljs-string">开局一个碗,结局一根绳</span>|<span class="hljs-string">最高排名807</span>|<span class="hljs-string">坐标:陕西宝鸡</span>|<span class="hljs-string">互关忘私(实名,3天內),误杀私</span>|<span class="hljs-string">禁止炸铃,炸铃杀</span>|<span class="hljs-string">题解不懂可私信</span>|<span class="hljs-string">删display none看主页</span>|<span class="hljs-string">估值前500进度:302-&gt;322</span>|<span class="hljs-string">已完成目标！(前1000）</span>|<span class="hljs-string">Even if the finish line is far away, we must walk to the end.</span></code></pre>
-                    <p><a href="https://www.luogu.me/article/hu9a8skr">放不下的东西（主页链接）</a></p>
+                    <p><a href="https://www.luogu.me/article/hu9a8skr" data-lang="zh">放不下的东西（主页链接）</a></p>
+                    <p><a href="https://www.luogu.me/article/hu9a8skr" data-lang="en" style="display: none;">Things that don't fit (homepage link)</a></p>
                 </div>
                 
                 <div class="card">
-                    <h2>重要更新</h2>
-                    <h3>upd on 2025.8.16 MgDy Round 2 已经开始了，欢迎报名！</h3>
-                    <p>查看<a href="https://mingdynasty1.github.io/gxrz.html">完整更新日志</a>了解网站发展历程。</p>
+                    <h2 data-lang="zh">重要更新</h2>
+                    <h2 data-lang="en" style="display: none;">Important Updates</h2>
+                    <h3 data-lang="zh">upd on 2025.8.16 MgDy Round 2 已经开始了，欢迎报名！</h3>
+                    <h3 data-lang="en" style="display: none;">upd on 2025.8.16 MgDy Round 2 has started, welcome to register!</h3>
+                    <p data-lang="zh">查看<a href="https://mingdynasty1.github.io/gxrz.html">完整更新日志</a>了解网站发展历程。</p>
+                    <p data-lang="en" style="display: none;">Check the <a href="https://mingdynasty1.github.io/gxrz.html">complete update log</a> to learn about the website development history.</p>
                 </div>
             </div>
             
             <div class="sidebar">
-                <h3>快速导航</h3>
+                <h3 data-lang="zh">快速导航</h3>
+                <h3 data-lang="en" style="display: none;">Quick Navigation</h3>
                 <ul>
-                    <li><a href="https://mingdynasty1.github.io/OImap.html">主页地图</a></li>
-                    <li><a href="https://MingDynasty1.github.io/MgDy.html">个人信息</a></li>
-                    <li><a href="https://MingDynasty1.github.io/MgDyhistory.html">大明历史</a></li>
-                    <li><a href="https://MingDynasty1.github.io/luntan/index.html">大明论坛</a></li>
-                    <li><a href="https://MingDynasty1.github.io/contact-us-MgDy.html">联系我们</a></li>
-                    <li><a href="https://www.luogu.com.cn/user/1015347">洛谷主页</a></li>
-                    <li><a href="https://github.com/MingDynasty1">GitHub主页</a></li>
-                    <li><a href="https://MingDynasty1.github.io/MapMgDy.html">大明导航</a></li>
-                    <li><a href="https://MingDynasty1.github.io/OnlineJudge/index.html">免费网盘</a></li>
-                    <li><a href="https://mingdynasty1.github.io/friends/friends.md">友情链接</a></li>
-                    <li><a href="https://mingdynasty1.github.io/cbpan_help/MingDynasty_cbpan_help.html">网盘帮助</a></li>
-                    <li><a href="https://mingdynasty1.github.io/game.html">益智小游戏</a></li>
-                    <li><a href="https://mingdynasty1.github.io/2048.html">2048游戏</a></li>
-                    <li><a href="https://mingdynasty1.github.io/gxrz.html">更新日志</a></li>
-                    <li><a href="https://MingDynasty1.github.io/calc.html">计算器</a></li>
-                    <li><a href="https://MingDynasty1.github.io/dmgame.html">大明皇帝模拟器</a></li>
-                    <li><a href="https://mingdynasty1.github.io/dmhpy.html">大明国庆</a></li>
+                    <li><a href="https://mingdynasty1.github.io/OImap.html" data-lang="zh">主页地图</a><a href="https://mingdynasty1.github.io/OImap.html" data-lang="en" style="display: none;">Home Map</a></li>
+                    <li><a href="https://MingDynasty1.github.io/MgDy.html" data-lang="zh">个人信息</a><a href="https://MingDynasty1.github.io/MgDy.html" data-lang="en" style="display: none;">Personal Info</a></li>
+                    <li><a href="https://MingDynasty1.github.io/MgDyhistory.html" data-lang="zh">大明历史</a><a href="https://MingDynasty1.github.io/MgDyhistory.html" data-lang="en" style="display: none;">Ming History</a></li>
+                    <li><a href="https://MingDynasty1.github.io/luntan/index.html" data-lang="zh">大明论坛</a><a href="https://MingDynasty1.github.io/luntan/index.html" data-lang="en" style="display: none;">Ming Forum</a></li>
+                    <li><a href="https://MingDynasty1.github.io/contact-us-MgDy.html" data-lang="zh">联系我们</a><a href="https://MingDynasty1.github.io/contact-us-MgDy.html" data-lang="en" style="display: none;">Contact Us</a></li>
+                    <li><a href="https://www.luogu.com.cn/user/1015347" data-lang="zh">洛谷主页</a><a href="https://www.luogu.com.cn/user/1015347" data-lang="en" style="display: none;">Luogu Homepage</a></li>
+                    <li><a href="https://github.com/MingDynasty1" data-lang="zh">GitHub主页</a><a href="https://github.com/MingDynasty1" data-lang="en" style="display: none;">GitHub Homepage</a></li>
+                    <li><a href="https://MingDynasty1.github.io/MapMgDy.html" data-lang="zh">大明导航</a><a href="https://MingDynasty1.github.io/MapMgDy.html" data-lang="en" style="display: none;">Ming Navigation</a></li>
+                    <li><a href="https://MingDynasty1.github.io/OnlineJudge/index.html" data-lang="zh">免费网盘</a><a href="https://MingDynasty1.github.io/OnlineJudge/index.html" data-lang="en" style="display: none;">Free Cloud Storage</a></li>
+                    <li><a href="https://mingdynasty1.github.io/friends/friends.md" data-lang="zh">友情链接</a><a href="https://mingdynasty1.github.io/friends/friends.md" data-lang="en" style="display: none;">Friends Links</a></li>
+                    <li><a href="https://mingdynasty1.github.io/cbpan_help/MingDynasty_cbpan_help.html" data-lang="zh">网盘帮助</a><a href="https://mingdynasty1.github.io/cbpan_help/MingDynasty_cbpan_help.html" data-lang="en" style="display: none;">Cloud Storage Help</a></li>
+                    <li><a href="https://mingdynasty1.github.io/game.html" data-lang="zh">益智小游戏</a><a href="https://mingdynasty1.github.io/game.html" data-lang="en" style="display: none;">Puzzle Games</a></li>
+                    <li><a href="https://mingdynasty1.github.io/2048.html" data-lang="zh">2048游戏</a><a href="https://mingdynasty1.github.io/2048.html" data-lang="en" style="display: none;">2048 Game</a></li>
+                    <li><a href="https://mingdynasty1.github.io/gxrz.html" data-lang="zh">更新日志</a><a href="https://mingdynasty1.github.io/gxrz.html" data-lang="en" style="display: none;">Update Log</a></li>
+                    <li><a href="https://MingDynasty1.github.io/calc.html" data-lang="zh">计算器</a><a href="https://MingDynasty1.github.io/calc.html" data-lang="en" style="display: none;">Calculator</a></li>
+                    <li><a href="https://MingDynasty1.github.io/dmgame.html" data-lang="zh">大明皇帝模拟器</a><a href="https://MingDynasty1.github.io/dmgame.html" data-lang="en" style="display: none;">Ming Emperor Simulator</a></li>
+                    <li><a href="https://mingdynasty1.github.io/dmhpy.html" data-lang="zh">大明国庆</a><a href="https://mingdynasty1.github.io/dmhpy.html" data-lang="en" style="display: none;">Ming National Day</a></li>
                     <!-- 添加人生模拟器链接 -->
-                    <li><a href="https://MingDynasty1.github.io/People-Remake-Life.html">人生模拟器</a></li>
+                    <li><a href="https://MingDynasty1.github.io/People-Remake-Life.html" data-lang="zh">人生模拟器</a><a href="https://MingDynasty1.github.io/People-Remake-Life.html" data-lang="en" style="display: none;">Life Simulator</a></li>
                     <!-- 添加贪吃蛇游戏链接 -->
-                    <li><a href="https://MingDynasty1.github.io/snakegame.html">贪吃蛇游戏</a></li>
+                    <li><a href="https://MingDynasty1.github.io/snakegame.html" data-lang="zh">贪吃蛇游戏</a><a href="https://MingDynasty1.github.io/snakegame.html" data-lang="en" style="display: none;">Snake Game</a></li>
                     <!-- 添加常见问题解答链接 -->
-                    <li><a href="https://MingDynasty1.github.io/FAQ.html">常见问题解答</a></li>
+                    <li><a href="https://MingDynasty1.github.io/FAQ.html" data-lang="zh">常见问题解答</a><a href="https://MingDynasty1.github.io/FAQ.html" data-lang="en" style="display: none;">FAQ</a></li>
                     <!-- 添加博客主页链接 -->
-                    <li><a href="https://MingDynasty1.github.io/blog/index.html" style="font-weight: bold; color: var(--accent-color);">博客主页</a></li>
+                    <li><a href="https://MingDynasty1.github.io/blog/index.html" style="font-weight: bold; color: var(--accent-color);" data-lang="zh">博客主页</a><a href="https://MingDynasty1.github.io/blog/index.html" style="font-weight: bold; color: var(--accent-color); display: none;" data-lang="en">Blog Homepage</a></li>
                 </ul>
                 
-                <h3>个人简介</h3>
-                <p>7年级蒟蒻,欢迎吊打</p>
-                <p>坐标: 陕西西安</p>
-                <p>最高排名: 304</p>
+                <h3 data-lang="zh">个人简介</h3>
+                <h3 data-lang="en" style="display: none;">Personal Profile</h3>
+                <p data-lang="zh">7年级蒟蒻,欢迎吊打</p>
+                <p data-lang="en" style="display: none;">7th grade rookie, welcome to challenge</p>
+                <p data-lang="zh">坐标: 陕西西安</p>
+                <p data-lang="en" style="display: none;">Location: Xi'an, Shaanxi</p>
+                <p data-lang="zh">最高排名: 304</p>
+                <p data-lang="en" style="display: none;">Highest Ranking: 304</p>
                 
-                <h3>座右铭</h3>
+                <h3 data-lang="zh">座右铭</h3>
+                <h3 data-lang="en" style="display: none;">Motto</h3>
                 <p class="ming-decoration">Even if the finish line is far away, we must walk to the end.</p>
                 
                 <div class="game-card">
-                    <h3>大明寿司派对（华容道）</h3>
-                    <p>挑战传统智力游戏</p>
-                    <a href="https://mingdynasty1.github.io/game.html" class="game-btn">开始游戏</a>
+                    <h3 data-lang="zh">大明寿司派对（华容道）</h3>
+                    <h3 data-lang="en" style="display: none;">Ming Sushi Party (Klotski)</h3>
+                    <p data-lang="zh">挑战传统智力游戏</p>
+                    <p data-lang="en" style="display: none;">Challenge traditional puzzle game</p>
+                    <a href="https://mingdynasty1.github.io/game.html" class="game-btn" data-lang="zh">开始游戏</a>
+                    <a href="https://mingdynasty1.github.io/game.html" class="game-btn" data-lang="en" style="display: none;">Start Game</a>
                 </div>
                 
                 <div class="game-card">
-                    <h3>2048数字游戏</h3>
-                    <p>挑战数字组合能力</p>
-                    <a href="https://mingdynasty1.github.io/2048.html" class="game-btn">开始游戏</a>
+                    <h3 data-lang="zh">2048数字游戏</h3>
+                    <h3 data-lang="en" style="display: none;">2048 Number Game</h3>
+                    <p data-lang="zh">挑战数字组合能力</p>
+                    <p data-lang="en" style="display: none;">Challenge number combination skills</p>
+                    <a href="https://mingdynasty1.github.io/2048.html" class="game-btn" data-lang="zh">开始游戏</a>
+                    <a href="https://mingdynasty1.github.io/2048.html" class="game-btn" data-lang="en" style="display: none;">Start Game</a>
                 </div>
                 
                 <div class="game-card">
-                    <h3>大明皇帝模拟器</h3>
-                    <p>体验明朝皇帝的生活</p>
-                    <a href="https://MingDynasty1.github.io/dmgame.html" class="game-btn">开始游戏</a>
+                    <h3 data-lang="zh">大明皇帝模拟器</h3>
+                    <h3 data-lang="en" style="display: none;">Ming Emperor Simulator</h3>
+                    <p data-lang="zh">体验明朝皇帝的生活</p>
+                    <p data-lang="en" style="display: none;">Experience life as a Ming emperor</p>
+                    <a href="https://MingDynasty1.github.io/dmgame.html" class="game-btn" data-lang="zh">开始游戏</a>
+                    <a href="https://MingDynasty1.github.io/dmgame.html" class="game-btn" data-lang="en" style="display: none;">Start Game</a>
                 </div>
                 
                 <div class="game-card">
-                    <h3>大明国庆</h3>
-                    <p>庆祝明朝盛世的庆典</p>
-                    <a href="https://mingdynasty1.github.io/dmhpy.html" class="game-btn">开始游戏</a>
+                    <h3 data-lang="zh">大明国庆</h3>
+                    <h3 data-lang="en" style="display: none;">Ming National Day</h3>
+                    <p data-lang="zh">庆祝明朝盛世的庆典</p>
+                    <p data-lang="en" style="display: none;">Celebrate Ming prosperity celebrations</p>
+                    <a href="https://mingdynasty1.github.io/dmhpy.html" class="game-btn" data-lang="zh">开始游戏</a>
+                    <a href="https://mingdynasty1.github.io/dmhpy.html" class="game-btn" data-lang="en" style="display: none;">Start Game</a>
                 </div>
 
                 <div class="game-card">
-                    <h3>更新日志</h3>
-                    <p>了解网站发展历程</p>
-                    <a href="https://mingdynasty1.github.io/gxrz.html" class="game-btn">查看日志</a>
+                    <h3 data-lang="zh">更新日志</h3>
+                    <h3 data-lang="en" style="display: none;">Update Log</h3>
+                    <p data-lang="zh">了解网站发展历程</p>
+                    <p data-lang="en" style="display: none;">Learn about website development history</p>
+                    <a href="https://mingdynasty1.github.io/gxrz.html" class="game-btn" data-lang="zh">查看日志</a>
+                    <a href="https://mingdynasty1.github.io/gxrz.html" class="game-btn" data-lang="en" style="display: none;">View Log</a>
                 </div>
                 
                 <div class="game-card">
-                    <h3>计算器</h3>
-                    <p>明朝风格计算器</p>
-                    <a href="https://MingDynasty1.github.io/calc.html" class="game-btn">使用计算器</a>
+                    <h3 data-lang="zh">计算器</h3>
+                    <h3 data-lang="en" style="display: none;">Calculator</h3>
+                    <p data-lang="zh">明朝风格计算器</p>
+                    <p data-lang="en" style="display: none;">Ming style calculator</p>
+                    <a href="https://MingDynasty1.github.io/calc.html" class="game-btn" data-lang="zh">使用计算器</a>
+                    <a href="https://MingDynasty1.github.io/calc.html" class="game-btn" data-lang="en" style="display: none;">Use Calculator</a>
                 </div>
                 
                 <div class="game-card">
-                    <h3>大明历史</h3>
-                    <p>探索明朝历史与文化</p>
-                    <a href="https://MingDynasty1.github.io/MgDyhistory.html" class="game-btn">探索历史</a>
+                    <h3 data-lang="zh">大明历史</h3>
+                    <h3 data-lang="en" style="display: none;">Ming History</h3>
+                    <p data-lang="zh">探索明朝历史与文化</p>
+                    <p data-lang="en" style="display: none;">Explore Ming history and culture</p>
+                    <a href="https://MingDynasty1.github.io/MgDyhistory.html" class="game-btn" data-lang="zh">探索历史</a>
+                    <a href="https://MingDynasty1.github.io/MgDyhistory.html" class="game-btn" data-lang="en" style="display: none;">Explore History</a>
                 </div>
                 
                 <!-- 新增人生模拟器卡片 -->
                 <div class="game-card">
-                    <h3>人生模拟器</h3>
-                    <p>体验不同的人生轨迹</p>
-                    <a href="https://MingDynasty1.github.io/People-Remake-Life.html" class="game-btn">开始体验</a>
+                    <h3 data-lang="zh">人生模拟器</h3>
+                    <h3 data-lang="en" style="display: none;">Life Simulator</h3>
+                    <p data-lang="zh">体验不同的人生轨迹</p>
+                    <p data-lang="en" style="display: none;">Experience different life paths</p>
+                    <a href="https://MingDynasty1.github.io/People-Remake-Life.html" class="game-btn" data-lang="zh">开始体验</a>
+                    <a href="https://MingDynasty1.github.io/People-Remake-Life.html" class="game-btn" data-lang="en" style="display: none;">Start Experience</a>
                 </div>
                 
                 <!-- 新增贪吃蛇游戏卡片 -->
                 <div class="game-card">
-                    <h3>贪吃蛇游戏</h3>
-                    <p>经典贪吃蛇游戏</p>
-                    <a href="https://MingDynasty1.github.io/snakegame.html" class="game-btn">开始游戏</a>
+                    <h3 data-lang="zh">贪吃蛇游戏</h3>
+                    <h3 data-lang="en" style="display: none;">Snake Game</h3>
+                    <p data-lang="zh">经典贪吃蛇游戏</p>
+                    <p data-lang="en" style="display: none;">Classic snake game</p>
+                    <a href="https://MingDynasty1.github.io/snakegame.html" class="game-btn" data-lang="zh">开始游戏</a>
+                    <a href="https://MingDynasty1.github.io/snakegame.html" class="game-btn" data-lang="en" style="display: none;">Start Game</a>
                 </div>
                 
                 <!-- 新增常见问题解答卡片 -->
                 <div class="game-card">
-                    <h3>常见问题解答</h3>
-                    <p>查看常见问题解答</p>
-                    <a href="https://MingDynasty1.github.io/FAQ.html" class="game-btn">查看FAQ</a>
+                    <h3 data-lang="zh">常见问题解答</h3>
+                    <h3 data-lang="en" style="display: none;">FAQ</h3>
+                    <p data-lang="zh">查看常见问题解答</p>
+                    <p data-lang="en" style="display: none;">Check frequently asked questions</p>
+                    <a href="https://MingDynasty1.github.io/FAQ.html" class="game-btn" data-lang="zh">查看FAQ</a>
+                    <a href="https://MingDynasty1.github.io/FAQ.html" class="game-btn" data-lang="en" style="display: none;">View FAQ</a>
                 </div>
                 
                 <div class="game-card">
-                    <h3>联系我们</h3>
-                    <p>有任何问题或建议？联系我们！</p>
-                    <a href="https://MingDynasty1.github.io/contact-us-MgDy.html" class="game-btn">联系我们</a>
+                    <h3 data-lang="zh">联系我们</h3>
+                    <h3 data-lang="en" style="display: none;">Contact Us</h3>
+                    <p data-lang="zh">有任何问题或建议？联系我们！</p>
+                    <p data-lang="en" style="display: none;">Any questions or suggestions? Contact us!</p>
+                    <a href="https://MingDynasty1.github.io/contact-us-MgDy.html" class="game-btn" data-lang="zh">联系我们</a>
+                    <a href="https://MingDynasty1.github.io/contact-us-MgDy.html" class="game-btn" data-lang="en" style="display: none;">Contact Us</a>
                 </div>
                 
                 <div class="game-card">
-                    <h3>博客主页</h3>
-                    <p>查看皇帝的技术文章与思考</p>
-                    <a href="https://MingDynasty1.github.io/blog/index.html" class="game-btn">访问博客</a>
+                    <h3 data-lang="zh">博客主页</h3>
+                    <h3 data-lang="en" style="display: none;">Blog Homepage</h3>
+                    <p data-lang="zh">查看皇帝的技术文章与思考</p>
+                    <p data-lang="en" style="display: none;">View the emperor's technical articles and thoughts</p>
+                    <a href="https://MingDynasty1.github.io/blog/index.html" class="game-btn" data-lang="zh">访问博客</a>
+                    <a href="https://MingDynasty1.github.io/blog/index.html" class="game-btn" data-lang="en" style="display: none;">Visit Blog</a>
                 </div>
             </div>
         </div>
@@ -1110,11 +1281,14 @@
     
     <footer>
     <div class="container">
-        <p>© 2013-2025 MingDynasty,Inc. MingDynasty 的个人主页 | 灵感源于明朝美学</p>
-        <p>开局一个碗，结局一根绳 | 传承与创新 | <a href="https://mingdynasty1.github.io/gxrz.html" style="color: #f8f3e6;">查看更新日志</a></p>
+        <p data-lang="zh">© 2013-2025 MingDynasty,Inc. MingDynasty 的个人主页 | 灵感源于明朝美学</p>
+        <p data-lang="en" style="display: none;">© 2013-2025 MingDynasty,Inc. MingDynasty's Personal Homepage | Inspired by Ming Dynasty Aesthetics</p>
+        <p data-lang="zh">开局一个碗，结局一根绳 | 传承与创新 | <a href="https://mingdynasty1.github.io/gxrz.html" style="color: #f8f3e6;">查看更新日志</a></p>
+        <p data-lang="en" style="display: none;">Start with a bowl, end with a rope | Inheritance and Innovation | <a href="https://mingdynasty1.github.io/gxrz.html" style="color: #f8f3e6;">View Update Log</a></p>
         <!-- 添加ICP备案信息 -->
         <p style="margin-top: 10px; font-size: 0.9rem;">
-            <a href="https://icp.gov.moe/?keyword=20250643" target="_blank" style="color: #f8f3e6; text-decoration: underline;">萌ICP备20250643号</a>
+            <a href="https://icp.gov.moe/?keyword=20250643" target="_blank" style="color: #f8f3e6; text-decoration: underline;" data-lang="zh">萌ICP备20250643号</a>
+            <a href="https://icp.gov.moe/?keyword=20250643" target="_blank" style="color: #f8f3e6; text-decoration: underline; display: none;" data-lang="en">MoeICP No. 20250643</a>
         </p>
     </div>
 </footer>
@@ -1141,9 +1315,16 @@
             const weekdays = ["日", "一", "二", "三", "四", "五", "六"];
             const weekday = weekdays[now.getDay()];
             
+            // 英文日期
+            const weekdaysEn = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            const monthsEn = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            const weekdayEn = weekdaysEn[now.getDay()];
+            const monthEn = monthsEn[now.getMonth()];
+            
             // 更新显示
             document.getElementById('current-time').textContent = `${hours}:${minutes}:${seconds}`;
             document.getElementById('current-date').textContent = `${year}年${month}月${day}日 星期${weekday}`;
+            document.getElementById('current-date-en').textContent = `${weekdayEn}, ${monthEn} ${day}, ${year}`;
         }
         
         // 初始更新一次
@@ -1229,10 +1410,15 @@
         const canvas = document.getElementById('snake-game-board');
         const ctx = canvas.getContext('2d');
         const scoreElement = document.getElementById('snake-score');
+        const scoreElementEn = document.getElementById('snake-score-en');
         const highScoreElement = document.getElementById('snake-high-score');
+        const highScoreElementEn = document.getElementById('snake-high-score-en');
         const startBtn = document.getElementById('snake-start-btn');
+        const startBtnEn = document.getElementById('snake-start-btn-en');
         const pauseBtn = document.getElementById('snake-pause-btn');
+        const pauseBtnEn = document.getElementById('snake-pause-btn-en');
         const resetBtn = document.getElementById('snake-reset-btn');
+        const resetBtnEn = document.getElementById('snake-reset-btn-en');
         
         // 游戏变量
         const gridSize = 20;
@@ -1258,6 +1444,7 @@
             score = 0;
             updateScore();
             highScoreElement.textContent = highScore;
+            highScoreElementEn.textContent = highScore;
         }
         
         // 生成食物
@@ -1340,9 +1527,11 @@
         // 更新分数
         function updateScore() {
             scoreElement.textContent = score;
+            scoreElementEn.textContent = score;
             if (score > highScore) {
                 highScore = score;
                 highScoreElement.textContent = highScore;
+                highScoreElementEn.textContent = highScore;
                 localStorage.setItem('snakeHighScore', highScore);
             }
         }
@@ -1351,7 +1540,12 @@
         function gameOver() {
             gameRunning = false;
             clearInterval(gameLoop);
-            alert(`游戏结束！你的得分是: ${score}`);
+            const currentLang = localStorage.getItem('language') || 'zh';
+            if (currentLang === 'zh') {
+                alert(`游戏结束！你的得分是: ${score}`);
+            } else {
+                alert(`Game Over! Your score is: ${score}`);
+            }
         }
         
         // 开始游戏
@@ -1359,7 +1553,12 @@
             if (!gameRunning) {
                 gameRunning = true;
                 gameLoop = setInterval(updateGame, 150);
-                startBtn.textContent = "游戏中...";
+                const currentLang = localStorage.getItem('language') || 'zh';
+                if (currentLang === 'zh') {
+                    startBtn.textContent = "游戏中...";
+                } else {
+                    startBtnEn.textContent = "Playing...";
+                }
             }
         }
         
@@ -1368,7 +1567,12 @@
             if (gameRunning) {
                 gameRunning = false;
                 clearInterval(gameLoop);
-                startBtn.textContent = "继续游戏";
+                const currentLang = localStorage.getItem('language') || 'zh';
+                if (currentLang === 'zh') {
+                    startBtn.textContent = "继续游戏";
+                } else {
+                    startBtnEn.textContent = "Continue Game";
+                }
             } else {
                 startGame();
             }
@@ -1380,7 +1584,12 @@
             clearInterval(gameLoop);
             initGame();
             drawGame();
-            startBtn.textContent = "开始游戏";
+            const currentLang = localStorage.getItem('language') || 'zh';
+            if (currentLang === 'zh') {
+                startBtn.textContent = "开始游戏";
+            } else {
+                startBtnEn.textContent = "Start Game";
+            }
         }
         
         // 键盘控制
@@ -1416,14 +1625,60 @@
         
         // 按钮事件监听
         startBtn.addEventListener('click', startGame);
+        startBtnEn.addEventListener('click', startGame);
         pauseBtn.addEventListener('click', pauseGame);
+        pauseBtnEn.addEventListener('click', pauseGame);
         resetBtn.addEventListener('click', resetGame);
+        resetBtnEn.addEventListener('click', resetGame);
         
         // 初始化游戏
         initGame();
         drawGame();
         highScoreElement.textContent = highScore;
+        highScoreElementEn.textContent = highScore;
+        
+        // 语言切换功能
+        const languageToggle = document.getElementById('language-toggle');
+        
+        // 检查本地存储的语言偏好
+        const savedLanguage = localStorage.getItem('language');
+        if (savedLanguage === 'en') {
+            switchLanguage('en');
+        }
+        
+        // 切换语言
+        languageToggle.addEventListener('click', function() {
+            const currentLang = localStorage.getItem('language') || 'zh';
+            const newLang = currentLang === 'zh' ? 'en' : 'zh';
+            switchLanguage(newLang);
+        });
+        
+        // 语言切换函数
+        function switchLanguage(lang) {
+            // 更新所有带有data-lang属性的元素
+            document.querySelectorAll('[data-lang]').forEach(element => {
+                if (element.getAttribute('data-lang') === lang) {
+                    element.style.display = '';
+                } else {
+                    element.style.display = 'none';
+                }
+            });
+            
+            // 更新语言按钮文本
+            if (lang === 'zh') {
+                languageToggle.querySelector('[data-lang="zh"]').style.display = '';
+                languageToggle.querySelector('[data-lang="en"]').style.display = 'none';
+            } else {
+                languageToggle.querySelector('[data-lang="zh"]').style.display = 'none';
+                languageToggle.querySelector('[data-lang="en"]').style.display = '';
+            }
+            
+            // 保存语言偏好
+            localStorage.setItem('language', lang);
+            
+            // 更新页面语言属性
+            document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+        }
     </script>
 </body>
 </html>
-
