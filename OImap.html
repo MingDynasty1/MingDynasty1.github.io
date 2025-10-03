@@ -2,21 +2,59 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-<link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>信息学竞赛导航 - MingDynasty1 Github Page</title>
+    <title>信息学竞赛导航 | MingDynasty</title>
     <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        :root {
+            /* 亮色主题变量 */
+            --bg-color: #f8f3e6;
+            --container-bg: rgba(255, 249, 239, 0.9);
+            --text-color: #333;
+            --accent-color: #8a0f0f;
+            --secondary-color: #7a5d34;
+            --border-color: #b3815f;
+            --card-bg: linear-gradient(to bottom, #fff, #f9f1e3);
+            --card-border: #d4b78c;
+            --footer-color: #7a5d34;
+            --decoration-color: #b3815f;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --button-bg: #8a0f0f;
+            --button-hover: #c53d13;
+            --gradient: linear-gradient(to right, #c53d13, #e28327, #c53d13);
+        }
+
+        [data-theme="dark"] {
+            /* 暗色主题变量 */
+            --bg-color: #1a1a1a;
+            --container-bg: rgba(40, 40, 40, 0.95);
+            --text-color: #e0e0e0;
+            --accent-color: #d9534f;
+            --secondary-color: #a68b5b;
+            --border-color: #5d4037;
+            --card-bg: linear-gradient(to bottom, #2d2d2d, #3d3d3d);
+            --card-border: #5d4037;
+            --footer-color: #a68b5b;
+            --decoration-color: #5d4037;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --button-bg: #d9534f;
+            --button-hover: #c9302c;
+            --gradient: linear-gradient(to right, #c53d13, #e28327, #c53d13);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
         }
         
         body {
             font-family: 'Noto Serif SC', serif;
-            background-color: #f8f3e6;
-            color: #333;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path fill="%23b3815f" fill-opacity="0.1" d="M10,10 C20,30 30,20 50,50 S80,70 90,90 L90,10 Z"/></svg>');
             padding: 20px;
             line-height: 1.6;
@@ -25,10 +63,10 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            background: rgba(255, 249, 239, 0.9);
-            border: 2px solid #b3815f;
+            background: var(--container-bg);
+            border: 2px solid var(--border-color);
             border-radius: 5px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 15px var(--shadow-color);
             padding: 20px;
             position: relative;
             overflow: hidden;
@@ -41,13 +79,13 @@
             left: 0;
             right: 0;
             height: 10px;
-            background: linear-gradient(to right, #c53d13, #e28327, #c53d13);
+            background: var(--gradient);
         }
         
         header {
             text-align: center;
             padding: 30px 0;
-            border-bottom: 2px solid #b3815f;
+            border-bottom: 2px solid var(--border-color);
             margin-bottom: 30px;
             position: relative;
         }
@@ -55,15 +93,15 @@
         h1 {
             font-family: 'Ma Shan Zheng', cursive;
             font-size: 3.5rem;
-            color: #8a0f0f;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            color: var(--accent-color);
+            text-shadow: 2px 2px 4px var(--shadow-color);
             margin-bottom: 10px;
             letter-spacing: 5px;
         }
         
         .subtitle {
             font-size: 1.2rem;
-            color: #7a5d34;
+            color: var(--secondary-color);
             margin-bottom: 20px;
         }
         
@@ -92,7 +130,7 @@
             max-width: 800px;
             margin: 0 auto 40px;
             font-size: 1.1rem;
-            color: #5c4b37;
+            color: var(--secondary-color);
             line-height: 1.8;
             padding: 0 20px;
         }
@@ -105,8 +143,8 @@
         }
         
         .platform-card {
-            background: linear-gradient(to bottom, #fff, #f9f1e3);
-            border: 1px solid #d4b78c;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
             border-radius: 5px;
             padding: 20px;
             transition: transform 0.3s, box-shadow 0.3s;
@@ -116,7 +154,7 @@
         
         .platform-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 20px var(--shadow-color);
         }
         
         .platform-card::before {
@@ -126,19 +164,19 @@
             left: 0;
             right: 0;
             height: 5px;
-            background: linear-gradient(to right, #c53d13, #e28327);
+            background: var(--gradient);
         }
         
         .platform-card h3 {
-            color: #8a0f0f;
+            color: var(--accent-color);
             font-size: 1.5rem;
             margin-bottom: 15px;
             padding-bottom: 10px;
-            border-bottom: 1px dashed #d4b78c;
+            border-bottom: 1px dashed var(--card-border);
         }
         
         .platform-card p {
-            color: #5c4b37;
+            color: var(--text-color);
             margin-bottom: 20px;
             min-height: 80px;
         }
@@ -146,7 +184,7 @@
         .platform-card a {
             display: block;
             text-align: center;
-            background: #8a0f0f;
+            background: var(--button-bg);
             color: #fff;
             padding: 10px 15px;
             text-decoration: none;
@@ -156,15 +194,43 @@
         }
         
         .platform-card a:hover {
-            background: #c53d13;
+            background: var(--button-hover);
         }
         
         footer {
             text-align: center;
             padding: 20px 0;
-            color: #7a5d34;
-            border-top: 1px solid #d4b78c;
+            color: var(--footer-color);
+            border-top: 1px solid var(--card-border);
             font-size: 0.9rem;
+        }
+        
+        /* 主题切换按钮 */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--container-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px var(--shadow-color);
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+        
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+        
+        .theme-toggle i {
+            font-size: 1.5rem;
+            color: var(--accent-color);
         }
         
         @media (max-width: 768px) {
@@ -179,10 +245,25 @@
             .decoration {
                 display: none;
             }
+            
+            .theme-toggle {
+                top: 10px;
+                right: 10px;
+                width: 40px;
+                height: 40px;
+            }
+            
+            .theme-toggle i {
+                font-size: 1.2rem;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+    </div>
+    
     <div class="container">
         <div class="decoration decoration-1"></div>
         <div class="decoration decoration-2"></div>
@@ -250,6 +331,38 @@
             <p>© 2013-2025 MingDynasty,Inc. MingDynasty1 GitHub Page | 设计灵感源自明朝艺术风格 | 仅供学习交流使用</p>
         </footer>
     </div>
-</body>
 
+    <script>
+        // 主题切换功能
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        
+        // 检查本地存储或系统偏好
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme === 'dark' || (!currentTheme && prefersDarkScheme.matches)) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        }
+        
+        // 切换主题
+        themeToggle.addEventListener('click', function() {
+            let theme = 'light';
+            if (document.documentElement.getAttribute('data-theme') !== 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                theme = 'dark';
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            }
+            
+            // 保存用户选择
+            localStorage.setItem('theme', theme);
+        });
+    </script>
+</body>
 </html>
