@@ -12,10 +12,46 @@
             box-sizing: border-box;
         }
         
+        :root {
+            --bg-color: #f5f7fa;
+            --bg-secondary: #e4e8f0;
+            --container-bg: rgba(255, 255, 255, 0.95);
+            --text-color: #333;
+            --text-secondary: #666;
+            --text-muted: #888;
+            --border-color: #e1e1e1;
+            --accent-color: #c19a6b;
+            --accent-dark: #a67c52;
+            --accent-darker: #8c6d46;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --search-bg: #f8f8f8;
+            --btn-secondary-bg: transparent;
+            --btn-secondary-border: #ddd;
+            --btn-secondary-hover: #f5f5f5;
+        }
+        
+        [data-theme="dark"] {
+            --bg-color: #1a1a2e;
+            --bg-secondary: #16213e;
+            --container-bg: rgba(30, 30, 46, 0.95);
+            --text-color: #e6e6e6;
+            --text-secondary: #b8b8b8;
+            --text-muted: #888;
+            --border-color: #2d2d44;
+            --accent-color: #c19a6b;
+            --accent-dark: #a67c52;
+            --accent-darker: #8c6d46;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --search-bg: #2a2a3e;
+            --btn-secondary-bg: transparent;
+            --btn-secondary-border: #444;
+            --btn-secondary-hover: #2d2d44;
+        }
+        
         body {
             font-family: 'Microsoft YaHei', 'SimHei', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
-            color: #333;
+            background: linear-gradient(135deg, var(--bg-color) 0%, var(--bg-secondary) 100%);
+            color: var(--text-color);
             line-height: 1.6;
             min-height: 100vh;
             display: flex;
@@ -24,19 +60,21 @@
             justify-content: center;
             padding: 20px;
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill="none" stroke="rgba(200, 200, 200, 0.2)" stroke-width="2" x="10" y="10" width="80" height="80" /></svg>');
+            transition: background 0.3s ease, color 0.3s ease;
         }
         
         .container {
             max-width: 800px;
             width: 100%;
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--container-bg);
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px var(--shadow-color);
             padding: 40px;
             text-align: center;
             position: relative;
             overflow: hidden;
-            border: 1px solid #e1e1e1;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
         }
         
         .ming-border {
@@ -45,8 +83,8 @@
             left: 0;
             right: 0;
             height: 8px;
-            background: linear-gradient(90deg, #c19a6b, #e4d5b7, #c19a6b);
-            border-bottom: 2px solid #8c6d46;
+            background: linear-gradient(90deg, var(--accent-color), #e4d5b7, var(--accent-color));
+            border-bottom: 2px solid var(--accent-darker);
         }
         
         .header {
@@ -55,7 +93,7 @@
         
         h1 {
             font-size: 8rem;
-            color: #c19a6b;
+            color: var(--accent-color);
             text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.1);
             margin-bottom: 10px;
             letter-spacing: 5px;
@@ -63,7 +101,7 @@
         
         h2 {
             font-size: 2rem;
-            color: #555;
+            color: var(--text-secondary);
             margin-bottom: 20px;
             font-weight: 600;
         }
@@ -71,7 +109,7 @@
         p {
             font-size: 1.2rem;
             margin-bottom: 25px;
-            color: #666;
+            color: var(--text-secondary);
             max-width: 600px;
             margin-left: auto;
             margin-right: auto;
@@ -80,7 +118,7 @@
         .decoration {
             margin: 30px 0;
             font-size: 4rem;
-            color: #c19a6b;
+            color: var(--accent-color);
         }
         
         .action-buttons {
@@ -106,27 +144,27 @@
         }
         
         .btn-primary {
-            background: linear-gradient(to right, #c19a6b, #a67c52);
+            background: linear-gradient(to right, var(--accent-color), var(--accent-dark));
             color: white;
             box-shadow: 0 4px 15px rgba(193, 154, 107, 0.3);
         }
         
         .btn-primary:hover {
-            background: linear-gradient(to right, #a67c52, #8c6d46);
+            background: linear-gradient(to right, var(--accent-dark), var(--accent-darker));
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(193, 154, 107, 0.4);
         }
         
         .btn-secondary {
-            background: transparent;
-            color: #666;
-            border: 2px solid #ddd;
+            background: var(--btn-secondary-bg);
+            color: var(--text-secondary);
+            border: 2px solid var(--btn-secondary-border);
         }
         
         .btn-secondary:hover {
-            background: #f5f5f5;
-            border-color: #c19a6b;
-            color: #c19a6b;
+            background: var(--btn-secondary-hover);
+            border-color: var(--accent-color);
+            color: var(--accent-color);
             transform: translateY(-2px);
         }
         
@@ -134,7 +172,7 @@
             display: flex;
             max-width: 500px;
             margin: 30px auto;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 5px 15px var(--shadow-color);
             border-radius: 50px;
             overflow: hidden;
         }
@@ -143,14 +181,16 @@
             flex: 1;
             padding: 16px 25px;
             border: none;
-            background: #f8f8f8;
+            background: var(--search-bg);
             font-size: 1.1rem;
+            color: var(--text-color);
+            transition: all 0.3s ease;
         }
         
         .search-button {
             padding: 16px 30px;
             border: none;
-            background: linear-gradient(to right, #c19a6b, #a67c52);
+            background: linear-gradient(to right, var(--accent-color), var(--accent-dark));
             color: white;
             font-weight: 600;
             cursor: pointer;
@@ -158,12 +198,12 @@
         }
         
         .search-button:hover {
-            background: linear-gradient(to right, #a67c52, #8c6d46);
+            background: linear-gradient(to right, var(--accent-dark), var(--accent-darker));
         }
         
         .footer {
             margin-top: 40px;
-            color: #888;
+            color: var(--text-muted);
             font-size: 0.9rem;
         }
         
@@ -174,7 +214,7 @@
         .ornament {
             font-size: 2rem;
             margin: 0 10px;
-            color: #c19a6b;
+            color: var(--accent-color);
             display: inline-block;
             animation: float 3s ease-in-out infinite;
         }
@@ -187,18 +227,88 @@
         .delay-1 { animation-delay: 0.5s; }
         .delay-2 { animation-delay: 1s; }
         
+        /* 主题切换按钮样式 */
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--container-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px var(--shadow-color);
+            z-index: 10;
+        }
+        
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+        
+        .theme-toggle svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--accent-color);
+        }
+        
+        .sun-icon {
+            display: none;
+        }
+        
+        [data-theme="dark"] .moon-icon {
+            display: none;
+        }
+        
+        [data-theme="dark"] .sun-icon {
+            display: block;
+        }
+        
         @media (max-width: 600px) {
             h1 { font-size: 6rem; }
             h2 { font-size: 1.6rem; }
             p { font-size: 1rem; }
             .btn { padding: 12px 20px; }
             .container { padding: 30px 20px; }
+            .theme-toggle {
+                top: 15px;
+                right: 15px;
+                width: 40px;
+                height: 40px;
+            }
+            .theme-toggle svg {
+                width: 20px;
+                height: 20px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="ming-border"></div>
+        
+        <!-- 主题切换按钮 -->
+        <div class="theme-toggle" id="themeToggle">
+            <svg class="moon-icon" viewBox="0 0 24 24">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <svg class="sun-icon" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+        </div>
+        
         <div class="header">
             <h1>404</h1>
             <h2>页面未找到</h2>
@@ -265,8 +375,23 @@
                     searchButton.click();
                 }
             });
+            
+            // 主题切换功能
+            const themeToggle = document.getElementById('themeToggle');
+            const currentTheme = localStorage.getItem('theme') || 'light';
+            
+            // 应用保存的主题
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            
+            // 切换主题函数
+            themeToggle.addEventListener('click', function() {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+            });
         });
     </script>
 </body>
-
 </html>
