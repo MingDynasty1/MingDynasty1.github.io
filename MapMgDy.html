@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大明导航 - 明朝风格地图系统 | MingDynasty</title>
+  <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'SimSun', '宋体', serif;
+            background-color: #f5f1e6;
+            color: #333;
+            line-height: 1.6;
+            overflow: hidden;
+        }
+        
+        /* 导航栏样式 */
+        .ming-nav {
+            background: linear-gradient(to bottom, #9c1d1d, #7a0000);
+            border-bottom: 4px solid #d4af37;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            position: relative;
+            padding: 0 20px;
+            height: 70px;
+            z-index: 1000;
+        }
+        
+        .nav-container {
+            max-width: 100%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            height: 100%;
+        }
+        
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            color: #f5f1e6;
+            text-decoration: none;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .nav-logo span {
+            margin-left: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .nav-search {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            max-width: 600px;
+            margin: 0 20px;
+        }
+        
+        .search-box {
+            position: relative;
+            width: 100%;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 12px 20px 12px 45px;
+            border: 2px solid #d4af37;
+            border-radius: 30px;
+            font-size: 16px;
+            background-color: #f5f1e6;
+            color: #333;
+            outline: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7a0000;
+            font-size: 18px;
+        }
+        
+        .nav-user {
+            display: flex;
+            align-items: center;
+            color: #f5f1e6;
+        }
+        
+        .user-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+        
+        /* 装饰元素 */
+        .cloud-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='30' viewBox='0 0 100 30'%3E%3Cpath d='M0,15 Q10,5 20,15 T40,15 T60,15 T80,15 T100,15' fill='none' stroke='%23d4af37' stroke-width='1' opacity='0.3'/%3E%3C/svg%3E");
+            opacity: 0.3;
+            pointer-events: none;
+        }
+        
+        .nav-decoration {
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='10' viewBox='0 0 120 10'%3E%3Cpath d='M0,5 Q10,0 20,5 T40,5 T60,5 T80,5 T100,5 T120,5' fill='none' stroke='%23d4af37' stroke-width='2'/%3E%3C/svg%3E");
+            background-repeat: repeat-x;
+        }
+        
+        /* 地图容器 */
+        .map-container {
+            position: relative;
+            height: calc(100vh - 70px);
+            width: 100%;
+        }
+        
+        #ming-map {
+            height: 100%;
+            width: 100%;
+        }
+        
+        /* 侧边栏 */
+        .sidebar {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 350px;
+            background: rgba(156, 29, 29, 0.9);
+            border: 2px solid #d4af37;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            z-index: 999;
+            color: #f5f1e6;
+            overflow: hidden;
+        }
+        
+        .sidebar-header {
+            background: #7a0000;
+            padding: 15px 20px;
+            border-bottom: 2px solid #d4af37;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .sidebar-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #d4af37;
+        }
+        
+        .sidebar-close {
+            background: none;
+            border: none;
+            color: #f5f1e6;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        .sidebar-content {
+            padding: 20px;
+        }
+        
+        .route-input {
+            margin-bottom: 15px;
+        }
+        
+        .route-input label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #d4af37;
+        }
+        
+        .route-input input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #d4af37;
+            border-radius: 5px;
+            background: rgba(245, 241, 230, 0.9);
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .route-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .ming-button {
+            flex: 1;
+            padding: 12px;
+            background: #d4af37;
+            color: #7a0000;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .ming-button:hover {
+            background: #c19b2a;
+            transform: translateY(-2px);
+        }
+        
+        .route-result {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(122, 0, 0, 0.7);
+            border-radius: 5px;
+            border: 1px solid #d4af37;
+        }
+        
+        .route-info {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        /* 底部工具栏 */
+        .toolbar {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            background: rgba(156, 29, 29, 0.9);
+            padding: 15px 20px;
+            border-radius: 50px;
+            border: 2px solid #d4af37;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            z-index: 999;
+        }
+        
+        .tool-button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #d4af37;
+            color: #7a0000;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tool-button:hover {
+            background: #c19b2a;
+            transform: scale(1.1);
+        }
+        
+        /* 地图图例 */
+        .map-legend {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(156, 29, 29, 0.9);
+            border: 2px solid #d4af37;
+            border-radius: 10px;
+            padding: 15px;
+            color: #f5f1e6;
+            z-index: 999;
+            width: 200px;
+        }
+        
+        .legend-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #d4af37;
+            border-bottom: 1px solid #d4af37;
+            padding-bottom: 5px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: calc(100% - 40px);
+            }
+            
+            .nav-search {
+                max-width: 300px;
+            }
+            
+            .toolbar {
+                bottom: 10px;
+                padding: 10px 15px;
+            }
+            
+            .tool-button {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+        }
+        
+        /* 自定义地图样式 */
+        .custom-popup .leaflet-popup-content-wrapper {
+            background: rgba(156, 29, 29, 0.9);
+            color: #f5f1e6;
+            border: 2px solid #d4af37;
+            border-radius: 10px;
+        }
+        
+        .custom-popup .leaflet-popup-tip {
+            background: #d4af37;
+        }
+        
+        .custom-popup .leaflet-popup-close-button {
+            color: #f5f1e6;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="ming-nav">
+        <div class="cloud-pattern"></div>
+        <div class="nav-container">
+            <a href="#" class="nav-logo">
+                <span>大明导航</span>
+            </a>
+            
+            <div class="nav-search">
+                <div class="search-box">
+                    <div class="search-icon">🔍</div>
+                    <input type="text" class="search-input" placeholder="搜索地点、路线...">
+                </div>
+            </div>
+            
+            <div class="nav-user">
+                <div class="user-icon">👤</div>
+                <span>用户</span>
+            </div>
+        </div>
+        <div class="nav-decoration"></div>
+    </nav>
+    
+    <!-- 地图容器 -->
+    <div class="map-container">
+        <div id="ming-map"></div>
+        
+        <!-- 侧边栏 -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">路线规划</div>
+                <button class="sidebar-close">✕</button>
+            </div>
+            <div class="sidebar-content">
+                <div class="route-input">
+                    <label for="start-point">起点</label>
+                    <input type="text" id="start-point" placeholder="输入起点位置" value="北京故宫">
+                </div>
+                <div class="route-input">
+                    <label for="end-point">终点</label>
+                    <input type="text" id="end-point" placeholder="输入终点位置" value="南京明孝陵">
+                </div>
+                <div class="route-actions">
+                    <button class="ming-button" id="plan-route">规划路线</button>
+                    <button class="ming-button" id="clear-route">清除路线</button>
+                </div>
+                <div class="route-result">
+                    <div class="route-info">
+                        <span>距离:</span>
+                        <span>约 1,100 公里</span>
+                    </div>
+                    <div class="route-info">
+                        <span>预计时间:</span>
+                        <span>约 13 小时</span>
+                    </div>
+                    <div class="route-info">
+                        <span>路线类型:</span>
+                        <span>驾车</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 底部工具栏 -->
+        <div class="toolbar">
+            <button class="tool-button" title="定位">📍</button>
+            <button class="tool-button" title="放大">➕</button>
+            <button class="tool-button" title="缩小">➖</button>
+            <button class="tool-button" title="图层">🗺️</button>
+            <button class="tool-button" title="收藏">⭐</button>
+        </div>
+        
+        <!-- 地图图例 -->
+        <div class="map-legend">
+            <div class="legend-title">地图图例</div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #9c1d1d;"></div>
+                <span>历史遗迹</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #d4af37;"></div>
+                <span>文化景点</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #1a5276;"></div>
+                <span>水系</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #27ae60;"></div>
+                <span>山脉</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        // 初始化地图
+        const map = L.map('ming-map').setView([34.16, 108.54], 5);
+        
+        // 添加自定义明朝风格地图图层
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 18
+        }).addTo(map);
+        
+        // 添加一些明朝相关的地标
+        const mingLandmarks = [
+            { name: "北京故宫", coords: [39.916, 116.397], type: "历史遗迹" },
+            { name: "南京明孝陵", coords: [32.058, 118.851], type: "历史遗迹" },
+            { name: "西安城墙", coords: [34.258, 108.944], type: "历史遗迹" },
+            { name: "曲阜孔庙", coords: [35.597, 116.991], type: "文化景点" },
+            { name: "武当山古建筑群", coords: [32.400, 111.004], type: "文化景点" },
+            { name: "平遥古城", coords: [37.198, 112.176], type: "历史遗迹" }
+        ];
+        
+        // 为不同类型的地标设置不同颜色的图标
+        function getIconByType(type) {
+            let color = '#9c1d1d'; // 默认红色
+            
+            if (type === "文化景点") {
+                color = '#d4af37'; // 金色
+            }
+            
+            return L.divIcon({
+                className: 'custom-div-icon',
+                html: `<div style="background-color: ${color}; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 5px rgba(0,0,0,0.5);"></div>`,
+                iconSize: [24, 24],
+                iconAnchor: [12, 12]
+            });
+        }
+        
+        // 添加地标到地图
+        mingLandmarks.forEach(landmark => {
+            L.marker(landmark.coords, { icon: getIconByType(landmark.type) })
+                .addTo(map)
+                .bindPopup(`
+                    <div class="custom-popup">
+                        <h3>${landmark.name}</h3>
+                        <p>类型: ${landmark.type}</p>
+                        <button class="ming-button" style="margin-top: 10px; padding: 5px 10px; font-size: 14px;">查看详情</button>
+                    </div>
+                `);
+        });
+        
+        // 添加一些示例路线
+        const routePoints = [
+            [39.916, 116.397], // 北京故宫
+            [36.067, 120.383], // 青岛
+            [34.258, 108.944], // 西安
+            [32.058, 118.851]  // 南京明孝陵
+        ];
+        
+        let routeLine = null;
+        
+        // 路线规划功能
+        document.getElementById('plan-route').addEventListener('click', function() {
+            if (routeLine) {
+                map.removeLayer(routeLine);
+            }
+            
+            routeLine = L.polyline(routePoints, {
+                color: '#d4af37',
+                weight: 5,
+                opacity: 0.7,
+                dashArray: '10, 10'
+            }).addTo(map);
+            
+            // 调整地图视图以显示整个路线
+            map.fitBounds(routeLine.getBounds());
+        });
+        
+        // 清除路线功能
+        document.getElementById('clear-route').addEventListener('click', function() {
+            if (routeLine) {
+                map.removeLayer(routeLine);
+                routeLine = null;
+            }
+        });
+        
+        // 工具栏功能
+        document.querySelectorAll('.tool-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const title = this.getAttribute('title');
+                alert(`执行功能: ${title}`);
+                
+                // 实际应用中这里会有具体功能实现
+                if (title === '定位') {
+                    map.locate({setView: true, maxZoom: 16});
+                } else if (title === '放大') {
+                    map.zoomIn();
+                } else if (title === '缩小') {
+                    map.zoomOut();
+                }
+            });
+        });
+        
+        // 侧边栏关闭功能
+        document.querySelector('.sidebar-close').addEventListener('click', function() {
+            document.querySelector('.sidebar').style.display = 'none';
+        });
+        
+        // 搜索功能
+        document.querySelector('.search-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const query = this.value;
+                if (query) {
+                    alert(`搜索: ${query}`);
+                    // 实际应用中这里会有搜索和定位功能
+                }
+            }
+        });
+        
+        // 添加一些示例水域和山脉
+        const waterBody = L.polygon([
+            [30.5, 114.3],
+            [31.2, 115.8],
+            [29.8, 116.5],
+            [28.9, 115.2]
+        ], {
+            color: '#1a5276',
+            fillColor: '#1a5276',
+            fillOpacity: 0.3
+        }).addTo(map).bindPopup('洞庭湖');
+        
+        const mountainRange = L.polygon([
+            [27.5, 112.5],
+            [28.8, 113.2],
+            [29.5, 112.0],
+            [28.2, 111.3]
+        ], {
+            color: '#27ae60',
+            fillColor: '#27ae60',
+            fillOpacity: 0.3
+        }).addTo(map).bindPopup('衡山');
+    </script>
+</body>
+</html>
