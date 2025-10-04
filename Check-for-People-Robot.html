@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>明朝风格人机验证</title>
+    <style>
+        :root {
+            --primary-color: #8c1d1d;
+            --secondary-color: #d4af37;
+            --bg-color: #f5f0e6;
+            --card-bg: #fefefe;
+            --text-color: #333;
+            --border-color: #8c1d1d;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --success-color: #2d5016;
+            --error-color: #8c1d1d;
+            --slider-bg: #e8e1d1;
+        }
+
+        .dark-mode {
+            --primary-color: #c44545;
+            --secondary-color: #e6c158;
+            --bg-color: #1a1a1a;
+            --card-bg: #2a2a2a;
+            --text-color: #e0e0e0;
+            --border-color: #c44545;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --success-color: #4a7a2a;
+            --error-color: #c44545;
+            --slider-bg: #3a3a3a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "楷体", "SimKai", "STKaiti", serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d4af37' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-color);
+        }
+        
+        .verification-container {
+            width: 100%;
+            max-width: 500px;
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .verification-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 50%, var(--primary-color) 100%);
+        }
+        
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-color);
+            z-index: 10;
+        }
+        
+        .verification-header {
+            text-align: center;
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .verification-header h2 {
+            color: var(--primary-color);
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+        
+        .verification-header p {
+            color: var(--text-color);
+            font-size: 14px;
+        }
+        
+        .verification-content {
+            background-color: var(--slider-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .verification-image {
+            width: 100%;
+            height: 200px;
+            background-color: var(--slider-bg);
+            border-radius: 4px;
+            margin-bottom: 15px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .verification-image::before {
+            content: "明";
+            font-size: 120px;
+            color: var(--slider-bg);
+            filter: brightness(0.8);
+            position: absolute;
+            z-index: 0;
+        }
+        
+        .puzzle-piece {
+            width: 60px;
+            height: 60px;
+            background-color: var(--primary-color);
+            border-radius: 4px;
+            position: absolute;
+            left: 50px;
+            top: 70px;
+            cursor: grab;
+            box-shadow: 0 3px 10px var(--shadow-color);
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            transition: background-color 0.3s;
+        }
+        
+        .puzzle-target {
+            width: 60px;
+            height: 60px;
+            border: 2px dashed var(--primary-color);
+            border-radius: 4px;
+            position: absolute;
+            right: 50px;
+            top: 70px;
+            z-index: 1;
+        }
+        
+        .verification-slider {
+            width: 100%;
+            height: 44px;
+            background: var(--slider-bg);
+            border-radius: 22px;
+            position: relative;
+            margin-top: 20px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .slider-track {
+            width: 100%;
+            height: 100%;
+            border-radius: 22px;
+            position: absolute;
+            overflow: hidden;
+        }
+        
+        .slider-track::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            opacity: 0.2;
+        }
+        
+        .slider-handle {
+            width: 50px;
+            height: 40px;
+            background: var(--primary-color);
+            border-radius: 20px;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            transition: left 0.1s ease, background-color 0.3s;
+            z-index: 3;
+            box-shadow: 0 2px 5px var(--shadow-color);
+        }
+        
+        .slider-text {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-color);
+            font-size: 14px;
+            letter-spacing: 1px;
+            z-index: 2;
+        }
+        
+        .verification-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+        
+        .verification-button {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .button-cancel {
+            background: var(--slider-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+        
+        .button-submit {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .button-submit:hover {
+            filter: brightness(1.1);
+        }
+        
+        .button-cancel:hover {
+            filter: brightness(0.9);
+        }
+        
+        .decoration {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            opacity: 0.1;
+        }
+        
+        .decoration-1 {
+            top: 20px;
+            right: 20px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50,10 C70,10 90,30 90,50 C90,70 70,90 50,90 C30,90 10,70 10,50 C10,30 30,10 50,10 Z' fill='none' stroke='%238c1d1d' stroke-width='2'/%3E%3C/svg%3E") no-repeat center;
+        }
+        
+        .decoration-2 {
+            bottom: 20px;
+            left: 20px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M20,50 L40,30 L60,50 L40,70 Z' fill='none' stroke='%238c1d1d' stroke-width='2'/%3E%3C/svg%3E") no-repeat center;
+        }
+        
+        .success-message, .error-message {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            border-radius: 4px;
+            margin-top: 15px;
+        }
+        
+        .success-message {
+            color: var(--success-color);
+            background-color: rgba(45, 80, 22, 0.1);
+            border: 1px solid rgba(45, 80, 22, 0.3);
+        }
+        
+        .error-message {
+            color: var(--error-color);
+            background-color: rgba(140, 29, 29, 0.1);
+            border: 1px solid rgba(140, 29, 29, 0.3);
+        }
+        
+        .success-message.show, .error-message.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: var(--text-color);
+            opacity: 0.7;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        
+        .shake {
+            animation: shake 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <div class="verification-container">
+        <button class="theme-toggle" id="themeToggle">🌙</button>
+        <div class="decoration decoration-1"></div>
+        <div class="decoration decoration-2"></div>
+        
+        <div class="verification-header">
+            <h2>人机验证</h2>
+            <p>请完成验证以继续操作</p>
+        </div>
+        
+        <div class="verification-content">
+            <div class="verification-image">
+                <div class="puzzle-piece" id="puzzlePiece">✓</div>
+                <div class="puzzle-target" id="puzzleTarget"></div>
+            </div>
+            
+            <div class="verification-slider" id="slider">
+                <div class="slider-track"></div>
+                <div class="slider-handle" id="sliderHandle">→</div>
+                <div class="slider-text">滑动验证</div>
+            </div>
+        </div>
+        
+        <div class="success-message" id="successMessage">
+            <h3>验证成功！</h3>
+            <p>您已完成人机验证，可以继续操作。</p>
+        </div>
+        
+        <div class="error-message" id="errorMessage">
+            <h3>验证失败</h3>
+            <p>请完成验证后再提交。</p>
+        </div>
+        
+        <div class="verification-footer">
+            <button class="verification-button button-cancel" id="cancelButton">取消</button>
+            <button class="verification-button button-submit" id="submitButton">验证</button>
+        </div>
+        
+        <div class="copyright">
+            © 2013-2025 MingDynasty,Inc. 人机验证 | 灵感源于明朝美学
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const slider = document.getElementById('slider');
+            const sliderHandle = document.getElementById('sliderHandle');
+            const puzzlePiece = document.getElementById('puzzlePiece');
+            const puzzleTarget = document.getElementById('puzzleTarget');
+            const submitButton = document.getElementById('submitButton');
+            const cancelButton = document.getElementById('cancelButton');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            const themeToggle = document.getElementById('themeToggle');
+            
+            let isDragging = false;
+            let isVerified = false;
+            let isDarkMode = false;
+            
+            // 主题切换功能
+            themeToggle.addEventListener('click', function() {
+                isDarkMode = !isDarkMode;
+                document.body.classList.toggle('dark-mode', isDarkMode);
+                themeToggle.textContent = isDarkMode ? '☀️' : '🌙';
+            });
+            
+            // 滑块验证功能
+            sliderHandle.addEventListener('mousedown', startDrag);
+            sliderHandle.addEventListener('touchstart', startDrag);
+            
+            function startDrag(e) {
+                isDragging = true;
+                document.addEventListener('mousemove', onDrag);
+                document.addEventListener('touchmove', onDrag);
+                document.addEventListener('mouseup', stopDrag);
+                document.addEventListener('touchend', stopDrag);
+                
+                if (e.type === 'touchstart') {
+                    e.preventDefault();
+                }
+            }
+            
+            function onDrag(e) {
+                if (!isDragging) return;
+                
+                const sliderRect = slider.getBoundingClientRect();
+                let clientX;
+                
+                if (e.type === 'mousemove') {
+                    clientX = e.clientX;
+                } else if (e.type === 'touchmove') {
+                    clientX = e.touches[0].clientX;
+                }
+                
+                let newLeft = clientX - sliderRect.left - (sliderHandle.offsetWidth / 2);
+                
+                // 限制滑块在轨道范围内
+                newLeft = Math.max(0, Math.min(newLeft, sliderRect.width - sliderHandle.offsetWidth));
+                
+                sliderHandle.style.left = newLeft + 'px';
+                
+                // 检查是否验证成功（滑块到达最右侧）
+                if (newLeft >= sliderRect.width - sliderHandle.offsetWidth - 5) {
+                    isVerified = true;
+                    sliderHandle.innerHTML = "✓";
+                    sliderHandle.style.background = "var(--success-color)";
+                } else {
+                    isVerified = false;
+                    sliderHandle.innerHTML = "→";
+                    sliderHandle.style.background = "var(--primary-color)";
+                }
+            }
+            
+            function stopDrag() {
+                isDragging = false;
+                document.removeEventListener('mousemove', onDrag);
+                document.removeEventListener('touchmove', onDrag);
+                document.removeEventListener('mouseup', stopDrag);
+                document.removeEventListener('touchend', stopDrag);
+                
+                // 如果未验证成功，滑块回到起始位置
+                if (!isVerified) {
+                    sliderHandle.style.left = '2px';
+                }
+            }
+            
+            // 拼图验证功能
+            let isPuzzleDragging = false;
+            let startX, startY;
+            
+            puzzlePiece.addEventListener('mousedown', startPuzzleDrag);
+            puzzlePiece.addEventListener('touchstart', startPuzzleDrag);
+            
+            function startPuzzleDrag(e) {
+                isPuzzleDragging = true;
+                puzzlePiece.style.cursor = 'grabbing';
+                
+                if (e.type === 'mousedown') {
+                    startX = e.clientX - puzzlePiece.getBoundingClientRect().left;
+                    startY = e.clientY - puzzlePiece.getBoundingClientRect().top;
+                } else if (e.type === 'touchstart') {
+                    startX = e.touches[0].clientX - puzzlePiece.getBoundingClientRect().left;
+                    startY = e.touches[0].clientY - puzzlePiece.getBoundingClientRect().top;
+                    e.preventDefault();
+                }
+                
+                document.addEventListener('mousemove', onPuzzleDrag);
+                document.addEventListener('touchmove', onPuzzleDrag);
+                document.addEventListener('mouseup', stopPuzzleDrag);
+                document.addEventListener('touchend', stopPuzzleDrag);
+            }
+            
+            function onPuzzleDrag(e) {
+                if (!isPuzzleDragging) return;
+                
+                let clientX, clientY;
+                
+                if (e.type === 'mousemove') {
+                    clientX = e.clientX;
+                    clientY = e.clientY;
+                } else if (e.type === 'touchmove') {
+                    clientX = e.touches[0].clientX;
+                    clientY = e.touches[0].clientY;
+                }
+                
+                const containerRect = document.querySelector('.verification-image').getBoundingClientRect();
+                
+                let newLeft = clientX - containerRect.left - startX;
+                let newTop = clientY - containerRect.top - startY;
+                
+                // 限制拼图在容器范围内
+                newLeft = Math.max(0, Math.min(newLeft, containerRect.width - puzzlePiece.offsetWidth));
+                newTop = Math.max(0, Math.min(newTop, containerRect.height - puzzlePiece.offsetHeight));
+                
+                puzzlePiece.style.left = newLeft + 'px';
+                puzzlePiece.style.top = newTop + 'px';
+                
+                // 检查是否拼图到位
+                const targetRect = puzzleTarget.getBoundingClientRect();
+                const pieceRect = puzzlePiece.getBoundingClientRect();
+                
+                const isInTarget = 
+                    Math.abs(pieceRect.left - targetRect.left) < 10 &&
+                    Math.abs(pieceRect.top - targetRect.top) < 10;
+                
+                if (isInTarget) {
+                    puzzlePiece.style.background = "var(--success-color)";
+                    puzzlePiece.style.left = (targetRect.left - containerRect.left) + 'px';
+                    puzzlePiece.style.top = (targetRect.top - containerRect.top) + 'px';
+                    isVerified = true;
+                } else {
+                    puzzlePiece.style.background = "var(--primary-color)";
+                    isVerified = false;
+                }
+            }
+            
+            function stopPuzzleDrag() {
+                isPuzzleDragging = false;
+                puzzlePiece.style.cursor = 'grab';
+                document.removeEventListener('mousemove', onPuzzleDrag);
+                document.removeEventListener('touchmove', onPuzzleDrag);
+                document.removeEventListener('mouseup', stopPuzzleDrag);
+                document.removeEventListener('touchend', stopPuzzleDrag);
+            }
+            
+            // 提交按钮功能
+            submitButton.addEventListener('click', function() {
+                if (isVerified) {
+                    successMessage.classList.add('show');
+                    errorMessage.classList.remove('show');
+                    
+                    // 3秒后隐藏成功消息
+                    setTimeout(function() {
+                        successMessage.classList.remove('show');
+                        resetVerification();
+                    }, 3000);
+                } else {
+                    errorMessage.classList.add('show');
+                    successMessage.classList.remove('show');
+                    
+                    // 添加抖动效果
+                    slider.classList.add('shake');
+                    setTimeout(() => slider.classList.remove('shake'), 500);
+                    
+                    // 5秒后隐藏错误消息
+                    setTimeout(function() {
+                        errorMessage.classList.remove('show');
+                    }, 5000);
+                }
+            });
+            
+            // 取消按钮功能
+            cancelButton.addEventListener('click', resetVerification);
+            
+            // 重置验证
+            function resetVerification() {
+                // 重置滑块
+                sliderHandle.style.left = '2px';
+                sliderHandle.innerHTML = "→";
+                sliderHandle.style.background = "var(--primary-color)";
+                
+                // 重置拼图
+                puzzlePiece.style.left = '50px';
+                puzzlePiece.style.top = '70px';
+                puzzlePiece.style.background = "var(--primary-color)";
+                
+                isVerified = false;
+                successMessage.classList.remove('show');
+                errorMessage.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>
