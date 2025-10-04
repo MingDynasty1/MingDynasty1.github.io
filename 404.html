@@ -219,6 +219,33 @@
             animation: float 3s ease-in-out infinite;
         }
         
+        /* 新增图片展示区域样式 */
+        .image-section {
+            margin: 30px 0;
+            padding: 20px;
+            border-radius: 10px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+        }
+        
+        .image-section h3 {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .featured-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            transition: transform 0.3s ease;
+        }
+        
+        .featured-image:hover {
+            transform: scale(1.02);
+        }
+        
         @keyframes float {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-10px); }
@@ -321,6 +348,12 @@
         </div>
         
         <p>抱歉，您访问的页面似乎不存在。这可能是因为页面已被移除、网址更改或输入有误。</p>
+        
+        <!-- 新增图片展示区域 -->
+        <div class="image-section">
+            <h3>探索更多内容</h3>
+            <img src="https://vjudge.net/static/bundle/b3bb0b0cf13cd630088c.jpg" alt="特色图片" class="featured-image">
+        </div>
         
         <div class="dynamic-elements">
             <div class="search-box">
