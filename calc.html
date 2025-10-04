@@ -298,6 +298,14 @@
             opacity: 0.8;
         }
         
+        .keyboard-hint {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+            color: var(--text-color);
+            opacity: 0.7;
+        }
+        
         @media (max-width: 500px) {
             .ming-calculator {
                 padding: 15px;
@@ -315,6 +323,10 @@
             
             .title {
                 font-size: 24px;
+            }
+            
+            .keyboard-hint {
+                font-size: 12px;
             }
         }
     </style>
@@ -368,6 +380,10 @@
                 <span>◆</span>
                 <span>◆</span>
                 <span>◆</span>
+            </div>
+            
+            <div class="keyboard-hint">
+                提示: 您可以使用键盘输入数字和运算符 (0-9, +, -, *, /, .) 以及 Enter(=), Backspace(⌫), Escape(C)
             </div>
         </div>
         
@@ -439,11 +455,56 @@
             }
         }
         
+        // 键盘事件处理
+        function handleKeyboardInput(event) {
+            const key = event.key;
+            
+            // 数字键
+            if (key >= '0' && key <= '9') {
+                appendToDisplay(key);
+                return;
+            }
+            
+            // 运算符
+            switch (key) {
+                case '+':
+                    appendToDisplay('+');
+                    break;
+                case '-':
+                    appendToDisplay('-');
+                    break;
+                case '*':
+                    appendToDisplay('*');
+                    break;
+                case '/':
+                    appendToDisplay('/');
+                    break;
+                case '.':
+                    appendToDisplay('.');
+                    break;
+                case 'Enter':
+                case '=':
+                    calculate();
+                    break;
+                case 'Backspace':
+                    deleteLast();
+                    break;
+                case 'Escape':
+                case 'c':
+                case 'C':
+                    clearDisplay();
+                    break;
+            }
+        }
+        
         // 初始化显示
         updateDisplay();
         
         // 添加主题切换事件监听
         document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+        
+        // 添加键盘事件监听
+        document.addEventListener('keydown', handleKeyboardInput);
     </script>
 </body>
 </html>
