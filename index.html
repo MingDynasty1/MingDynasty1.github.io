@@ -1303,6 +1303,13 @@
         <p data-lang="en" style="display: none;">© 2013-2025 MingDynasty,Inc. MingDynasty's Personal Homepage | Inspired by Ming Dynasty Aesthetics</p>
         <p data-lang="zh">开局一个碗，结局一根绳 | 传承与创新 | <a href="https://mingdynasty1.github.io/gxrz.html" style="color: #f8f3e6;">查看更新日志</a></p>
         <p data-lang="en" style="display: none;">Start with a bowl, end with a rope | Inheritance and Innovation | <a href="https://mingdynasty1.github.io/gxrz.html" style="color: #f8f3e6;">View Update Log</a></p>
+        
+        <!-- 添加运行天数统计 -->
+        <p style="margin-top: 10px; font-size: 0.9rem;">
+            <span data-lang="zh">本站已运行 <span id="days-running">0</span> 天</span>
+            <span data-lang="en" style="display: none;">This site has been running for <span id="days-running-en">0</span> days</span>
+        </p>
+        
         <!-- 添加ICP备案信息 -->
         <p style="margin-top: 10px; font-size: 0.9rem;">
             <a href="https://icp.gov.moe/?keyword=20250643" target="_blank" style="color: #f8f3e6; text-decoration: underline;" data-lang="zh">萌ICP备20250643号</a>
@@ -1697,11 +1704,23 @@
             // 更新页面语言属性
             document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
         }
+        
+        // 计算运行天数
+        function calculateDaysRunning() {
+            const startDate = new Date('2025-06-18');
+            const currentDate = new Date();
+            
+            // 计算天数差
+            const timeDiff = currentDate.getTime() - startDate.getTime();
+            const daysRunning = Math.floor(timeDiff / (1000 * 3600 * 24));
+            
+            // 更新显示
+            document.getElementById('days-running').textContent = daysRunning;
+            document.getElementById('days-running-en').textContent = daysRunning;
+        }
+        
+        // 页面加载时计算运行天数
+        calculateDaysRunning();
     </script>
 </body>
 </html>
-
-
-
-
-
