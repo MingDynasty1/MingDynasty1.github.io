@@ -422,9 +422,6 @@ function initializeAll() {
 document.addEventListener('DOMContentLoaded', function() {
     // 延迟检查，确保页面完全加载
     setTimeout(() => {
-        // 检查人机验证（保留在HTML中）
-        // checkHumanVerification();
-        
         // 初始化其他功能
         initializeAll();
     }, 100);
