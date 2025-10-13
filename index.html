@@ -30,6 +30,13 @@
             --code-bg: #2b2b2b;
             --time-bg: linear-gradient(135deg, #8b0000, #d4af37);
             --pattern-opacity: 0.05;
+            --primary-color: #8b0000;
+            --secondary-color: #d4af37;
+            --display-bg: #f8f3e6;
+            --btn-bg: #e8d5c0;
+            --btn-operator-bg: #8b0000;
+            --btn-equals-bg: #d4af37;
+            --btn-clear-bg: #a52a2a;
         }
         
         .dark-mode {
@@ -46,6 +53,13 @@
             --code-bg: #3d3d3d;
             --time-bg: linear-gradient(135deg, #600000, #9b7a1f);
             --pattern-opacity: 0.1;
+            --primary-color: #cc0000;
+            --secondary-color: #c19b30;
+            --display-bg: #2d2d2d;
+            --btn-bg: #3d3d3d;
+            --btn-operator-bg: #600000;
+            --btn-equals-bg: #9b7a1f;
+            --btn-clear-bg: #7a1f1f;
         }
         
         body {
@@ -775,6 +789,57 @@
             margin-bottom: 5px;
         }
     </style>
+    
+    <!-- 人机验证检查脚本 -->
+    <script>
+        // 检查是否已经通过人机验证
+        function checkHumanVerification() {
+            // 从cookie中获取验证结果
+            const getCookie = (name) => {
+                const value = `; ${document.cookie}`;
+                const parts = value.split(`; ${name}=`);
+                if (parts.length === 2) return parts.pop().split(';').shift();
+                return null;
+            };
+            
+            const verificationCookie = getCookie('JSESSIONID');
+            
+            // 如果没有验证cookie，跳转到验证页面
+            if (!verificationCookie) {
+                window.location.href = 'https://mingdynasty1.github.io/Check-for-People-Robot.html';
+                return false;
+            }
+            
+            // 验证cookie的有效性
+            try {
+                const verificationData = JSON.parse(atob(verificationCookie));
+                if (verificationData && verificationData.verified && verificationData.timestamp) {
+                    // 检查是否在有效期内（例如24小时）
+                    const now = new Date().getTime();
+                    const verificationTime = new Date(verificationData.timestamp).getTime();
+                    const hoursDiff = (now - verificationTime) / (1000 * 60 * 60);
+                    
+                    if (hoursDiff < 24) {
+                        return true; // 验证有效
+                    }
+                }
+            } catch (e) {
+                console.error('验证cookie解析失败:', e);
+            }
+            
+            // 验证失败，跳转到验证页面
+            window.location.href = 'https://mingdynasty1.github.io/Check-for-People-Robot.html';
+            return false;
+        }
+
+        // 页面加载时检查验证
+        document.addEventListener('DOMContentLoaded', function() {
+            // 延迟检查，确保页面完全加载
+            setTimeout(() => {
+                checkHumanVerification();
+            }, 100);
+        });
+    </script>
 </head>
 <body class="light-mode">
     <header>
@@ -855,8 +920,8 @@
             <a href="https://MingDynasty1.github.io/luntan/index.html" data-lang="zh">大明论坛</a>
             <a href="https://MingDynasty1.github.io/luntan/index.html" data-lang="en" style="display: none;">Ming Forum</a>
 
-            <a href="https://mingdynasty1.github.io/Check-for-Peolpe-Robot.html" data-lang="zh">人机验证</a>
-            <a href="https://mingdynasty1.github.io/Check-for-Peolpe-Robot.html" data-lang="en" style="display: none;">Check If You're A Robot</a>
+            <a href="https://mingdynasty1.github.io/Check-for-People-Robot.html" data-lang="zh">人机验证</a>
+            <a href="https://mingdynasty1.github.io/Check-for-People-Robot.html" data-lang="en" style="display: none;">Check If You're A Robot</a>
             
             <!-- 添加常见问题解答链接 -->
             <a href="https://MingDynasty1.github.io/FAQ.html" data-lang="zh">常见问题解答</a>
@@ -1148,7 +1213,7 @@
                     <li><a href="https://mingdynasty1.github.io/dmhpy.html" data-lang="zh">大明国庆</a><a href="https://mingdynasty1.github.io/dmhpy.html" data-lang="en" style="display: none;">Ming National Day</a></li>
                     <!-- 添加人生模拟器链接 -->
                     <!-- 添加贪吃蛇游戏链接 -->
-                    <li><a href="https://mingdynasty1.github.io/Check-for-Peolpe-Robot.html" data-lang="zh">人机验证</a><a href="https://mingdynasty1.github.io/Check-for-Peolpe-Robot.html" data-lang="en" style="display: none;">Home Navigation</a></li>
+                    <li><a href="https://mingdynasty1.github.io/Check-for-People-Robot.html" data-lang="zh">人机验证</a><a href="https://mingdynasty1.github.io/Check-for-People-Robot.html" data-lang="en" style="display: none;">Home Navigation</a></li>
                     <li><a href="https://MingDynasty1.github.io/snakegame.html" data-lang="zh">贪吃蛇游戏</a><a href="https://MingDynasty1.github.io/snakegame.html" data-lang="en" style="display: none;">Snake Game</a></li>
                     <!-- 添加常见问题解答链接 -->
                     <li><a href="https://MingDynasty1.github.io/FAQ.html" data-lang="zh">常见问题解答</a><a href="https://MingDynasty1.github.io/FAQ.html" data-lang="en" style="display: none;">FAQ</a></li>
@@ -1282,41 +1347,27 @@
             </div>
         </div>
     </div>
-    <script src="https://giscus.app/client.js"
-        data-repo="MingDynasty1/MingDynasty1.github.io"
-        data-repo-id="R_kgDOO2Ztqw"
-        data-category="Announcements"
-        data-category-id="DIC_kwDOO2Ztq84CwOsc"
-        data-mapping="pathname"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="top"
-        data-theme="dark"
-        data-lang="zh-CN"
-        crossorigin="anonymous"
-        async>
-</script>
+
     <footer>
-    <div class="container">
-        <p data-lang="zh">© 2013-2025 MingDynasty,Inc. MingDynasty 的个人主页 | 灵感源于明朝美学</p>
-        <p data-lang="en" style="display: none;">© 2013-2025 MingDynasty,Inc. MingDynasty's Personal Homepage | Inspired by Ming Dynasty Aesthetics</p>
-        <p data-lang="zh">开局一个碗，结局一根绳 | 传承与创新 | <a href="https://mingdynasty1.github.io/gxrz.html" style="color: #f8f3e6;">查看更新日志</a></p>
-        <p data-lang="en" style="display: none;">Start with a bowl, end with a rope | Inheritance and Innovation | <a href="https://mingdynasty1.github.io/gxrz.html" style="color: #f8f3e6;">View Update Log</a></p>
-        
-        <!-- 添加运行天数统计 -->
-        <p style="margin-top: 10px; font-size: 0.9rem;">
-            <span data-lang="zh">本站已运行 <span id="days-running">0</span> 天</span>
-            <span data-lang="en" style="display: none;">This site has been running for <span id="days-running-en">0</span> days</span>
-        </p>
-        
-        <!-- 添加ICP备案信息 -->
-        <p style="margin-top: 10px; font-size: 0.9rem;">
-            <a href="https://icp.gov.moe/?keyword=20250643" target="_blank" style="color: #f8f3e6; text-decoration: underline;" data-lang="zh">萌ICP备20250643号</a>
-            <a href="https://icp.gov.moe/?keyword=20250643" target="_blank" style="color: #f8f3e6; text-decoration: underline; display: none;" data-lang="en">MoeICP No. 20250643</a>
-        </p>
-    </div>
-</footer>
+        <div class="container">
+            <p data-lang="zh">© 2013-2025 MingDynasty,Inc. MingDynasty 的个人主页 | 灵感源于明朝美学</p>
+            <p data-lang="en" style="display: none;">© 2013-2025 MingDynasty,Inc. MingDynasty's Personal Homepage | Inspired by Ming Dynasty Aesthetics</p>
+            <p data-lang="zh">开局一个碗，结局一根绳 | 传承与创新 | <a href="https://mingdynasty1.github.io/gxrz.html" style="color: #f8f3e6;">查看更新日志</a></p>
+            <p data-lang="en" style="display: none;">Start with a bowl, end with a rope | Inheritance and Innovation | <a href="https://mingdynasty1.github.io/gxrz.html" style="color: #f8f3e6;">View Update Log</a></p>
+            
+            <!-- 添加运行天数统计 -->
+            <p style="margin-top: 10px; font-size: 0.9rem;">
+                <span data-lang="zh">今天是本站运行的第 <span id="days-running">0</span> 天</span>
+                <span data-lang="en" style="display: none;">This site has been running for <span id="days-running-en">0</span> days</span>
+            </p>
+            
+            <!-- 添加ICP备案信息 -->
+            <p style="margin-top: 10px; font-size: 0.9rem;">
+                <a href="https://icp.gov.moe/?keyword=20250643" target="_blank" style="color: #f8f3e6; text-decoration: underline;" data-lang="zh">萌ICP备20250643号</a>
+                <a href="https://icp.gov.moe/?keyword=20250643" target="_blank" style="color: #f8f3e6; text-decoration: underline; display: none;" data-lang="en">MoeICP No. 20250643</a>
+            </p>
+        </div>
+    </footer>
 
     <!-- Font Awesome 图标 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
