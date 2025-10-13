@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>明朝风格人机验证</title>
+        <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <title>人机验证 | MingDynasty</title>
     <style>
         :root {
             --primary-color: #8c1d1d;
@@ -314,6 +315,14 @@
             opacity: 0.7;
         }
         
+        .redirect-info {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+        
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -338,7 +347,7 @@
         
         <div class="verification-header">
             <h2>人机验证</h2>
-            <p>请完成验证以继续操作</p>
+            <p>请完成验证以继续访问 MingDynasty 主页</p>
         </div>
         
         <div class="verification-content">
@@ -356,12 +365,16 @@
         
         <div class="success-message" id="successMessage">
             <h3>验证成功！</h3>
-            <p>您已完成人机验证，可以继续操作。</p>
+            <p>您已完成人机验证，正在跳转回主页...</p>
         </div>
         
         <div class="error-message" id="errorMessage">
             <h3>验证失败</h3>
             <p>请完成验证后再提交。</p>
+        </div>
+        
+        <div class="redirect-info" id="redirectInfo">
+            验证成功后将在 <span id="countdown">3</span> 秒内自动跳转
         </div>
         
         <div class="verification-footer">
@@ -374,6 +387,9 @@
         </div>
     </div>
 
+    <!-- 引入验证管理脚本 -->
+    <script src="server.js"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const slider = document.getElementById('slider');
@@ -384,11 +400,18 @@
             const cancelButton = document.getElementById('cancelButton');
             const successMessage = document.getElementById('successMessage');
             const errorMessage = document.getElementById('errorMessage');
+            const redirectInfo = document.getElementById('redirectInfo');
+            const countdownElement = document.getElementById('countdown');
             const themeToggle = document.getElementById('themeToggle');
             
             let isDragging = false;
             let isVerified = false;
             let isDarkMode = false;
+            let countdown = 3;
+            let countdownInterval;
+            
+            // 初始化时隐藏重定向信息
+            redirectInfo.style.display = 'none';
             
             // 主题切换功能
             themeToggle.addEventListener('click', function() {
@@ -539,14 +562,24 @@
             // 提交按钮功能
             submitButton.addEventListener('click', function() {
                 if (isVerified) {
+                    // 创建验证cookie
+                    if (window.verificationManager) {
+                        window.verificationManager.initializeVerification();
+                    } else {
+                        // 备用方案：直接设置cookie
+                        createFallbackCookie();
+                    }
+                    
                     successMessage.classList.add('show');
                     errorMessage.classList.remove('show');
+                    redirectInfo.style.display = 'block';
                     
-                    // 3秒后隐藏成功消息
-                    setTimeout(function() {
-                        successMessage.classList.remove('show');
-                        resetVerification();
-                    }, 3000);
+                    // 禁用按钮防止重复提交
+                    submitButton.disabled = true;
+                    cancelButton.disabled = true;
+                    
+                    // 开始倒计时
+                    startCountdown();
                 } else {
                     errorMessage.classList.add('show');
                     successMessage.classList.remove('show');
@@ -562,8 +595,47 @@
                 }
             });
             
-            // 取消按钮功能
-            cancelButton.addEventListener('click', resetVerification);
+            // 倒计时函数
+            function startCountdown() {
+                countdown = 3;
+                countdownElement.textContent = countdown;
+                
+                countdownInterval = setInterval(function() {
+                    countdown--;
+                    countdownElement.textContent = countdown;
+                    
+                    if (countdown <= 0) {
+                        clearInterval(countdownInterval);
+                        // 跳转回主页
+                        window.location.href = 'https://mingdynasty1.github.io/';
+                    }
+                }, 1000);
+            }
+            
+            // 备用cookie创建函数
+            function createFallbackCookie() {
+                const timestamp = new Date().toISOString();
+                const verificationData = {
+                    verified: true,
+                    timestamp: timestamp,
+                    userAgent: navigator.userAgent.substring(0, 50), // 截取部分用户代理
+                    sessionId: 'fallback_' + Date.now()
+                };
+                
+                // 对数据进行base64编码
+                const encodedData = btoa(JSON.stringify(verificationData));
+                
+                // 设置cookie，有效期为24小时
+                const expiryDate = new Date(Date.now() + 24 * 60 * 60 * 1000).toUTCString();
+                document.cookie = `JSESSIONID=${encodedData}; expires=${expiryDate}; path=/; Secure; SameSite=Strict`;
+            }
+            
+            // 取消按钮功能 - 跳转回主页（但不设置验证）
+            cancelButton.addEventListener('click', function() {
+                if (confirm('确定要取消验证吗？您将无法访问主页。')) {
+                    window.location.href = 'https://mingdynasty1.github.io/';
+                }
+            });
             
             // 重置验证
             function resetVerification() {
@@ -580,6 +652,16 @@
                 isVerified = false;
                 successMessage.classList.remove('show');
                 errorMessage.classList.remove('show');
+                redirectInfo.style.display = 'none';
+                
+                // 重新启用按钮
+                submitButton.disabled = false;
+                cancelButton.disabled = false;
+                
+                // 清除倒计时
+                if (countdownInterval) {
+                    clearInterval(countdownInterval);
+                }
             }
         });
     </script>
