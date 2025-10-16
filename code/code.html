@@ -368,6 +368,75 @@
             border-left: 5px solid var(--gold-color);
         }
         
+        /* 测试用例状态样式 */
+        .test-case {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        .test-case-number {
+            font-weight: bold;
+            margin-right: 15px;
+            min-width: 80px;
+        }
+        
+        .status {
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        
+        .status.ac {
+            background-color: #2e7d32;
+            color: white;
+        }
+        
+        .status.wa {
+            background-color: #c62828;
+            color: white;
+        }
+        
+        .status.tle {
+            background-color: #ff8f00;
+            color: white;
+        }
+        
+        .status.mle {
+            background-color: #6a1b9a;
+            color: white;
+        }
+        
+        .status.ole {
+            background-color: #283593;
+            color: white;
+        }
+        
+        .status.ile {
+            background-color: #00695c;
+            color: white;
+        }
+        
+        .status.uke {
+            background-color: #37474f;
+            color: white;
+        }
+        
+        .status.ce {
+            background-color: #4527a0;
+            color: white;
+        }
+        
+        .time-info {
+            margin-left: auto;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+        
         /* 页脚样式 */
         footer {
             background: var(--header-bg);
@@ -565,6 +634,15 @@ int main() {
         const codeEditor = document.getElementById('code-editor');
         const languageSelect = document.getElementById('language-select');
         
+        // 测试用例数据
+        const testCases = [
+            { input: "3\n13 312 343", expected: "34331213" },
+            { input: "4\n7 13 4 246", expected: "7424613" },
+            { input: "5\n1 2 3 4 5", expected: "54321" },
+            { input: "3\n9 99 999", expected: "999999" },
+            { input: "2\n12 121", expected: "12121" }
+        ];
+        
         submitBtn.addEventListener('click', function() {
             const code = codeEditor.value;
             const language = languageSelect.value;
@@ -574,28 +652,101 @@ int main() {
                 return;
             }
             
-            resultOutput.textContent = "正在编译和运行代码...\n\n";
+            // 显示编译中
+            resultOutput.innerHTML = "正在编译代码...\n\n";
             
-            // 模拟代码执行过程
+            // 模拟编译过程
             setTimeout(() => {
-                // 这里模拟代码执行结果
-                // 在实际应用中，这里应该发送代码到后端进行编译和执行
+                // 随机决定是否编译成功
+                const compileSuccess = Math.random() > 0.1; // 90%编译成功
                 
-                resultOutput.textContent += "编译成功！\n\n";
-                resultOutput.textContent += "测试用例 #1:\n";
-                resultOutput.textContent += "输入: 3\n       13 312 343\n";
-                resultOutput.textContent += "输出: 34331213\n";
-                resultOutput.textContent += "预期: 34331213\n";
-                resultOutput.textContent += "✓ 通过\n\n";
+                if (!compileSuccess) {
+                    resultOutput.innerHTML = "编译错误 (CE)\n\n";
+                    resultOutput.innerHTML += "错误信息：\n";
+                    resultOutput.innerHTML += "error: expected ';' before '}' token\n";
+                    resultOutput.innerHTML += "error: return type specification for constructor invalid\n";
+                    return;
+                }
                 
-                resultOutput.textContent += "测试用例 #2:\n";
-                resultOutput.textContent += "输入: 4\n       7 13 4 246\n";
-                resultOutput.textContent += "输出: 7424613\n";
-                resultOutput.textContent += "预期: 7424613\n";
-                resultOutput.textContent += "✓ 通过\n\n";
+                // 编译成功，开始测试
+                resultOutput.innerHTML = "编译成功！\n\n";
+                resultOutput.innerHTML += "开始运行测试用例...\n\n";
                 
-                resultOutput.textContent += "所有测试用例通过！\n";
-                resultOutput.textContent += "恭喜您成功解决了这个问题！";
+                // 模拟测试用例运行
+                let allPassed = true;
+                
+                // 延迟显示每个测试用例的结果
+                let delay = 500;
+                testCases.forEach((testCase, index) => {
+                    setTimeout(() => {
+                        // 随机决定测试结果
+                        const statusTypes = ['AC', 'WA', 'TLE', 'MLE', 'OLE'];
+                        const weights = [0.7, 0.15, 0.05, 0.05, 0.05]; // AC概率70%
+                        const randomValue = Math.random();
+                        
+                        let cumulativeWeight = 0;
+                        let status = 'AC';
+                        
+                        for (let i = 0; i < statusTypes.length; i++) {
+                            cumulativeWeight += weights[i];
+                            if (randomValue <= cumulativeWeight) {
+                                status = statusTypes[i];
+                                break;
+                            }
+                        }
+                        
+                        if (status !== 'AC') {
+                            allPassed = false;
+                        }
+                        
+                        // 创建测试用例结果元素
+                        const testCaseElement = document.createElement('div');
+                        testCaseElement.className = 'test-case';
+                        
+                        const testNumber = document.createElement('div');
+                        testNumber.className = 'test-case-number';
+                        testNumber.textContent = `测试点 #${index + 1}`;
+                        
+                        const statusElement = document.createElement('div');
+                        statusElement.className = `status ${status.toLowerCase()}`;
+                        statusElement.textContent = status;
+                        
+                        const timeElement = document.createElement('div');
+                        timeElement.className = 'time-info';
+                        timeElement.textContent = `${(Math.random() * 100 + 10).toFixed(0)}ms`;
+                        
+                        testCaseElement.appendChild(testNumber);
+                        testCaseElement.appendChild(statusElement);
+                        testCaseElement.appendChild(timeElement);
+                        
+                        resultOutput.appendChild(testCaseElement);
+                        
+                        // 如果是最后一个测试用例，显示最终结果
+                        if (index === testCases.length - 1) {
+                            setTimeout(() => {
+                                const finalResult = document.createElement('div');
+                                finalResult.style.marginTop = '15px';
+                                finalResult.style.padding = '10px';
+                                finalResult.style.borderRadius = '4px';
+                                finalResult.style.fontWeight = 'bold';
+                                
+                                if (allPassed) {
+                                    finalResult.style.backgroundColor = '#2e7d32';
+                                    finalResult.style.color = 'white';
+                                    finalResult.textContent = '✓ 恭喜！所有测试用例通过！';
+                                } else {
+                                    finalResult.style.backgroundColor = '#c62828';
+                                    finalResult.style.color = 'white';
+                                    finalResult.textContent = '✗ 部分测试用例未通过，请检查代码逻辑';
+                                }
+                                
+                                resultOutput.appendChild(finalResult);
+                            }, 300);
+                        }
+                    }, delay);
+                    
+                    delay += 500;
+                });
             }, 1500);
         });
         
@@ -636,7 +787,9 @@ int main() {
 }`;
                     break;
                 case 'python':
-                    sampleCode = `n = int(input())
+                    sampleCode = `import functools
+
+n = int(input())
 nums = input().split()
 
 # 自定义比较函数
@@ -673,7 +826,8 @@ public class Main {
 }`;
                     break;
                 case 'javascript':
-                    sampleCode = `const readline = require('readline');
+                    sampleCode = `// Node.js 环境
+const readline = require('readline');
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
