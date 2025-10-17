@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户排名 - 大明编程挑战 | MingDynasty</title>
+        <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --bg-color: #f8f3e6;
+            --text-color: #333;
+            --card-bg: #fff;
+            --header-bg: linear-gradient(to right, #8b0000, #a52a2a);
+            --nav-bg: #8b0000;
+            --accent-color: #8b0000;
+            --gold-color: #d4af37;
+            --border-color: #e0c987;
+        }
+        
+        body {
+            font-family: 'SimSun', '宋体', serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: var(--header-bg);
+            color: #f8f3e6;
+            padding: 20px 0;
+            border-bottom: 5px solid var(--gold-color);
+        }
+        
+        nav {
+            background-color: var(--nav-bg);
+            padding: 15px 0;
+            margin-bottom: 30px;
+        }
+        
+        nav .container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        nav a {
+            color: #f8f3e6;
+            text-decoration: none;
+            padding: 5px 15px;
+            border-radius: 5px;
+        }
+        
+        nav a:hover, .nav-active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid var(--accent-color);
+        }
+        
+        .ranking-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .ranking-table th,
+        .ranking-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .ranking-table th {
+            background: var(--accent-color);
+            color: white;
+        }
+        
+        .ranking-table tr:hover {
+            background: rgba(139, 0, 0, 0.05);
+        }
+        
+        .rank-1 { background: linear-gradient(135deg, #ffd700, #ffed4e); }
+        .rank-2 { background: linear-gradient(135deg, #c0c0c0, #e8e8e8); }
+        .rank-3 { background: linear-gradient(135deg, #cd7f32, #e9a768); }
+        
+        .rank-number {
+            font-weight: bold;
+            text-align: center;
+            width: 60px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gold-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .page-btn {
+            padding: 8px 15px;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        
+        .page-btn.active {
+            background: var(--accent-color);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>大明编程挑战 - 用户排名</h1>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="container">
+            <a href="https://mingdynasty1.github.io/">首页</a>
+            <a href="https://mingdynasty1.github.io/code/problem/list/index.html">题库</a>
+            <a href="https://mingdynasty1.github.io/code/contest/index.html">比赛</a>
+            <a href="#" class="nav-active">排名</a>
+            <a href="https://mgdyqwq.freeflarum.com">讨论</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="card">
+            <h2>用户排行榜</h2>
+            <table class="ranking-table">
+                <thead>
+                    <tr>
+                        <th width="80">排名</th>
+                        <th>用户</th>
+                        <th width="120">通过题目</th>
+                        <th width="120">提交次数</th>
+                        <th width="120">通过率</th>
+                    </tr>
+                </thead>
+                <tbody id="ranking-body">
+                    <!-- 排名数据将通过JavaScript动态生成 -->
+                </tbody>
+            </table>
+            
+            <div class="pagination">
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn">下一页</button>
+            </div>
+        </div>
+   
