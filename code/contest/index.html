@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编程比赛 - 大明编程挑战</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --bg-color: #f8f3e6;
+            --text-color: #333;
+            --card-bg: #fff;
+            --header-bg: linear-gradient(to right, #8b0000, #a52a2a);
+            --nav-bg: #8b0000;
+            --accent-color: #8b0000;
+            --gold-color: #d4af37;
+            --border-color: #e0c987;
+        }
+        
+        body {
+            font-family: 'SimSun', '宋体', serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+        }
+        
+        header {
+            background: var(--header-bg);
+            color: #f8f3e6;
+            padding: 20px 0;
+            border-bottom: 5px solid var(--gold-color);
+        }
+        
+        nav {
+            background-color: var(--nav-bg);
+            padding: 15px 0;
+            margin-bottom: 30px;
+        }
+        
+        nav .container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        nav a {
+            color: #f8f3e6;
+            text-decoration: none;
+            padding: 5px 15px;
+            border-radius: 5px;
+        }
+        
+        nav a:hover, .nav-active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid var(--accent-color);
+        }
+        
+        .contest-grid {
+            display: grid;
+            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        }
+        
+        .contest-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 25px;
+            border: 2px solid var(--border-color);
+            transition: transform 0.3s;
+            position: relative;
+        }
+        
+        .contest-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-color);
+        }
+        
+        .contest-card.live {
+            border-color: #ff4444;
+            background: linear-gradient(135deg, #fff, #ffe6e6);
+            animation: pulse 2s infinite;
+        }
+        
+        .contest-card.upcoming {
+            border-color: var(--gold-color);
+            background: linear-gradient(135deg, #fff, #fff9e6);
+        }
+        
+        .contest-card.ended {
+            border-color: #ccc;
+            opacity: 0.8;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 68, 68, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 68, 68, 0); }
+        }
+        
+        .contest-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .status-live { background: #ff4444; color: white; }
+        .status-upcoming { background: var(--gold-color); color: white; }
+        .status-ended { background: #666; color: white; }
+        
+        .contest-title {
+            color: var(--accent-color);
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+        
+        .contest-platform {
+            display: inline-block;
+            background: #4a86e8;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+        
+        .contest-info {
+            display: grid;
+            gap: 8px;
+            margin: 15px 0;
+        }
+        
+        .contest-info div {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .contest-tags {
+            display: flex;
+            gap: 5px;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+        
+        .contest-tag {
+            background: rgba(139, 0, 0, 0.1);
+            color: var(--accent-color);
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+        }
+        
+        .join-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-family: 'SimSun', '宋体', serif;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+        
+        .join-btn:hover {
+            background: var(--nav-bg);
+        }
+        
+        .join-btn.external {
+            background: #4a86e8;
+        }
+        
+        .join-btn.external:hover {
+            background: #3a76d8;
+        }
+        
+        .join-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .contest-notice {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+            color: #856404;
+        }
+        
+        footer {
+            background: var(--header-bg);
+            color: #f8f3e6;
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 50px;
+            border-top: 5px solid var(--gold-color);
+        }
+        
+        .copyright {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+        
+        @media (max-width: 768px) {
+            nav .container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .contest-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>大明编程挑战 - 编程比赛</h1>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="container">
+            <a href="https://mingdynasty1.github.io/">首页</a>
+            <a href="https://mingdynasty1.github.io/code/problem/list/index.html">题库</a>
+            <a href="#" class="nav-active">比赛</a>
+            <a href="https://mingdynasty1.github.io/code/rank/index.html">排名</a>
+            <a href="https://mgdyqwq.freeflarum.com">讨论</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="card">
+            <h2>比赛列表</h2>
+            <p>参与编程比赛，与全国的程序员同台竞技，提升编程能力！</p>
+            
+            <div class="contest-notice">
+                <i class="fas fa-info-circle"></i> 
+                <strong>注意：</strong> 部分比赛在洛谷平台举行，点击参赛按钮将跳转到洛谷平台。
+            </div>
+        </div>
+        
+        <div class="contest-grid">
+            <!-- MgDy Round 1 欢乐赛 -->
+            <div class="contest-card live">
+                <div class="contest-status status-live">
+                    <i class="fas fa-play-circle"></i> 进行中
+                </div>
+                <h3 class="contest-title">
+                    MgDy Round 1 | 欢乐赛
+                    <span class="contest-platform">洛谷</span>
+                </h3>
+                <div class="contest-tags">
+                    <span class="contest-tag">入门</span>
+                    <span class="contest-tag">欢乐赛</span>
+                    <span class="contest-tag">适合新手</span>
+                </div>
+                <div class="contest-info">
+                    <div><span>平台:</span> <span>洛谷</span></div>
+                    <div><span>开始时间:</span> <span>2024-01-20 19:00</span></div>
+                    <div><span>结束时间:</span> <span>2024-01-27 19:00</span></div>
+                    <div><span>题目数量:</span> <span>5 题</span></div>
+                    <div><span>参赛人数:</span> <span>2,156 人</span></div>
+                    <div><span>难度:</span> <span>普及-</span></div>
+                </div>
+                <button class="join-btn external" onclick="window.open('https://www.luogu.com.cn/contest/247666', '_blank')">
+                    <i class="fas fa-external-link-alt"></i> 前往洛谷参赛
+                </button>
+            </div>
+            
+            <!-- MgDy Round 2 同步赛 -->
+            <div class="contest-card live">
+                <div class="contest-status status-live">
+                    <i class="fas fa-play-circle"></i> 进行中
+                </div>
+                <h3 class="contest-title">
+                    MgDy Round 2 | 同步赛
+                    <span class="contest-platform">洛谷</span>
+                </h3>
+                <div class="contest-tags">
+                    <span class="contest-tag">提高</span>
+                    <span class="contest-tag">同步赛</span>
+                    <span class="contest-tag">挑战性</span>
+                </div>
+                <div class="contest-info">
+                    <div><span>平台:</span> <span>洛谷</span></div>
+                    <div><span>开始时间:</span> <span>2024-01-25 14:00</span></div>
+                    <div><span>结束时间:</span> <span>2024-02-01 14:00</span></div>
+                    <div><span>题目数量:</span> <span>6 题</span></div>
+                    <div><span>参赛人数:</span> <span>1,847 人</span></div>
+                    <div><span>难度:</span> <span>普及+/提高</span></div>
+                </div>
+                <button class="join-btn external" onclick="window.open('https://www.luogu.com.cn/contest/274912', '_blank')">
+                    <i class="fas fa-external-link-alt"></i> 前往洛谷参赛
+                </button>
+            </div>
+            
+            <!-- 大明编程周赛 -->
+            <div class="contest-card live">
+                <div class="contest-status status-live">
+                    <i class="fas fa-play-circle"></i> 进行中
+                </div>
+                <h3 class="contest-title">大明编程周赛 #25</h3>
+                <div class="contest-tags">
+                    <span class="contest-tag">周赛</span>
+                    <span class="contest-tag">常规</span>
+                    <span class="contest-tag">积分赛</span>
+                </div>
+                <div class="contest-info">
+                    <div><span>开始时间:</span> <span>2024-01-20 19:00</span></div>
+                    <div><span>结束时间:</span> <span>2024-01-20 21:00</span></div>
+                    <div><span>题目数量:</span> <span>4 题</span></div>
+                    <div><span>参赛人数:</span> <span>1,248 人</span></div>
+                    <div><span>难度:</span> <span>中等</span></div>
+                </div>
+                <button class="join-btn">立即参赛</button>
+            </div>
+            
+            <!-- 即将开始的比赛 -->
+            <div class="contest-card upcoming">
+                <div class="contest-status status-upcoming">即将开始</div>
+                <h3 class="contest-title">春季算法大赛</h3>
+                <div class="contest-tags">
+                    <span class="contest-tag">大型比赛</span>
+                    <span class="contest-tag">算法</span>
+                    <span class="contest-tag">高难度</span>
+                </div>
+                <div class="contest-info">
+                    <div><span>开始时间:</span> <span>2024-02-01 10:00</span></div>
+                    <div><span>结束时间:</span> <span>2024-02-01 16:00</span></div>
+                    <div><span>题目数量:</span> <span>6 题</span></div>
+                    <div><span>难度:</span> <span>中等 ~ 困难</span></div>
+                </div>
+                <button class="join-btn">报名参赛</button>
+            </div>
+            
+            <!-- 已结束的比赛 -->
+            <div class="contest-card ended">
+                <div class="contest-status status-ended">已结束</div>
+                <h3 class="contest-title">大明编程周赛 #24</h3>
+                <div class="contest-tags">
+                    <span class="contest-tag">周赛</span>
+                    <span class="contest-tag">常规</span>
+                </div>
+                <div class="contest-info">
+                    <div><span>开始时间:</span> <span>2024-01-13 19:00</span></div>
+                    <div><span>结束时间:</span> <span>2024-01-13 21:00</span></div>
+                    <div><span>题目数量:</span> <span>4 题</span></div>
+                    <div><span>参赛人数:</span> <span>1,156 人</span></div>
+                </div>
+                <button class="join-btn" disabled>查看题解</button>
+            </div>
+            
+            <div class="contest-card upcoming">
+                <div class="contest-status status-upcoming">即将开始</div>
+                <h3 class="contest-title">新人训练赛 #8</h3>
+                <div class="contest-tags">
+                    <span class="contest-tag">新人友好</span>
+                    <span class="contest-tag">训练赛</span>
+                    <span class="contest-tag">基础</span>
+                </div>
+                <div class="contest-info">
+                    <div><span>开始时间:</span> <span>2024-01-27 14:00</span></div>
+                    <div><span>结束时间:</span> <span>2024-01-27 16:00</span></div>
+                    <div><span>题目数量:</span> <span>5 题</span></div>
+                    <div><span>难度:</span> <span>简单 ~ 中等</span></div>
+                </div>
+                <button class="join-btn">报名参赛</button>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3><i class="fas fa-trophy"></i> 比赛说明</h3>
+            <div style="margin-top: 15px;">
+                <p><strong>比赛类型说明：</strong></p>
+                <ul style="margin: 10px 0; padding-left: 20px;">
+                    <li><span style="color: #ff4444;">● 进行中</span> - 当前正在进行的比赛，可以立即参加</li>
+                    <li><span style="color: #d4af37;">● 即将开始</span> - 未来将要举办的比赛，可以提前报名</li>
+                    <li><span style="color: #666;">● 已结束</span> - 已经结束的比赛，可以查看题解和排名</li>
+                </ul>
+                <p><strong>平台说明：</strong></p>
+                <ul style="margin: 10px 0; padding-left: 20px;">
+                    <li>本站比赛 - 在大明编程挑战平台举行的比赛</li>
+                    <li>洛谷比赛 - 在洛谷平台举行的比赛，点击将跳转到洛谷</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2013-2025 MingDynasty,Inc. 大明编程挑战 | 灵感源于明朝美学</p>
+            <p>开局一个碗，结局一根绳 | 传承与创新</p>
+        </div>
+    </footer>
+
+    <script>
+        // 比赛卡片点击事件
+        document.querySelectorAll('.contest-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                if (!e.target.classList.contains('join-btn') && !e.target.closest('.join-btn')) {
+                    const title = this.querySelector('.contest-title').textContent;
+                    alert(`查看比赛详情: ${title}`);
+                }
+            });
+        });
+
+        // 本站比赛按钮点击事件
+        document.querySelectorAll('.join-btn:not(.external)').forEach(btn => {
+            if (!btn.disabled) {
+                btn.addEventListener('click', function() {
+                    const card = this.closest('.contest-card');
+                    const title = card.querySelector('.contest-title').textContent;
+                    alert(`参加比赛: ${title}`);
+                });
+            }
+        });
+
+        // 更新比赛状态（模拟实时状态）
+        function updateContestStatus() {
+            const now = new Date();
+            const contests = document.querySelectorAll('.contest-card');
+            
+            contests.forEach(contest => {
+                const status = contest.querySelector('.contest-status');
+                if (status.textContent.includes('进行中')) {
+                    // 为进行中的比赛添加闪烁效果
+                    if (!contest.classList.contains('pulse-added')) {
+                        contest.classList.add('pulse-added');
+                    }
+                }
+            });
+        }
+
+        // 初始化
+        updateContestStatus();
+        setInterval(updateContestStatus, 5000); // 每5秒更新一次状态
+    </script>
+</body>
+</html>
