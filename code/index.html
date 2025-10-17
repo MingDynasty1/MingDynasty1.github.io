@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大明OJ | OnlineJudge | MingDynasty</title>
+      <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+        
+        :root {
+            /* 亮色主题变量 */
+            --bg-color: #f8f3e6;
+            --text-color: #333;
+            --card-bg: #fff;
+            --header-bg: linear-gradient(to right, #8b0000, #a52a2a);
+            --nav-bg: #8b0000;
+            --accent-color: #8b0000;
+            --gold-color: #d4af37;
+            --border-color: #e0c987;
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --code-bg: #2b2b2b;
+            --time-bg: linear-gradient(135deg, #8b0000, #d4af37);
+            --pattern-opacity: 0.05;
+        }
+        
+        .dark-mode {
+            /* 暗色主题变量 */
+            --bg-color: #1a1a1a;
+            --text-color: #e6e6e6;
+            --card-bg: #2d2d2d;
+            --header-bg: linear-gradient(to right, #600000, #7a1f1f);
+            --nav-bg: #600000;
+            --accent-color: #cc0000;
+            --gold-color: #c19b30;
+            --border-color: #5c4c1a;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --code-bg: #3d3d3d;
+            --time-bg: linear-gradient(135deg, #600000, #9b7a1f);
+            --pattern-opacity: 0.1;
+        }
+        
+        body {
+            font-family: 'SimSun', '宋体', serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill-opacity="' + var(--pattern-opacity) + '" fill="%23000" width="100" height="100"/></svg>');
+            padding: 0;
+            margin: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* 页眉样式 */
+        header {
+            background: var(--header-bg);
+            color: #f8f3e6;
+            padding: 20px 0;
+            border-bottom: 5px solid var(--gold-color);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            position: relative;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
+            letter-spacing: 5px;
+            margin-bottom: 10px;
+        }
+        
+        /* 导航样式 */
+        nav {
+            background-color: var(--nav-bg);
+            padding: 15px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid var(--gold-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        nav a {
+            color: #f8f3e6;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1.1rem;
+            padding: 5px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* 用户信息样式 */
+        .user-info {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            color: #f8f3e6;
+        }
+        
+        .user-info span {
+            margin-right: 15px;
+        }
+        
+        .login-btn, .register-btn, .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: #f8f3e6;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+            font-family: 'SimSun', '宋体', serif;
+        }
+        
+        .login-btn:hover, .register-btn:hover, .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* 主题切换按钮 */
+        .theme-switch {
+            margin-left: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .theme-switch-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            color: #f8f3e6;
+            font-size: 0.9rem;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+            margin-left: 10px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--gold-color);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        /* 卡片样式 */
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            border-left: 5px solid var(--accent-color);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(to right, var(--accent-color), var(--gold-color));
+        }
+        
+        .card h2 {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed var(--border-color);
+            font-size: 1.5rem;
+        }
+        
+        /* 问题列表样式 */
+        .problem-list {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .problem-item {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 3px 10px var(--shadow-color);
+            border-left: 5px solid var(--accent-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.3s;
+        }
+        
+        .problem-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px var(--shadow-color);
+        }
+        
+        .problem-info h3 {
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+        
+        .problem-meta {
+            display: flex;
+            gap: 15px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .problem-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .solve-btn {
+            background: var(--accent-color);
+            color: #f8f3e6;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'SimSun', '宋体', serif;
+        }
+        
+        .solve-btn:hover {
+            background: var(--nav-bg);
+        }
+        
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+            border-top: 5px solid var(--gold-color);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px dashed var(--border-color);
+        }
+        
+        .modal-header h2 {
+            color: var(--accent-color);
+            margin: 0;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-color);
+            font-weight: bold;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'SimSun', '宋体', serif;
+        }
+        
+        .submit-btn {
+            background: var(--accent-color);
+            color: #f8f3e6;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: block;
+            width: 100%;
+            font-family: 'SimSun', '宋体', serif;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .submit-btn:hover {
+            background: var(--nav-bg);
+        }
+        
+        /* 页脚样式 */
+        footer {
+            background: var(--header-bg);
+            color: #f8f3e6;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+            border-top: 5px solid var(--gold-color);
+        }
+        
+        /* 明朝特色装饰 */
+        .ming-decoration {
+            font-family: 'KaiTi', '楷体', serif;
+            color: var(--accent-color);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .chinese-pattern {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"><path fill="' + var(--accent-color) + '" fill-opacity="0.1" d="M0 0h60v60H0z"/><path fill="' + var(--gold-color) + '" fill-opacity="0.1" d="M0 0h30v30H0z"/></svg>');
+            background-size: 60px 60px;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .problem-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .solve-btn {
+                align-self: flex-end;
+            }
+            
+            nav {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .user-info {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body class="light-mode">
+    <header>
+        <div class="container">
+            <h1 class="ming-decoration">大明编程挑战</h1>
+            <p>传承明朝风韵，展现编程之美</p>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="container">
+            <a href="#" class="nav-active">首页</a>
+            <a href="#">题库</a>
+            <a href="#">比赛</a>
+            <a href="#">排名</a>
+            <a href="#">讨论</a>
+            
+            <div class="user-info" id="user-info">
+                <span id="username-display">未登录</span>
+                <button class="login-btn" id="login-btn">登录</button>
+                <button class="register-btn" id="register-btn">注册</button>
+                <button class="logout-btn" id="logout-btn" style="display: none;">退出</button>
+            </div>
+            
+            <div class="theme-switch">
+                <label class="theme-switch-label">
+                    <i class="fas fa-moon"></i>
+                    <span class="switch">
+                        <input type="checkbox" id="theme-toggle">
+                        <span class="slider"></span>
+                    </span>
+                    <i class="fas fa-sun"></i>
+                </label>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="card chinese-pattern">
+            <h2>欢迎来到大明编程挑战</h2>
+            <p>在这里，您可以挑战各种编程题目，提升编程技能，感受明朝文化的独特魅力。</p>
+        </div>
+        
+        <div class="card">
+            <h2>题目列表</h2>
+            <div class="problem-list" id="problem-list">
+                <!-- 题目列表将通过JavaScript动态加载 -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- 登录模态框 -->
+    <div class="modal" id="login-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>用户登录</h2>
+                <button class="close-btn">&times;</button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-username">用户名</label>
+                    <input type="text" id="login-username" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">密码</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="submit-btn">登录</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- 注册模态框 -->
+    <div class="modal" id="register-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>用户注册</h2>
+                <button class="close-btn">&times;</button>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="register-username">用户名</label>
+                    <input type="text" id="register-username" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-password">密码</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-email">邮箱</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <button type="submit" class="submit-btn">注册</button>
+            </form>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>© 2013-2025 MingDynasty,Inc. 大明编程挑战 | 灵感源于明朝美学</p>
+            <p>开局一个碗，结局一根绳 | 传承与创新</p>
+        </div>
+    </footer>
+
+    <script>
+        // 全局变量
+        let currentUser = null;
+        
+        // DOM 元素
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        const loginBtn = document.getElementById('login-btn');
+        const registerBtn = document.getElementById('register-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const loginModal = document.getElementById('login-modal');
+        const registerModal = document.getElementById('register-modal');
+        const closeBtns = document.querySelectorAll('.close-btn');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const usernameDisplay = document.getElementById('username-display');
+        const problemList = document.getElementById('problem-list');
+        
+        // 主题切换功能
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            body.classList.add('dark-mode');
+            themeToggle.checked = true;
+        }
+        
+        themeToggle.addEventListener('change', function() {
+            if (this.checked) {
+                body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+        
+        if (!savedTheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            body.classList.add('dark-mode');
+            themeToggle.checked = true;
+        }
+        
+        // 模态框控制
+        loginBtn.addEventListener('click', () => {
+            loginModal.style.display = 'flex';
+        });
+        
+        registerBtn.addEventListener('click', () => {
+            registerModal.style.display = 'flex';
+        });
+        
+        closeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                loginModal.style.display = 'none';
+                registerModal.style.display = 'none';
+            });
+        });
+        
+        window.addEventListener('click', (e) => {
+            if (e.target === loginModal) {
+                loginModal.style.display = 'none';
+            }
+            if (e.target === registerModal) {
+                registerModal.style.display = 'none';
+            }
+        });
+        
+        // 检查登录状态
+        function checkLoginStatus() {
+            const userCookie = getCookie('MingDynasty');
+            if (userCookie) {
+                currentUser = JSON.parse(userCookie);
+                updateUIForLoggedInUser();
+            }
+        }
+        
+        // 获取Cookie
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+        
+        // 设置Cookie
+        function setCookie(name, value, days) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            const expires = `expires=${date.toUTCString()}`;
+            document.cookie = `${name}=${value}; ${expires}; path=/`;
+        }
+        
+        // 更新登录用户界面
+        function updateUIForLoggedInUser() {
+            usernameDisplay.textContent = currentUser.username;
+            loginBtn.style.display = 'none';
+            registerBtn.style.display = 'none';
+            logoutBtn.style.display = 'block';
+        }
+        
+        // 退出登录
+        logoutBtn.addEventListener('click', () => {
+            document.cookie = 'MingDynasty=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            currentUser = null;
+            usernameDisplay.textContent = '未登录';
+            loginBtn.style.display = 'block';
+            registerBtn.style.display = 'block';
+            logoutBtn.style.display = 'none';
+        });
+        
+        // 登录表单提交
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    setCookie('MingDynasty', JSON.stringify(result.user), 7);
+                    currentUser = result.user;
+                    updateUIForLoggedInUser();
+                    loginModal.style.display = 'none';
+                    loginForm.reset();
+                    alert('登录成功！');
+                } else {
+                    alert('登录失败：' + result.message);
+                }
+            } catch (error) {
+                console.error('登录错误:', error);
+                alert('登录过程中发生错误');
+            }
+        });
+        
+        // 注册表单提交
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('register-username').value;
+            const password = document.getElementById('register-password').value;
+            const email = document.getElementById('register-email').value;
+            
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password, email })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    registerModal.style.display = 'none';
+                    registerForm.reset();
+                    alert('注册成功！请登录。');
+                } else {
+                    alert('注册失败：' + result.message);
+                }
+            } catch (error) {
+                console.error('注册错误:', error);
+                alert('注册过程中发生错误');
+            }
+        });
+        
+        // 加载题目列表
+        async function loadProblems() {
+            try {
+                const response = await fetch('/api/problems');
+                const problems = await response.json();
+                
+                problemList.innerHTML = '';
+                problems.forEach(problem => {
+                    const problemItem = document.createElement('div');
+                    problemItem.className = 'problem-item';
+                    problemItem.innerHTML = `
+                        <div class="problem-info">
+                            <h3>${problem.id}. ${problem.title}</h3>
+                            <div class="problem-meta">
+                                <span><i class="fas fa-user"></i> 通过率: ${problem.acceptance}%</span>
+                                <span><i class="fas fa-star"></i> 难度: ${problem.difficulty}</span>
+                                <span><i class="fas fa-clock"></i> 更新时间: ${problem.updateTime}</span>
+                            </div>
+                        </div>
+                        <button class="solve-btn" onclick="solveProblem(${problem.id})">开始解题</button>
+                    `;
+                    problemList.appendChild(problemItem);
+                });
+            } catch (error) {
+                console.error('加载题目列表错误:', error);
+                problemList.innerHTML = '<p>加载题目列表失败，请稍后重试</p>';
+            }
+        }
+        
+        // 解题函数
+        function solveProblem(problemId) {
+            if (!currentUser) {
+                alert('请先登录后再解题');
+                loginModal.style.display = 'flex';
+                return;
+            }
+            window.location.href = `problem.html?id=${problemId}`;
+        }
+        
+        // 初始化
+        checkLoginStatus();
+        loadProblems();
+    </script>
+</body>
+</html>
