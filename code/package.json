@@ -1,0 +1,18 @@
+{
+  "name": "mingdynasty-oj",
+  "version": "1.0.0",
+  "description": "大明编程挑战在线评测系统",
+  "main": "oj_server.js",
+  "scripts": {
+    "start": "node oj_server.js",
+    "dev": "node oj_server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.6"
+  },
+  "keywords": ["oj", "programming", "mingdynasty"],
+  "author": "MingDynasty",
+  "license": "MIT"
+}
