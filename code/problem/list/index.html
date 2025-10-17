@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <title>题目列表 - 大明编程挑战 | MingDynasty</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+        
+        :root {
+            --bg-color: #f8f3e6;
+            --text-color: #333;
+            --card-bg: #fff;
+            --header-bg: linear-gradient(to right, #8b0000, #a52a2a);
+            --nav-bg: #8b0000;
+            --accent-color: #8b0000;
+            --gold-color: #d4af37;
+            --border-color: #e0c987;
+            --shadow-color: rgba(0, 0, 0, 0.08);
+        }
+        
+        .dark-mode {
+            --bg-color: #1a1a1a;
+            --text-color: #e6e6e6;
+            --card-bg: #2d2d2d;
+            --header-bg: linear-gradient(to right, #600000, #7a1f1f);
+            --nav-bg: #600000;
+            --accent-color: #cc0000;
+            --gold-color: #c19b30;
+            --border-color: #5c4c1a;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+        }
+        
+        body {
+            font-family: 'SimSun', '宋体', serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: var(--header-bg);
+            color: #f8f3e6;
+            padding: 20px 0;
+            border-bottom: 5px solid var(--gold-color);
+        }
+        
+        nav {
+            background-color: var(--nav-bg);
+            padding: 15px 0;
+            margin-bottom: 30px;
+        }
+        
+        nav .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        nav a {
+            color: #f8f3e6;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 5px 15px;
+            border-radius: 5px;
+        }
+        
+        nav a:hover, .nav-active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            border-left: 5px solid var(--accent-color);
+        }
+        
+        .problem-list {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .problem-item {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 60px 1fr auto auto;
+            gap: 20px;
+            align-items: center;
+            box-shadow: 0 3px 10px var(--shadow-color);
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .problem-id {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            text-align: center;
+        }
+        
+        .problem-info h3 {
+            color: var(--accent-color);
+            margin-bottom: 5px;
+        }
+        
+        .problem-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .difficulty {
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .difficulty.easy { background: #e8f5e8; color: #2e7d32; }
+        .difficulty.medium { background: #fff3e0; color: #ef6c00; }
+        .difficulty.hard { background: #ffebee; color: #c62828; }
+        
+        .acceptance {
+            color: #666;
+        }
+        
+        .solve-btn {
+            background: var(--accent-color);
+            color: #f8f3e6;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'SimSun', '宋体', serif;
+        }
+        
+        .solve-btn:hover {
+            background: var(--nav-bg);
+        }
+        
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .search-box input, .search-box select {
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'SimSun', '宋体', serif;
+        }
+        
+        .search-box input {
+            flex: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .problem-item {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .problem-meta {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body class="light-mode">
+    <header>
+        <div class="container">
+            <h1>大明编程挑战 - 题目列表</h1>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="container">
+            <a href="https://mingdynasty1.github.io/">首页</a>
+            <a href="#" class="nav-active">题库</a>
+            <a href="https://mingdynasty1.github.io/code/contest/index.html">比赛</a>
+            <a href="https://mingdynasty1.github.io/code/rank/index.html">排名</a>
+            <a href="https://mgdyqwq.freeflarum.com">讨论</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="card">
+            <h2>题目列表</h2>
+            <div class="search-box">
+                <input type="text" placeholder="搜索题目..." id="search-input">
+                <select id="difficulty-filter">
+                    <option value="">所有难度</option>
+                    <option value="easy">简单</option>
+                    <option value="medium">中等</option>
+                    <option value="hard">困难</option>
+                </select>
+                <select id="status-filter">
+                    <option value="">所有状态</option>
+                    <option value="solved">已解决</option>
+                    <option value="unsolved">未解决</option>
+                </select>
+            </div>
+            
+            <div class="problem-list" id="problem-list">
+                <!-- 题目列表将通过JavaScript动态生成 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 题目数据
+        const problems = [
+            { id: 1, title: "两数之和", difficulty: "easy", acceptance: "89.5%", tags: ["数组", "哈希表"] },
+            { id: 2, title: "数字连接问题", difficulty: "easy", acceptance: "85.2%", tags: ["字符串", "排序"] },
+            { id: 3, title: "最大子序列和", difficulty: "medium", acceptance: "72.5%", tags: ["动态规划", "数组"] },
+            { id: 4, title: "大明密码加密", difficulty: "medium", acceptance: "65.3%", tags: ["字符串", "加密"] },
+            { id: 5, title: "迷宫寻路", difficulty: "hard", acceptance: "45.8%", tags: ["广度优先搜索", "图"] },
+            { id: 6, title: "快速排序实现", difficulty: "medium", acceptance: "68.9%", tags: ["排序", "算法"] },
+            { id: 7, title: "二叉树遍历", difficulty: "easy", acceptance: "82.1%", tags: ["树", "递归"] },
+            { id: 8, title: "图的最短路径", difficulty: "hard", acceptance: "38.7%", tags: ["图", "算法"] }
+        ];
+
+        // 渲染题目列表
+        function renderProblems(filteredProblems = problems) {
+            const problemList = document.getElementById('problem-list');
+            problemList.innerHTML = '';
+
+            filteredProblems.forEach(problem => {
+                const problemItem = document.createElement('div');
+                problemItem.className = 'problem-item';
+                problemItem.innerHTML = `
+                    <div class="problem-id">${problem.id}</div>
+                    <div class="problem-info">
+                        <h3>${problem.title}</h3>
+                        <div class="problem-meta">
+                            ${problem.tags.map(tag => `<span>#${tag}</span>`).join('')}
+                        </div>
+                    </div>
+                    <div class="difficulty ${problem.difficulty}">
+                        ${problem.difficulty === 'easy' ? '简单' : problem.difficulty === 'medium' ? '中等' : '困难'}
+                    </div>
+                    <div class="acceptance">${problem.acceptance}</div>
+                    <button class="solve-btn" onclick="solveProblem(${problem.id})">开始解题</button>
+                `;
+                problemList.appendChild(problemItem);
+            });
+        }
+
+        // 解题函数
+        function solveProblem(problemId) {
+            alert(`开始解题 #${problemId}`);
+            // 实际应用中这里会跳转到解题页面
+        }
+
+        // 搜索和筛选功能
+        document.getElementById('search-input').addEventListener('input', filterProblems);
+        document.getElementById('difficulty-filter').addEventListener('change', filterProblems);
+        document.getElementById('status-filter').addEventListener('change', filterProblems);
+
+        function filterProblems() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const difficulty = document.getElementById('difficulty-filter').value;
+            const status = document.getElementById('status-filter').value;
+
+            const filtered = problems.filter(problem => {
+                const matchesSearch = problem.title.toLowerCase().includes(searchTerm) ||
+                                    problem.tags.some(tag => tag.toLowerCase().includes(searchTerm));
+                const matchesDifficulty = !difficulty || problem.difficulty === difficulty;
+                // 状态筛选在实际应用中会根据用户解题状态来过滤
+                const matchesStatus = !status; // 简化处理
+
+                return matchesSearch && matchesDifficulty && matchesStatus;
+            });
+
+            renderProblems(filtered);
+        }
+
+        // 初始化
+        renderProblems();
+    </script>
+</body>
+</html>
