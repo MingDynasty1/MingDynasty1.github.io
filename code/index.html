@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>大明OJ | OnlineJudge | MingDynasty</title>
-      <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <title>大明编程挑战 | GitHub Pages版</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* 全局样式 */
@@ -106,6 +105,10 @@
         
         nav a:hover {
             background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-active {
+            background-color: rgba(255, 255, 255, 0.2);
         }
         
         /* 用户信息样式 */
@@ -226,144 +229,57 @@
             font-size: 1.5rem;
         }
         
-        /* 问题列表样式 */
-        .problem-list {
+        /* 特性网格 */
+        .features-grid {
             display: grid;
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
         }
         
-        .problem-item {
+        .feature-card {
             background: var(--card-bg);
             border-radius: 8px;
-            padding: 20px;
+            padding: 25px;
+            text-align: center;
             box-shadow: 0 3px 10px var(--shadow-color);
-            border-left: 5px solid var(--accent-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            border-top: 5px solid var(--gold-color);
             transition: transform 0.3s;
         }
         
-        .problem-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px var(--shadow-color);
+        .feature-card:hover {
+            transform: translateY(-5px);
         }
         
-        .problem-info h3 {
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+        }
+        
+        .feature-card h3 {
             color: var(--accent-color);
             margin-bottom: 10px;
         }
         
-        .problem-meta {
-            display: flex;
-            gap: 15px;
-            color: #666;
-            font-size: 0.9rem;
+        .feature-card p {
+            color: var(--text-color);
+            opacity: 0.8;
         }
         
-        .problem-meta span {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .solve-btn {
+        .btn {
+            display: inline-block;
             background: var(--accent-color);
             color: #f8f3e6;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-family: 'SimSun', '宋体', serif;
-        }
-        
-        .solve-btn:hover {
-            background: var(--nav-bg);
-        }
-        
-        /* 模态框样式 */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .modal-content {
-            background: var(--card-bg);
-            border-radius: 8px;
-            padding: 30px;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
-            border-top: 5px solid var(--gold-color);
-        }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px dashed var(--border-color);
-        }
-        
-        .modal-header h2 {
-            color: var(--accent-color);
-            margin: 0;
-        }
-        
-        .close-btn {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--text-color);
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--text-color);
-            font-weight: bold;
-        }
-        
-        .form-group input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            background: var(--bg-color);
-            color: var(--text-color);
-            font-family: 'SimSun', '宋体', serif;
-        }
-        
-        .submit-btn {
-            background: var(--accent-color);
-            color: #f8f3e6;
-            border: none;
             padding: 12px 30px;
             border-radius: 5px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: background 0.3s;
-            display: block;
-            width: 100%;
+            text-decoration: none;
             font-family: 'SimSun', '宋体', serif;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 15px;
+            transition: background 0.3s;
         }
         
-        .submit-btn:hover {
+        .btn:hover {
             background: var(--nav-bg);
         }
         
@@ -391,16 +307,6 @@
         
         /* 响应式设计 */
         @media (max-width: 768px) {
-            .problem-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-            
-            .solve-btn {
-                align-self: flex-end;
-            }
-            
             nav {
                 flex-direction: column;
                 gap: 10px;
@@ -408,6 +314,10 @@
             
             .user-info {
                 margin-left: 0;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -423,13 +333,13 @@
     <nav>
         <div class="container">
             <a href="#" class="nav-active">首页</a>
-            <a href="#">题库</a>
-            <a href="#">比赛</a>
-            <a href="#">排名</a>
-            <a href="#">讨论</a>
+            <a href="https://mingdynasty1.github.io/code/problem/list/index.html">题库</a>
+            <a href="https://mingdynasty1.github.io/code/contest/index.html">比赛</a>
+            <a href="https://mingdynasty1.github.io/code/rank/index.html">排名</a>
+            <a href="https://mgdyqwq.freeflarum.com">讨论</a>
             
             <div class="user-info" id="user-info">
-                <span id="username-display">未登录</span>
+                <span id="username-display">游客</span>
                 <button class="login-btn" id="login-btn">登录</button>
                 <button class="register-btn" id="register-btn">注册</button>
                 <button class="logout-btn" id="logout-btn" style="display: none;">退出</button>
@@ -451,95 +361,90 @@
     <div class="container">
         <div class="card chinese-pattern">
             <h2>欢迎来到大明编程挑战</h2>
-            <p>在这里，您可以挑战各种编程题目，提升编程技能，感受明朝文化的独特魅力。</p>
+            <p>在这里，你可以挑战各种编程题目，提升编程技能，感受明朝文化的独特魅力。我们的平台提供丰富的题目资源、实时评测系统和活跃的社区讨论。</p>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <h3>丰富题库</h3>
+                <p>涵盖算法、数据结构、数学等各类编程题目，从简单到困难，满足不同水平的学习需求。</p>
+                <a href="https://mingdynasty1.github.io/code/problem/list/index.html" class="btn">开始刷题</a>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <h3>编程比赛</h3>
+                <p>定期举办编程竞赛，与本站的程序员同台竞技，提升编程能力和解决问题的能力。</p>
+                <a href="https://mingdynasty1.github.io/code/contest/index.html" class="btn">查看比赛</a>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3>实时排名</h3>
+                <p>查看本站OIer的排名情况，了解自己的水平位置，激励自己不断进步。</p>
+                <a href="https://mingdynasty1.github.io/code/rank/index.html" class="btn">查看排名</a>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3>社区讨论</h3>
+                <p>加入我们的社区，与其他编程爱好者交流学习心得，解决编程难题。</p>
+                <a href="https://mgdyqwq.freeflarum.com" class="btn">参与讨论</a>
+            </div>
         </div>
         
         <div class="card">
-            <h2>题目列表</h2>
-            <div class="problem-list" id="problem-list">
-                <!-- 题目列表将通过JavaScript动态加载 -->
+            <h2>系统特色</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;">
+                <div>
+                    <h3 style="color: var(--gold-color); margin-bottom: 10px;">🎯 精准评测</h3>
+                    <p>实时代码评测系统，快速反馈运行结果，帮助您及时发现和修正错误。</p>
+                </div>
+                <div>
+                    <h3 style="color: var(--gold-color); margin-bottom: 10px;">📚 学习路径</h3>
+                    <p>系统化的学习路线图，从基础到进阶，循序渐进提升编程能力。</p>
+                </div>
+                <div>
+                    <h3 style="color: var(--gold-color); margin-bottom: 10px;">🏆 成就系统</h3>
+                    <p>丰富的成就徽章系统，记录您的学习历程，激励持续进步。</p>
+                </div>
+                <div>
+                    <h3 style="color: var(--gold-color); margin-bottom: 10px;">🌍 多语言支持</h3>
+                    <p>支持C++、Python、Java、JavaScript等多种编程语言。</p>
+                </div>
             </div>
-        </div>
-    </div>
-    
-    <!-- 登录模态框 -->
-    <div class="modal" id="login-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>用户登录</h2>
-                <button class="close-btn">&times;</button>
-            </div>
-            <form id="login-form">
-                <div class="form-group">
-                    <label for="login-username">用户名</label>
-                    <input type="text" id="login-username" required>
-                </div>
-                <div class="form-group">
-                    <label for="login-password">密码</label>
-                    <input type="password" id="login-password" required>
-                </div>
-                <button type="submit" class="submit-btn">登录</button>
-            </form>
-        </div>
-    </div>
-    
-    <!-- 注册模态框 -->
-    <div class="modal" id="register-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>用户注册</h2>
-                <button class="close-btn">&times;</button>
-            </div>
-            <form id="register-form">
-                <div class="form-group">
-                    <label for="register-username">用户名</label>
-                    <input type="text" id="register-username" required>
-                </div>
-                <div class="form-group">
-                    <label for="register-password">密码</label>
-                    <input type="password" id="register-password" required>
-                </div>
-                <div class="form-group">
-                    <label for="register-email">邮箱</label>
-                    <input type="email" id="register-email" required>
-                </div>
-                <button type="submit" class="submit-btn">注册</button>
-            </form>
         </div>
     </div>
     
     <footer>
         <div class="container">
-            <p>© 2013-2025 MingDynasty,Inc. 大明编程挑战 | 灵感源于明朝美学</p>
+            <p>© 2013-2025 MingDynasty,Inc. MingDynasty's OnlineJudge OJ | 灵感源于明朝美学</p>
             <p>开局一个碗，结局一根绳 | 传承与创新</p>
         </div>
     </footer>
 
     <script>
-        // 全局变量
-        let currentUser = null;
-        
-        // DOM 元素
+        // 主题切换功能
         const themeToggle = document.getElementById('theme-toggle');
         const body = document.body;
-        const loginBtn = document.getElementById('login-btn');
-        const registerBtn = document.getElementById('register-btn');
-        const logoutBtn = document.getElementById('logout-btn');
-        const loginModal = document.getElementById('login-modal');
-        const registerModal = document.getElementById('register-modal');
-        const closeBtns = document.querySelectorAll('.close-btn');
-        const loginForm = document.getElementById('login-form');
-        const registerForm = document.getElementById('register-form');
-        const usernameDisplay = document.getElementById('username-display');
-        const problemList = document.getElementById('problem-list');
         
-        // 主题切换功能
+        // 检查本地存储的主题偏好
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'dark') {
             body.classList.add('dark-mode');
             themeToggle.checked = true;
         }
         
+        // 切换主题
         themeToggle.addEventListener('change', function() {
             if (this.checked) {
                 body.classList.add('dark-mode');
@@ -550,184 +455,54 @@
             }
         });
         
+        // 根据系统偏好设置初始主题
         if (!savedTheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
             body.classList.add('dark-mode');
             themeToggle.checked = true;
         }
         
-        // 模态框控制
-        loginBtn.addEventListener('click', () => {
-            loginModal.style.display = 'flex';
-        });
-        
-        registerBtn.addEventListener('click', () => {
-            registerModal.style.display = 'flex';
-        });
-        
-        closeBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                loginModal.style.display = 'none';
-                registerModal.style.display = 'none';
-            });
-        });
-        
-        window.addEventListener('click', (e) => {
-            if (e.target === loginModal) {
-                loginModal.style.display = 'none';
-            }
-            if (e.target === registerModal) {
-                registerModal.style.display = 'none';
-            }
-        });
+        // 简单的用户状态管理
+        const loginBtn = document.getElementById('login-btn');
+        const registerBtn = document.getElementById('register-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const usernameDisplay = document.getElementById('username-display');
         
         // 检查登录状态
         function checkLoginStatus() {
-            const userCookie = getCookie('MingDynasty');
-            if (userCookie) {
-                currentUser = JSON.parse(userCookie);
-                updateUIForLoggedInUser();
+            const userData = localStorage.getItem('mingdynasty_user');
+            if (userData) {
+                const user = JSON.parse(userData);
+                usernameDisplay.textContent = user.username;
+                loginBtn.style.display = 'none';
+                registerBtn.style.display = 'none';
+                logoutBtn.style.display = 'block';
             }
         }
         
-        // 获取Cookie
-        function getCookie(name) {
-            const value = `; ${document.cookie}`;
-            const parts = value.split(`; ${name}=`);
-            if (parts.length === 2) return parts.pop().split(';').shift();
-        }
-        
-        // 设置Cookie
-        function setCookie(name, value, days) {
-            const date = new Date();
-            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-            const expires = `expires=${date.toUTCString()}`;
-            document.cookie = `${name}=${value}; ${expires}; path=/`;
-        }
-        
-        // 更新登录用户界面
-        function updateUIForLoggedInUser() {
-            usernameDisplay.textContent = currentUser.username;
-            loginBtn.style.display = 'none';
-            registerBtn.style.display = 'none';
-            logoutBtn.style.display = 'block';
-        }
-        
         // 退出登录
-        logoutBtn.addEventListener('click', () => {
-            document.cookie = 'MingDynasty=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-            currentUser = null;
-            usernameDisplay.textContent = '未登录';
+        logoutBtn.addEventListener('click', function() {
+            localStorage.removeItem('mingdynasty_user');
+            usernameDisplay.textContent = '游客';
             loginBtn.style.display = 'block';
             registerBtn.style.display = 'block';
             logoutBtn.style.display = 'none';
         });
         
-        // 登录表单提交
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const username = document.getElementById('login-username').value;
-            const password = document.getElementById('login-password').value;
-            
-            try {
-                const response = await fetch('/api/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ username, password })
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    setCookie('MingDynasty', JSON.stringify(result.user), 7);
-                    currentUser = result.user;
-                    updateUIForLoggedInUser();
-                    loginModal.style.display = 'none';
-                    loginForm.reset();
-                    alert('登录成功！');
-                } else {
-                    alert('登录失败：' + result.message);
-                }
-            } catch (error) {
-                console.error('登录错误:', error);
-                alert('登录过程中发生错误');
+        // 模拟登录（实际应用中应该有真实的登录逻辑）
+        loginBtn.addEventListener('click', function() {
+            const username = prompt('请输入用户名:');
+            if (username) {
+                const user = {
+                    username: username,
+                    loginTime: new Date().toISOString()
+                };
+                localStorage.setItem('mingdynasty_user', JSON.stringify(user));
+                checkLoginStatus();
             }
         });
-        
-        // 注册表单提交
-        registerForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const username = document.getElementById('register-username').value;
-            const password = document.getElementById('register-password').value;
-            const email = document.getElementById('register-email').value;
-            
-            try {
-                const response = await fetch('/api/register', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ username, password, email })
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    registerModal.style.display = 'none';
-                    registerForm.reset();
-                    alert('注册成功！请登录。');
-                } else {
-                    alert('注册失败：' + result.message);
-                }
-            } catch (error) {
-                console.error('注册错误:', error);
-                alert('注册过程中发生错误');
-            }
-        });
-        
-        // 加载题目列表
-        async function loadProblems() {
-            try {
-                const response = await fetch('/api/problems');
-                const problems = await response.json();
-                
-                problemList.innerHTML = '';
-                problems.forEach(problem => {
-                    const problemItem = document.createElement('div');
-                    problemItem.className = 'problem-item';
-                    problemItem.innerHTML = `
-                        <div class="problem-info">
-                            <h3>${problem.id}. ${problem.title}</h3>
-                            <div class="problem-meta">
-                                <span><i class="fas fa-user"></i> 通过率: ${problem.acceptance}%</span>
-                                <span><i class="fas fa-star"></i> 难度: ${problem.difficulty}</span>
-                                <span><i class="fas fa-clock"></i> 更新时间: ${problem.updateTime}</span>
-                            </div>
-                        </div>
-                        <button class="solve-btn" onclick="solveProblem(${problem.id})">开始解题</button>
-                    `;
-                    problemList.appendChild(problemItem);
-                });
-            } catch (error) {
-                console.error('加载题目列表错误:', error);
-                problemList.innerHTML = '<p>加载题目列表失败，请稍后重试</p>';
-            }
-        }
-        
-        // 解题函数
-        function solveProblem(problemId) {
-            if (!currentUser) {
-                alert('请先登录后再解题');
-                loginModal.style.display = 'flex';
-                return;
-            }
-            window.location.href = `problem.html?id=${problemId}`;
-        }
         
         // 初始化
         checkLoginStatus();
-        loadProblems();
     </script>
 </body>
 </html>
