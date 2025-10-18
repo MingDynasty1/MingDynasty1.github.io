@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>明影阁 - 明朝风格电影播放器</title>
+    <title>明影阁 - 明朝风格电影播放器 | MingDynasty</title>
+
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
     <style>
         /* 基础样式 */
         * {
@@ -240,7 +242,7 @@
         .time-display {
             color: #f8f3e6;
             font-size: 0.9rem;
-            min-width: 100px;
+            min-width: 140px;
             text-align: center;
         }
         
@@ -404,7 +406,7 @@
                     <div class="progress-bar" id="progressBar"></div>
                 </div>
                 
-                <div class="time-display" id="timeDisplay">00:00 / 00:00</div>
+                <div class="time-display" id="timeDisplay">00:00:00 / 00:00:00</div>
                 
                 <div class="volume-container">
                     <button class="control-btn" id="volumeBtn">🔊</button>
@@ -495,14 +497,19 @@
             const progress = (video.currentTime / video.duration) * 100;
             progressBar.style.width = `${progress}%`;
             
-            // 更新时间显示
-            const currentMinutes = Math.floor(video.currentTime / 60);
-            const currentSeconds = Math.floor(video.currentTime % 60);
-            const durationMinutes = Math.floor(video.duration / 60);
-            const durationSeconds = Math.floor(video.duration % 60);
+            // 更新时间显示为 时:分:秒 格式
+            const currentHours = Math.floor(video.currentTime / 3600);
+            const currentRemainingSec = video.currentTime % 3600;
+            const currentMinutes = Math.floor(currentRemainingSec / 60);
+            const currentSeconds = Math.floor(currentRemainingSec % 60);
+            
+            const durationHours = Math.floor(video.duration / 3600);
+            const durationRemainingSec = video.duration % 3600;
+            const durationMinutes = Math.floor(durationRemainingSec / 60);
+            const durationSeconds = Math.floor(durationRemainingSec % 60);
             
             timeDisplay.textContent = 
-                `${currentMinutes.toString().padStart(2, '0')}:${currentSeconds.toString().padStart(2, '0')} / ${durationMinutes.toString().padStart(2, '0')}:${durationSeconds.toString().padStart(2, '0')}`;
+                `${currentHours.toString().padStart(2, '0')}:${currentMinutes.toString().padStart(2, '0')}:${currentSeconds.toString().padStart(2, '0')} / ${durationHours.toString().padStart(2, '0')}:${durationMinutes.toString().padStart(2, '0')}:${durationSeconds.toString().padStart(2, '0')}`;
         });
         
         // 点击进度条跳转
@@ -561,10 +568,13 @@
         
         // 视频加载完成后更新时长
         video.addEventListener('loadedmetadata', function() {
-            const durationMinutes = Math.floor(video.duration / 60);
-            const durationSeconds = Math.floor(video.duration % 60);
+            const durationHours = Math.floor(video.duration / 3600);
+            const durationRemainingSec = video.duration % 3600;
+            const durationMinutes = Math.floor(durationRemainingSec / 60);
+            const durationSeconds = Math.floor(durationRemainingSec % 60);
+            
             timeDisplay.textContent = 
-                `00:00 / ${durationMinutes.toString().padStart(2, '0')}:${durationSeconds.toString().padStart(2, '0')}`;
+                `00:00:00 / ${durationHours.toString().padStart(2, '0')}:${durationMinutes.toString().padStart(2, '0')}:${durationSeconds.toString().padStart(2, '0')}`;
         });
     </script>
 </body>
