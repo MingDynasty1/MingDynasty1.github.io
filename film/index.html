@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>明影阁 - 明朝风格电影播放器</title>
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-color: #9a0000;
+            --secondary-color: #7a0000;
+            --accent-color: #d4af37;
+            --bg-color: #f8f3e6;
+            --text-color: #333;
+            --card-bg: #fff;
+            --border-color: #d4af37;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+        
+        .dark-theme {
+            --primary-color: #7a0000;
+            --secondary-color: #5a0000;
+            --accent-color: #b8941f;
+            --bg-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --card-bg: #2a2a2a;
+            --border-color: #b8941f;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+        }
+        
+        body {
+            font-family: "SimSun", "宋体", serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.05"><path d="M20,20 C40,0 60,0 80,20 C100,40 100,60 80,80 C60,100 40,100 20,80 C0,60 0,40 20,20 Z" fill="none" stroke="%237a0000" stroke-width="2"/></svg>');
+        }
+        
+        .dark-theme body {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.05"><path d="M20,20 C40,0 60,0 80,20 C100,40 100,60 80,80 C60,100 40,100 20,80 C0,60 0,40 20,20 Z" fill="none" stroke="%23b8941f" stroke-width="2"/></svg>');
+        }
+        
+        /* 播放提示 */
+        .play-tip {
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            color: #f8f3e6;
+            padding: 10px 0;
+            text-align: center;
+            border-bottom: 2px solid var(--accent-color);
+            position: relative;
+        }
+        
+        .play-tip-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .play-tip a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: bold;
+            margin-left: 10px;
+            padding: 3px 8px;
+            border: 1px solid var(--accent-color);
+            border-radius: 3px;
+            transition: all 0.3s;
+        }
+        
+        .play-tip a:hover {
+            background-color: var(--accent-color);
+            color: var(--secondary-color);
+        }
+        
+        /* 头部样式 */
+        header {
+            background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+            color: #f8f3e6;
+            padding: 20px 0;
+            border-bottom: 5px solid var(--accent-color);
+            box-shadow: 0 3px 10px var(--shadow-color);
+        }
+        
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            letter-spacing: 5px;
+            margin-left: 15px;
+        }
+        
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background-color: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.8rem;
+            color: var(--secondary-color);
+            border: 2px solid #f8f3e6;
+        }
+        
+        .theme-toggle {
+            background-color: var(--accent-color);
+            color: var(--secondary-color);
+            border: none;
+            border-radius: 4px;
+            padding: 8px 15px;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        
+        .theme-toggle:hover {
+            background-color: #f0c850;
+            transform: scale(1.05);
+        }
+        
+        /* 主要内容区 */
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        /* 播放器容器 */
+        .player-container {
+            background-color: var(--card-bg);
+            border: 3px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            overflow: hidden;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+        
+        .player-header {
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            color: #f8f3e6;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .player-header h2 {
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+        }
+        
+        .movie-title {
+            font-size: 1.2rem;
+            color: var(--accent-color);
+        }
+        
+        /* 视频区域 */
+        .video-wrapper {
+            position: relative;
+            background-color: #000;
+        }
+        
+        video {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        /* 控制面板 */
+        .controls {
+            background: linear-gradient(to bottom, #333, #222);
+            padding: 15px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .control-btn {
+            background-color: var(--accent-color);
+            color: var(--secondary-color);
+            border: none;
+            border-radius: 4px;
+            width: 40px;
+            height: 40px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        
+        .control-btn:hover {
+            background-color: #f0c850;
+            transform: scale(1.05);
+        }
+        
+        .progress-container {
+            flex-grow: 1;
+            height: 10px;
+            background-color: #555;
+            border-radius: 5px;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: var(--accent-color);
+            border-radius: 5px;
+            width: 0%;
+        }
+        
+        .time-display {
+            color: #f8f3e6;
+            font-size: 0.9rem;
+            min-width: 100px;
+            text-align: center;
+        }
+        
+        .volume-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .volume-slider {
+            width: 80px;
+            -webkit-appearance: none;
+            height: 6px;
+            background: #555;
+            border-radius: 3px;
+            outline: none;
+        }
+        
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            cursor: pointer;
+        }
+        
+        .fullscreen-btn {
+            margin-left: auto;
+        }
+        
+        /* 电影信息 */
+        .movie-info {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 3px 10px var(--shadow-color);
+            transition: all 0.3s ease;
+        }
+        
+        .movie-info h3 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .movie-details {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+        }
+        
+        .movie-poster {
+            width: 100%;
+            border: 2px solid var(--border-color);
+            border-radius: 5px;
+        }
+        
+        .movie-description h4 {
+            color: var(--text-color);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .movie-description p {
+            margin-bottom: 15px;
+            text-indent: 2em;
+        }
+        
+        .movie-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .meta-item {
+            background-color: var(--bg-color);
+            padding: 8px 15px;
+            border-radius: 4px;
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        .meta-item strong {
+            color: var(--primary-color);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            
+            .logo h1 {
+                font-size: 2rem;
+            }
+            
+            .movie-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                gap: 10px;
+            }
+            
+            .volume-container {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body class="light-theme">
+    <!-- 播放提示 -->
+    <div class="play-tip">
+        <div class="play-tip-content">
+            <strong>提示：</strong> 如果无法播放，请<a href="https://code.cbpan.org/f/d/POIL/film.MOV" target="_blank">下载影片</a>或稍等一会
+        </div>
+    </div>
+
+    <!-- 页面头部 -->
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <div class="logo-icon">影</div>
+                <h1>明影阁</h1>
+            </div>
+            <button class="theme-toggle" id="themeToggle">
+                <span id="themeIcon">🌙</span>
+                <span id="themeText">暗色模式</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- 主要内容区 -->
+    <div class="container">
+        <!-- 播放器 -->
+        <div class="player-container">
+            <div class="player-header">
+                <h2>大明风华录</h2>
+                <div class="movie-title">万历年间宫廷秘史</div>
+            </div>
+            
+            <div class="video-wrapper">
+                <video id="myVideo" poster="https://via.placeholder.com/800x450?text=大明风华录">
+                    <source src="https://code.cbpan.org/f/d/POIL/film.MOV" type="video/mp4">
+                    您的浏览器不支持HTML5视频播放。
+                </video>
+            </div>
+            
+            <div class="controls">
+                <button class="control-btn" id="playPauseBtn">▶</button>
+                <button class="control-btn" id="stopBtn">■</button>
+                
+                <div class="progress-container" id="progressContainer">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                
+                <div class="time-display" id="timeDisplay">00:00 / 00:00</div>
+                
+                <div class="volume-container">
+                    <button class="control-btn" id="volumeBtn">🔊</button>
+                    <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.1" value="1">
+                </div>
+                
+                <button class="control-btn fullscreen-btn" id="fullscreenBtn">⛶</button>
+            </div>
+        </div>
+        
+        <!-- 电影信息 -->
+        <div class="movie-info">
+            <h3>影片信息</h3>
+            <div class="movie-details">
+                <div>
+                    <img src="https://via.placeholder.com/300x450?text=大明风华录海报" alt="大明风华录海报" class="movie-poster">
+                </div>
+                <div class="movie-description">
+                    <h4>剧情简介</h4>
+                    <p>本片讲述了万历年间宫廷内外的权力斗争与情感纠葛。以大学士张居正改革为背景，展现了明朝中后期政治、经济、文化的繁荣与危机。</p>
+                    <p>影片通过细腻的镜头语言和精美的服化道设计，还原了明代宫廷生活的真实面貌，展现了那个时代的风土人情和社会风貌。</p>
+                    <p>本片由著名导演李时中执导，汇集了当红影星王守仁、徐霞客等实力派演员，是近年来少有的历史题材佳作。</p>
+                    
+                    <div class="movie-meta">
+                        <div class="meta-item"><strong>导演：</strong>李时中</div>
+                        <div class="meta-item"><strong>主演：</strong>王守仁、徐霞客、张居正</div>
+                        <div class="meta-item"><strong>类型：</strong>历史 / 剧情</div>
+                        <div class="meta-item"><strong>年代：</strong>万历年间</div>
+                        <div class="meta-item"><strong>片长：</strong>120分钟</div>
+                        <div class="meta-item"><strong>评分：</strong>★★★★☆</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 获取DOM元素
+        const video = document.getElementById('myVideo');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressContainer = document.getElementById('progressContainer');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const volumeBtn = document.getElementById('volumeBtn');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeText = document.getElementById('themeText');
+        const body = document.body;
+        
+        // 主题切换功能
+        themeToggle.addEventListener('click', function() {
+            if (body.classList.contains('light-theme')) {
+                body.classList.remove('light-theme');
+                body.classList.add('dark-theme');
+                themeIcon.textContent = '☀️';
+                themeText.textContent = '亮色模式';
+            } else {
+                body.classList.remove('dark-theme');
+                body.classList.add('light-theme');
+                themeIcon.textContent = '🌙';
+                themeText.textContent = '暗色模式';
+            }
+        });
+        
+        // 播放/暂停功能
+        playPauseBtn.addEventListener('click', function() {
+            if (video.paused) {
+                video.play();
+                playPauseBtn.innerHTML = '❚❚';
+            } else {
+                video.pause();
+                playPauseBtn.innerHTML = '▶';
+            }
+        });
+        
+        // 停止功能
+        stopBtn.addEventListener('click', function() {
+            video.pause();
+            video.currentTime = 0;
+            playPauseBtn.innerHTML = '▶';
+        });
+        
+        // 更新进度条
+        video.addEventListener('timeupdate', function() {
+            const progress = (video.currentTime / video.duration) * 100;
+            progressBar.style.width = `${progress}%`;
+            
+            // 更新时间显示
+            const currentMinutes = Math.floor(video.currentTime / 60);
+            const currentSeconds = Math.floor(video.currentTime % 60);
+            const durationMinutes = Math.floor(video.duration / 60);
+            const durationSeconds = Math.floor(video.duration % 60);
+            
+            timeDisplay.textContent = 
+                `${currentMinutes.toString().padStart(2, '0')}:${currentSeconds.toString().padStart(2, '0')} / ${durationMinutes.toString().padStart(2, '0')}:${durationSeconds.toString().padStart(2, '0')}`;
+        });
+        
+        // 点击进度条跳转
+        progressContainer.addEventListener('click', function(e) {
+            const pos = (e.pageX - this.offsetLeft) / this.offsetWidth;
+            video.currentTime = pos * video.duration;
+        });
+        
+        // 音量控制
+        volumeSlider.addEventListener('input', function() {
+            video.volume = this.value;
+            updateVolumeIcon();
+        });
+        
+        volumeBtn.addEventListener('click', function() {
+            if (video.volume > 0) {
+                video.volume = 0;
+                volumeSlider.value = 0;
+            } else {
+                video.volume = 1;
+                volumeSlider.value = 1;
+            }
+            updateVolumeIcon();
+        });
+        
+        function updateVolumeIcon() {
+            if (video.volume === 0) {
+                volumeBtn.innerHTML = '🔇';
+            } else if (video.volume < 0.5) {
+                volumeBtn.innerHTML = '🔈';
+            } else {
+                volumeBtn.innerHTML = '🔊';
+            }
+        }
+        
+        // 全屏功能
+        fullscreenBtn.addEventListener('click', function() {
+            if (!document.fullscreenElement) {
+                if (video.requestFullscreen) {
+                    video.requestFullscreen();
+                } else if (video.webkitRequestFullscreen) {
+                    video.webkitRequestFullscreen();
+                } else if (video.msRequestFullscreen) {
+                    video.msRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            }
+        });
+        
+        // 视频加载完成后更新时长
+        video.addEventListener('loadedmetadata', function() {
+            const durationMinutes = Math.floor(video.duration / 60);
+            const durationSeconds = Math.floor(video.duration % 60);
+            timeDisplay.textContent = 
+                `00:00 / ${durationMinutes.toString().padStart(2, '0')}:${durationSeconds.toString().padStart(2, '0')}`;
+        });
+    </script>
+</body>
+</html>
