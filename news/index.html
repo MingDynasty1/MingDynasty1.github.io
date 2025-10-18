@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>明闻阁 - 明朝风格新闻 | MingDynasty</title>
+      <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "SimSun", "宋体", serif;
+            background-color: #f8f3e6;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* 公告栏样式 */
+        .announcement {
+            background: linear-gradient(to right, #7a0000, #9a0000);
+            color: #f8f3e6;
+            padding: 10px 0;
+            text-align: center;
+            border-bottom: 2px solid #d4af37;
+            position: relative;
+        }
+        
+        .announcement-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .announcement a {
+            color: #d4af37;
+            text-decoration: none;
+            font-weight: bold;
+            margin-left: 10px;
+            padding: 3px 8px;
+            border: 1px solid #d4af37;
+            border-radius: 3px;
+            transition: all 0.3s;
+        }
+        
+        .announcement a:hover {
+            background-color: #d4af37;
+            color: #7a0000;
+        }
+        
+        /* 头部样式 */
+        header {
+            background: linear-gradient(to bottom, #9a0000, #7a0000);
+            color: #f8f3e6;
+            padding: 20px 0;
+            border-bottom: 5px solid #d4af37;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            letter-spacing: 5px;
+            margin-left: 15px;
+        }
+        
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background-color: #d4af37;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.8rem;
+            color: #7a0000;
+            border: 2px solid #f8f3e6;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav li {
+            margin-left: 25px;
+        }
+        
+        nav a {
+            color: #f8f3e6;
+            text-decoration: none;
+            font-size: 1.2rem;
+            padding: 5px 10px;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        nav a:hover {
+            border-bottom: 2px solid #d4af37;
+        }
+        
+        /* 主要内容区 */
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+        
+        /* 新闻卡片样式 */
+        .news-card {
+            background-color: #fff;
+            border: 1px solid #d4af37;
+            border-radius: 5px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .news-card-header {
+            background-color: #7a0000;
+            color: #f8f3e6;
+            padding: 15px 20px;
+            position: relative;
+        }
+        
+        .news-card-header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        
+        .news-card-date {
+            font-size: 0.9rem;
+            color: #d4af37;
+        }
+        
+        .news-card-content {
+            padding: 20px;
+        }
+        
+        .news-card-content img {
+            width: 100%;
+            height: auto;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+        }
+        
+        .news-card-content p {
+            margin-bottom: 15px;
+            text-indent: 2em;
+        }
+        
+        .read-more {
+            display: inline-block;
+            background-color: #7a0000;
+            color: #f8f3e6;
+            padding: 8px 15px;
+            text-decoration: none;
+            border-radius: 3px;
+            transition: background-color 0.3s;
+        }
+        
+        .read-more:hover {
+            background-color: #9a0000;
+        }
+        
+        /* 侧边栏样式 */
+        .sidebar {
+            background-color: #fff;
+            border: 1px solid #d4af37;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar h3 {
+            color: #7a0000;
+            border-bottom: 2px solid #d4af37;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .sidebar-news {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #ddd;
+        }
+        
+        .sidebar-news:last-child {
+            border-bottom: none;
+        }
+        
+        .sidebar-news h4 {
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .sidebar-news p {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        /* 页脚样式 */
+        footer {
+            background-color: #333;
+            color: #f8f3e6;
+            padding: 30px 0;
+            margin-top: 40px;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            padding: 0 20px;
+        }
+        
+        .footer-section h3 {
+            color: #d4af37;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .footer-section p, .footer-section a {
+            color: #ccc;
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+        
+        .footer-section a {
+            text-decoration: none;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .footer-section a:hover {
+            color: #d4af37;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            margin-top: 20px;
+            border-top: 1px solid #555;
+            color: #999;
+            font-size: 0.8rem;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                margin-top: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            nav li {
+                margin: 5px 10px;
+            }
+            
+            .footer-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 公告栏 -->
+    <div class="announcement">
+        <div class="announcement-content">
+            <strong>公告：</strong> MingDynasty1.github.io MingDynasty1的个人主页v1.1.3发布
+            <a href="https://MingDynasty1.github.io" target="_blank">立即访问</a>
+        </div>
+    </div>
+
+    <!-- 页面头部 -->
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <div class="logo-icon">明</div>
+                <h1>明闻阁</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#">首页</a></li>
+                    <li><a href="#">朝堂要闻</a></li>
+                    <li><a href="#">民生百态</a></li>
+                    <li><a href="#">文苑雅集</a></li>
+                    <li><a href="#">商贾资讯</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 主要内容区 -->
+    <div class="container">
+        <main>
+            <!-- 头条新闻 -->
+            <article class="news-card">
+                <div class="news-card-header">
+                    <h2>内阁大学士李东阳上书建言新政，获圣上嘉许</h2>
+                    <div class="news-card-date">万历四十五年 三月初七</div>
+                </div>
+                <div class="news-card-content">
+                    <img src="https://via.placeholder.com/800x400" alt="内阁大学士李东阳">
+                    <p>近日，内阁大学士李东阳呈递《新政十疏》，针对当前朝政提出十条改革建议，涉及吏治、赋税、军备等多个方面。圣上阅览后大为赞赏，称其"深谋远虑，切中时弊"。</p>
+                    <p>李东阳在奏疏中指出，当前吏治腐败，官员贪墨成风，应加强监察力度，严惩贪官污吏。在赋税方面，他建议减轻百姓负担，改革税制，使税赋更加公平合理。</p>
+                    <p>此外，李东阳还就边防问题提出建议，认为应加强北方边防，增派精兵强将，以防外敌侵扰。同时，他还主张发展海上贸易，增加国库收入。</p>
+                    <a href="#" class="read-more">阅读全文</a>
+                </div>
+            </article>
+
+            <!-- 次要新闻 -->
+            <article class="news-card">
+                <div class="news-card-header">
+                    <h2>江南丝绸业繁荣，苏杭织造局产量创新高</h2>
+                    <div class="news-card-date">万历四十五年 三月初五</div>
+                </div>
+                <div class="news-card-content">
+                    <img src="https://via.placeholder.com/800x400" alt="江南丝绸">
+                    <p>据苏州织造局最新统计，今年春季丝绸产量较去年同期增长三成，创历史新高。江南各地丝织作坊生意兴隆，产品远销海外。</p>
+                    <p>苏州织造局官员表示，近年来朝廷对丝绸业的支持政策成效显著，加上海外需求增加，促使丝绸产量大幅提升。目前，江南丝绸已成为对外贸易的重要商品，为国家带来丰厚税收。</p>
+                    <p>同时，丝绸业的繁荣也带动了相关产业发展，如蚕桑养殖、染料制作、纺织机械等，为当地百姓提供了大量就业机会。</p>
+                    <a href="#" class="read-more">阅读全文</a>
+                </div>
+            </article>
+        </main>
+
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <h3>最新消息</h3>
+            <div class="sidebar-news">
+                <h4>京城科举会试即将举行</h4>
+                <p>今年科举会试定于四月初八举行，各地举子已陆续抵达京城备考。</p>
+            </div>
+            <div class="sidebar-news">
+                <h4>郑和船队后裔筹建航海博物馆</h4>
+                <p>为纪念郑和下西洋壮举，其后裔计划在南京筹建航海博物馆。</p>
+            </div>
+            <div class="sidebar-news">
+                <h4>景德镇官窑推出新款青花瓷</h4>
+                <p>景德镇官窑近日推出新款青花瓷器，图案精美，工艺精湛，备受收藏家青睐。</p>
+            </div>
+            <div class="sidebar-news">
+                <h4>《永乐大典》修缮工程进展顺利</h4>
+                <p>国家图书馆《永乐大典》修缮工程已完成过半，预计明年可全部完工。</p>
+            </div>
+
+            <h3>热门话题</h3>
+            <div class="sidebar-news">
+                <h4>海禁政策利弊之辩</h4>
+                <p>朝堂之上，关于海禁政策的争论日益激烈，各方观点不一。</p>
+            </div>
+            <div class="sidebar-news">
+                <h4>书院教育何去何从</h4>
+                <p>随着科举制度日益僵化，书院教育的改革方向成为士林热议话题。</p>
+            </div>
+        </aside>
+    </div>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>关于明闻阁</h3>
+                <p>明闻阁创立于万历年间，致力于传播真实、及时的新闻资讯，传承中华文化，服务天下百姓。</p>
+            </div>
+            <div class="footer-section">
+                <h3>快速链接</h3>
+                <a href="#">朝堂要闻</a>
+                <a href="#">民生百态</a>
+                <a href="#">文苑雅集</a>
+                <a href="#">商贾资讯</a>
+                <a href="#">联系我们</a>
+            </div>
+            <div class="footer-section">
+                <h3>联系我们</h3>
+                <p>地址：长安碑林区</p>
+                <p>投稿邮箱：wangzyy1368@163.com</p>
+                <p>官方驿使：暂时还没有</p>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2013-2025 MingDynasty,Inc. 大明新闻 | 明朝美学
+        </div>
+    </footer>
+</body>
+</html>
