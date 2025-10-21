@@ -788,6 +788,202 @@
         .snake-game-instructions li {
             margin-bottom: 5px;
         }
+        
+        /* 每日打卡样式 */
+        .daily-checkin-card {
+            background: linear-gradient(135deg, #f8f3e6 0%, #e0c987 100%);
+            border: 3px solid var(--accent-color);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(139, 0, 0, 0.15);
+        }
+        
+        .dark-mode .daily-checkin-card {
+            background: linear-gradient(135deg, #2d2d2d 0%, #5c4c1a 100%);
+        }
+        
+        .daily-checkin-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(to right, var(--accent-color), var(--gold-color));
+        }
+        
+        .daily-checkin-card h3 {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+            text-align: center;
+            border-bottom: 2px solid var(--gold-color);
+            padding-bottom: 10px;
+        }
+        
+        .checkin-stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .checkin-stat {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            min-width: 120px;
+        }
+        
+        .dark-mode .checkin-stat {
+            background: rgba(45, 45, 45, 0.7);
+        }
+        
+        .checkin-stat h4 {
+            color: var(--accent-color);
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+        
+        .checkin-stat p {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--gold-color);
+        }
+        
+        .fortune-result {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            border: 2px solid var(--border-color);
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .dark-mode .fortune-result {
+            background: rgba(45, 45, 45, 0.8);
+        }
+        
+        .fortune-level {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-family: 'KaiTi', '楷体', serif;
+        }
+        
+        .fortune-message {
+            font-size: 1.1rem;
+            color: var(--text-color);
+            font-style: italic;
+        }
+        
+        .fortune-daxiong {
+            color: #ff0000;
+            text-shadow: 0 0 5px rgba(255, 0, 0, 0.3);
+        }
+        
+        .fortune-xiong {
+            color: #ff6b6b;
+        }
+        
+        .fortune-zhongping {
+            color: #ffa500;
+        }
+        
+        .fortune-xiaoji {
+            color: #32cd32;
+        }
+        
+        .fortune-daji {
+            color: #00ff00;
+            text-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+        }
+        
+        .checkin-btn {
+            display: block;
+            background: var(--accent-color);
+            color: #f8f3e6;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            margin: 20px auto 0;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-family: 'SimSun', '宋体', serif;
+        }
+        
+        .checkin-btn:hover {
+            background: transparent;
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+        
+        .checkin-btn:disabled {
+            background: #cccccc;
+            color: #666666;
+            cursor: not-allowed;
+        }
+        
+        .checkin-btn:disabled:hover {
+            background: #cccccc;
+            border-color: transparent;
+            color: #666666;
+        }
+        
+        .checkin-history {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .dark-mode .checkin-history {
+            background: rgba(45, 45, 45, 0.5);
+        }
+        
+        .checkin-history h4 {
+            color: var(--accent-color);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .checkin-history ul {
+            list-style: none;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        
+        .checkin-history li {
+            padding: 8px 0;
+            border-bottom: 1px dotted var(--border-color);
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .checkin-history li:last-child {
+            border-bottom: none;
+        }
+        
+        .checkin-date {
+            color: var(--text-color);
+        }
+        
+        .checkin-fortune {
+            font-weight: bold;
+        }
     </style>
     
     <!-- 人机验证检查脚本 -->
@@ -959,6 +1155,47 @@
             <div id="current-time">00:00:00</div>
             <div id="current-date" data-lang="zh">0000年00月00日 星期X</div>
             <div id="current-date-en" data-lang="en" style="display: none;">Monday, January 1, 2000</div>
+        </div>
+        
+        <!-- 每日打卡卡片 -->
+        <div class="daily-checkin-card">
+            <h3><i class="fas fa-calendar-check"></i> <span data-lang="zh">每日打卡</span><span data-lang="en" style="display: none;">Daily Check-in</span></h3>
+            
+            <div class="checkin-stats">
+                <div class="checkin-stat">
+                    <h4 data-lang="zh">连续打卡</h4>
+                    <h4 data-lang="en" style="display: none;">Consecutive Days</h4>
+                    <p id="consecutive-days">0</p>
+                </div>
+                <div class="checkin-stat">
+                    <h4 data-lang="zh">总打卡天数</h4>
+                    <h4 data-lang="en" style="display: none;">Total Days</h4>
+                    <p id="total-days">0</p>
+                </div>
+                <div class="checkin-stat">
+                    <h4 data-lang="zh">今日运势</h4>
+                    <h4 data-lang="en" style="display: none;">Today's Fortune</h4>
+                    <p id="today-fortune">-</p>
+                </div>
+            </div>
+            
+            <div class="fortune-result">
+                <div class="fortune-level" id="fortune-level">-</div>
+                <div class="fortune-message" id="fortune-message" data-lang="zh">点击下方按钮抽取今日运势</div>
+                <div class="fortune-message" id="fortune-message-en" style="display: none;">Click the button below to draw today's fortune</div>
+            </div>
+            
+            <button class="checkin-btn" id="checkin-btn" data-lang="zh">抽签打卡</button>
+            <button class="checkin-btn" id="checkin-btn-en" style="display: none;" data-lang="en">Draw Fortune & Check-in</button>
+            
+            <div class="checkin-history">
+                <h4 data-lang="zh">打卡历史</h4>
+                <h4 data-lang="en" style="display: none;">Check-in History</h4>
+                <ul id="checkin-history-list">
+                    <li data-lang="zh"><span class="checkin-date">暂无记录</span><span class="checkin-fortune">-</span></li>
+                    <li data-lang="en" style="display: none;"><span class="checkin-date">No records</span><span class="checkin-fortune">-</span></li>
+                </ul>
+            </div>
         </div>
         
         <!-- 新增大明历史卡片 -->
@@ -1398,9 +1635,207 @@
 
     <!-- 外部JavaScript文件 -->
     <script src="server_mingdynasty1.js"></script>
+    
+    <!-- 每日打卡功能JavaScript -->
+    <script>
+        // 每日打卡功能
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化打卡数据
+            let checkinData = {
+                consecutiveDays: 0,
+                totalDays: 0,
+                lastCheckinDate: null,
+                todayFortune: null,
+                history: []
+            };
+            
+            // 从localStorage加载打卡数据
+            function loadCheckinData() {
+                const savedData = localStorage.getItem('mingDynastyCheckinData');
+                if (savedData) {
+                    checkinData = JSON.parse(savedData);
+                }
+                updateCheckinDisplay();
+            }
+            
+            // 保存打卡数据到localStorage
+            function saveCheckinData() {
+                localStorage.setItem('mingDynastyCheckinData', JSON.stringify(checkinData));
+            }
+            
+            // 更新打卡显示
+            function updateCheckinDisplay() {
+                document.getElementById('consecutive-days').textContent = checkinData.consecutiveDays;
+                document.getElementById('total-days').textContent = checkinData.totalDays;
+                
+                // 更新今日运势显示
+                if (checkinData.todayFortune) {
+                    document.getElementById('today-fortune').textContent = checkinData.todayFortune.level;
+                    document.getElementById('fortune-level').textContent = checkinData.todayFortune.level;
+                    document.getElementById('fortune-message').textContent = checkinData.todayFortune.message;
+                    document.getElementById('fortune-message-en').textContent = checkinData.todayFortune.messageEn;
+                    
+                    // 设置运势颜色
+                    const fortuneLevel = document.getElementById('fortune-level');
+                    fortuneLevel.className = 'fortune-level';
+                    switch(checkinData.todayFortune.level) {
+                        case '§大凶§':
+                            fortuneLevel.classList.add('fortune-daxiong');
+                            break;
+                        case '§凶§':
+                            fortuneLevel.classList.add('fortune-xiong');
+                            break;
+                        case '§中平§':
+                            fortuneLevel.classList.add('fortune-zhongping');
+                            break;
+                        case '§小吉§':
+                            fortuneLevel.classList.add('fortune-xiaoji');
+                            break;
+                        case '§大吉§':
+                            fortuneLevel.classList.add('fortune-daji');
+                            break;
+                    }
+                }
+                
+                // 更新打卡历史
+                const historyList = document.getElementById('checkin-history-list');
+                historyList.innerHTML = '';
+                
+                if (checkinData.history.length === 0) {
+                    const noRecordZh = document.createElement('li');
+                    noRecordZh.innerHTML = '<span class="checkin-date">暂无记录</span><span class="checkin-fortune">-</span>';
+                    noRecordZh.setAttribute('data-lang', 'zh');
+                    
+                    const noRecordEn = document.createElement('li');
+                    noRecordEn.innerHTML = '<span class="checkin-date">No records</span><span class="checkin-fortune">-</span>';
+                    noRecordEn.setAttribute('data-lang', 'en');
+                    noRecordEn.style.display = 'none';
+                    
+                    historyList.appendChild(noRecordZh);
+                    historyList.appendChild(noRecordEn);
+                } else {
+                    // 显示最近7天的记录
+                    const recentHistory = checkinData.history.slice(-7).reverse();
+                    recentHistory.forEach(record => {
+                        const listItem = document.createElement('li');
+                        listItem.innerHTML = `<span class="checkin-date">${record.date}</span><span class="checkin-fortune">${record.fortune}</span>`;
+                        historyList.appendChild(listItem);
+                    });
+                }
+                
+                // 检查今天是否已经打卡
+                const today = new Date().toDateString();
+                if (checkinData.lastCheckinDate === today) {
+                    document.getElementById('checkin-btn').disabled = true;
+                    document.getElementById('checkin-btn-en').disabled = true;
+                    document.getElementById('checkin-btn').textContent = '今日已打卡';
+                    document.getElementById('checkin-btn-en').textContent = 'Already Checked-in Today';
+                } else {
+                    document.getElementById('checkin-btn').disabled = false;
+                    document.getElementById('checkin-btn-en').disabled = false;
+                    document.getElementById('checkin-btn').textContent = '抽签打卡';
+                    document.getElementById('checkin-btn-en').textContent = 'Draw Fortune & Check-in';
+                }
+            }
+            
+            // 随机生成运势
+            function generateFortune() {
+                const fortunes = [
+                    {
+                        level: '§大凶§',
+                        message: '今日运势不佳，诸事不宜，宜静不宜动',
+                        messageEn: 'Bad luck today, avoid major decisions, stay calm'
+                    },
+                    {
+                        level: '§凶§',
+                        message: '今日运势稍差，小心谨慎，避免冒险',
+                        messageEn: 'Slightly bad luck today, be cautious, avoid risks'
+                    },
+                    {
+                        level: '§中平§',
+                        message: '今日运势平平，稳扎稳打，静待时机',
+                        messageEn: 'Average luck today, steady progress, wait for opportunities'
+                    },
+                    {
+                        level: '§小吉§',
+                        message: '今日运势不错，小有收获，宜积极行动',
+                        messageEn: 'Good luck today, small gains, take positive action'
+                    },
+                    {
+                        level: '§大吉§',
+                        message: '今日运势极佳，万事顺利，心想事成',
+                        messageEn: 'Excellent luck today, everything goes smoothly, wishes come true'
+                    }
+                ];
+                
+                // 权重：大凶10%，凶20%，中平30%，小吉25%，大吉15%
+                const weights = [0.1, 0.2, 0.3, 0.25, 0.15];
+                let random = Math.random();
+                let cumulativeWeight = 0;
+                
+                for (let i = 0; i < weights.length; i++) {
+                    cumulativeWeight += weights[i];
+                    if (random <= cumulativeWeight) {
+                        return fortunes[i];
+                    }
+                }
+                
+                // 默认返回中平
+                return fortunes[2];
+            }
+            
+            // 处理打卡按钮点击
+            function handleCheckin() {
+                const today = new Date().toDateString();
+                
+                // 检查是否已经打卡
+                if (checkinData.lastCheckinDate === today) {
+                    alert('今天已经打卡过了！');
+                    return;
+                }
+                
+                // 生成运势
+                const fortune = generateFortune();
+                
+                // 更新连续打卡天数
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                const yesterdayString = yesterday.toDateString();
+                
+                if (checkinData.lastCheckinDate === yesterdayString) {
+                    checkinData.consecutiveDays++;
+                } else if (checkinData.lastCheckinDate !== today) {
+                    checkinData.consecutiveDays = 1;
+                }
+                
+                // 更新总打卡天数
+                checkinData.totalDays++;
+                
+                // 更新最后打卡日期和今日运势
+                checkinData.lastCheckinDate = today;
+                checkinData.todayFortune = fortune;
+                
+                // 添加到历史记录
+                checkinData.history.push({
+                    date: new Date().toLocaleDateString('zh-CN'),
+                    fortune: fortune.level
+                });
+                
+                // 保存数据并更新显示
+                saveCheckinData();
+                updateCheckinDisplay();
+                
+                // 显示打卡成功消息
+                alert(`打卡成功！\n今日运势：${fortune.level}\n${fortune.message}`);
+            }
+            
+            // 绑定打卡按钮事件
+            document.getElementById('checkin-btn').addEventListener('click', handleCheckin);
+            document.getElementById('checkin-btn-en').addEventListener('click', handleCheckin);
+            
+            // 初始化
+            loadCheckinData();
+        });
+    </script>
 </body>
 </html>
-
-
-
-
