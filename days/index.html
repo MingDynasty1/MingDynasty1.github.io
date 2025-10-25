@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <title>大明日历 | MingDynasty</title>
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "楷体", "宋体", serif;
+            background-color: #f5f0e6; /* 米黄色背景，类似宣纸 */
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.05"><path d="M20,20 C40,0 60,0 80,20 C100,40 100,60 80,80 C60,100 40,100 20,80 C0,60 0,40 20,20 Z" fill="none" stroke="%238b0000" stroke-width="2"/></svg>');
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #fff;
+            border: 1px solid #d9c7a7;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            position: relative;
+        }
+        
+        /* 明朝风格装饰 */
+        .decoration-top, .decoration-bottom {
+            height: 20px;
+            background: linear-gradient(90deg, #8b0000, #b22222, #8b0000);
+            margin: 0 -30px;
+            position: relative;
+        }
+        
+        .decoration-top::before, .decoration-bottom::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background-color: #d4af37;
+        }
+        
+        .decoration-top::after, .decoration-bottom::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background-color: #d4af37;
+        }
+        
+        /* 标题样式 */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #8b0000;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            color: #8b0000;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            letter-spacing: 5px;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            color: #666;
+        }
+        
+        /* 日历样式 */
+        .calendar-section {
+            margin-bottom: 40px;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px 15px;
+            background-color: #f9f3e9;
+            border: 1px solid #d9c7a7;
+            border-radius: 5px;
+        }
+        
+        .calendar-header h2 {
+            color: #8b0000;
+            font-size: 1.8rem;
+        }
+        
+        .calendar-nav button {
+            background-color: #8b0000;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            margin: 0 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background-color 0.3s;
+        }
+        
+        .calendar-nav button:hover {
+            background-color: #a52a2a;
+        }
+        
+        .calendar {
+            width: 100%;
+            border-collapse: collapse;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .calendar th {
+            background-color: #8b0000;
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-weight: normal;
+        }
+        
+        .calendar td {
+            border: 1px solid #d9c7a7;
+            padding: 15px 10px;
+            text-align: center;
+            vertical-align: top;
+            height: 100px;
+            background-color: #fff;
+            transition: all 0.2s;
+        }
+        
+        .calendar td:hover {
+            background-color: #f9f3e9;
+            transform: scale(1.02);
+        }
+        
+        .calendar .other-month {
+            color: #ccc;
+            background-color: #f9f9f9;
+        }
+        
+        .calendar .today {
+            background-color: #f9f3e9;
+            font-weight: bold;
+            position: relative;
+            box-shadow: inset 0 0 0 2px #8b0000;
+        }
+        
+        .calendar .today::after {
+            content: "今日";
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            font-size: 0.7rem;
+            color: #8b0000;
+            background-color: #f9f3e9;
+            padding: 1px 4px;
+            border-radius: 3px;
+        }
+        
+        .date-number {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        
+        /* 跳转日期区域样式 */
+        .jump-section {
+            padding: 25px;
+            background-color: #f9f3e9;
+            border: 1px solid #d9c7a7;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+        
+        .jump-section h2 {
+            color: #8b0000;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #d9c7a7;
+            text-align: center;
+        }
+        
+        .jump-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .jump-form label {
+            font-weight: bold;
+            color: #555;
+        }
+        
+        .jump-form select, .jump-form input {
+            padding: 10px;
+            border: 1px solid #d9c7a7;
+            border-radius: 4px;
+            font-family: inherit;
+            background-color: white;
+        }
+        
+        .jump-form button {
+            background-color: #8b0000;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        .jump-form button:hover {
+            background-color: #a52a2a;
+        }
+        
+        /* 页脚样式 */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #d9c7a7;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .calendar td {
+                height: 80px;
+                padding: 10px 5px;
+            }
+            
+            .date-number {
+                font-size: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .calendar-header h2 {
+                font-size: 1.5rem;
+            }
+            
+            .jump-form {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .calendar td {
+                height: 60px;
+                padding: 5px 2px;
+            }
+            
+            .date-number {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="decoration-top"></div>
+        
+        <div class="header">
+            <h1>大明历</h1>
+            <p>传承中华文化，记录岁月时光</p>
+        </div>
+        
+        <div class="jump-section">
+            <h2>跳转日期</h2>
+            <div class="jump-form">
+                <label for="jump-year">年份：</label>
+                <select id="jump-year">
+                    <!-- 年份选项将通过JavaScript动态生成 -->
+                </select>
+                
+                <label for="jump-month">月份：</label>
+                <select id="jump-month">
+                    <option value="0">1月</option>
+                    <option value="1">2月</option>
+                    <option value="2">3月</option>
+                    <option value="3">4月</option>
+                    <option value="4">5月</option>
+                    <option value="5">6月</option>
+                    <option value="6">7月</option>
+                    <option value="7">8月</option>
+                    <option value="8">9月</option>
+                    <option value="9">10月</option>
+                    <option value="10">11月</option>
+                    <option value="11">12月</option>
+                </select>
+                
+                <button type="button" id="jump-btn">跳转</button>
+            </div>
+        </div>
+        
+        <div class="calendar-section">
+            <div class="calendar-header">
+                <h2 id="current-month">2023年6月</h2>
+                <div class="calendar-nav">
+                    <button id="prev-month">上个月</button>
+                    <button id="today-btn">今日</button>
+                    <button id="next-month">下个月</button>
+                </div>
+            </div>
+            <table class="calendar" id="calendar">
+                <!-- 日历内容将通过JavaScript动态生成 -->
+            </table>
+        </div>
+        
+        <div class="footer">
+            <p> © 2013-2025 MingDynasty,Inc. 大明日历 | 传承中华文化，记录岁月时光</p>
+        </div>
+        
+        <div class="decoration-bottom"></div>
+    </div>
+
+    <script>
+        // 日历功能
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化日历
+            let currentDate = new Date();
+            renderCalendar(currentDate);
+            
+            // 初始化年份选择
+            initYearSelectors();
+            
+            // 绑定事件
+            document.getElementById('prev-month').addEventListener('click', function() {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+                renderCalendar(currentDate);
+            });
+            
+            document.getElementById('next-month').addEventListener('click', function() {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                renderCalendar(currentDate);
+            });
+            
+            document.getElementById('today-btn').addEventListener('click', function() {
+                currentDate = new Date();
+                renderCalendar(currentDate);
+                updateJumpSelectors(currentDate);
+            });
+            
+            // 跳转按钮事件
+            document.getElementById('jump-btn').addEventListener('click', jumpToDate);
+        });
+        
+        // 渲染日历
+        function renderCalendar(date) {
+            const calendarEl = document.getElementById('calendar');
+            const currentMonthEl = document.getElementById('current-month');
+            
+            // 设置当前月份显示
+            const year = date.getFullYear();
+            const month = date.getMonth();
+            currentMonthEl.textContent = `${year}年${month + 1}月`;
+            
+            // 更新跳转选择器
+            updateJumpSelectors(date);
+            
+            // 清空日历
+            calendarEl.innerHTML = '';
+            
+            // 创建表头
+            const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+            const headerRow = document.createElement('tr');
+            weekdays.forEach(day => {
+                const th = document.createElement('th');
+                th.textContent = day;
+                headerRow.appendChild(th);
+            });
+            calendarEl.appendChild(headerRow);
+            
+            // 获取当月第一天和最后一天
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            
+            // 获取第一天是星期几（0-6，0是星期日）
+            const firstDayOfWeek = firstDay.getDay();
+            
+            // 获取上个月的最后几天
+            const prevMonthLastDay = new Date(year, month, 0).getDate();
+            
+            // 创建日历行
+            let currentRow = document.createElement('tr');
+            calendarEl.appendChild(currentRow);
+            
+            // 添加上个月的日期
+            for (let i = firstDayOfWeek - 1; i >= 0; i--) {
+                const cell = document.createElement('td');
+                cell.className = 'other-month';
+                cell.innerHTML = `<div class="date-number">${prevMonthLastDay - i}</div>`;
+                currentRow.appendChild(cell);
+            }
+            
+            // 添加当月的日期
+            const today = new Date();
+            for (let day = 1; day <= lastDay.getDate(); day++) {
+                // 如果是新的一周，创建新行
+                if ((firstDayOfWeek + day - 1) % 7 === 0 && day !== 1) {
+                    currentRow = document.createElement('tr');
+                    calendarEl.appendChild(currentRow);
+                }
+                
+                const cell = document.createElement('td');
+                const cellDate = new Date(year, month, day);
+                
+                // 标记今天
+                if (cellDate.toDateString() === today.toDateString()) {
+                    cell.className = 'today';
+                }
+                
+                cell.innerHTML = `<div class="date-number">${day}</div>`;
+                currentRow.appendChild(cell);
+            }
+            
+            // 添加下个月的日期
+            const remainingCells = 7 - currentRow.cells.length;
+            for (let day = 1; day <= remainingCells; day++) {
+                const cell = document.createElement('td');
+                cell.className = 'other-month';
+                cell.innerHTML = `<div class="date-number">${day}</div>`;
+                currentRow.appendChild(cell);
+            }
+        }
+        
+        // 初始化年份选择器
+        function initYearSelectors() {
+            const currentYear = new Date().getFullYear();
+            const jumpYearSelect = document.getElementById('jump-year');
+            
+            // 添加过去10年和未来10年的选项
+            for (let year = currentYear - 10; year <= currentYear + 10; year++) {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year + '年';
+                jumpYearSelect.appendChild(option);
+            }
+            
+            // 设置默认选中当前年份
+            jumpYearSelect.value = currentYear;
+        }
+        
+        // 更新跳转选择器
+        function updateJumpSelectors(date) {
+            document.getElementById('jump-year').value = date.getFullYear();
+            document.getElementById('jump-month').value = date.getMonth();
+        }
+        
+        // 跳转到指定日期
+        function jumpToDate() {
+            const year = parseInt(document.getElementById('jump-year').value);
+            const month = parseInt(document.getElementById('jump-month').value);
+            
+            const jumpDate = new Date(year, month, 1);
+            renderCalendar(jumpDate);
+        }
+    </script>
+</body>
+</html>
