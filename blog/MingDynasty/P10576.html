@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P10576 题解 | MingDynasty</title>
+      <link rel="icon" href="https://mingdynasty1.github.io/000000000000000000.png" type="image/png">
+    <style>
+        :root {
+            --bg-color: #f5ecd7;
+            --text-color: #3c2f1e;
+            --accent-color: #8b0000;
+            --border-color: #8b4513;
+            --code-bg: #f9f3e9;
+        }
+
+        .dark-mode {
+            --bg-color: #2d2418;
+            --text-color: #e8d8c3;
+            --accent-color: #d4a76a;
+            --border-color: #a67c52;
+            --code-bg: #3c2f1e;
+        }
+
+        body {
+            font-family: "SimSun", "宋体", serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            transition: all 0.3s ease;
+            max-width: 900px;
+            margin: 0 auto;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            padding: 30px;
+            position: relative;
+        }
+
+        h1 {
+            color: var(--accent-color);
+            text-align: center;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            font-size: 2.2em;
+        }
+
+        h2 {
+            color: var(--accent-color);
+            border-left: 5px solid var(--border-color);
+            padding-left: 10px;
+            margin-top: 30px;
+        }
+
+        .update-info {
+            background-color: rgba(139, 69, 19, 0.1);
+            border-left: 4px solid var(--border-color);
+            padding: 10px 15px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+
+        a {
+            color: #8b4513;
+            text-decoration: none;
+            border-bottom: 1px dotted #8b4513;
+        }
+
+        .dark-mode a {
+            color: #d4a76a;
+            border-bottom-color: #d4a76a;
+        }
+
+        pre {
+            background-color: var(--code-bg);
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            overflow-x: auto;
+            border-radius: 5px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        code {
+            font-family: "Courier New", monospace;
+            background-color: var(--code-bg);
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--accent-color);
+            color: var(--bg-color);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: inherit;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .theme-toggle:hover {
+            opacity: 0.9;
+        }
+
+        .children-day {
+            text-align: center;
+            margin: 20px 0;
+            color: var(--accent-color);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .dark-mode .footer {
+            color: #aaa;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .theme-toggle {
+                position: static;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" id="themeToggle">🌙</button>
+    
+    <h1>儿童节快乐题解</h1>
+    
+    <div class="children-day">
+        <p>祝各位 OIer 儿童节快乐！在儿童节切掉本题！</p>
+    </div>
+    
+    <div class="update-info">
+        <p>upd on 2025.5.30：补充计算时的注意点。</p>
+        <p>upd on 2025.5.31：又到了一年中的儿童节，本蒟蒻祝各位儿童节快乐，在儿童节切掉本题。</p>
+    </div>
+    
+    <h2>前言：</h2>
+    <p>一名蒟蒻到家的 Oier 为这个题花费了半小时。</p>
+    <p><a href="https://www.luogu.com.cn/problem/P10576">题目链接</a></p>
+    <p>叫你输出满足"一个数加 10120300500 是完全平方数且这个数减 10120300500 也是完全平方数"的这些数的和。</p>
+    
+    <h2>思路：</h2>
+    <p>我们把每次需要加的数看为 n。</p>
+    <p>由于你不知道最大的 n 有多大，所以我们希望从 n-10120300500 或 n+10120300500 来突破。把 sqrt(n-10120300500) 看作 a，sqrt(n+10120300500) 看作 b，那么 a²-b² 根据平方差公式可得结果是 (a+b)(a-b)=20240601000，枚举 (a+b) 即可。遇到正确的 n 直接加入答案就可以了。</p>
+    <p>最终由于这个题是结果填空题，把最终的结果输出就能 AC。注意：真实计算需要使用 long long 计算，在此本蒟蒻已经帮你们算过了。</p>
+    <p><strong>由于答案过大，需要转成字符串输出。</strong></p>
+    
+    <h2>AC代码：</h2>
+    <pre><code>#include&lt;bits/stdc++.h&gt;
+using namespace std;
+int main(){
+    cout&lt;&lt;"37044368843012180000";
+    return 0;
+}</code></pre>
+    
+    <p>珍惜生命，远离抄袭。</p>
+    
+    <div class="footer">
+        <p>© 2013-2025 MingDynasty,Inc. P10576 儿童节快乐题解 | 明朝风格界面</p>
+    </div>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        // 检查本地存储的主题偏好
+        if (localStorage.getItem('theme') === 'dark') {
+            body.classList.add('dark-mode');
+            themeToggle.textContent = '☀️';
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+                themeToggle.textContent = '☀️';
+            } else {
+                localStorage.setItem('theme', 'light');
+                themeToggle.textContent = '🌙';
+            }
+        });
+    </script>
+</body>
+</html>
