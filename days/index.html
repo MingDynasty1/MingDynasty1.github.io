@@ -3,9 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
     <title>大明日历 | MingDynasty</title>
     <style>
+        /* CSS变量定义 */
+        :root {
+            --bg-color: #f5f0e6;
+            --container-bg: #fff;
+            --text-color: #333;
+            --border-color: #d9c7a7;
+            --primary-color: #8b0000;
+            --primary-hover: #a52a2a;
+            --accent-color: #d4af37;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --header-bg: #f9f3e9;
+            --calendar-bg: #fff;
+            --calendar-hover: #f9f3e9;
+            --other-month-bg: #f9f9f9;
+            --other-month-color: #ccc;
+            --today-bg: #f9f3e9;
+            --today-color: #8b0000;
+        }
+
+        /* 暗色主题变量 */
+        .dark-theme {
+            --bg-color: #1a1a1a;
+            --container-bg: #2d2d2d;
+            --text-color: #e0e0e0;
+            --border-color: #555;
+            --primary-color: #c62828;
+            --primary-hover: #e53935;
+            --accent-color: #ffd54f;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --header-bg: #3d3d3d;
+            --calendar-bg: #2d2d2d;
+            --calendar-hover: #3d3d3d;
+            --other-month-bg: #252525;
+            --other-month-color: #777;
+            --today-bg: #3d3d3d;
+            --today-color: #ff6b6b;
+        }
+
         /* 基础样式 */
         * {
             margin: 0;
@@ -15,29 +53,36 @@
         
         body {
             font-family: "楷体", "宋体", serif;
-            background-color: #f5f0e6; /* 米黄色背景，类似宣纸 */
-            color: #333;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             line-height: 1.6;
             padding: 20px;
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.05"><path d="M20,20 C40,0 60,0 80,20 C100,40 100,60 80,80 C60,100 40,100 20,80 C0,60 0,40 20,20 Z" fill="none" stroke="%238b0000" stroke-width="2"/></svg>');
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .dark-theme body {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.05"><path d="M20,20 C40,0 60,0 80,20 C100,40 100,60 80,80 C60,100 40,100 20,80 C0,60 0,40 20,20 Z" fill="none" stroke="%23c62828" stroke-width="2"/></svg>');
         }
         
         .container {
             max-width: 1000px;
             margin: 0 auto;
-            background-color: #fff;
-            border: 1px solid #d9c7a7;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            background-color: var(--container-bg);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 0 15px var(--shadow-color);
             padding: 30px;
             position: relative;
+            transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
         }
         
         /* 明朝风格装饰 */
         .decoration-top, .decoration-bottom {
             height: 20px;
-            background: linear-gradient(90deg, #8b0000, #b22222, #8b0000);
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-hover), var(--primary-color));
             margin: 0 -30px;
             position: relative;
+            transition: background 0.3s;
         }
         
         .decoration-top::before, .decoration-bottom::before {
@@ -47,7 +92,8 @@
             left: 0;
             right: 0;
             height: 5px;
-            background-color: #d4af37;
+            background-color: var(--accent-color);
+            transition: background-color 0.3s;
         }
         
         .decoration-top::after, .decoration-bottom::after {
@@ -57,7 +103,8 @@
             left: 0;
             right: 0;
             height: 5px;
-            background-color: #d4af37;
+            background-color: var(--accent-color);
+            transition: background-color 0.3s;
         }
         
         /* 标题样式 */
@@ -65,21 +112,49 @@
             text-align: center;
             margin-bottom: 30px;
             padding-bottom: 20px;
-            border-bottom: 2px solid #8b0000;
+            border-bottom: 2px solid var(--primary-color);
             position: relative;
+            transition: border-color 0.3s;
         }
         
         .header h1 {
             font-size: 2.5rem;
-            color: #8b0000;
+            color: var(--primary-color);
             margin-bottom: 10px;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
             letter-spacing: 5px;
+            transition: color 0.3s;
         }
         
         .header p {
             font-size: 1.2rem;
-            color: #666;
+            color: var(--text-color);
+            transition: color 0.3s;
+        }
+        
+        /* 主题切换按钮 */
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .theme-toggle:hover {
+            background-color: var(--primary-hover);
+            transform: scale(1.1);
         }
         
         /* 日历样式 */
@@ -93,18 +168,20 @@
             align-items: center;
             margin-bottom: 20px;
             padding: 10px 15px;
-            background-color: #f9f3e9;
-            border: 1px solid #d9c7a7;
+            background-color: var(--header-bg);
+            border: 1px solid var(--border-color);
             border-radius: 5px;
+            transition: background-color 0.3s, border-color 0.3s;
         }
         
         .calendar-header h2 {
-            color: #8b0000;
+            color: var(--primary-color);
             font-size: 1.8rem;
+            transition: color 0.3s;
         }
         
         .calendar-nav button {
-            background-color: #8b0000;
+            background-color: var(--primary-color);
             color: white;
             border: none;
             padding: 8px 15px;
@@ -116,48 +193,50 @@
         }
         
         .calendar-nav button:hover {
-            background-color: #a52a2a;
+            background-color: var(--primary-hover);
         }
         
         .calendar {
             width: 100%;
             border-collapse: collapse;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 0 10px var(--shadow-color);
+            transition: box-shadow 0.3s;
         }
         
         .calendar th {
-            background-color: #8b0000;
+            background-color: var(--primary-color);
             color: white;
             padding: 12px;
             text-align: center;
             font-weight: normal;
+            transition: background-color 0.3s;
         }
         
         .calendar td {
-            border: 1px solid #d9c7a7;
+            border: 1px solid var(--border-color);
             padding: 15px 10px;
             text-align: center;
             vertical-align: top;
             height: 100px;
-            background-color: #fff;
+            background-color: var(--calendar-bg);
             transition: all 0.2s;
         }
         
         .calendar td:hover {
-            background-color: #f9f3e9;
+            background-color: var(--calendar-hover);
             transform: scale(1.02);
         }
         
         .calendar .other-month {
-            color: #ccc;
-            background-color: #f9f9f9;
+            color: var(--other-month-color);
+            background-color: var(--other-month-bg);
         }
         
         .calendar .today {
-            background-color: #f9f3e9;
+            background-color: var(--today-bg);
             font-weight: bold;
             position: relative;
-            box-shadow: inset 0 0 0 2px #8b0000;
+            box-shadow: inset 0 0 0 2px var(--today-color);
         }
         
         .calendar .today::after {
@@ -166,8 +245,8 @@
             bottom: 5px;
             right: 5px;
             font-size: 0.7rem;
-            color: #8b0000;
-            background-color: #f9f3e9;
+            color: var(--today-color);
+            background-color: var(--today-bg);
             padding: 1px 4px;
             border-radius: 3px;
         }
@@ -180,19 +259,21 @@
         /* 跳转日期区域样式 */
         .jump-section {
             padding: 25px;
-            background-color: #f9f3e9;
-            border: 1px solid #d9c7a7;
+            background-color: var(--header-bg);
+            border: 1px solid var(--border-color);
             border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 5px 15px var(--shadow-color);
             margin-bottom: 30px;
+            transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
         }
         
         .jump-section h2 {
-            color: #8b0000;
+            color: var(--primary-color);
             margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 1px solid #d9c7a7;
+            border-bottom: 1px solid var(--border-color);
             text-align: center;
+            transition: color 0.3s, border-color 0.3s;
         }
         
         .jump-form {
@@ -205,19 +286,22 @@
         
         .jump-form label {
             font-weight: bold;
-            color: #555;
+            color: var(--text-color);
+            transition: color 0.3s;
         }
         
         .jump-form select, .jump-form input {
             padding: 10px;
-            border: 1px solid #d9c7a7;
+            border: 1px solid var(--border-color);
             border-radius: 4px;
             font-family: inherit;
-            background-color: white;
+            background-color: var(--container-bg);
+            color: var(--text-color);
+            transition: background-color 0.3s, border-color 0.3s, color 0.3s;
         }
         
         .jump-form button {
-            background-color: #8b0000;
+            background-color: var(--primary-color);
             color: white;
             border: none;
             padding: 10px 20px;
@@ -229,7 +313,7 @@
         }
         
         .jump-form button:hover {
-            background-color: #a52a2a;
+            background-color: var(--primary-hover);
         }
         
         /* 页脚样式 */
@@ -237,9 +321,10 @@
             text-align: center;
             margin-top: 40px;
             padding-top: 20px;
-            border-top: 1px solid #d9c7a7;
-            color: #666;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-color);
             font-size: 0.9rem;
+            transition: color 0.3s, border-color 0.3s;
         }
         
         /* 响应式设计 */
@@ -264,6 +349,11 @@
             .jump-form {
                 flex-direction: column;
             }
+            
+            .theme-toggle {
+                top: 10px;
+                right: 10px;
+            }
         }
         
         @media (max-width: 480px) {
@@ -284,6 +374,8 @@
 </head>
 <body>
     <div class="container">
+        <button class="theme-toggle" id="theme-toggle">🌙</button>
+        
         <div class="decoration-top"></div>
         
         <div class="header">
@@ -369,6 +461,38 @@
             
             // 跳转按钮事件
             document.getElementById('jump-btn').addEventListener('click', jumpToDate);
+            
+            // 主题切换功能
+            const themeToggle = document.getElementById('theme-toggle');
+            const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+            
+            // 检查本地存储的主题偏好
+            const currentTheme = localStorage.getItem('theme');
+            if (currentTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                themeToggle.textContent = '☀️';
+            } else if (currentTheme === 'light') {
+                document.body.classList.remove('dark-theme');
+                themeToggle.textContent = '🌙';
+            } else if (prefersDarkScheme.matches) {
+                // 如果用户未设置偏好但系统偏好暗色模式
+                document.body.classList.add('dark-theme');
+                themeToggle.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            }
+            
+            // 切换主题
+            themeToggle.addEventListener('click', function() {
+                if (document.body.classList.contains('dark-theme')) {
+                    document.body.classList.remove('dark-theme');
+                    themeToggle.textContent = '🌙';
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    document.body.classList.add('dark-theme');
+                    themeToggle.textContent = '☀️';
+                    localStorage.setItem('theme', 'dark');
+                }
+            });
         });
         
         // 渲染日历
