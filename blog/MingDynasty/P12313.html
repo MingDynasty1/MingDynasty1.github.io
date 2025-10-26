@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>P12133 题解 | MingDynasty</title>
+    <title>P12313 题解 | MingDynasty</title>
       <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -216,7 +216,7 @@
     </style>
 </head>
 <body class="light-mode">
-    <button class="toggle-btn" onclick="toggleTheme()">切换到暗色模式</button>
+    <button class="toggle-btn" onclick="toggleTheme()">🌙</button>
     
     <div class="container">
         <div class="header">
@@ -245,7 +245,7 @@
         <div class="code-block">
             <pre><code>/*
     Author: MingDynasty
-    Problem: https://www.luogu.com.cn/problem/P12133
+    Problem: https://www.luogu.com.cn/problem/P12313
 */
 #include&lt;bits/stdc++.h&gt;
 #define eps 1e-8
@@ -296,11 +296,11 @@ int main(){
             if (body.classList.contains('light-mode')) {
                 body.classList.remove('light-mode');
                 body.classList.add('dark-mode');
-                button.textContent = '切换到亮色模式';
+                button.textContent = '☀️';
             } else {
                 body.classList.remove('dark-mode');
                 body.classList.add('light-mode');
-                button.textContent = '切换到暗色模式';
+                button.textContent = '🌙';
             }
         }
         
