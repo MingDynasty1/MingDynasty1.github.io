@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P12133 题解 | MingDynasty</title>
+      <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "SimSun", "宋体", serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .light-mode {
+            background-color: #f8f4e9;
+            color: #333;
+        }
+        
+        .dark-mode {
+            background-color: #1a1a1a;
+            color: #e0d6c2;
+        }
+        
+        .container {
+            border: 2px solid #8b4513;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background-color: inherit;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #8b4513;
+        }
+        
+        h1 {
+            color: #8b4513;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .dark-mode h1 {
+            color: #d2691e;
+        }
+        
+        h2 {
+            color: #8b4513;
+            margin: 20px 0 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #8b4513;
+            font-size: 22px;
+        }
+        
+        .dark-mode h2 {
+            color: #d2691e;
+            border-bottom-color: #d2691e;
+        }
+        
+        p, ul {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        ul {
+            padding-left: 25px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .code-block {
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            line-height: 1.4;
+        }
+        
+        .dark-mode .code-block {
+            background-color: #2d2d2d;
+            border-color: #555;
+            color: #e0e0e0;
+        }
+        
+        .toggle-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 16px;
+            background-color: #8b4513;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        
+        .toggle-btn:hover {
+            background-color: #a0522d;
+        }
+        
+        .dark-mode .toggle-btn {
+            background-color: #d2691e;
+        }
+        
+        .dark-mode .toggle-btn:hover {
+            background-color: #cd853f;
+        }
+        
+        .problem-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: #8b4513;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .dark-mode .problem-link {
+            color: #d2691e;
+        }
+        
+        .problem-link:hover {
+            text-decoration: underline;
+        }
+        
+        .declaration {
+            font-style: italic;
+            color: #666;
+            margin: 10px 0;
+        }
+        
+        .dark-mode .declaration {
+            color: #aaa;
+        }
+        
+        .complexity {
+            font-weight: bold;
+            color: #8b4513;
+            margin: 15px 0;
+        }
+        
+        .dark-mode .complexity {
+            color: #d2691e;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid #8b4513;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .dark-mode .footer {
+            color: #aaa;
+            border-top-color: #d2691e;
+        }
+        
+        .math-formula {
+            text-align: center;
+            margin: 15px 0;
+            padding: 10px;
+            background-color: rgba(139, 69, 19, 0.1);
+            border-radius: 4px;
+        }
+        
+        .dark-mode .math-formula {
+            background-color: rgba(210, 105, 30, 0.1);
+        }
+        
+        .note {
+            background-color: #fff9e6;
+            border-left: 4px solid #ffcc00;
+            padding: 12px;
+            margin: 15px 0;
+        }
+        
+        .dark-mode .note {
+            background-color: #332900;
+            border-left-color: #ffcc00;
+        }
+        
+        .author {
+            text-align: right;
+            font-style: italic;
+            margin-top: 10px;
+            color: #8b4513;
+        }
+        
+        .dark-mode .author {
+            color: #d2691e;
+        }
+    </style>
+</head>
+<body class="light-mode">
+    <button class="toggle-btn" onclick="toggleTheme()">切换到暗色模式</button>
+    
+    <div class="container">
+        <div class="header">
+            <h1>P12133 利息计算问题</h1>
+            <a href="https://www.luogu.com.cn/P12133" class="problem-link" target="_blank">题目链接</a>
+        </div>
+        
+        <p class="declaration">毒瘤精度题。</p>
+        
+        <h2>题目思路</h2>
+        <p>本身并不难想。根据小学知识，我们知道利息公式为：</p>
+        
+        <div class="math-formula">
+            \[ \text{利息} = \text{利率} \times \text{本金} \times \text{时间} \]
+        </div>
+        
+        <p>所以每天的钱我们可以根据这个公式算出来，再加上本金。但是，毒瘤就毒瘤在了精度问题，我们可以使用加偏移量的方式来确保正确性，每次再特判利息小于 0.01 的情况就可以了。</p>
+        
+        <div class="note">
+            <p><strong>注意：</strong>由于浮点数精度问题，直接计算可能会导致结果不准确。我们使用偏移量（eps）和向下取整（floor）来确保精度正确。</p>
+        </div>
+        
+        <p class="complexity"><strong>时间复杂度 \(O(M)\)。</strong></p>
+        
+        <h2>完整代码</h2>
+        <div class="code-block">
+            <pre><code>/*
+    Author: MingDynasty
+    Problem: https://www.luogu.com.cn/problem/P12133
+*/
+#include&lt;bits/stdc++.h&gt;
+#define eps 1e-8
+using namespace std;
+int m;
+double sum,a;
+int main(){
+    cin.tie(0)-&gt;sync_with_stdio(0);
+    cin&gt;&gt;m;
+    while(m--){
+        cin&gt;&gt;a;
+        double l=floor(sum*0.00005*100+eps)/100;
+        sum=sum+a+(l&lt;0.01?0:l);
+        printf("%.2lf\n",floor((sum+eps)*100)/100);
+    }
+    return 0;
+}</code></pre>
+        </div>
+        
+        <h2>算法解析</h2>
+        <p>1. <strong>利息计算</strong>：根据公式，利息 = 本金 × 利率 × 时间。这里利率是0.005%，时间按天计算。</p>
+        <p>2. <strong>精度处理</strong>：</p>
+        <ul>
+            <li>使用 <code>eps = 1e-8</code> 作为偏移量，避免浮点数精度误差</li>
+            <li>利息计算：<code>floor(sum*0.00005*100+eps)/100</code></li>
+            <li>特判利息小于0.01的情况，此时不计利息</li>
+            <li>最终结果：<code>floor((sum+eps)*100)/100</code></li>
+        </ul>
+        <p>3. <strong>关键点</strong>：</p>
+        <ul>
+            <li>利率为0.005%，即0.00005</li>
+            <li>利息小于0.01元时不计算（银行规定）</li>
+            <li>使用floor函数和eps偏移量确保精度正确</li>
+        </ul>
+        
+        <p class="author">—— MingDynasty</p>
+        
+        <div class="footer">
+            <p>© 2013-2025 MingDynasty,Inc.P12133 题解</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            const button = document.querySelector('.toggle-btn');
+            
+            if (body.classList.contains('light-mode')) {
+                body.classList.remove('light-mode');
+                body.classList.add('dark-mode');
+                button.textContent = '切换到亮色模式';
+            } else {
+                body.classList.remove('dark-mode');
+                body.classList.add('light-mode');
+                button.textContent = '切换到暗色模式';
+            }
+        }
+        
+        // MathJax配置
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+</body>
+</html>
