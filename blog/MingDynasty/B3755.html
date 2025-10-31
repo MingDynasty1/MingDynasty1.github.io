@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P3755 题解 | MingDynasty</title>
+      <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <style>
+        :root {
+            --primary-color: #8c6d46;
+            --secondary-color: #d4b78c;
+            --bg-color: #f5f1e8;
+            --text-color: #3a3226;
+            --card-bg: #f9f5ed;
+            --border-color: #c4a97a;
+            --shadow-color: rgba(140, 109, 70, 0.2);
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #c4a97a;
+            --secondary-color: #8c6d46;
+            --bg-color: #2a2318;
+            --text-color: #e6dfd1;
+            --card-bg: #352c1e;
+            --border-color: #5d4c32;
+            --shadow-color: rgba(196, 169, 122, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            font-family: 'SimSun', '宋体', serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+            position: relative;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px var(--shadow-color);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--secondary-color);
+            font-style: italic;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 5px 10px;
+            cursor: pointer;
+            color: var(--text-color);
+            font-family: inherit;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+
+        h3 {
+            color: var(--secondary-color);
+            margin: 15px 0 10px;
+            font-size: 1.4rem;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .code-container {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 15px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        code {
+            font-family: 'Courier New', monospace;
+            color: var(--text-color);
+        }
+
+        .algorithm {
+            background-color: var(--bg-color);
+            padding: 15px;
+            border-left: 4px solid var(--primary-color);
+            margin: 15px 0;
+        }
+
+        .example {
+            background-color: var(--bg-color);
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: var(--secondary-color);
+            color: var(--bg-color);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>洛谷 P3755 题解</h1>
+        <div class="subtitle">骨牌放置问题 - 明朝风格设计</div>
+        <button class="theme-toggle" id="themeToggle">切换暗色模式</button>
+    </header>
+
+    <div class="container">
+        <div class="left-column">
+            <section class="card">
+                <h2>题目描述</h2>
+                <p>在一个 n×n 的棋盘上，有 k 个格子有障碍物（位于主对角线上）。现在要用 1×2 的骨牌覆盖棋盘，要求骨牌不能重叠，也不能覆盖到有障碍物的格子上。请输出一种覆盖方案，用数字表示不同的骨牌。</p>
+                
+                <h3>输入格式</h3>
+                <p>第一行两个整数 n, k (1 ≤ n ≤ 500, 0 ≤ k ≤ n)</p>
+                <p>接下来 k 行，每行一个整数，表示障碍物的行号（列号与行号相同）</p>
+                
+                <h3>输出格式</h3>
+                <p>输出一个 n×n 的矩阵，表示覆盖方案。每个骨牌用相同的数字表示，数字从1开始递增。障碍物位置输出0。</p>
+            </section>
+
+            <section class="card">
+                <h2>算法思路</h2>
+                <div class="algorithm">
+                    <p>本题可以采用贪心策略解决：</p>
+                    <ol>
+                        <li>初始化棋盘，标记所有障碍物位置（主对角线上的k个格子）</li>
+                        <li>按行优先顺序遍历棋盘每个格子</li>
+                        <li>对于每个未被覆盖且无障碍的格子：
+                            <ul>
+                                <li>优先尝试向右放置横骨牌（如果右边格子存在且未被覆盖）</li>
+                                <li>如果无法向右放置，则尝试向下放置竖骨牌（如果下边格子存在且未被覆盖）</li>
+                            </ul>
+                        </li>
+                        <li>使用计数器为每个骨牌分配唯一编号</li>
+                    </ol>
+                    <p>这种贪心策略能够保证在题目限制下找到一种可行的骨牌覆盖方案。</p>
+                </div>
+            </section>
+        </div>
+
+        <div class="right-column">
+            <section class="card">
+                <h2>代码实现</h2>
+                <div class="code-container">
+                    <code>
+#include&lt;bits/stdc++.h&gt;<br>
+using namespace std;<br>
+int n,k,ans[555][555];<br>
+bool vis[555][555];<br>
+int main(){<br>
+&nbsp;&nbsp;cin.tie(0)-&gt;sync_with_stdio(0);<br>
+&nbsp;&nbsp;cin&gt;&gt;n&gt;&gt;k;<br>
+&nbsp;&nbsp;for(int i=1;i&lt;=k;i++) vis[i][i]=1;<br>
+&nbsp;&nbsp;int cnt=1;<br>
+&nbsp;&nbsp;for(int i=1;i&lt;=n;i++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for(int j=1;j&lt;=n;j++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(!vis[i][j]){<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(j+1&lt;=n&amp;&amp;!vis[i][j+1]) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ans[i][j]=ans[i][j+1]=cnt++,vis[i][j]=vis[i][j+1]=1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else if(i+1&lt;=n&amp;&amp;!vis[i+1][j]) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ans[i][j]=ans[i+1][j]=cnt++,vis[i][j]=vis[i+1][j]=1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;for(int i=1;i&lt;=n;i++){<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for(int j=1;j&lt;=n;j++) cout&lt;&lt;ans[i][j]&lt;&lt;' ';<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cout&lt;&lt;'\n';<br>
+&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;return 0;<br>
+}
+                    </code>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>示例分析</h2>
+                <div class="example">
+                    <p>假设输入 n=3, k=1，障碍物在(1,1)位置：</p>
+                    <table>
+                        <tr>
+                            <th>坐标</th>
+                            <th>(1,1)</th>
+                            <th>(1,2)</th>
+                            <th>(1,3)</th>
+                        </tr>
+                        <tr>
+                            <th>(2,1)</th>
+                            <th>(2,2)</th>
+                            <th>(2,3)</th>
+                        </tr>
+                        <tr>
+                            <th>(3,1)</th>
+                            <th>(3,2)</th>
+                            <th>(3,3)</th>
+                        </tr>
+                    </table>
+                    <p>可能的输出方案：</p>
+                    <table>
+                        <tr>
+                            <td>0</td>
+                            <td>1</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>2</td>
+                            <td>3</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>4</td>
+                            <td>4</td>
+                        </tr>
+                    </table>
+                    <p>其中数字相同的格子表示同一块骨牌覆盖的位置。</p>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2013-2025 MingDynasty,Inc. B3755 题解 | 大明题解</p>
+    </footer>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        updateButtonText();
+        
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateButtonText();
+        });
+        
+        function updateButtonText() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            themeToggle.textContent = currentTheme === 'light' ? '切换暗色模式' : '切换亮色模式';
+        }
+    </script>
+</body>
+</html>
