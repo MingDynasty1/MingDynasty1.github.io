@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>明P8648 题解 | MingDynasty</title>
+      <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <style>
+        :root {
+            --primary-color: #8B4513;
+            --secondary-color: #D2B48C;
+            --accent-color: #A52A2A;
+            --text-color: #333;
+            --bg-color: #F5F5DC;
+            --card-bg: #FFF8DC;
+            --border-color: #8B4513;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode {
+            --primary-color: #CD853F;
+            --secondary-color: #8B7355;
+            --accent-color: #D2691E;
+            --text-color: #E0D3B8;
+            --bg-color: #2F1B14;
+            --card-bg: #3D2B1F;
+            --border-color: #CD853F;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            font-family: "SimSun", "宋体", serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%238B4513' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            border-bottom: 2px solid var(--border-color);
+            position: relative;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px var(--shadow-color);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--accent-color);
+            font-style: italic;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--primary-color);
+            color: var(--card-bg);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: inherit;
+            box-shadow: 0 2px 5px var(--shadow-color);
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-color);
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+
+        .card h2 {
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .code-container {
+            background-color: #1E1E1E;
+            color: #D4D4D4;
+            border-radius: 5px;
+            padding: 15px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+        }
+
+        .code-keyword {
+            color: #569CD6;
+        }
+
+        .code-comment {
+            color: #6A9955;
+            font-style: italic;
+        }
+
+        .code-string {
+            color: #CE9178;
+        }
+
+        .code-function {
+            color: #DCDCAA;
+        }
+
+        .code-number {
+            color: #B5CEA8;
+        }
+
+        .problem-link {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 4px;
+            text-decoration: none;
+            margin: 10px 0;
+        }
+
+        .problem-link:hover {
+            background-color: var(--accent-color);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            color: var(--accent-color);
+            font-size: 0.9rem;
+        }
+
+        .decoration {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>明朝风格设计</h1>
+            <div class="subtitle">二维差分算法模板与实现</div>
+            <button class="theme-toggle" id="themeToggle">切换暗色模式</button>
+        </header>
+
+        <div class="decoration">※ ※ ※</div>
+
+        <div class="card">
+            <h2>题目信息</h2>
+            <p>这是一道关于二维差分的算法题目，需要计算多个矩形覆盖的总面积。</p>
+            <a href="https://www.luogu.com.cn/problem/P8648" class="problem-link" target="_blank">查看题目 - P8648</a>
+        </div>
+
+        <div class="card">
+            <h2>算法思路</h2>
+            <p>对于这种黄题一般都是比较简单的模板，此题为二维差分的模板。在此处本人默认都会模板。</p>
+            <p>思路：防止 TLE，我们直接开正解。在输入时直接在二维差分数组上修改。在输入后二维前缀和一遍，统计非 0 的数量即可。（不求重叠数量，只求面积，所以不用累加。）</p>
+            <p><strong>时间复杂度：O(n²)</strong></p>
+        </div>
+
+        <div class="card">
+            <h2>代码实现</h2>
+            <div class="code-container">
+                <pre><code>#include&lt;bits/stdc++.h&gt;
+using namespace std;
+const int N=1e4+19;
+int n,m,a[N][N],s[N][N],ans;
+int main(){
+    cin.tie(0)-&gt;sync_with_stdio(0);
+    cin&gt;&gt;n;
+    for(int i=1;i&lt;=n;i++){
+        int x1,y1,x2,y2,d=1;
+        cin&gt;&gt;x1&gt;&gt;y1&gt;&gt;x2&gt;&gt;y2;
+        x1++,y1++,x2++,y2++;
+        s[x1][y1]+=d;
+        s[x1][y2]-=d;
+        s[x2][y1]-=d;
+        s[x2][y2]+=d;
+    }
+    for(int i=1;i&lt;N;i++){
+        for(int j=1;j&lt;N;j++){
+            s[i][j]+=s[i-1][j]+s[i][j-1]-s[i-1][j-1];
+            if(s[i][j]) ans++;
+        }
+    }
+    cout&lt;&lt;ans;
+    return 0;
+}</code></pre>
+            </div>
+            <p style="margin-top: 10px; color: var(--accent-color);">珍惜生命，远离抄袭。</p>
+        </div>
+
+        <div class="decoration">※ ※ ※</div>
+
+        <footer>
+            <p> &copy; 2013-2025 MingDynasty,Inc. P8648 题解</p>
+        </footer>
+    </div>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            
+            if (document.body.classList.contains('dark-mode')) {
+                themeToggle.textContent = '切换亮色模式';
+            } else {
+                themeToggle.textContent = '切换暗色模式';
+            }
+        });
+    </script>
+</body>
+</html>
