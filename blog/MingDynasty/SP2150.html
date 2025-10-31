@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SP2150 题解 | MingDynasty</title>
+      <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <style>
+        :root {
+            --primary-color: #8b0000;
+            --secondary-color: #d4af37;
+            --bg-color: #f5f0e6;
+            --text-color: #3a2615;
+            --border-color: #8b4513;
+            --shadow-color: rgba(139, 69, 19, 0.3);
+            --code-bg: #f9f5eb;
+            --header-bg: #8b0000;
+            --header-text: #f5f0e6;
+        }
+
+        .dark-mode {
+            --primary-color: #c41e3a;
+            --secondary-color: #d4af37;
+            --bg-color: #2a1f15;
+            --text-color: #e8d8c3;
+            --border-color: #8b4513;
+            --shadow-color: rgba(139, 69, 19, 0.5);
+            --code-bg: #3a2a1a;
+            --header-bg: #5a1a1a;
+            --header-text: #e8d8c3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            font-family: "SimSun", "宋体", serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%238b4513' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: var(--bg-color);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            overflow: hidden;
+        }
+
+        header {
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            border-bottom: 3px solid var(--secondary-color);
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--secondary-color);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--text-color);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .problem-info {
+            background-color: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 5px var(--shadow-color);
+        }
+
+        .problem-title {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .problem-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .problem-link:hover {
+            text-decoration: underline;
+        }
+
+        .code-container {
+            background-color: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 20px;
+            margin-top: 20px;
+            position: relative;
+            box-shadow: 0 2px 5px var(--shadow-color);
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .code-title {
+            font-size: 1.3rem;
+            color: var(--primary-color);
+        }
+
+        .copy-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .copy-btn:hover {
+            opacity: 0.9;
+        }
+
+        pre {
+            background-color: var(--code-bg);
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+            font-family: 'Courier New', monospace;
+            line-height: 1.4;
+        }
+
+        code {
+            font-family: 'Courier New', monospace;
+        }
+
+        .explanation {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: var(--code-bg);
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 5px var(--shadow-color);
+        }
+
+        .explanation h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .content {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>明朝风格代码展示</h1>
+            <div class="subtitle">古典美学与现代编程的完美融合</div>
+            <button class="theme-toggle" id="themeToggle">🌙</button>
+        </header>
+        
+        <div class="content">
+            <div class="problem-info">
+                <h2 class="problem-title">SP2150 CIRU - The area of the union of circles</h2>
+                <a href="https://www.luogu.com.cn/problem/SP2150" class="problem-link" target="_blank">题目链接</a>
+                <p>橙到黄难度。</p>
+            </div>
+            
+            <div class="code-container">
+                <div class="code-header">
+                    <h3 class="code-title">C++ 解决方案</h3>
+                    <button class="copy-btn" id="copyBtn">复制代码</button>
+                </div>
+                <pre><code>#include&lt;bits/stdc++.h&gt;
+using namespace std;
+const int MAXN=3e7+1;
+int a[MAXN];
+int main(){
+  int T;
+  cin&gt;&gt;T;
+  while(T--){
+    int n;
+    cin&gt;&gt;n;
+    for(int i=0;i&lt;n;i++) cin&gt;&gt;a[i];
+    map&lt;long long,int&gt;m;
+    m[0]=1;
+    long long p=0,a=0;
+    for(int i=0;i&lt;n;i++){
+      p+=a[i];
+      if(m.find(p-47)!=m.end()) a+=m[p-47];
+      m[p]++;
+    }
+    cout&lt;&lt;a&lt;&lt;'\n';
+  }
+  return 0;
+}</code></pre>
+            </div>
+            
+            <div class="explanation">
+                <h3>题目思路解析</h3>
+                <p>建议食用 STL。</p>
+                <p>求子段和，用前缀和记录，再用 STL 的 map 开一个桶记录数量，查询子段和为 47 时用函数很方便。</p>
+                <p><a href="https://www.luogu.com.cn/record/230809886" target="_blank">附：免费快读模板！</a></p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2013-2025 MingDynasty,Inc. SP2150 题解 | 古典与现代的完美结合</p>
+        </div>
+    </div>
+
+    <script>
+        // 主题切换功能
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            themeToggle.textContent = body.classList.contains('dark-mode') ? '☀️' : '🌙';
+        });
+        
+        // 复制代码功能
+        const copyBtn = document.getElementById('copyBtn');
+        copyBtn.addEventListener('click', () => {
+            const code = document.querySelector('pre code').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = copyBtn.textContent;
+                copyBtn.textContent = '已复制!';
+                setTimeout(() => {
+                    copyBtn.textContent = originalText;
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>
