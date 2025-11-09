@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>大明华容道 | MingDynasty</title>
   <script src="https://cdn.tailwindcss.com"></script>
-        <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+  <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
   <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
   
   <!-- 配置Tailwind自定义颜色和字体 -->
@@ -99,6 +99,7 @@
       <div class="mb-4">
         <p class="text-ming-beige mb-2"><i class="fa fa-signal text-ming-yellow mr-2"></i> 步数: <span id="moveCount" class="font-bold">0</span></p>
         <p class="text-ming-beige mb-2"><i class="fa fa-clock-o text-ming-yellow mr-2"></i> 时间: <span id="timer" class="font-bold">00:00</span></p>
+        <p class="text-ming-beige mb-2"><i class="fa fa-lightbulb-o text-ming-yellow mr-2"></i> 今日提示: <span id="hintCount" class="font-bold">5</span>/5</p>
       </div>
       
       <div class="space-y-2 mb-4">
@@ -106,7 +107,7 @@
           <i class="fa fa-refresh mr-2"></i> 重新开始
         </button>
         <button id="hintBtn" class="w-full bg-ming-blue hover:bg-blue-800 text-ming-beige py-2 px-4 rounded border border-ming-gold transition-all duration-300 flex items-center justify-center">
-          <i class="fa fa-lightbulb-o mr-2"></i> 提示
+          <i class="fa fa-lightbulb-o mr-2"></i> 提示 (<span id="hintBtnCount">5</span>)
         </button>
       </div>
       
@@ -171,6 +172,22 @@
             <p>明朝开国谋士</p>
           </div>
         </div>
+        
+        <div class="flex items-center">
+          <div class="w-4 h-4 bg-purple-600 text-ming-beige rounded-sm flex items-center justify-center font-bold mr-2">李</div>
+          <div>
+            <p class="font-bold text-ming-yellow">李文忠</p>
+            <p>明朝开国名将</p>
+          </div>
+        </div>
+        
+        <div class="flex items-center">
+          <div class="w-4 h-4 bg-teal-600 text-ming-beige rounded-sm flex items-center justify-center font-bold mr-2">汤</div>
+          <div>
+            <p class="font-bold text-ming-yellow">汤和</p>
+            <p>明朝开国名将</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -189,12 +206,17 @@
       </button>
     </div>
   </div>
+  
+  <!-- 底部版权信息 -->
+  <footer class="mt-8 text-center text-ming-brown text-sm">
+    <p>© 2013-2025 MingDynasty,Inc.大明华容道</p>
+  </footer>
 
   <script>
     // 游戏配置
     const config = {
-      gridSize: 4,          // 4x4 网格
-      cellSize: 80,         // 每个格子的大小(像素)
+      gridSize: 6,          // 6x6 网格
+      cellSize: 70,         // 每个格子的大小(像素)
       pieceTypes: {
         // 朱元璋 (2x2)
         zhu: { 
@@ -233,6 +255,24 @@
           width: 1, 
           height: 1 
         },
+        // 李文忠 (1x1)
+        li: { 
+          name: "李文忠", 
+          shortName: "李", 
+          color: "bg-purple-600 text-ming-beige",
+          colorDark: "bg-purple-600/80 text-ming-beige",
+          width: 1, 
+          height: 1 
+        },
+        // 汤和 (1x1)
+        tang: { 
+          name: "汤和", 
+          shortName: "汤", 
+          color: "bg-teal-600 text-ming-beige",
+          colorDark: "bg-teal-600/80 text-ming-beige",
+          width: 1, 
+          height: 1 
+        },
         // 空白位置
         empty: { 
           name: "空白", 
@@ -245,12 +285,14 @@
       }
     };
 
-    // 初始布局 - 4x4 网格
+    // 初始布局 - 6x6 网格
     const initialLayout = [
-      [{type: 'xu', id: 'xu1'}, {type: 'xu', id: 'xu1'}, {type: 'chang', id: 'chang1'}, {type: 'chang', id: 'chang2'}],
-      [{type: 'zhu', id: 'zhu1'}, {type: 'zhu', id: 'zhu1'}, {type: 'chang', id: 'chang1'}, {type: 'chang', id: 'chang2'}],
-      [{type: 'zhu', id: 'zhu1'}, {type: 'zhu', id: 'zhu1'}, {type: 'liu', id: 'liu1'}, {type: 'liu', id: 'liu2'}],
-      [{type: 'chang', id: 'chang3'}, {type: 'chang', id: 'chang4'}, {type: 'liu', id: 'liu3'}, {type: 'empty', id: 'empty1'}]
+      [{type: 'xu', id: 'xu1'}, {type: 'xu', id: 'xu1'}, {type: 'chang', id: 'chang1'}, {type: 'chang', id: 'chang2'}, {type: 'li', id: 'li1'}, {type: 'li', id: 'li2'}],
+      [{type: 'zhu', id: 'zhu1'}, {type: 'zhu', id: 'zhu1'}, {type: 'chang', id: 'chang1'}, {type: 'chang', id: 'chang2'}, {type: 'li', id: 'li3'}, {type: 'li', id: 'li4'}],
+      [{type: 'zhu', id: 'zhu1'}, {type: 'zhu', id: 'zhu1'}, {type: 'liu', id: 'liu1'}, {type: 'liu', id: 'liu2'}, {type: 'tang', id: 'tang1'}, {type: 'tang', id: 'tang2'}],
+      [{type: 'chang', id: 'chang3'}, {type: 'chang', id: 'chang4'}, {type: 'liu', id: 'liu3'}, {type: 'liu', id: 'liu4'}, {type: 'tang', id: 'tang3'}, {type: 'tang', id: 'tang4'}],
+      [{type: 'xu', id: 'xu2'}, {type: 'xu', id: 'xu2'}, {type: 'empty', id: 'empty1'}, {type: 'empty', id: 'empty2'}, {type: 'empty', id: 'empty3'}, {type: 'empty', id: 'empty4'}],
+      [{type: 'xu', id: 'xu3'}, {type: 'xu', id: 'xu3'}, {type: 'empty', id: 'empty5'}, {type: 'empty', id: 'empty6'}, {type: 'empty', id: 'empty7'}, {type: 'empty', id: 'empty8'}]
     ];
 
     // 游戏状态
@@ -261,13 +303,18 @@
       startTime: null,
       timerInterval: null,
       elapsedTime: 0,
-      isDarkMode: false
+      isDarkMode: false,
+      hintsUsed: 0,
+      maxHints: 5,
+      lastHintDate: null
     };
 
     // DOM 元素
     const boardElement = document.getElementById('board');
     const moveCountElement = document.getElementById('moveCount');
     const timerElement = document.getElementById('timer');
+    const hintCountElement = document.getElementById('hintCount');
+    const hintBtnCountElement = document.getElementById('hintBtnCount');
     const restartBtn = document.getElementById('restartBtn');
     const hintBtn = document.getElementById('hintBtn');
     const winModal = document.getElementById('winModal');
@@ -276,6 +323,51 @@
     const playAgainBtn = document.getElementById('playAgainBtn');
     const themeToggle = document.getElementById('themeToggle');
     const bodyElement = document.body;
+
+    // 初始化提示次数
+    function initHints() {
+      const today = new Date().toDateString();
+      const storedDate = localStorage.getItem('hintDate');
+      
+      if (storedDate !== today) {
+        // 新的一天，重置提示次数
+        localStorage.setItem('hintDate', today);
+        localStorage.setItem('hintsUsed', '0');
+        gameState.hintsUsed = 0;
+      } else {
+        // 同一天，获取已使用的提示次数
+        gameState.hintsUsed = parseInt(localStorage.getItem('hintsUsed') || '0');
+      }
+      
+      updateHintDisplay();
+    }
+
+    // 更新提示显示
+    function updateHintDisplay() {
+      const remainingHints = gameState.maxHints - gameState.hintsUsed;
+      hintCountElement.textContent = remainingHints;
+      hintBtnCountElement.textContent = remainingHints;
+      
+      // 如果没有剩余提示，禁用提示按钮
+      if (remainingHints <= 0) {
+        hintBtn.disabled = true;
+        hintBtn.classList.add('opacity-50', 'cursor-not-allowed');
+      } else {
+        hintBtn.disabled = false;
+        hintBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+      }
+    }
+
+    // 使用提示
+    function useHint() {
+      if (gameState.hintsUsed < gameState.maxHints) {
+        gameState.hintsUsed++;
+        localStorage.setItem('hintsUsed', gameState.hintsUsed.toString());
+        updateHintDisplay();
+        return true;
+      }
+      return false;
+    }
 
     // 切换明暗主题
     function toggleTheme() {
@@ -614,13 +706,19 @@
       }
       
       // 朱元璋是2x2的棋子，获胜条件是他的底部到达最后一行中间
-      if (zhuRow === config.gridSize - 2 && zhuCol === 1) {
+      if (zhuRow === config.gridSize - 2 && zhuCol === 2) {
         endGame(true);
       }
     }
 
     // 提示功能
     function showHint() {
+      // 检查是否还有提示次数
+      if (!useHint()) {
+        alert('今日提示次数已用完，请明天再来！');
+        return;
+      }
+      
       // 简单的提示算法：寻找可以移动的棋子
       for (let row = 0; row < config.gridSize; row++) {
         for (let col = 0; col < config.gridSize; col++) {
@@ -734,6 +832,7 @@
     function initGame() {
       initBoardSize();
       renderBoard();
+      initHints();
       
       // 事件监听
       restartBtn.addEventListener('click', resetGame);
