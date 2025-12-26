@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>飞翔的小鸟 | MingDynasty</title>
+  <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <style>
+        /* 基础样式 */
+        :root {
+            /* 亮色模式 */
+            --bg-color: #f5f0e8;
+            --text-color: #8B4513;
+            --border-color: #A0522D;
+            --obstacle-color: #8B4513;
+            --obstacle-light: #A0522D;
+            --popup-bg: #fff8f0;
+            --popup-shadow: rgba(139, 69, 19, 0.2);
+            --cloud-fill: #d9c8b4;
+            --footer-text: #6d4c41;
+        }
+
+        /* 暗色模式 */
+        .dark-mode {
+            --bg-color: #2c2418;
+            --text-color: #e8d8c0;
+            --border-color: #c09871;
+            --obstacle-color: #5d4037;
+            --obstacle-light: #8d6e63;
+            --popup-bg: #3d3528;
+            --popup-shadow: rgba(0, 0, 0, 0.4);
+            --cloud-fill: #4a3d2d;
+            --footer-text: #c8b6a6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            overflow: hidden;
+            font-family: "SimSun", serif;
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 背景装饰 */
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='var(--cloud-fill)' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.3;
+            z-index: 0;
+            transition: background-color 0.3s ease;
+        }
+
+        /* 标题和控制区 */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .title {
+            color: var(--text-color);
+            font-size: 24px;
+            letter-spacing: 3px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .score-display {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .mode-toggle {
+            padding: 8px 15px;
+            background-color: var(--obstacle-color);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: "SimSun", serif;
+            transition: background-color 0.3s ease;
+        }
+
+        .mode-toggle:hover {
+            background-color: var(--obstacle-light);
+        }
+
+        /* 游戏容器 */
+        .game-container {
+            position: relative;
+            width: 100%;
+            height: calc(100vh - 140px); /* 调整高度，为页脚留出空间 */
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            overflow: hidden;
+            flex: 1;
+        }
+
+        /* 小鸟样式 */
+        .bird-container {
+            position: absolute;
+            top: 50%;
+            left: 100px;
+            transform: translateY(-50%);
+            z-index: 5;
+            transition: top 0.1s ease;
+        }
+
+        .bird {
+            position: relative;
+            width: 80px;
+            height: 60px;
+        }
+
+        .bird-body {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            width: 40px;
+            height: 30px;
+            background-color: var(--text-color);
+            border-radius: 50% 60% 40% 50%;
+        }
+
+        .bird-head {
+            position: absolute;
+            top: 10px;
+            left: 50px;
+            width: 25px;
+            height: 25px;
+            background-color: var(--text-color);
+            border-radius: 50%;
+        }
+
+        .bird-beak {
+            position: absolute;
+            top: 15px;
+            left: 70px;
+            width: 15px;
+            height: 8px;
+            background-color: #FFFFF0;
+            border-radius: 0 50% 50% 0;
+        }
+
+        .bird-eye {
+            position: absolute;
+            top: 13px;
+            left: 60px;
+            width: 4px;
+            height: 4px;
+            background-color: #000;
+            border-radius: 50%;
+        }
+
+        .bird-wing {
+            position: absolute;
+            top: 18px;
+            left: 15px;
+            width: 35px;
+            height: 25px;
+            background-color: var(--obstacle-light);
+            border-radius: 60% 0 0 40%;
+            animation: flap 0.8s ease-in-out infinite alternate;
+            transform-origin: right center;
+        }
+
+        .bird-wing::after {
+            content: "";
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            width: 20px;
+            height: 15px;
+            background-image: url("data:image/svg+xml,%3Csvg width='20' height='15' viewBox='0 0 20 15' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h4v4h-4V0zm5 0h4v4h-4V0zm5 0h4v4h-4V0zm5 0h4v4h-4V0zM0 5h4v4h-4V5zm5 0h4v4h-4V5zm5 0h4v4h-4V5zm5 0h4v4h-4V5zM0 10h4v4h-4v-4zm5 0h4v4h-4v-4zm5 0h4v4h-4v-4zm5 0h4v4h-4v-4z' fill='var(--text-color)' fill-opacity='0.6'/%3E%3C/svg%3E");
+            opacity: 0.8;
+        }
+
+        .bird-tail {
+            position: absolute;
+            top: 25px;
+            left: 5px;
+            width: 20px;
+            height: 15px;
+            background-color: var(--text-color);
+            border-radius: 0 40% 40% 0;
+        }
+
+        .bird-leg {
+            position: absolute;
+            top: 40px;
+            left: 30px;
+            width: 2px;
+            height: 8px;
+            background-color: #FFFFF0;
+            transform: rotate(10deg);
+        }
+
+        .bird-leg:nth-child(2) {
+            left: 38px;
+            transform: rotate(-10deg);
+        }
+
+        /* 障碍样式 - 明式栏杆风格 */
+        .obstacle {
+            position: absolute;
+            width: 80px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 4;
+        }
+
+        .obstacle-top, .obstacle-bottom {
+            width: 100%;
+            background-color: var(--obstacle-color);
+            border: 3px solid var(--border-color);
+            position: relative;
+        }
+
+        .obstacle-top::after, .obstacle-bottom::after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20v20H0V0zm2 2v16h16V2H2z' fill='none'/%3E%3Cpath d='M3 3h2v2H3V3zm4 0h2v2H7V3zm4 0h2v2h-2V3zm4 0h2v2h-2V3zM3 7h2v2H3V7zm4 0h2v2H7V7zm4 0h2v2h-2V7zm4 0h2v2h-2V7zM3 11h2v2H3v-2zm4 0h2v2H7v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2zM3 15h2v2H3v-2zm4 0h2v2H7v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2z' fill='var(--obstacle-light)' fill-opacity='0.3'/%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        /* 翅膀扇动动画 */
+        @keyframes flap {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(-30deg); }
+        }
+
+        /* 游戏结束弹窗 */
+        .game-over-popup {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--popup-bg);
+            padding: 30px 40px;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px var(--popup-shadow);
+            z-index: 20;
+            text-align: center;
+            display: none;
+            border: 2px solid var(--border-color);
+        }
+
+        .popup-title {
+            font-size: 28px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .popup-stats {
+            font-size: 20px;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .restart-btn {
+            padding: 10px 25px;
+            background-color: var(--obstacle-color);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            font-family: "SimSun", serif;
+            transition: background-color 0.3s ease;
+        }
+
+        .restart-btn:hover {
+            background-color: var(--obstacle-light);
+        }
+
+        /* 开始提示 */
+        .start-hint {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            color: var(--text-color);
+            z-index: 15;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 15px 30px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* 页脚样式 */
+        .footer {
+            position: relative;
+            z-index: 10;
+            padding: 10px 20px;
+            text-align: center;
+            color: var(--footer-text);
+            font-size: 14px;
+            letter-spacing: 1px;
+            border-top: 1px solid var(--border-color);
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景装饰 -->
+    <div class="background"></div>
+    
+    <!-- 头部区域 -->
+    <div class="header">
+        <div class="title">明风飞翔小鸟</div>
+        <div class="controls">
+            <div class="score-display">得分: <span id="score">0</span></div>
+            <button class="mode-toggle" id="modeToggle">切换暗色模式</button>
+        </div>
+    </div>
+    
+    <!-- 游戏容器 -->
+    <div class="game-container" id="gameContainer">
+        <!-- 开始提示 -->
+        <div class="start-hint" id="startHint">按空格键或点击屏幕开始游戏</div>
+        
+        <!-- 小鸟容器 -->
+        <div class="bird-container" id="bird">
+            <div class="bird">
+                <div class="bird-body"></div>
+                <div class="bird-head"></div>
+                <div class="bird-beak"></div>
+                <div class="bird-eye"></div>
+                <div class="bird-wing"></div>
+                <div class="bird-tail"></div>
+                <div class="bird-leg"></div>
+                <div class="bird-leg"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 页脚版权信息 -->
+    <div class="footer">
+        © 2013-2025 MingDynasty,Inc. Flying Bird Game | 大明皇帝
+    </div>
+    
+    <!-- 游戏结束弹窗 -->
+    <div class="game-over-popup" id="gameOverPopup">
+        <div class="popup-title">游戏结束</div>
+        <div class="popup-stats">
+            <div>最终得分: <span id="finalScore">0</span></div>
+            <div>游戏用时: <span id="gameTime">0</span> 秒</div>
+        </div>
+        <button class="restart-btn" id="restartBtn">重新开始</button>
+    </div>
+
+    <script>
+        // 游戏状态变量 - 极致慢速 + 无障碍通过设计
+        const game = {
+            isRunning: false,
+            score: 0,
+            startTime: 0,
+            gameTime: 0,
+            gravity: 0.4,            // 极致缓慢的下落速度
+            birdJump: -15,           // 极轻柔的跳跃力度
+            birdSpeedY: 0,
+            obstacleSpeed: 0.8,      // 障碍几乎是静止移动
+            obstacleInterval: 5000,  // 5秒生成一个障碍，充足反应时间
+            obstacles: [],
+            animationFrame: null
+        };
+
+        // DOM 元素
+        const bird = document.getElementById('bird');
+        const gameContainer = document.getElementById('gameContainer');
+        const scoreDisplay = document.getElementById('score');
+        const finalScore = document.getElementById('finalScore');
+        const gameTimeDisplay = document.getElementById('gameTime');
+        const gameOverPopup = document.getElementById('gameOverPopup');
+        const restartBtn = document.getElementById('restartBtn');
+        const modeToggle = document.getElementById('modeToggle');
+        const startHint = document.getElementById('startHint');
+        
+        // 初始化小鸟位置
+        let birdTop = 50;
+
+        // 暗色/亮色模式切换
+        modeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                modeToggle.textContent = '切换亮色模式';
+            } else {
+                modeToggle.textContent = '切换暗色模式';
+            }
+        });
+
+        // 开始游戏
+        function startGame() {
+            if (game.isRunning) return;
+            
+            game.isRunning = true;
+            game.score = 0;
+            game.startTime = Date.now();
+            scoreDisplay.textContent = '0';
+            startHint.style.display = 'none';
+            
+            // 清除现有障碍
+            game.obstacles.forEach(obs => obs.element.remove());
+            game.obstacles = [];
+            
+            // 重置小鸟位置
+            birdTop = 50;
+            bird.style.top = `${birdTop}%`;
+            game.birdSpeedY = 0;
+            
+            // 隐藏游戏结束弹窗
+            gameOverPopup.style.display = 'none';
+            
+            // 开始生成障碍
+            generateObstacles();
+            
+            // 开始游戏循环
+            gameLoop();
+        }
+
+        // 游戏结束
+        function gameOver() {
+            game.isRunning = false;
+            cancelAnimationFrame(game.animationFrame);
+            
+            // 计算游戏用时
+            game.gameTime = ((Date.now() - game.startTime) / 1000).toFixed(1);
+            
+            // 显示游戏结束弹窗
+            finalScore.textContent = game.score;
+            gameTimeDisplay.textContent = game.gameTime;
+            gameOverPopup.style.display = 'block';
+        }
+
+        // 生成障碍 - 确保小鸟100%可以通过
+        function generateObstacles() {
+            if (!game.isRunning) return;
+            
+            // 创建障碍
+            const obstacle = document.createElement('div');
+            obstacle.className = 'obstacle';
+            
+            // 固定通道高度为60%（极大的通过空间）
+            const gapHeight = 60;
+            // 固定通道位置在屏幕正中间
+            const gapTop = 50;
+            
+            // 创建上下障碍
+            const topObstacle = document.createElement('div');
+            topObstacle.className = 'obstacle-top';
+            topObstacle.style.height = `${gapTop - gapHeight/2}%`;
+            
+            const bottomObstacle = document.createElement('div');
+            bottomObstacle.className = 'obstacle-bottom';
+            bottomObstacle.style.height = `${100 - (gapTop + gapHeight/2)}%`;
+            
+            obstacle.appendChild(topObstacle);
+            obstacle.appendChild(bottomObstacle);
+            
+            // 设置障碍位置
+            obstacle.style.left = '100%';
+            obstacle.dataset.scored = 'false';
+            
+            // 添加到容器和障碍数组
+            gameContainer.appendChild(obstacle);
+            game.obstacles.push({
+                element: obstacle,
+                gapTop: gapTop,
+                gapHeight: gapHeight,
+                scored: false
+            });
+            
+            // 定时生成下一个障碍
+            setTimeout(generateObstacles, game.obstacleInterval);
+        }
+
+        // 更新障碍位置
+        function updateObstacles() {
+            const obstaclesToRemove = [];
+            
+            game.obstacles.forEach(obs => {
+                // 获取当前位置
+                const currentLeft = parseFloat(obs.element.style.left) || 100;
+                const newLeft = currentLeft - game.obstacleSpeed;
+                
+                // 更新位置
+                obs.element.style.left = `${newLeft}%`;
+                
+                // 检测小鸟是否穿过障碍
+                if (!obs.scored && newLeft < 10 && newLeft + 8 > 10) {
+                    obs.scored = true;
+                    obs.element.dataset.scored = 'true';
+                    game.score++;
+                    scoreDisplay.textContent = game.score;
+                }
+                
+                // 移除超出屏幕的障碍
+                if (newLeft < -8) {
+                    obstaclesToRemove.push(obs);
+                }
+                
+                // 碰撞检测（现在几乎不可能撞到）
+                if (checkCollision(obs)) {
+                    gameOver();
+                }
+            });
+            
+            // 清理超出屏幕的障碍
+            obstaclesToRemove.forEach(obs => {
+                obs.element.remove();
+                const index = game.obstacles.indexOf(obs);
+                if (index > -1) {
+                    game.obstacles.splice(index, 1);
+                }
+            });
+        }
+
+        // 碰撞检测
+        function checkCollision(obstacle) {
+            // 小鸟边界
+            const birdRect = bird.getBoundingClientRect();
+            const gameRect = gameContainer.getBoundingClientRect();
+            
+            // 小鸟相对位置
+            const birdRelativeTop = ((birdRect.top - gameRect.top) / gameRect.height) * 100;
+            const birdRelativeBottom = ((birdRect.bottom - gameRect.top) / gameRect.height) * 100;
+            
+            // 障碍位置
+            const obstacleLeft = parseFloat(obstacle.element.style.left) || 100;
+            
+            // 检测是否在障碍范围内
+            if (obstacleLeft < 10 + 8 && obstacleLeft + 8 > 10) {
+                // 检测是否撞到上下障碍（通道极大，几乎不可能）
+                if (birdRelativeTop < obstacle.gapTop - obstacle.gapHeight/2 || 
+                    birdRelativeBottom > obstacle.gapTop + obstacle.gapHeight/2) {
+                    return true;
+                }
+            }
+            
+            // 检测是否撞到边界（唯一可能的碰撞）
+            if (birdRelativeTop < 0 || birdRelativeBottom > 100) {
+                return true;
+            }
+            
+            return false;
+        }
+
+        // 更新小鸟位置
+        function updateBird() {
+            // 应用重力
+            game.birdSpeedY += game.gravity;
+            birdTop += game.birdSpeedY / 10;
+            
+            // 限制小鸟位置（防止飞出边界）
+            birdTop = Math.max(5, Math.min(95, birdTop));
+            
+            // 更新位置
+            bird.style.top = `${birdTop}%`;
+        }
+
+        // 小鸟跳跃
+        function jump() {
+            if (!game.isRunning) {
+                startGame();
+                return;
+            }
+            game.birdSpeedY = game.birdJump;
+        }
+
+        // 游戏主循环
+        function gameLoop() {
+            if (!game.isRunning) return;
+            
+            updateBird();
+            updateObstacles();
+            
+            game.animationFrame = requestAnimationFrame(gameLoop);
+        }
+
+        // 事件监听
+        // 空格键跳跃
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                jump();
+            }
+        });
+
+        // 点击屏幕跳跃
+        gameContainer.addEventListener('click', jump);
+
+        // 重新开始按钮
+        restartBtn.addEventListener('click', startGame);
+
+        // 初始提示点击开始
+        startHint.addEventListener('click', startGame);
+    </script>
+</body>
+</html>
