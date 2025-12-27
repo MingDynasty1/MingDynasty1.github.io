@@ -380,6 +380,63 @@
             margin-bottom: 1rem;
         }
         
+        /* 历代皇帝板块样式 */
+        .emperors {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+        
+        .emperor-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, background-color 0.3s, opacity 0.5s;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .emperor-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .emperor-number {
+            background: var(--ming-red);
+            color: var(--ming-white);
+            padding: 0.8rem;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .emperor-content {
+            padding: 1.2rem;
+            flex-grow: 1;
+        }
+        
+        .emperor-name {
+            color: var(--ming-blue);
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid var(--ming-gold);
+            padding-bottom: 0.3rem;
+        }
+        
+        .emperor-reign {
+            color: var(--ming-red);
+            font-weight: bold;
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
+        }
+        
+        .emperor-bio {
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
         /* 页脚 */
         footer {
             background: var(--footer-bg);
@@ -453,6 +510,10 @@
             
             .timeline-item:nth-child(even)::after {
                 left: 18px;
+            }
+            
+            .emperors {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             }
         }
     </style>
@@ -630,7 +691,7 @@
             </div>
         </section>
 
-        <!-- 特色部分 -->
+        <!-- 文化与科技部分 -->
         <section id="culture" class="section" style="margin-top: 5rem;">
             <div class="section-title">
                 <h2>明朝文化与科技</h2>
@@ -656,6 +717,175 @@
                     <div class="feature-content">
                         <h3>火器技术</h3>
                         <p>明代火器制造技术达到很高水平，神机营是世界上最早的独立火器部队，在军事上具有重要地位。明朝还引进了西方火器技术并进行改良。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 历代皇帝部分 -->
+        <section id="emperors" class="section" style="margin-top: 5rem;">
+            <div class="section-title">
+                <h2>明朝十六帝</h2>
+                <p>大明王朝的历代君主</p>
+            </div>
+            <div class="emperors">
+                <!-- 1. 明太祖 朱元璋 -->
+                <div class="emperor-card">
+                    <div class="emperor-number">第1位</div>
+                    <div class="emperor-content">
+                        <div class="emperor-name">明太祖 朱元璋 (洪武帝)</div>
+                        <div class="emperor-reign">在位：1368-1398年</div>
+                        <div class="emperor-bio">明朝开国皇帝，字国瑞，出身贫寒，推翻元朝统治，统一全国。在位期间加强中央集权，休养生息，史称"洪武之治"。</div>
+                    </div>
+                </div>
+
+                <!-- 2. 明惠帝 朱允炆 -->
+                <div class="emperor-card">
+                    <div class="emperor-number">第2位</div>
+                    <div class="emperor-content">
+                        <div class="emperor-name">明惠帝 朱允炆 (建文帝)</div>
+                        <div class="emperor-reign">在位：1398-1402年</div>
+                        <div class="emperor-bio">朱元璋之孙，继位后推行削藩政策，引发靖难之役，最终被朱棣推翻，下落不明。史称建文新政。</div>
+                    </div>
+                </div>
+
+                <!-- 3. 明成祖 朱棣 -->
+                <div class="emperor-card">
+                    <div class="emperor-number">第3位</div>
+                    <div class="emperor-content">
+                        <div class="emperor-name">明成祖 朱棣 (永乐帝)</div>
+                        <div class="emperor-reign">在位：1402-1424年</div>
+                        <div class="emperor-bio">朱元璋第四子，发动靖难之役夺取皇位。迁都北京，派郑和下西洋，编纂《永乐大典》，开创永乐盛世。</div>
+                    </div>
+                </div>
+
+                <!-- 4. 明仁宗 朱高炽 -->
+                <div class="emperor-card">
+                    <div class="emperor-number">第4位</div>
+                    <div class="emperor-content">
+                        <div class="emperor-name">明仁宗 朱高炽 (洪熙帝)</div>
+                        <div class="emperor-reign">在位：1424-1425年</div>
+                        <div class="emperor-bio">朱棣长子，在位仅十个月，为政开明，赦免建文旧臣，与民休息，为仁宣之治奠定基础。</div>
+                    </div>
+                </div>
+
+                <!-- 5. 明宣宗 朱瞻基 -->
+                <div class="emperor-card">
+                    <div class="emperor-number">第5位</div>
+                    <div class="emperor-content">
+                        <div class="emperor-name">明宣宗 朱瞻基 (宣德帝)</div>
+                        <div class="emperor-reign">在位：1425-1435年</div>
+                        <div class="emperor-bio">朱高炽长子，与其父并称"仁宣之治"。擅长书画，政治清明，经济发展，但也开启了明朝宦官干政的先河。</div>
+                    </div>
+                </div>
+
+                <!-- 6. 明英宗 朱祁镇 -->
+                <div class="emperor-card">
+                    <div class="emperor-number">第6位</div>
+                    <div class="emperor-content">
+                        <div class="emperor-name">明英宗 朱祁镇 (正统/天顺帝)</div>
+                        <div class="emperor-reign">在位：1435-1449, 1457-1464年</div>
+                        <div class="emperor-bio">两次在位，土木堡之变中被俘，后通过夺门之变复位。前期宠信王振，后期废除殉葬制度，功过参半。</div>
+                    </div>
+                </div>
+
+                <!-- 7. 明代宗 朱祁钰 -->
+                <div class="emperor-card">
+                    <div class="emperor-number">第7位</div>
+                    <div class="emperor-content">
+                        <div class="emperor-name">明代宗 朱祁钰 (景泰帝)</div>
+                        <div class="emperor-reign">在位：1449-1457年</div>
+                        <div class="emperor-bio">朱祁镇之弟，土木堡之变后即位，任用于谦取得北京保卫战胜利，改革内政，后被英宗复辟废黜。</div>
+                    </div>
+                </div>
+
+                <!-- 8. 明宪宗 朱见深 -->
+                <div class="emperor-card">
+                    <div class="emperor-number">第8位</div>
+                    <div class="emperor-content">
+                        <div class="emperor-name">明宪宗 朱见深 (成化帝)</div>
+                        <div class="emperor-reign">在位：1464-1487年</div>
+                        <div class="emperor-bio">英宗长子，在位初期平反于谦冤案，后期宠信万贵妃，重用宦官汪直，设立西厂，朝政渐趋腐败。</div>
+                    </div>
+                </div>
+
+                <!-- 9. 明孝宗 朱祐樘 -->
+                <div class="emperor-card">
+                    <div class="emperor-number">第9位</div>
+                    <div class="emperor-content">
+                        <div class="emperor-name">明孝宗 朱祐樘 (弘治帝)</div>
+                        <div class="emperor-reign">在位：1487-1505年</div>
+                        <div class="emperor-bio">历史上唯一实行一夫一妻制的皇帝，勤于政事，励精图治，扭转朝政腐败状况，史称"弘治中兴"。</div>
+                    </div>
+                </div>
+
+                <!-- 10. 明武宗 朱厚照 -->
+                <div class="emperor-card">
+                    <div class="emperor-number">第10位</div>
+                    <div class="emperor-content">
+                        <div class="emperor-name">明武宗 朱厚照 (正德帝)</div>
+                        <div class="emperor-reign">在位：1505-1521年</div>
+                        <div class="emperor-bio">孝宗独子，贪玩好武，宠信刘瑾等八虎，自封"总督军务威武大将军"，南巡时意外落水去世，无子嗣。</div>
+                    </div>
+                </div>
+
+                <!-- 11. 明世宗 朱厚熜 -->
+                <div class="emperor-card">
+                    <div class="emperor-number">第11位</div>
+                    <div class="emperor-content">
+                        <div class="emperor-name">明世宗 朱厚熜 (嘉靖帝)</div>
+                        <div class="emperor-reign">在位：1521-1567年</div>
+                        <div class="emperor-bio">武宗堂弟，大礼议之争获胜，前期整顿朝纲，后期沉迷修道，二十余年不上朝，严嵩专权，倭寇之乱严重。</div>
+                    </div>
+                </div>
+
+                <!-- 12. 明穆宗 朱载坖 -->
+                <div class="emperor-card">
+                    <div class="emperor-number">第12位</div>
+                    <div class="emperor-content">
+                        <div class="emperor-name">明穆宗 朱载坖 (隆庆帝)</div>
+                        <div class="emperor-reign">在位：1567-1572年</div>
+                        <div class="emperor-bio">嘉靖第三子，重用高拱、张居正等贤臣，与蒙古俺答汗议和，开放海禁，史称"隆庆开关"，明朝经济复苏。</div>
+                    </div>
+                </div>
+
+                <!-- 13. 明神宗 朱翊钧 -->
+                <div class="emperor-card">
+                    <div class="emperor-number">第13位</div>
+                    <div class="emperor-content">
+                        <div class="emperor-name">明神宗 朱翊钧 (万历帝)</div>
+                        <div class="emperor-reign">在位：1572-1620年</div>
+                        <div class="emperor-bio">十岁即位，张居正辅政推行改革，亲政后三十年不上朝，东林党争加剧，萨尔浒之战惨败，明朝走向衰落。</div>
+                    </div>
+                </div>
+
+                <!-- 14. 明光宗 朱常洛 -->
+                <div class="emperor-card">
+                    <div class="emperor-number">第14位</div>
+                    <div class="emperor-content">
+                        <div class="emperor-name">明光宗 朱常洛 (泰昌帝)</div>
+                        <div class="emperor-reign">在位：1620年（仅29天）</div>
+                        <div class="emperor-bio">万历长子，经历国本之争，即位后废除矿税，却因红丸案暴毙，是明朝在位时间最短的皇帝。</div>
+                    </div>
+                </div>
+
+                <!-- 15. 明熹宗 朱由校 -->
+                <div class="emperor-card">
+                    <div class="emperor-number">第15位</div>
+                    <div class="emperor-content">
+                        <div class="emperor-name">明熹宗 朱由校 (天启帝)</div>
+                        <div class="emperor-reign">在位：1620-1627年</div>
+                        <div class="emperor-bio">擅长木工，不理朝政，宠信魏忠贤，东林党人遭迫害，后金势力日益强大，明朝内忧外患加剧。</div>
+                    </div>
+                </div>
+
+                <!-- 16. 明思宗 朱由检 -->
+                <div class="emperor-card">
+                    <div class="emperor-number">第16位</div>
+                    <div class="emperor-content">
+                        <div class="emperor-name">明思宗 朱由检 (崇祯帝)</div>
+                        <div class="emperor-reign">在位：1627-1644年</div>
+                        <div class="emperor-bio">明朝末代皇帝，铲除魏忠贤，力图中兴，但刚愎自用，频繁更换大臣，内有农民起义，外有后金威胁，最终自缢殉国。</div>
                     </div>
                 </div>
             </div>
@@ -751,10 +981,32 @@
                 observer.observe(item);
             });
         }
+
+        // 皇帝卡片动画效果
+        function animateEmperors() {
+            const emperorCards = document.querySelectorAll('.emperor-card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if(entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            emperorCards.forEach((card, index) => {
+                card.style.opacity = 0;
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = `opacity 0.5s ${index * 0.1}s, transform 0.5s ${index * 0.1}s`;
+                observer.observe(card);
+            });
+        }
         
         // 页面加载完成后执行
         window.addEventListener('DOMContentLoaded', () => {
             animateTimeline();
+            animateEmperors();
         });
     </script>
 </body>
