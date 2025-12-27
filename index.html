@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -7,7 +6,790 @@
     <title>MingDynasty的个人主页 | 明朝风韵</title>
     <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="server.css">
+    <style>
+        /* 全局样式 */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+        
+        :root {
+            /* 亮色主题变量 */
+            --bg-color: #f8f3e6;
+            --text-color: #333;
+            --card-bg: #fff;
+            --header-bg: linear-gradient(to right, #8b0000, #a52a2a);
+            --nav-bg: #8b0000;
+            --accent-color: #8b0000;
+            --gold-color: #d4af37;
+            --border-color: #e0c987;
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --code-bg: #2b2b2b;
+            --time-bg: linear-gradient(135deg, #8b0000, #d4af37);
+            --pattern-opacity: 0.05;
+            --primary-color: #8b0000;
+            --secondary-color: #d4af37;
+            --display-bg: #f8f3e6;
+            --btn-bg: #e8d5c0;
+            --btn-operator-bg: #8b0000;
+            --btn-equals-bg: #d4af37;
+            --btn-clear-bg: #a52a2a;
+        }
+        
+        .dark-mode {
+            /* 暗色主题变量 */
+            --bg-color: #1a1a1a;
+            --text-color: #e6e6e6;
+            --card-bg: #2d2d2d;
+            --header-bg: linear-gradient(to right, #600000, #7a1f1f);
+            --nav-bg: #600000;
+            --accent-color: #cc0000;
+            --gold-color: #c19b30;
+            --border-color: #5c4c1a;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --code-bg: #3d3d3d;
+            --time-bg: linear-gradient(135deg, #600000, #9b7a1f);
+            --pattern-opacity: 0.1;
+            --primary-color: #cc0000;
+            --secondary-color: #c19b30;
+            --display-bg: #2d2d2d;
+            --btn-bg: #3d3d3d;
+            --btn-operator-bg: #600000;
+            --btn-equals-bg: #9b7a1f;
+            --btn-clear-bg: #7a1f1f;
+        }
+        
+        body {
+            font-family: 'SimSun', '宋体', serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill-opacity="' + var(--pattern-opacity) + '" fill="%23000" width="100" height="100"/></svg>');
+            padding: 0;
+            margin: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* 页眉样式 */
+        header {
+            background: var(--header-bg);
+            color: #f8f3e6;
+            padding: 20px 0;
+            border-bottom: 5px solid var(--gold-color);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            position: relative;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
+            letter-spacing: 5px;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* 导航样式 */
+        nav {
+            background-color: var(--nav-bg);
+            padding: 15px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid var(--gold-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        nav a {
+            color: #f8f3e6;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1.1rem;
+            padding: 5px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* 主题切换按钮 */
+        .theme-switch {
+            margin-left: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .theme-switch-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            color: #f8f3e6;
+            font-size: 0.9rem;
+        }
+        
+        .theme-switch-label i {
+            margin-right: 5px;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+            margin-left: 10px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+     
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--gold-color);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        /* 语言切换按钮 */
+        .language-switch {
+            margin-left: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .language-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: #f8f3e6;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+        }
+        
+        .language-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* 主要内容区 */
+        .main-content {
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        /* 卡片样式 */
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            border-left: 5px solid var(--accent-color);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(to right, var(--accent-color), var(--gold-color));
+        }
+        
+        .card h2 {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed var(--border-color);
+            font-size: 1.5rem;
+        }
+        
+        /* 图片容器 */
+        .image-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .image-container img {
+            width: 100%;
+            border: 3px solid var(--gold-color);
+            border-radius: 5px;
+            transition: transform 0.3s;
+        }
+        
+        .image-container img:hover {
+            transform: scale(1.03);
+        }
+        
+        /* 链接样式 */
+        a {
+            color: var(--accent-color);
+            text-decoration: none;
+            transition: color 0.3s;
+            position: relative;
+        }
+        
+        a:hover {
+            color: var(--gold-color);
+        }
+        
+        a::after {
+            content: "";
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: var(--gold-color);
+            transition: width 0.3s;
+        }
+        
+        a:hover::after {
+            width: 100%;
+        }
+        
+        /* 代码块样式 */
+        pre {
+            background: var(--code-bg);
+            color: #f8f3e6;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            border-left: 5px solid var(--gold-color);
+            font-family: 'Consolas', 'Monaco', monospace;
+            margin: 20px 0;
+        }
+        
+        /* 侧边栏样式 */
+        .sidebar {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            border-left: 5px solid var(--gold-color);
+        }
+        
+        .sidebar h3 {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed var(--border-color);
+            text-align: center;
+        }
+        
+        .sidebar ul {
+            list-style: none;
+        }
+        
+        .sidebar li {
+            padding: 8px 0;
+            border-bottom: 1px dotted var(--border-color);
+        }
+        
+        .sidebar li:last-child {
+            border-bottom: none;
+        }
+        
+        /* 页脚样式 */
+        footer {
+            background: var(--header-bg);
+            color: #f8f3e6;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+            border-top: 5px solid var(--gold-color);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            nav a {
+                display: block;
+                margin: 10px 0;
+            }
+            
+            .theme-switch, .language-switch {
+                margin: 10px 0;
+            }
+        }
+        
+        /* 明朝特色装饰 */
+        .ming-decoration {
+            font-family: 'KaiTi', '楷体', serif;
+            color: var(--accent-color);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .chinese-pattern {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"><path fill="' + var(--accent-color) + '" fill-opacity="0.1" d="M0 0h60v60H0z"/><path fill="' + var(--gold-color) + '" fill-opacity="0.1" d="M0 0h30v30H0z"/></svg>');
+            background-size: 60px 60px;
+        }
+        
+        /* 游戏卡片样式 */
+        .game-card {
+            background: linear-gradient(135deg, var(--bg-color) 0%, var(--border-color) 100%);
+            border: 2px solid var(--accent-color);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(139, 0, 0, 0.2);
+        }
+        
+        .game-card h3 {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .game-card p {
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+        
+        .game-btn {
+            display: inline-block;
+            background: var(--accent-color);
+            color: #f8f3e6;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        .game-btn:hover {
+            background: var(--nav-bg);
+        }
+        
+        /* 时间报时器样式 */
+        .time-display {
+            background: var(--time-bg);
+            color: #f8f3e6;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px 0;
+            font-family: 'KaiTi', '楷体', serif;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .time-display #current-time {
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        .time-display #current-date {
+            font-size: 1.1rem;
+            margin-top: 5px;
+            opacity: 0.9;
+        }
+        
+        /* 计算器样式 */
+        .calculator-container {
+            background: linear-gradient(145deg, var(--secondary-color), var(--primary-color));
+            border: 4px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            position: relative;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .calculator-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, var(--border-color), var(--secondary-color), var(--border-color));
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        .calculator-container::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, var(--border-color), var(--secondary-color), var(--border-color));
+            border-top: 2px solid var(--primary-color);
+        }
+        
+        .calculator-title {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--text-color);
+            font-size: 24px;
+            text-shadow: 1px 1px 2px rgba(255, 215, 0, 0.5);
+            letter-spacing: 4px;
+            position: relative;
+        }
+        
+        .calculator-title::before, .calculator-title::after {
+            content: "◆";
+            color: var(--border-color);
+            margin: 0 15px;
+            font-size: 20px;
+        }
+        
+        .calculator-display {
+            background: var(--display-bg);
+            border: 3px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: right;
+            font-size: 32px;
+            min-height: 80px;
+            box-shadow: inset 0 0 10px rgba(139, 69, 19, 0.3);
+            font-family: 'SimHei', '黑体', sans-serif;
+            color: var(--text-color);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .calculator-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        
+        .calc-btn {
+            background: var(--btn-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px 0;
+            font-size: 22px;
+            cursor: pointer;
+            color: var(--text-color);
+            transition: all 0.2s;
+            font-family: 'SimHei', '黑体', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .calc-btn:hover {
+            background: linear-gradient(to bottom, #e8d5c0, #d4a76a);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+        
+        .calc-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 1px 3px var(--shadow-color);
+        }
+        
+        .calc-operator {
+            background: var(--btn-operator-bg);
+            color: #f9f3e9;
+            font-weight: bold;
+        }
+        
+        .calc-equals {
+            background: var(--btn-equals-bg);
+            color: #f9f3e9;
+            font-weight: bold;
+            grid-column: span 2;
+        }
+        
+        .calc-clear {
+            background: var(--btn-clear-bg);
+            color: #f9f3e9;
+            font-weight: bold;
+        }
+        
+        .calculator-decoration {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .calculator-decoration span {
+            font-size: 24px;
+            color: var(--border-color);
+        }
+        
+        /* 历史卡片样式 */
+        .history-card {
+            background: linear-gradient(135deg, #f8f3e6 0%, #e0c987 100%);
+            border: 3px solid var(--accent-color);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(139, 0, 0, 0.15);
+        }
+        
+        .dark-mode .history-card {
+            background: linear-gradient(135deg, #2d2d2d 0%, #5c4c1a 100%);
+        }
+        
+        .history-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(to right, var(--accent-color), var(--gold-color));
+        }
+        
+        .history-card h3 {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+            text-align: center;
+            border-bottom: 2px solid var(--gold-color);
+            padding-bottom: 10px;
+        }
+        
+        .history-card p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+            text-align: justify;
+        }
+        
+        .history-btn {
+            display: inline-block;
+            background: var(--accent-color);
+            color: #f8f3e6;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            margin-top: 10px;
+        }
+        
+        .history-btn:hover {
+            background: transparent;
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+        
+        .history-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .history-feature {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+        
+        .dark-mode .history-feature {
+            background: rgba(45, 45, 45, 0.7);
+        }
+        
+        .history-feature i {
+            font-size: 2rem;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+        
+        .history-feature h4 {
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+        
+        /* 访问量统计样式 */
+        .visitor-counter {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            font-family: 'KaiTi', '楷体', serif;
+        }
+        
+        .dark-mode .visitor-counter {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        .visitor-counter span {
+            margin-right: 10px;
+            color: var(--gold-color);
+            font-weight: bold;
+        }
+        
+        .visitor-counter img {
+            height: 20px;
+            vertical-align: middle;
+        }
+        
+        /* 贪吃蛇游戏样式 */
+        .snake-game-container {
+            background: linear-gradient(135deg, var(--bg-color) 0%, var(--border-color) 100%);
+            border: 3px solid var(--accent-color);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            box-shadow: 0 8px 16px rgba(139, 0, 0, 0.15);
+        }
+        
+        .snake-game-container h3 {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+            text-align: center;
+            border-bottom: 2px solid var(--gold-color);
+            padding-bottom: 10px;
+        }
+        
+        .snake-game-board {
+            display: inline-block;
+            border: 3px solid var(--border-color);
+            border-radius: 5px;
+            background-color: var(--card-bg);
+            box-shadow: 0 4px 8px var(--shadow-color);
+            margin: 15px 0;
+        }
+        
+        .snake-game-info {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            font-family: 'KaiTi', '楷体', serif;
+        }
+        
+        .snake-game-score {
+            background: var(--accent-color);
+            color: #f8f3e6;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .snake-game-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .snake-game-btn {
+            background: var(--accent-color);
+            color: #f8f3e6;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+            font-family: 'SimSun', '宋体', serif;
+        }
+        
+        .snake-game-btn:hover {
+            background: var(--nav-bg);
+        }
+        
+        .snake-game-instructions {
+            margin-top: 15px;
+            text-align: left;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 3px solid var(--gold-color);
+        }
+        
+        .dark-mode .snake-game-instructions {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        
+        .snake-game-instructions h4 {
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+        
+        .snake-game-instructions ul {
+            padding-left: 20px;
+        }
+        
+        .snake-game-instructions li {
+            margin-bottom: 5px;
+        }
+    </style>
+    
     <!-- 人机验证检查脚本 -->
     <script>
         // 检查是否已经通过人机验证
@@ -87,6 +869,8 @@
             <a href="https://mingdynasty1.github.io/friends/friends.html" data-lang="en" style="display: none;">Friends</a>
             <a href="https://mingdynasty1.github.io/news/" data-lang="zh">大明新闻</a>
             <a href="https://mingdynasty1.github.io/news/" data-lang="en" style="display: none;">Ming News</a>
+            <a href="https://mingdynasty1.github.io/flyingbird/" data-lang="zh">飞翔的小鸟</a>
+            <a href="https://mingdynasty1.github.io/flyingbird/" data-lang="en" style="display: none;">Flying Bird</a>
             
             <a href="https://MingDynasty1.github.io/OnlineJudge/index.html" data-lang="zh">免费网盘</a>
             <a href="https://MingDynasty1.github.io/OnlineJudge/index.html" data-lang="en" style="display: none;">Free Cloud Storage</a>
@@ -96,12 +880,10 @@
             
             <a href="https://www.luogu.com.cn/contest/247666" data-lang="zh">比赛宣传</a>
             <a href="https://www.luogu.com.cn/contest/247666" data-lang="en" style="display: none;">Contest Promotion</a>
-            <a href="https://mingdynasty1.github.io/join-us/" data-lang="zh">大明招聘</a>
-            <a href="https://mingdynasty1.github.io/join-us" data-lang="en" style="display: none;">Ming join</a>
+            
             <a href="https://mingdynasty1.github.io/game.html" data-lang="zh">益智小游戏</a>
             <a href="https://mingdynasty1.github.io/game.html" data-lang="en" style="display: none;">Puzzle Games</a>
-<a href="https://mingdynasty1.github.io/Best-game.html" data-lang="zh">大明华容道</a>
-            <a href="https://mingdynasty1.github.io/Best-game.html" data-lang="en" style="display: none;">Ming Huarongdao</a>
+
             <a href="https://mingdynasty1.github.io/code/index.html" data-lang="zh">大明 OJ</a>
             <a href="https://mingdynasty1.github.io/code/index.html" data-lang="en" style="display: none;">Ming OnlineJudge</a>
              <a href="https://mingdynasty1.github.io/film/index.html" data-lang="zh">大明电影</a>
@@ -111,8 +893,7 @@
             
             <a href="https://mingdynasty1.github.io/gxrz.html" data-lang="zh">更新日志</a>
             <a href="https://mingdynasty1.github.io/gxrz.html" data-lang="en" style="display: none;">Update Log</a>
-            <a href="https://mingdynasty1.github.io/join-us/" data-lang="zh">大明招聘</a>
-            <a href="https://mingdynasty1.github.io/join-us/" data-lang="en" style="display: none;">Ming join</a>
+            
             <a href="https://MingDynasty1.github.io/calc.html" data-lang="zh">计算器</a>
             <a href="https://MingDynasty1.github.io/calc.html" data-lang="en" style="display: none;">Calculator</a>
             
@@ -124,9 +905,6 @@
             
             <a href="https://MingDynasty1.github.io/MgDyhistory.html" data-lang="zh">大明历史</a>
             <a href="https://MingDynasty1.github.io/MgDyhistory.html" data-lang="en" style="display: none;">Ming History</a>
-
- <a href="https://MingDynasty1.github.io/days/" data-lang="zh">大明日历</a>
-            <a href="https://MingDynasty1.github.io/days/" data-lang="en" style="display: none;">Ming Date</a>
             
             <!-- 添加人生模拟器链接 -->
             <a href="https://MingDynasty1.github.io/People-Remake-Life.html" data-lang="zh">人生模拟器</a>
@@ -144,16 +922,15 @@
             <a href="https://MingDynasty1.github.io/contact-us-MgDy.html" data-lang="en" style="display: none;">Contact Us</a>
             
             <!-- 添加博客主页链接 -->
-            <a href="https://MingDynasty1.github.io/blog/index.html" data-lang="zh">博客主页</a>
-            <a href="https://MingDynasty1.github.io/blog/index.html" data-lang="en" style="display: none;">Blog Homepage</a>
+            <a href="https://MingDynasty1.github.io/blog/index.html" style="background-color: rgba(255,255,255,0.2);" data-lang="zh">博客主页</a>
+            <a href="https://MingDynasty1.github.io/blog/index.html" style="background-color: rgba(255,255,255,0.2); display: none;" data-lang="en">Blog Homepage</a>
             
             <a href="https://MingDynasty1.github.io/luntan/index.html" data-lang="zh">大明论坛</a>
             <a href="https://MingDynasty1.github.io/luntan/index.html" data-lang="en" style="display: none;">Ming Forum</a>
 
             <a href="https://mingdynasty1.github.io/Check-for-People-Robot.html" data-lang="zh">人机验证</a>
             <a href="https://mingdynasty1.github.io/Check-for-People-Robot.html" data-lang="en" style="display: none;">Check If You're A Robot</a>
-            <a href="https://mingdynasty1.github.io/ylwj/" data-lang="zh">html预览</a>
-            <a href="https://mingdynasty1.github.io/ylwj/" data-lang="en" style="display: none;">HTML Code</a>
+            
             <!-- 添加常见问题解答链接 -->
             <a href="https://MingDynasty1.github.io/FAQ.html" data-lang="zh">常见问题解答</a>
             <a href="https://MingDynasty1.github.io/FAQ.html" data-lang="en" style="display: none;">FAQ</a>
@@ -184,47 +961,6 @@
             <div id="current-time">00:00:00</div>
             <div id="current-date" data-lang="zh">0000年00月00日 星期X</div>
             <div id="current-date-en" data-lang="en" style="display: none;">Monday, January 1, 2000</div>
-        </div>
-        
-        <!-- 每日打卡卡片 -->
-        <div class="daily-checkin-card">
-            <h3><i class="fas fa-calendar-check"></i> <span data-lang="zh">每日打卡</span><span data-lang="en" style="display: none;">Daily Check-in</span></h3>
-            
-            <div class="checkin-stats">
-                <div class="checkin-stat">
-                    <h4 data-lang="zh">连续打卡</h4>
-                    <h4 data-lang="en" style="display: none;">Consecutive Days</h4>
-                    <p id="consecutive-days">0</p>
-                </div>
-                <div class="checkin-stat">
-                    <h4 data-lang="zh">总打卡天数</h4>
-                    <h4 data-lang="en" style="display: none;">Total Days</h4>
-                    <p id="total-days">0</p>
-                </div>
-                <div class="checkin-stat">
-                    <h4 data-lang="zh">今日运势</h4>
-                    <h4 data-lang="en" style="display: none;">Today's Fortune</h4>
-                    <p id="today-fortune">-</p>
-                </div>
-            </div>
-            
-            <div class="fortune-result">
-                <div class="fortune-level" id="fortune-level">-</div>
-                <div class="fortune-message" id="fortune-message" data-lang="zh">点击下方按钮抽取今日运势</div>
-                <div class="fortune-message" id="fortune-message-en" style="display: none;">Click the button below to draw today's fortune</div>
-            </div>
-            
-            <button class="checkin-btn" id="checkin-btn" data-lang="zh">抽签打卡</button>
-            <button class="checkin-btn" id="checkin-btn-en" style="display: none;" data-lang="en">Draw Fortune & Check-in</button>
-            
-            <div class="checkin-history">
-                <h4 data-lang="zh">打卡历史</h4>
-                <h4 data-lang="en" style="display: none;">Check-in History</h4>
-                <ul id="checkin-history-list">
-                    <li data-lang="zh"><span class="checkin-date">暂无记录</span><span class="checkin-fortune">-</span></li>
-                    <li data-lang="en" style="display: none;"><span class="checkin-date">No records</span><span class="checkin-fortune">-</span></li>
-                </ul>
-            </div>
         </div>
         
         <!-- 新增大明历史卡片 -->
@@ -336,7 +1072,7 @@
                         
                         <div class="calculator-buttons">
                             <button class="calc-btn calc-clear" onclick="clearCalcDisplay()">C</button>
-                            <button class="calc-btn calc-operator" onclick="deleteLastCalc()">⌫</button>
+                            <button class="calc-btn calc-operator" onclick="deleteLastCalc()">?</button>
                             <button class="calc-btn calc-operator" onclick="appendToCalcDisplay('/')">÷</button>
                             <button class="calc-btn calc-operator" onclick="appendToCalcDisplay('*')">×</button>
                             
@@ -474,10 +1210,12 @@
                     <li><a href="https://MingDynasty1.github.io/film/index.html" data-lang="zh">大明电影</a><a href="https://MingDynasty1.github.io/film/index.html" data-lang="en" style="display: none;">Ming film</a></li>
              
                     <li><a href="https://www.luogu.com.cn/user/1015347" data-lang="zh">洛谷主页</a><a href="https://www.luogu.com.cn/user/1015347" data-lang="en" style="display: none;">Luogu Homepage</a></li>
-                    <li><a href="https://github.com/MingDynasty1" data-lang="zh">GitHub主页</a><a href="https://github.com/MingDynasty1" data-lang="en" style="display: none;">GitHub Homepage</a></li>
+                    <li><a href="https://kkgithub.com/MingDynasty1" data-lang="zh">GitHub主页</a><a href="https://kkgithub.com/MingDynasty1" data-lang="en" style="display: none;">GitHub Homepage</a></li>
                     <li><a href="https://MingDynasty1.github.io/MapMgDy.html" data-lang="zh">大明导航</a><a href="https://MingDynasty1.github.io/MapMgDy.html" data-lang="en" style="display: none;">Ming Navigation</a></li>
+                    <li><a href="https://MingDynasty1.github.io/flyingbird/index.html" data-lang="zh">飞翔的小鸟</a><a href="https://MingDynasty1.github.io/flyingbird/index.html" data-lang="en" style="display: none;">Flying Bird</a></li>
+                   
                     <li><a href="https://MingDynasty1.github.io/OnlineJudge/index.html" data-lang="zh">免费网盘</a><a href="https://MingDynasty1.github.io/OnlineJudge/index.html" data-lang="en" style="display: none;">Free Cloud Storage</a></li>
-                    <li><a href="https://mingdynasty1.github.io/friends/friends.md" data-lang="zh">友情链接</a><a href="https://mingdynasty1.github.io/friends/friends.md" data-lang="en" style="display: none;">Friends Links</a></li>
+                    <li><a href="https://mingdynasty1.github.io/friends/friends.html" data-lang="zh">友情链接</a><a href="https://mingdynasty1.github.io/friends/friends.html" data-lang="en" style="display: none;">Friends Links</a></li>
                     <li><a href="https://mingdynasty1.github.io/cbpan_help/MingDynasty_cbpan_help.html" data-lang="zh">网盘帮助</a><a href="https://mingdynasty1.github.io/cbpan_help/MingDynasty_cbpan_help.html" data-lang="en" style="display: none;">Cloud Storage Help</a></li>
                     <li><a href="https://mingdynasty1.github.io/game.html" data-lang="zh">益智小游戏</a><a href="https://mingdynasty1.github.io/game.html" data-lang="en" style="display: none;">Puzzle Games</a></li>
                     <li><a href="https://mingdynasty1.github.io/2048.html" data-lang="zh">2048游戏</a><a href="https://mingdynasty1.github.io/2048.html" data-lang="en" style="display: none;">2048 Game</a></li>
@@ -485,11 +1223,8 @@
                     <li><a href="https://MingDynasty1.github.io/calc.html" data-lang="zh">计算器</a><a href="https://MingDynasty1.github.io/calc.html" data-lang="en" style="display: none;">Calculator</a></li>
                     <li><a href="https://MingDynasty1.github.io/dmgame.html" data-lang="zh">大明皇帝模拟器</a><a href="https://MingDynasty1.github.io/dmgame.html" data-lang="en" style="display: none;">Ming Emperor Simulator</a></li>
                     <li><a href="https://mingdynasty1.github.io/dmhpy.html" data-lang="zh">大明国庆</a><a href="https://mingdynasty1.github.io/dmhpy.html" data-lang="en" style="display: none;">Ming National Day</a></li>
-                    <li><a href="https://MingDynasty1.github.io/Best-game.html" data-lang="zh">大明华容道</a><a href="https://MingDynasty1.github.io/Best-game.html" data-lang="en" style="display: none;">Ming Huarongdao</a></li>
                      <li><a href="https://mingdynasty1.github.io/news/" data-lang="zh">大明新闻</a><a href="https://mingdynasty1.github.io/news/" data-lang="en" style="display: none;">Ming News</a></li>
                     <!-- 添加人生模拟器链接 -->
-                    <li><a href="https://mingdynasty1.github.io/ylwj/" data-lang="zh">html预览</a><a href="https://mingdynasty1.github.io/ylwj/" data-lang="en" style="display: none;">HTML Code</a></li>
-                    <li></li><a href="https://MingDynasty1.github.io/days/" data-lang="zh">大明日历</a><a href="https://MingDynasty1.github.io/days/" data-lang="en" style="display: none;">Ming Date</a></li>
                     <li><a href="https://mingdynasty1.github.io/code/index.html" data-lang="zh">大明 OJ</a><a href="https://mingdynasty1.github.io/code/index.html" data-lang="en" style="display: none;">Ming OnlineJudge</a></li>
                     <!-- 添加贪吃蛇游戏链接 -->
                     <li><a href="https://mingdynasty1.github.io/Check-for-People-Robot.html" data-lang="zh">人机验证</a><a href="https://mingdynasty1.github.io/Check-for-People-Robot.html" data-lang="en" style="display: none;">Home Navigation</a></li>
@@ -497,7 +1232,7 @@
                     <!-- 添加常见问题解答链接 -->
                     <li><a href="https://MingDynasty1.github.io/FAQ.html" data-lang="zh">常见问题解答</a><a href="https://MingDynasty1.github.io/FAQ.html" data-lang="en" style="display: none;">FAQ</a></li>
                     <!-- 添加博客主页链接 -->
-                    <li><a href="https://MingDynasty1.github.io/blog/index.html" style="font-weight: bold; color: var(--accent-color);" data-lang="zh">博客主页</a><a href="https://MingDynasty1.github.io/blog/index.html" style="font-weight: bold; color: var(--accent-color); display: none;" data-lang="en">Blog Homepage</a></li>
+                    <li><a href="https://MingDynasty1.github.io/blog/index.html" data-lang="zh">博客主页</a><a href="https://MingDynasty1.github.io/blog/index.html" data-lang="en">Blog Homepage</a></li>
                 </ul>
                 
                 <h3 data-lang="zh">个人简介</h3>
@@ -643,8 +1378,8 @@
 </script>
     <footer>
         <div class="container">
-            <p data-lang="zh">© 2013-2025 MingDynasty,Inc. MingDynasty 的个人主页 | 灵感源于明朝美学</p>
-            <p data-lang="en" style="display: none;">© 2013-2025 MingDynasty,Inc. MingDynasty's Personal Homepage | Inspired by Ming Dynasty Aesthetics</p>
+            <p data-lang="zh">? 2013-2025 MingDynasty,Inc. MingDynasty 的个人主页 | 灵感源于明朝美学</p>
+            <p data-lang="en" style="display: none;">? 2013-2025 MingDynasty,Inc. MingDynasty's Personal Homepage | Inspired by Ming Dynasty Aesthetics</p>
             <p data-lang="zh">开局一个碗，结局一根绳 | 传承与创新 | <a href="https://mingdynasty1.github.io/gxrz.html" style="color: #f8f3e6;">查看更新日志</a></p>
             <p data-lang="en" style="display: none;">Start with a bowl, end with a rope | Inheritance and Innovation | <a href="https://mingdynasty1.github.io/gxrz.html" style="color: #f8f3e6;">View Update Log</a></p>
             
@@ -663,216 +1398,12 @@
     </footer>
 
     <!-- Font Awesome 图标 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+    <script src="https://kkgithub.com/extdomains/cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 
     <!-- 外部JavaScript文件 -->
     <script src="server_mingdynasty1.js"></script>
-    
-    <!-- 每日打卡功能JavaScript -->
-    <script>
-        // 每日打卡功能
-        document.addEventListener('DOMContentLoaded', function() {
-            // 初始化打卡数据
-            let checkinData = {
-                consecutiveDays: 0,
-                totalDays: 0,
-                lastCheckinDate: null,
-                todayFortune: null,
-                history: []
-            };
-            
-            // 从localStorage加载打卡数据
-            function loadCheckinData() {
-                const savedData = localStorage.getItem('mingDynastyCheckinData');
-                if (savedData) {
-                    checkinData = JSON.parse(savedData);
-                }
-                updateCheckinDisplay();
-            }
-            
-            // 保存打卡数据到localStorage
-            function saveCheckinData() {
-                localStorage.setItem('mingDynastyCheckinData', JSON.stringify(checkinData));
-            }
-            
-            // 更新打卡显示
-            function updateCheckinDisplay() {
-                document.getElementById('consecutive-days').textContent = checkinData.consecutiveDays;
-                document.getElementById('total-days').textContent = checkinData.totalDays;
-                
-                // 更新今日运势显示
-                if (checkinData.todayFortune) {
-                    document.getElementById('today-fortune').textContent = checkinData.todayFortune.level;
-                    document.getElementById('fortune-level').textContent = checkinData.todayFortune.level;
-                    document.getElementById('fortune-message').textContent = checkinData.todayFortune.message;
-                    document.getElementById('fortune-message-en').textContent = checkinData.todayFortune.messageEn;
-                    
-                    // 设置运势颜色
-                    const fortuneLevel = document.getElementById('fortune-level');
-                    fortuneLevel.className = 'fortune-level';
-                    switch(checkinData.todayFortune.level) {
-                        case '§大凶§':
-                            fortuneLevel.classList.add('fortune-daxiong');
-                            break;
-                        case '§凶§':
-                            fortuneLevel.classList.add('fortune-xiong');
-                            break;
-                        case '§中平§':
-                            fortuneLevel.classList.add('fortune-zhongping');
-                            break;
-                        case '§小吉§':
-                            fortuneLevel.classList.add('fortune-xiaoji');
-                            break;
-                        case '§大吉§':
-                            fortuneLevel.classList.add('fortune-daji');
-                            break;
-                    }
-                }
-                
-                // 更新打卡历史
-                const historyList = document.getElementById('checkin-history-list');
-                historyList.innerHTML = '';
-                
-                if (checkinData.history.length === 0) {
-                    const noRecordZh = document.createElement('li');
-                    noRecordZh.innerHTML = '<span class="checkin-date">暂无记录</span><span class="checkin-fortune">-</span>';
-                    noRecordZh.setAttribute('data-lang', 'zh');
-                    
-                    const noRecordEn = document.createElement('li');
-                    noRecordEn.innerHTML = '<span class="checkin-date">No records</span><span class="checkin-fortune">-</span>';
-                    noRecordEn.setAttribute('data-lang', 'en');
-                    noRecordEn.style.display = 'none';
-                    
-                    historyList.appendChild(noRecordZh);
-                    historyList.appendChild(noRecordEn);
-                } else {
-                    // 显示最近7天的记录
-                    const recentHistory = checkinData.history.slice(-7).reverse();
-                    recentHistory.forEach(record => {
-                        const listItem = document.createElement('li');
-                        listItem.innerHTML = `<span class="checkin-date">${record.date}</span><span class="checkin-fortune">${record.fortune}</span>`;
-                        historyList.appendChild(listItem);
-                    });
-                }
-                
-                // 检查今天是否已经打卡
-                const today = new Date().toDateString();
-                if (checkinData.lastCheckinDate === today) {
-                    document.getElementById('checkin-btn').disabled = true;
-                    document.getElementById('checkin-btn-en').disabled = true;
-                    document.getElementById('checkin-btn').textContent = '今日已打卡';
-                    document.getElementById('checkin-btn-en').textContent = 'Already Checked-in Today';
-                } else {
-                    document.getElementById('checkin-btn').disabled = false;
-                    document.getElementById('checkin-btn-en').disabled = false;
-                    document.getElementById('checkin-btn').textContent = '抽签打卡';
-                    document.getElementById('checkin-btn-en').textContent = 'Draw Fortune & Check-in';
-                }
-            }
-            
-            // 随机生成运势
-            function generateFortune() {
-                const fortunes = [
-                    {
-                        level: '§大凶§',
-                        message: '今日运势不佳，诸事不宜，宜静不宜动',
-                        messageEn: 'Bad luck today, avoid major decisions, stay calm'
-                    },
-                    {
-                        level: '§凶§',
-                        message: '今日运势稍差，小心谨慎，避免冒险',
-                        messageEn: 'Slightly bad luck today, be cautious, avoid risks'
-                    },
-                    {
-                        level: '§中平§',
-                        message: '今日运势平平，稳扎稳打，静待时机',
-                        messageEn: 'Average luck today, steady progress, wait for opportunities'
-                    },
-                    {
-                        level: '§小吉§',
-                        message: '今日运势不错，小有收获，宜积极行动',
-                        messageEn: 'Good luck today, small gains, take positive action'
-                    },
-                    {
-                        level: '§大吉§',
-                        message: '今日运势极佳，万事顺利，心想事成',
-                        messageEn: 'Excellent luck today, everything goes smoothly, wishes come true'
-                    }
-                ];
-                
-                // 权重：大凶10%，凶20%，中平30%，小吉25%，大吉15%
-                const weights = [0.1, 0.2, 0.3, 0.25, 0.15];
-                let random = Math.random();
-                let cumulativeWeight = 0;
-                
-                for (let i = 0; i < weights.length; i++) {
-                    cumulativeWeight += weights[i];
-                    if (random <= cumulativeWeight) {
-                        return fortunes[i];
-                    }
-                }
-                
-                // 默认返回中平
-                return fortunes[2];
-            }
-            
-            // 处理打卡按钮点击
-            function handleCheckin() {
-                const today = new Date().toDateString();
-                
-                // 检查是否已经打卡
-                if (checkinData.lastCheckinDate === today) {
-                    alert('今天已经打卡过了！');
-                    return;
-                }
-                
-                // 生成运势
-                const fortune = generateFortune();
-                
-                // 更新连续打卡天数
-                const yesterday = new Date();
-                yesterday.setDate(yesterday.getDate() - 1);
-                const yesterdayString = yesterday.toDateString();
-                
-                if (checkinData.lastCheckinDate === yesterdayString) {
-                    checkinData.consecutiveDays++;
-                } else if (checkinData.lastCheckinDate !== today) {
-                    checkinData.consecutiveDays = 1;
-                }
-                
-                // 更新总打卡天数
-                checkinData.totalDays++;
-                
-                // 更新最后打卡日期和今日运势
-                checkinData.lastCheckinDate = today;
-                checkinData.todayFortune = fortune;
-                
-                // 添加到历史记录
-                checkinData.history.push({
-                    date: new Date().toLocaleDateString('zh-CN'),
-                    fortune: fortune.level
-                });
-                
-                // 保存数据并更新显示
-                saveCheckinData();
-                updateCheckinDisplay();
-                
-                // 显示打卡成功消息
-                alert(`打卡成功！\n今日运势：${fortune.level}\n${fortune.message}`);
-            }
-            
-            // 绑定打卡按钮事件
-            document.getElementById('checkin-btn').addEventListener('click', handleCheckin);
-            document.getElementById('checkin-btn-en').addEventListener('click', handleCheckin);
-            
-            // 初始化
-            loadCheckinData();
-        });
-    </script>
 </body>
 </html>
-
-
 
 
 
