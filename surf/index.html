@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>大明漂流 | MingDynasty</title>
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  <!-- Tailwind 配置 -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            // 明朝风格配色
+            ming: {
+              red: '#C42021',     // 朱红
+              gold: '#D4AF37',    // 鎏金
+              blue: '#1A5599',    // 青花蓝
+              green: '#2A6F39',   // 松绿
+              paper: '#F5F0E1',   // 宣纸色
+              ink: '#232323',     // 墨色
+              darkPaper: '#2C2821',// 暗色模式宣纸
+            },
+          },
+          fontFamily: {
+            ming: ['"Ma Shan Zheng"', 'cursive', 'sans-serif'],
+          },
+          backgroundImage: {
+            'ming-pattern': "url('https://picsum.photos/id/152/1000/1000')", // 古风纹理
+          }
+        },
+      }
+    }
+  </script>
+  
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .ming-border {
+        border-image: linear-gradient(to right, #D4AF37, #C42021, #D4AF37) 1;
+      }
+      .text-shadow-ming {
+        text-shadow: 2px 2px 0px rgba(0,0,0,0.3);
+      }
+      .game-shadow {
+        box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+      }
+      .character-shadow {
+        filter: drop-shadow(0 4px 3px rgba(0,0,0,0.3));
+      }
+    }
+    
+    /* 游戏画布样式 */
+    canvas {
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+    
+    /* 平滑过渡 */
+    * {
+      transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    }
+    
+    /* 滚动条美化 */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: theme('colors.ming.paper');
+      dark:bg-theme('colors.ming.darkPaper');
+    }
+    ::-webkit-scrollbar-thumb {
+      background: theme('colors.ming.blue');
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: theme('colors.ming.red');
+    }
+  </style>
+  
+  <!-- 引入书法字体 -->
+  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+</head>
+
+<body class="min-h-screen bg-ming-paper dark:bg-ming-darkPaper text-ming-ink dark:text-ming-paper font-ming overflow-x-hidden">
+  <!-- 页面加载检测 -->
+  <script>
+    // 自动检测暗色模式
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.classList.add('dark');
+    }
+    
+    // 监听系统主题变化
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+      if (e.matches) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    });
+  </script>
+
+  <!-- 头部 -->
+  <header class="py-4 px-6 border-b border-ming-gold/50 dark:border-ming-gold/30 flex justify-between items-center">
+    <h1 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-ming-red dark:text-ming-gold text-shadow-ming">
+      <i class="fa fa-ship mr-2"></i>大明漂流
+    </h1>
+    
+    <div class="flex items-center gap-4">
+      <!-- 主题切换按钮 -->
+      <button id="themeToggle" class="p-2 rounded-full hover:bg-ming-blue/20 dark:hover:bg-ming-blue/30 transition-all">
+        <i class="fa fa-moon-o dark:hidden text-xl"></i>
+        <i class="fa fa-sun-o hidden dark:block text-xl text-ming-gold"></i>
+      </button>
+      
+      <!-- 声音控制 -->
+      <button id="soundToggle" class="p-2 rounded-full hover:bg-ming-blue/20 dark:hover:bg-ming-blue/30 transition-all">
+        <i class="fa fa-volume-up text-xl"></i>
+      </button>
+    </div>
+  </header>
+
+  <main class="container mx-auto px-4 py-8 max-w-7xl">
+    <!-- 游戏选择面板 -->
+    <div id="gameMenu" class="mb-8 p-6 bg-white/80 dark:bg-ming-ink/80 rounded-lg game-shadow border border-ming-gold/40">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- 模式选择 -->
+        <div class="p-4 border border-ming-blue/30 rounded-lg">
+          <h2 class="text-xl font-bold text-ming-blue mb-3 border-b pb-2">游戏模式</h2>
+          <div class="space-y-2">
+            <label class="flex items-center gap-2 p-2 rounded hover:bg-ming-blue/10 cursor-pointer">
+              <input type="radio" name="gameMode" value="endless" checked class="accent-ming-red">
+              <span>无尽漂流</span>
+            </label>
+            <label class="flex items-center gap-2 p-2 rounded hover:bg-ming-blue/10 cursor-pointer">
+              <input type="radio" name="gameMode" value="obstacle" class="accent-ming-red">
+              <span>障碍挑战赛</span>
+            </label>
+            <label class="flex items-center gap-2 p-2 rounded hover:bg-ming-blue/10 cursor-pointer">
+              <input type="radio" name="gameMode" value="timed" class="accent-ming-red">
+              <span>计时竞速赛</span>
+            </label>
+          </div>
+        </div>
+        
+        <!-- 人物选择 -->
+        <div class="p-4 border border-ming-blue/30 rounded-lg">
+          <h2 class="text-xl font-bold text-ming-blue mb-3 border-b pb-2">选择角色</h2>
+          <div class="grid grid-cols-3 gap-2">
+            <div class="character-option selected p-2 rounded border-2 border-ming-red text-center hover:bg-ming-red/10 cursor-pointer transition-all" data-char="scholar">
+              <div class="text-3xl mb-1 character-shadow">🎓</div>
+              <span class="text-sm">文生</span>
+            </div>
+            <div class="character-option p-2 rounded border-2 border-transparent text-center hover:bg-ming-red/10 cursor-pointer transition-all" data-char="general">
+              <div class="text-3xl mb-1 character-shadow">⚔️</div>
+              <span class="text-sm">武将</span>
+            </div>
+            <div class="character-option p-2 rounded border-2 border-transparent text-center hover:bg-ming-red/10 cursor-pointer transition-all" data-char="merchant">
+              <div class="text-3xl mb-1 character-shadow">💰</div>
+              <span class="text-sm">商贾</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 难度选择 -->
+        <div class="p-4 border border-ming-blue/30 rounded-lg">
+          <h2 class="text-xl font-bold text-ming-blue mb-3 border-b pb-2">难度设置</h2>
+          <div class="space-y-2">
+            <label class="flex items-center gap-2 p-2 rounded hover:bg-ming-blue/10 cursor-pointer">
+              <input type="radio" name="difficulty" value="easy" checked class="accent-ming-red">
+              <span>易 - 江南水乡</span>
+            </label>
+            <label class="flex items-center gap-2 p-2 rounded hover:bg-ming-blue/10 cursor-pointer">
+              <input type="radio" name="difficulty" value="medium" class="accent-ming-red">
+              <span>中 - 长江激流</span>
+            </label>
+            <label class="flex items-center gap-2 p-2 rounded hover:bg-ming-blue/10 cursor-pointer">
+              <input type="radio" name="difficulty" value="hard" class="accent-ming-red">
+              <span>难 - 东海怒涛</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 开始游戏按钮 -->
+      <div class="mt-6 text-center">
+        <button id="startGame" class="px-8 py-3 bg-ming-red hover:bg-ming-red/80 text-white rounded-lg text-xl game-shadow transition-all transform hover:scale-105 active:scale-95">
+          <i class="fa fa-play mr-2"></i>开始泛舟
+        </button>
+      </div>
+    </div>
+    
+    <!-- 游戏区域 -->
+    <div id="gameArea" class="hidden relative">
+      <!-- 游戏画布容器 -->
+      <div class="relative aspect-video max-w-5xl mx-auto bg-ming-blue/10 dark:bg-ming-blue/20 rounded-lg overflow-hidden game-shadow border-2 border-ming-gold">
+        <canvas id="gameCanvas" class="w-full h-full"></canvas>
+        
+        <!-- 游戏UI叠加层 -->
+        <div id="gameUI" class="absolute inset-0 pointer-events-none">
+          <!-- 分数显示 -->
+          <div class="absolute top-4 left-4 bg-black/50 text-white px-3 py-1 rounded-lg text-lg">
+            里程: <span id="scoreDisplay">0</span> 丈
+          </div>
+          
+          <!-- 计时显示 (计时赛模式) -->
+          <div id="timerDisplay" class="absolute top-4 right-4 bg-black/50 text-white px-3 py-1 rounded-lg text-lg hidden">
+            时间: <span>00:00</span>
+          </div>
+          
+          <!-- 生命值显示 -->
+          <div class="absolute bottom-4 left-4 flex gap-1">
+            <div class="life-icon w-6 h-6 bg-ming-red rounded-full"></div>
+            <div class="life-icon w-6 h-6 bg-ming-red rounded-full"></div>
+            <div class="life-icon w-6 h-6 bg-ming-red rounded-full"></div>
+          </div>
+          
+          <!-- 暂停按钮 -->
+          <button id="pauseBtn" class="absolute top-4 left-1/2 -translate-x-1/2 bg-black/50 text-white px-3 py-1 rounded-lg pointer-events-auto hover:bg-black/70">
+            <i class="fa fa-pause"></i> 暂停
+          </button>
+        </div>
+        
+        <!-- 游戏开始界面 -->
+        <div id="gameStartOverlay" class="absolute inset-0 bg-black/70 flex flex-col items-center justify-center pointer-events-auto">
+          <h2 class="text-3xl text-white mb-4">准备出发!</h2>
+          <p class="text-white mb-6">使用 <span class="text-ming-gold">← →</span> 方向键控制木舟，避开障碍</p>
+          <button id="startBtn" class="px-6 py-2 bg-ming-red text-white rounded hover:bg-ming-red/80">
+            <i class="fa fa-play mr-2"></i>开始
+          </button>
+        </div>
+        
+        <!-- 游戏暂停界面 -->
+        <div id="gamePauseOverlay" class="absolute inset-0 bg-black/70 flex flex-col items-center justify-center pointer-events-none opacity-0">
+          <h2 class="text-3xl text-white mb-4">游戏暂停</h2>
+          <div class="flex gap-4">
+            <button id="resumeBtn" class="px-6 py-2 bg-ming-green text-white rounded hover:bg-ming-green/80">
+              <i class="fa fa-play mr-2"></i>继续
+            </button>
+            <button id="restartBtn" class="px-6 py-2 bg-ming-red text-white rounded hover:bg-ming-red/80">
+              <i class="fa fa-refresh mr-2"></i>重新开始
+            </button>
+          </div>
+        </div>
+        
+        <!-- 游戏结束界面 -->
+        <div id="gameOverOverlay" class="absolute inset-0 bg-black/70 flex flex-col items-center justify-center pointer-events-none opacity-0">
+          <h2 class="text-3xl text-white mb-2">游戏结束</h2>
+          <p class="text-white mb-4">最终里程: <span id="finalScore" class="text-ming-gold">0</span> 丈</p>
+          <button id="playAgainBtn" class="px-6 py-2 bg-ming-red text-white rounded hover:bg-ming-red/80">
+            <i class="fa fa-refresh mr-2"></i>再玩一次
+          </button>
+        </div>
+      </div>
+      
+      <!-- 游戏控制说明 -->
+      <div class="mt-6 p-4 bg-white/80 dark:bg-ming-ink/80 rounded-lg game-shadow border border-ming-gold/40">
+        <h3 class="text-xl font-bold text-ming-blue mb-2">操作说明</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <p><i class="fa fa-arrow-left text-ming-red mr-2"></i> 左移木舟</p>
+            <p><i class="fa fa-arrow-right text-ming-red mr-2"></i> 右移木舟</p>
+            <p><i class="fa fa-space-shuttle text-ming-red mr-2"></i> 空格键 加速 (限时)</p>
+          </div>
+          <div>
+            <p><i class="fa fa-pause text-ming-red mr-2"></i> ESC键 暂停游戏</p>
+            <p><i class="fa fa-life-ring text-ming-red mr-2"></i> 收集道具可获得生命或加速</p>
+            <p><i class="fa fa-trophy text-ming-red mr-2"></i> 尽可能漂流更远的距离</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 游戏统计 -->
+    <div id="gameStats" class="mt-8 p-6 bg-white/80 dark:bg-ming-ink/80 rounded-lg game-shadow border border-ming-gold/40 hidden">
+      <h2 class="text-xl font-bold text-ming-blue mb-4 border-b pb-2">游戏统计</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="text-center p-3 bg-ming-blue/10 rounded-lg">
+          <h3 class="text-ming-red mb-1">最高里程</h3>
+          <p class="text-2xl font-bold" id="highScore">0 丈</p>
+        </div>
+        <div class="text-center p-3 bg-ming-blue/10 rounded-lg">
+          <h3 class="text-ming-red mb-1">游戏次数</h3>
+          <p class="text-2xl font-bold" id="gameCount">0</p>
+        </div>
+        <div class="text-center p-3 bg-ming-blue/10 rounded-lg">
+          <h3 class="text-ming-red mb-1">最佳成绩</h3>
+          <p class="text-2xl font-bold" id="bestStreak">0 秒</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="mt-12 py-6 border-t border-ming-gold/50 dark:border-ming-gold/30 text-center">
+    <p>© 2013-2025 MingDynasty,Inc. 大明漂流 | Ming surf</p>
+    <p class="mt-2 text-sm opacity-70">使用 ← → 方向键控制 | 按ESC暂停</p>
+  </footer>
+
+  <script>
+    // 游戏主逻辑
+    document.addEventListener('DOMContentLoaded', () => {
+      // DOM元素
+      const themeToggle = document.getElementById('themeToggle');
+      const soundToggle = document.getElementById('soundToggle');
+      const startGameBtn = document.getElementById('startGame');
+      const gameMenu = document.getElementById('gameMenu');
+      const gameArea = document.getElementById('gameArea');
+      const gameStats = document.getElementById('gameStats');
+      const characterOptions = document.querySelectorAll('.character-option');
+      
+      // 游戏UI元素
+      const gameCanvas = document.getElementById('gameCanvas');
+      const ctx = gameCanvas.getContext('2d');
+      const startBtn = document.getElementById('startBtn');
+      const pauseBtn = document.getElementById('pauseBtn');
+      const resumeBtn = document.getElementById('resumeBtn');
+      const restartBtn = document.getElementById('restartBtn');
+      const playAgainBtn = document.getElementById('playAgainBtn');
+      const scoreDisplay = document.getElementById('scoreDisplay');
+      const finalScore = document.getElementById('finalScore');
+      const timerDisplay = document.getElementById('timerDisplay');
+      
+      // 覆盖层
+      const gameStartOverlay = document.getElementById('gameStartOverlay');
+      const gamePauseOverlay = document.getElementById('gamePauseOverlay');
+      const gameOverOverlay = document.getElementById('gameOverOverlay');
+      
+      // 游戏状态
+      let gameState = {
+        isRunning: false,
+        isPaused: false,
+        score: 0,
+        highScore: localStorage.getItem('mingSurfHighScore') || 0,
+        gameCount: localStorage.getItem('mingSurfGameCount') || 0,
+        bestStreak: localStorage.getItem('mingSurfBestStreak') || 0,
+        lives: 3,
+        time: 0,
+        timerInterval: null,
+        gameMode: 'endless',
+        difficulty: 'easy',
+        character: 'scholar',
+        speed: 5,
+        obstacles: [],
+        powerups: [],
+        player: {
+          x: 0,
+          y: 0,
+          width: 40,
+          height: 60,
+          speed: 8
+        }
+      };
+      
+      // 更新统计显示
+      document.getElementById('highScore').textContent = `${gameState.highScore} 丈`;
+      document.getElementById('gameCount').textContent = gameState.gameCount;
+      document.getElementById('bestStreak').textContent = `${gameState.bestStreak} 秒`;
+      
+      // 主题切换
+      themeToggle.addEventListener('click', () => {
+        document.documentElement.classList.toggle('dark');
+      });
+      
+      // 声音切换
+      let soundEnabled = true;
+      soundToggle.addEventListener('click', () => {
+        soundEnabled = !soundEnabled;
+        const icon = soundToggle.querySelector('i');
+        if (soundEnabled) {
+          icon.classList.remove('fa-volume-off');
+          icon.classList.add('fa-volume-up');
+        } else {
+          icon.classList.remove('fa-volume-up');
+          icon.classList.add('fa-volume-off');
+        }
+      });
+      
+      // 角色选择
+      characterOptions.forEach(option => {
+        option.addEventListener('click', () => {
+          characterOptions.forEach(opt => opt.classList.remove('selected', 'border-ming-red'));
+          option.classList.add('selected', 'border-ming-red');
+          gameState.character = option.dataset.char;
+        });
+      });
+      
+      // 开始游戏
+      startGameBtn.addEventListener('click', () => {
+        // 获取选择的模式和难度
+        gameState.gameMode = document.querySelector('input[name="gameMode"]:checked').value;
+        gameState.difficulty = document.querySelector('input[name="difficulty"]:checked').value;
+        
+        // 根据难度设置速度
+        switch(gameState.difficulty) {
+          case 'easy': gameState.speed = 5; break;
+          case 'medium': gameState.speed = 7; break;
+          case 'hard': gameState.speed = 9; break;
+        }
+        
+        // 显示游戏区域，隐藏菜单
+        gameMenu.classList.add('hidden');
+        gameArea.classList.remove('hidden');
+        gameStats.classList.remove('hidden');
+        
+        // 调整画布大小
+        resizeCanvas();
+        
+        // 初始化游戏
+        initGame();
+      });
+      
+      // 调整画布大小
+      function resizeCanvas() {
+        const container = gameCanvas.parentElement;
+        gameCanvas.width = container.clientWidth;
+        gameCanvas.height = container.clientHeight;
+        
+        // 重置玩家位置
+        gameState.player.x = gameCanvas.width / 2 - gameState.player.width / 2;
+        gameState.player.y = gameCanvas.height - gameState.player.height - 20;
+      }
+      
+      // 初始化游戏
+      function initGame() {
+        gameState.isRunning = false;
+        gameState.isPaused = false;
+        gameState.score = 0;
+        gameState.lives = 3;
+        gameState.time = 0;
+        gameState.obstacles = [];
+        gameState.powerups = [];
+        
+        // 更新UI
+        scoreDisplay.textContent = '0';
+        updateLives();
+        
+        // 显示开始界面
+        gameStartOverlay.style.pointerEvents = 'auto';
+        
+        // 如果是计时赛，显示计时器
+        if (gameState.gameMode === 'timed') {
+          timerDisplay.classList.remove('hidden');
+          timerDisplay.querySelector('span').textContent = '00:00';
+        } else {
+          timerDisplay.classList.add('hidden');
+        }
+        
+        // 绘制初始画面
+        drawGame();
+      }
+      
+      // 开始游戏按钮
+      startBtn.addEventListener('click', () => {
+        gameStartOverlay.style.pointerEvents = 'none';
+        gameState.isRunning = true;
+        
+        // 重置游戏计数
+        gameState.gameCount++;
+        localStorage.setItem('mingSurfGameCount', gameState.gameCount);
+        document.getElementById('gameCount').textContent = gameState.gameCount;
+        
+        // 开始游戏循环
+        if (gameState.gameMode === 'timed') {
+          startTimer();
+        }
+        
+        gameLoop();
+      });
+      
+      // 暂停按钮
+      pauseBtn.addEventListener('click', () => {
+        pauseGame();
+      });
+      
+      // 继续按钮
+      resumeBtn.addEventListener('click', () => {
+        resumeGame();
+      });
+      
+      // 重新开始按钮
+      restartBtn.addEventListener('click', () => {
+        resumeGame();
+        initGame();
+      });
+      
+      // 再玩一次按钮
+      playAgainBtn.addEventListener('click', () => {
+        gameOverOverlay.style.opacity = '0';
+        gameOverOverlay.style.pointerEvents = 'none';
+        initGame();
+      });
+      
+      // 暂停游戏
+      function pauseGame() {
+        if (!gameState.isRunning || gameState.isPaused) return;
+        
+        gameState.isPaused = true;
+        gamePauseOverlay.style.opacity = '1';
+        gamePauseOverlay.style.pointerEvents = 'auto';
+        
+        if (gameState.timerInterval) {
+          clearInterval(gameState.timerInterval);
+        }
+      }
+      
+      // 恢复游戏
+      function resumeGame() {
+        if (!gameState.isRunning || !gameState.isPaused) return;
+        
+        gameState.isPaused = false;
+        gamePauseOverlay.style.opacity = '0';
+        gamePauseOverlay.style.pointerEvents = 'none';
+        
+        if (gameState.gameMode === 'timed' && gameState.isRunning) {
+          startTimer();
+        }
+        
+        gameLoop();
+      }
+      
+      // 开始计时器
+      function startTimer() {
+        if (gameState.timerInterval) {
+          clearInterval(gameState.timerInterval);
+        }
+        
+        gameState.timerInterval = setInterval(() => {
+          gameState.time++;
+          const minutes = Math.floor(gameState.time / 60).toString().padStart(2, '0');
+          const seconds = (gameState.time % 60).toString().padStart(2, '0');
+          timerDisplay.querySelector('span').textContent = `${minutes}:${seconds}`;
+        }, 1000);
+      }
+      
+      // 更新生命值显示
+      function updateLives() {
+        const lifeIcons = document.querySelectorAll('.life-icon');
+        lifeIcons.forEach((icon, index) => {
+          if (index < gameState.lives) {
+            icon.classList.remove('bg-gray-500');
+            icon.classList.add('bg-ming-red');
+          } else {
+            icon.classList.remove('bg-ming-red');
+            icon.classList.add('bg-gray-500');
+          }
+        });
+      }
+      
+      // 生成障碍
+      function generateObstacle() {
+        const obstacleWidth = Math.random() * 60 + 40;
+        const x = Math.random() * (gameCanvas.width - obstacleWidth);
+        
+        gameState.obstacles.push({
+          x,
+          y: -100,
+          width: obstacleWidth,
+          height: 40,
+          speed: gameState.speed
+        });
+        
+        // 随机生成道具
+        if (Math.random() < 0.15) {
+          const powerupTypes = ['life', 'speed', 'score'];
+          const type = powerupTypes[Math.floor(Math.random() * powerupTypes.length)];
+          
+          gameState.powerups.push({
+            x: Math.random() * (gameCanvas.width - 30),
+            y: -100,
+            width: 30,
+            height: 30,
+            speed: gameState.speed,
+            type
+          });
+        }
+      }
+      
+      // 碰撞检测
+      function checkCollisions() {
+        // 玩家碰撞框
+        const playerRect = {
+          x: gameState.player.x + 5,
+          y: gameState.player.y + 5,
+          width: gameState.player.width - 10,
+          height: gameState.player.height - 10
+        };
+        
+        // 检测与障碍的碰撞
+        for (let i = 0; i < gameState.obstacles.length; i++) {
+          const obs = gameState.obstacles[i];
+          const obsRect = {
+            x: obs.x,
+            y: obs.y,
+            width: obs.width,
+            height: obs.height
+          };
+          
+          if (rectCollision(playerRect, obsRect)) {
+            // 碰撞发生
+            gameState.lives--;
+            updateLives();
+            
+            // 移除碰撞的障碍
+            gameState.obstacles.splice(i, 1);
+            
+            // 播放碰撞音效
+            if (soundEnabled) {
+              // 这里可以添加音效播放
+            }
+            
+            // 检查游戏结束
+            if (gameState.lives <= 0) {
+              endGame();
+            }
+            
+            return;
+          }
+        }
+        
+        // 检测与道具的碰撞
+        for (let i = 0; i < gameState.powerups.length; i++) {
+          const powerup = gameState.powerups[i];
+          const powerupRect = {
+            x: powerup.x,
+            y: powerup.y,
+            width: powerup.width,
+            height: powerup.height
+          };
+          
+          if (rectCollision(playerRect, powerupRect)) {
+            // 根据道具类型执行效果
+            switch(powerup.type) {
+              case 'life':
+                gameState.lives = Math.min(3, gameState.lives + 1);
+                updateLives();
+                break;
+              case 'speed':
+                gameState.speed += 2;
+                setTimeout(() => {
+                  gameState.speed -= 2;
+                }, 5000);
+                break;
+              case 'score':
+                gameState.score += 50;
+                scoreDisplay.textContent = gameState.score;
+                break;
+            }
+            
+            // 移除道具
+            gameState.powerups.splice(i, 1);
+            
+            // 播放道具音效
+            if (soundEnabled) {
+              // 这里可以添加音效播放
+            }
+            
+            return;
+          }
+        }
+      }
+      
+      // 矩形碰撞检测
+      function rectCollision(rect1, rect2) {
+        return rect1.x < rect2.x + rect2.width &&
+               rect1.x + rect1.width > rect2.x &&
+               rect1.y < rect2.y + rect2.height &&
+               rect1.y + rect1.height > rect2.y;
+      }
+      
+      // 结束游戏
+      function endGame() {
+        gameState.isRunning = false;
+        
+        // 停止计时器
+        if (gameState.timerInterval) {
+          clearInterval(gameState.timerInterval);
+          gameState.timerInterval = null;
+        }
+        
+        // 更新最高分
+        if (gameState.score > gameState.highScore) {
+          gameState.highScore = gameState.score;
+          localStorage.setItem('mingSurfHighScore', gameState.highScore);
+          document.getElementById('highScore').textContent = `${gameState.highScore} 丈`;
+        }
+        
+        // 更新最佳时间
+        if (gameState.time > gameState.bestStreak) {
+          gameState.bestStreak = gameState.time;
+          localStorage.setItem('mingSurfBestStreak', gameState.bestStreak);
+          document.getElementById('bestStreak').textContent = `${gameState.bestStreak} 秒`;
+        }
+        
+        // 显示最终分数
+        finalScore.textContent = gameState.score;
+        
+        // 显示游戏结束界面
+        gameOverOverlay.style.opacity = '1';
+        gameOverOverlay.style.pointerEvents = 'auto';
+      }
+      
+      // 绘制游戏
+      function drawGame() {
+        if (!gameState.isRunning || gameState.isPaused) return;
+        
+        // 清空画布
+        ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+        
+        // 绘制背景 (明朝风格的水面)
+        drawBackground();
+        
+        // 绘制玩家
+        drawPlayer();
+        
+        // 更新并绘制障碍
+        updateObstacles();
+        
+        // 更新并绘制道具
+        updatePowerups();
+        
+        // 检测碰撞
+        checkCollisions();
+        
+        // 更新分数
+        gameState.score++;
+        scoreDisplay.textContent = gameState.score;
+        
+        // 游戏循环
+        requestAnimationFrame(drawGame);
+      }
+      
+      // 绘制背景
+      function drawBackground() {
+        // 水面渐变
+        const gradient = ctx.createLinearGradient(0, 0, 0, gameCanvas.height);
+        if (document.documentElement.classList.contains('dark')) {
+          gradient.addColorStop(0, '#0A2A5A');
+          gradient.addColorStop(1, '#051A3A');
+        } else {
+          gradient.addColorStop(0, '#4A90E2');
+          gradient.addColorStop(1, '#1A5599');
+        }
+        
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
+        
+        // 绘制水面波纹 (明朝水纹图案)
+        ctx.strokeStyle = document.documentElement.classList.contains('dark') ? '#2A70C2' : '#7AB0F2';
+        ctx.lineWidth = 2;
+        
+        for (let i = 0; i < 5; i++) {
+          const y = (gameCanvas.height / 5) * i + Math.sin(Date.now() / 500 + i) * 10;
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          
+          // 绘制波浪线
+          for (let x = 0; x < gameCanvas.width; x += 20) {
+            const waveHeight = Math.sin(x / 50 + Date.now() / 300 + i) * 5;
+            ctx.lineTo(x, y + waveHeight);
+          }
+          
+          ctx.stroke();
+        }
+        
+        // 绘制远处的山 (明朝山水画风格)
+        drawMountains();
+      }
+      
+      // 绘制远山
+      function drawMountains() {
+        ctx.fillStyle = document.documentElement.classList.contains('dark') ? '#1A2A3A' : '#8A9BA8';
+        
+        // 第一座山
+        ctx.beginPath();
+        ctx.moveTo(0, gameCanvas.height / 3);
+        ctx.lineTo(gameCanvas.width / 4, gameCanvas.height / 6);
+        ctx.lineTo(gameCanvas.width / 2, gameCanvas.height / 3);
+        ctx.closePath();
+        ctx.fill();
+        
+        // 第二座山
+        ctx.beginPath();
+        ctx.moveTo(gameCanvas.width / 2, gameCanvas.height / 3);
+        ctx.lineTo(gameCanvas.width * 3/4, gameCanvas.height / 8);
+        ctx.lineTo(gameCanvas.width, gameCanvas.height / 3);
+        ctx.closePath();
+        ctx.fill();
+      }
+      
+      // 绘制玩家
+      function drawPlayer() {
+        // 根据选择的角色绘制不同的形象
+        ctx.save();
+        ctx.translate(gameState.player.x + gameState.player.width/2, gameState.player.y + gameState.player.height/2);
+        
+        // 木舟底座 (明朝风格的木舟)
+        ctx.fillStyle = '#8B4513'; // 木色
+        ctx.beginPath();
+        ctx.moveTo(-20, 20);
+        ctx.lineTo(-15, -20);
+        ctx.lineTo(15, -20);
+        ctx.lineTo(20, 20);
+        ctx.closePath();
+        ctx.fill();
+        
+        // 舟的装饰 (明朝纹样)
+        ctx.strokeStyle = '#D4AF37'; // 金色
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(0, 0, 15, 0, Math.PI * 2);
+        ctx.stroke();
+        
+        // 根据角色绘制不同的人物
+        ctx.fillStyle = document.documentElement.classList.contains('dark') ? '#F5F0E1' : '#232323';
+        
+        switch(gameState.character) {
+          case 'scholar':
+            // 文生
+            ctx.beginPath();
+            ctx.arc(0, -10, 8, 0, Math.PI * 2); // 头
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(0, 15); // 身体
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(0, 5);
+            ctx.lineTo(-10, 0); // 左手
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(0, 5);
+            ctx.lineTo(10, 0); // 右手
+            ctx.stroke();
+            break;
+            
+          case 'general':
+            // 武将
+            ctx.beginPath();
+            ctx.arc(0, -10, 8, 0, Math.PI * 2); // 头
+            ctx.fill();
+            
+            ctx.fillRect(-10, 0, 20, 15); // 身体 (盔甲)
+            
+            ctx.beginPath();
+            ctx.moveTo(-10, 5);
+            ctx.lineTo(-15, 0); // 左手
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(10, 5);
+            ctx.lineTo(15, 0); // 右手
+            ctx.stroke();
+            break;
+            
+          case 'merchant':
+            // 商贾
+            ctx.beginPath();
+            ctx.arc(0, -10, 8, 0, Math.PI * 2); // 头
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.ellipse(0, 5, 10, 12, 0, 0, Math.PI * 2); // 身体
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.moveTo(-5, 5);
+            ctx.lineTo(-10, 0); // 左手
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(5, 5);
+            ctx.lineTo(10, 0); // 右手
+            ctx.stroke();
+            break;
+        }
+        
+        ctx.restore();
+      }
+      
+      // 更新障碍
+      function updateObstacles() {
+        // 随机生成新障碍
+        if (Math.random() < 0.02) {
+          generateObstacle();
+        }
+        
+        // 绘制并更新所有障碍
+        for (let i = gameState.obstacles.length - 1; i >= 0; i--) {
+          const obs = gameState.obstacles[i];
+          
+          // 更新位置
+          obs.y += obs.speed;
+          
+          // 绘制障碍 (明朝风格的礁石/浮木)
+          ctx.fillStyle = document.documentElement.classList.contains('dark') ? '#5A4A3A' : '#8B7B6B';
+          ctx.beginPath();
+          ctx.moveTo(obs.x, obs.y);
+          ctx.lineTo(obs.x + obs.width/4, obs.y - obs.height/2);
+          ctx.lineTo(obs.x + obs.width*3/4, obs.y - obs.height/2);
+          ctx.lineTo(obs.x + obs.width, obs.y);
+          ctx.lineTo(obs.x + obs.width*3/4, obs.y + obs.height/2);
+          ctx.lineTo(obs.x + obs.width/4, obs.y + obs.height/2);
+          ctx.closePath();
+          ctx.fill();
+          
+          // 移除超出屏幕的障碍
+          if (obs.y > gameCanvas.height) {
+            gameState.obstacles.splice(i, 1);
+          }
+        }
+      }
+      
+      // 更新道具
+      function updatePowerups() {
+        // 绘制并更新所有道具
+        for (let i = gameState.powerups.length - 1; i >= 0; i--) {
+          const powerup = gameState.powerups[i];
+          
+          // 更新位置
+          powerup.y += powerup.speed;
+          
+          // 根据类型绘制不同的道具
+          switch(powerup.type) {
+            case 'life':
+              // 生命道具 (红色)
+              ctx.fillStyle = '#C42021';
+              ctx.beginPath();
+              ctx.arc(powerup.x + powerup.width/2, powerup.y + powerup.height/2, powerup.width/2, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.fillStyle = 'white';
+              ctx.font = '16px Arial';
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.fillText('+1', powerup.x + powerup.width/2, powerup.y + powerup.height/2);
+              break;
+              
+            case 'speed':
+              // 加速道具 (黄色)
+              ctx.fillStyle = '#D4AF37';
+              ctx.beginPath();
+              ctx.arc(powerup.x + powerup.width/2, powerup.y + powerup.height/2, powerup.width/2, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.fillStyle = 'black';
+              ctx.font = '16px Arial';
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.fillText('⚡', powerup.x + powerup.width/2, powerup.y + powerup.height/2);
+              break;
+              
+            case 'score':
+              // 分数道具 (蓝色)
+              ctx.fillStyle = '#1A5599';
+              ctx.beginPath();
+              ctx.arc(powerup.x + powerup.width/2, powerup.y + powerup.height/2, powerup.width/2, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.fillStyle = 'white';
+              ctx.font = '16px Arial';
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.fillText('50', powerup.x + powerup.width/2, powerup.y + powerup.height/2);
+              break;
+          }
+          
+          // 移除超出屏幕的道具
+          if (powerup.y > gameCanvas.height) {
+            gameState.powerups.splice(i, 1);
+          }
+        }
+      }
+      
+      // 键盘控制
+      document.addEventListener('keydown', (e) => {
+        if (!gameState.isRunning || gameState.isPaused) {
+          // ESC键暂停/继续
+          if (e.key === 'Escape') {
+            if (gameState.isPaused) {
+              resumeGame();
+            } else if (gameState.isRunning) {
+              pauseGame();
+            }
+          }
+          return;
+        }
+        
+        // 左移
+        if (e.key === 'ArrowLeft' && gameState.player.x > 0) {
+          gameState.player.x -= gameState.player.speed;
+        }
+        
+        // 右移
+        if (e.key === 'ArrowRight' && gameState.player.x < gameCanvas.width - gameState.player.width) {
+          gameState.player.x += gameState.player.speed;
+        }
+        
+        // 空格键加速
+        if (e.key === ' ') {
+          gameState.speed += 3;
+          setTimeout(() => {
+            gameState.speed -= 3;
+          }, 1000);
+        }
+      });
+      
+      // 窗口大小调整
+      window.addEventListener('resize', resizeCanvas);
+    });
+  </script>
+</body>
+</html>
