@@ -379,17 +379,19 @@
     </div>
 
     <script>
-        // 游戏状态变量 - 极致慢速 + 无障碍通过设计
+        // 游戏状态变量 - 增加障碍数量但保持易通过
         const game = {
             isRunning: false,
             score: 0,
             startTime: 0,
             gameTime: 0,
-            gravity: 0.4,            // 极致缓慢的下落速度
-            birdJump: -15,           // 极轻柔的跳跃力度
+            gravity: 0.4,            // 缓慢的下落速度
+            birdJump: -15,           // 轻柔的跳跃力度
             birdSpeedY: 0,
-            obstacleSpeed: 0.8,      // 障碍几乎是静止移动
-            obstacleInterval: 5000,  // 5秒生成一个障碍，充足反应时间
+            obstacleSpeed: 1.2,      // 略微增加障碍移动速度
+            obstacleInterval: 2000,  // 2秒生成一个障碍（增加频率）
+            minGapHeight: 50,        // 最小通道高度
+            maxGapHeight: 60,        // 最大通道高度
             obstacles: [],
             animationFrame: null
         };
@@ -440,8 +442,10 @@
             // 隐藏游戏结束弹窗
             gameOverPopup.style.display = 'none';
             
-            // 开始生成障碍
+            // 立即生成第一个障碍
             generateObstacles();
+            // 快速生成第二个障碍，增加初始障碍密度
+            setTimeout(generateObstacles, 800);
             
             // 开始游戏循环
             gameLoop();
@@ -461,7 +465,7 @@
             gameOverPopup.style.display = 'block';
         }
 
-        // 生成障碍 - 确保小鸟100%可以通过
+        // 生成障碍 - 随机通道位置但保证足够空间
         function generateObstacles() {
             if (!game.isRunning) return;
             
@@ -469,10 +473,10 @@
             const obstacle = document.createElement('div');
             obstacle.className = 'obstacle';
             
-            // 固定通道高度为60%（极大的通过空间）
-            const gapHeight = 60;
-            // 固定通道位置在屏幕正中间
-            const gapTop = 50;
+            // 随机通道高度（50%-60%）
+            const gapHeight = game.minGapHeight + Math.random() * (game.maxGapHeight - game.minGapHeight);
+            // 随机通道位置（25%-75%），确保在屏幕中间区域
+            const gapTop = 25 + Math.random() * 50;
             
             // 创建上下障碍
             const topObstacle = document.createElement('div');
@@ -528,7 +532,7 @@
                     obstaclesToRemove.push(obs);
                 }
                 
-                // 碰撞检测（现在几乎不可能撞到）
+                // 碰撞检测
                 if (checkCollision(obs)) {
                     gameOver();
                 }
@@ -544,30 +548,36 @@
             });
         }
 
-        // 碰撞检测
+        // 碰撞检测（优化，增加容错）
         function checkCollision(obstacle) {
-            // 小鸟边界
+            // 小鸟边界（增加10px的容错）
             const birdRect = bird.getBoundingClientRect();
             const gameRect = gameContainer.getBoundingClientRect();
             
+            // 扩大小鸟的碰撞边界，增加容错
+            const birdSafeTop = birdRect.top + 10;
+            const birdSafeBottom = birdRect.bottom - 10;
+            const birdSafeLeft = birdRect.left + 10;
+            const birdSafeRight = birdRect.right - 10;
+            
             // 小鸟相对位置
-            const birdRelativeTop = ((birdRect.top - gameRect.top) / gameRect.height) * 100;
-            const birdRelativeBottom = ((birdRect.bottom - gameRect.top) / gameRect.height) * 100;
+            const birdRelativeTop = ((birdSafeTop - gameRect.top) / gameRect.height) * 100;
+            const birdRelativeBottom = ((birdSafeBottom - gameRect.top) / gameRect.height) * 100;
             
             // 障碍位置
             const obstacleLeft = parseFloat(obstacle.element.style.left) || 100;
             
             // 检测是否在障碍范围内
             if (obstacleLeft < 10 + 8 && obstacleLeft + 8 > 10) {
-                // 检测是否撞到上下障碍（通道极大，几乎不可能）
+                // 检测是否撞到上下障碍
                 if (birdRelativeTop < obstacle.gapTop - obstacle.gapHeight/2 || 
                     birdRelativeBottom > obstacle.gapTop + obstacle.gapHeight/2) {
                     return true;
                 }
             }
             
-            // 检测是否撞到边界（唯一可能的碰撞）
-            if (birdRelativeTop < 0 || birdRelativeBottom > 100) {
+            // 检测是否撞到边界
+            if (birdRect.top < gameRect.top || birdRect.bottom > gameRect.bottom) {
                 return true;
             }
             
