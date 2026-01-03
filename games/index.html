@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大明游艺阁 | MingDynasty</title>
+      <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <style>
+        /* 全局样式重置与基础设置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "SimSun", "宋体", "Microsoft YaHei", sans-serif;
+        }
+
+        body {
+            /* 明朝仿古宣纸背景 */
+            background-color: #f5f0e6;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d9c7b8' fill-opacity='0.3'/%3E%3C/svg%3E");
+            color: #5a3e2b;
+            line-height: 1.8;
+        }
+
+        /* 头部样式 - 明朝牌匾风格 */
+        header {
+            background: linear-gradient(135deg, #8b4513, #a0522d);
+            border-bottom: 5px solid #662e1c;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        header::before,
+        header::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            width: 80px;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg width='20' height='100' viewBox='0 0 20 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20v100H0z' fill='%23662e1c'/%3E%3Cpath d='M5 5v90h10v-90H5z' fill='%23a0522d'/%3E%3C/svg%3E") repeat-y;
+        }
+
+        header::before {
+            left: 0;
+        }
+
+        header::after {
+            right: 0;
+        }
+
+        .title-box {
+            background-color: #f8f3e9;
+            border: 3px solid #662e1c;
+            display: inline-block;
+            padding: 1rem 4rem;
+            border-radius: 4px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #662e1c;
+            text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.8);
+            letter-spacing: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7a4020;
+            margin-top: 0.5rem;
+            letter-spacing: 0.2rem;
+        }
+
+        /* 导航栏样式 - 明朝木栏风格 */
+        nav {
+            background: linear-gradient(90deg, #7c3f1f, #9b502f);
+            padding: 1rem 0;
+            border-bottom: 3px solid #5a2d17;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            gap: 2.5rem;
+        }
+
+        .nav-link {
+            color: #f8f3e9;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: #f8f3e9;
+            transform: translateY(-2px);
+        }
+
+        /* 主内容区样式 */
+        main {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        /* 游戏分类标题 - 明朝卷轴标题风格 */
+        .category-title {
+            background: linear-gradient(90deg, transparent, #e6d8c9, transparent);
+            border-bottom: 2px solid #a0522d;
+            text-align: center;
+            padding: 1rem 0;
+            margin: 4rem 0 2rem;
+            font-size: 1.8rem;
+            color: #662e1c;
+            letter-spacing: 0.3rem;
+        }
+
+        /* 游戏卡片容器 - 网格布局 */
+        .game-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2.5rem;
+            margin-top: 2rem;
+        }
+
+        /* 游戏卡片 - 明朝木匣风格 */
+        .game-card {
+            background-color: #f8f3e9;
+            border: 3px solid #a0522d;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 6px 15px rgba(85, 45, 20, 0.2);
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .game-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #662e1c, #a0522d, #662e1c);
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 20px rgba(85, 45, 20, 0.3);
+            border-color: #8b4513;
+        }
+
+        /* 游戏卡片图片容器 */
+        .game-img {
+            width: 100%;
+            height: 180px;
+            background-color: #d9c7b8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-bottom: 2px solid #a0522d;
+        }
+
+        .game-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .game-card:hover .game-img img {
+            transform: scale(1.05);
+        }
+
+        /* 游戏卡片内容 */
+        .game-content {
+            padding: 1.5rem;
+        }
+
+        .game-title {
+            font-size: 1.4rem;
+            color: #662e1c;
+            margin-bottom: 0.8rem;
+            text-align: center;
+            border-bottom: 1px dashed #d9c7b8;
+            padding-bottom: 0.8rem;
+        }
+
+        .game-desc {
+            font-size: 0.95rem;
+            color: #7a5238;
+            margin-bottom: 1.2rem;
+            text-align: justify;
+        }
+
+        /* 游戏链接按钮 - 明朝印章风格 */
+        .game-link {
+            display: block;
+            width: 100%;
+            background: linear-gradient(135deg, #a0522d, #8b4513);
+            color: #f8f3e9;
+            text-align: center;
+            padding: 0.8rem 0;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+            border: 2px solid #662e1c;
+            transition: all 0.3s ease;
+        }
+
+        .game-link:hover {
+            background: linear-gradient(135deg, #8b4513, #662e1c);
+            transform: scale(1.02);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        /* 页脚样式 - 明朝古卷底部风格 */
+        footer {
+            background: linear-gradient(180deg, #a0522d, #662e1c);
+            color: #f8f3e9;
+            text-align: center;
+            padding: 2rem 0;
+            border-top: 5px solid #5a2d17;
+            margin-top: 5rem;
+        }
+
+        .footer-text {
+            font-size: 1rem;
+            letter-spacing: 0.1rem;
+        }
+
+        /* 响应式适配 - 移动端优化 */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .nav-container {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .category-title {
+                font-size: 1.5rem;
+            }
+
+            .game-container {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部 - 牌匾风格标题 -->
+    <header>
+        <div class="title-box">
+            <h1>大明游艺阁</h1>
+            <p class="subtitle">汇聚古今雅趣，畅享游戏之乐</p>
+        </div>
+    </header>
+
+    <!-- 导航栏 - 木栏风格 -->
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="nav-link">首页</a>
+            <a href="#" class="nav-link">热门游戏</a>
+            <a href="#" class="nav-link">古风养成</a>
+            <a href="#" class="nav-link">策略征战</a>
+            <a href="#" class="nav-link">休闲雅趣</a>
+            <a href="#" class="nav-link">关于我们</a>
+        </div>
+    </nav>
+
+    <!-- 主内容区 - 游戏展示 -->
+    <main>
+        <!-- 热门游戏分类 -->
+        <h2 class="category-title">🔥 热门游戏</h2>
+        <div class="game-container">
+            <!-- 游戏卡片 1 -->
+            <div class="game-card">
+                <div class="game-img">
+                    <img src="https://picsum.photos/seed/ming1/400/300" alt="《大明江山》游戏封面">
+                </div>
+                <div class="game-content">
+                    <h3 class="game-title">大明江山</h3>
+                    <p class="game-desc">执掌大明朝政，平定四方战乱，打造属于你的永乐盛世，体验帝王的权谋与担当。</p>
+                    <a href="https://example.com/ming-jiangshan" target="_blank" class="game-link">进入游戏</a>
+                </div>
+            </div>
+
+            <!-- 游戏卡片 2 -->
+            <div class="game-card">
+                <div class="game-img">
+                    <img src="https://picsum.photos/seed/ming2/400/300" alt="《江南百景图》游戏封面">
+                </div>
+                <div class="game-content">
+                    <h3 class="game-title">江南百景图</h3>
+                    <p class="game-desc">重绘明朝江南盛景，修建亭台楼阁，招募文人墨客，打造一幅传世的江南水墨画卷。</p>
+                    <a href="https://example.com/jiangnan" target="_blank" class="game-link">进入游戏</a>
+                </div>
+            </div>
+
+            <!-- 游戏卡片 3 -->
+            <div class="game-card">
+                <div class="game-img">
+                    <img src="https://picsum.photos/seed/ming3/400/300" alt="《锦衣卫》游戏封面">
+                </div>
+                <div class="game-content">
+                    <h3 class="game-title">锦衣卫</h3>
+                    <p class="game-desc">化身锦衣卫缇骑，深入京城暗流，侦破悬案，铲除奸佞，守护大明的江山社稷。</p>
+                    <a href="https://example.com/jinyiwei" target="_blank" class="game-link">进入游戏</a>
+                </div>
+            </div>
+
+            <!-- 游戏卡片 4 -->
+            <div class="game-card">
+                <div class="game-img">
+                    <img src="https://picsum.photos/seed/ming4/400/300" alt="《文渊阁藏书》游戏封面">
+                </div>
+                <div class="game-content">
+                    <h3 class="game-title">文渊阁藏书</h3>
+                    <p class="game-desc">扮演翰林院编修，编纂《永乐大典》，搜集天下奇书，解锁古代文人的风雅人生。</p>
+                    <a href="https://example.com/wenyuange" target="_blank" class="game-link">进入游戏</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 古风养成分类 -->
+        <h2 class="category-title">🌸 古风养成</h2>
+        <div class="game-container">
+            <!-- 游戏卡片 5 -->
+            <div class="game-card">
+                <div class="game-img">
+                    <img src="https://picsum.photos/seed/ming5/400/300" alt="《大明世家》游戏封面">
+                </div>
+                <div class="game-content">
+                    <h3 class="game-title">大明世家</h3>
+                    <p class="game-desc">从布衣到望族，经营家族产业，培养子弟科举入仕，打造传承百年的大明名门望族。</p>
+                    <a href="https://example.com/daming-shijia" target="_blank" class="game-link">进入游戏</a>
+                </div>
+            </div>
+
+            <!-- 游戏卡片 6 -->
+            <div class="game-card">
+                <div class="game-img">
+                    <img src="https://picsum.photos/seed/ming6/400/300" alt="《绣楼梦》游戏封面">
+                </div>
+                <div class="game-content">
+                    <h3 class="game-title">绣楼梦</h3>
+                    <p class="game-desc">化身明朝大家闺秀，学习琴棋书画，梳妆打扮，邂逅如意郎君，书写一段古典情缘。</p>
+                    <a href="https://example.com/xiuloumeng" target="_blank" class="game-link">进入游戏</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 策略征战分类 -->
+        <h2 class="category-title">⚔️ 策略征战</h2>
+        <div class="game-container">
+            <!-- 游戏卡片 7 -->
+            <div class="game-card">
+                <div class="game-img">
+                    <img src="https://picsum.photos/seed/ming7/400/300" alt="《万历东征》游戏封面">
+                </div>
+                <div class="game-content">
+                    <h3 class="game-title">万历东征</h3>
+                    <p class="game-desc">重现万历朝鲜之役，调兵遣将，排兵布阵，抵御倭寇入侵，扬我大明国威。</p>
+                    <a href="https://example.com/wanli-dongzheng" target="_blank" class="game-link">进入游戏</a>
+                </div>
+            </div>
+
+            <!-- 游戏卡片 8 -->
+            <div class="game-card">
+                <div class="game-img">
+                    <img src="https://picsum.photos/seed/ming8/400/300" alt="《九边重镇》游戏封面">
+                </div>
+                <div class="game-content">
+                    <h3 class="game-title">九边重镇</h3>
+                    <p class="game-desc">镇守大明九边重镇，修筑城墙，训练兵马，抵御蒙古铁骑，守护北方边境的安宁。</p>
+                    <a href="https://example.com/jiubian-zhongzhen" target="_blank" class="game-link">进入游戏</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer>
+        <p class="footer-text">© 2013-2026 MingDynasty,Inc. 大明游艺阁 | 大明游戏</p>
+    </footer>
+
+    <!-- 简单交互脚本 - 可选 -->
+    <script>
+        // 给所有游戏链接添加点击提示（增强用户体验）
+        const gameLinks = document.querySelectorAll('.game-link');
+        gameLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                // 仅在演示环境下添加提示，实际项目可移除
+                if (this.href.includes('example.com')) {
+                    e.preventDefault();
+                    alert(`《${this.parentElement.querySelector('.game-title').textContent}》游戏链接即将跳转，敬请期待！`);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
