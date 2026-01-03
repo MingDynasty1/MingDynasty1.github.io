@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>诗词填字 | MingDynasty</title>
+      <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <style>
+        /* 全局样式重置与基础明朝风格设置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "SimSun", "宋体", "Microsoft YaHei", sans-serif;
+        }
+
+        body {
+            background-color: #f5f0e6;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d9c7b8' fill-opacity='0.3'/%3E%3C/svg%3E");
+            color: #5a3e2b;
+            line-height: 1.8;
+        }
+
+        /* 头部 - 明朝牌匾风格 */
+        header {
+            background: linear-gradient(135deg, #8b4513, #a0522d);
+            border-bottom: 5px solid #662e1c;
+            padding: 1.5rem 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        header::before,
+        header::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            width: 70px;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg width='20' height='100' viewBox='0 0 20 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20v100H0z' fill='%23662e1c'/%3E%3Cpath d='M5 5v90h10v-90H5z' fill='%23a0522d'/%3E%3C/svg%3E") repeat-y;
+        }
+
+        header::before {
+            left: 0;
+        }
+
+        header::after {
+            right: 0;
+        }
+
+        .title-box {
+            background-color: #f8f3e9;
+            border: 3px solid #662e1c;
+            display: inline-block;
+            padding: 0.8rem 3rem;
+            border-radius: 4px;
+            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: bold;
+            color: #662e1c;
+            text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.8);
+            letter-spacing: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #7a4020;
+            margin-top: 0.3rem;
+            letter-spacing: 0.2rem;
+        }
+
+        /* 游戏容器 - 统一样式 */
+        .game-wrapper {
+            max-width: 1000px;
+            margin: 3rem auto 5rem;
+            padding: 0 2rem;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* 通用游戏面板 - 明朝试卷/木匣风格 */
+        .game-panel {
+            background-color: #f8f3e9;
+            border: 3px solid #a0522d;
+            border-radius: 6px;
+            padding: 2.5rem 3rem;
+            box-shadow: 0 6px 15px rgba(85, 45, 20, 0.2);
+            position: relative;
+        }
+
+        .game-panel::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #662e1c, #a0522d, #662e1c);
+        }
+
+        /* 通用按钮样式 */
+        .game-btn {
+            background: linear-gradient(135deg, #8b4513, #a0522d);
+            color: #f8f3e9;
+            border: 2px solid #662e1c;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: 4px;
+        }
+
+        .game-btn:hover {
+            background: linear-gradient(135deg, #7c3f1f, #8b4513);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .game-btn:disabled {
+            background: linear-gradient(135deg, #bcaaa4, #d7ccc8);
+            border-color: #a0522d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* 大明诗词填字游戏专属样式 */
+        .question-title {
+            font-size: 1.5rem;
+            color: #662e1c;
+            margin-bottom: 1.8rem;
+            padding-left: 0.5rem;
+            border-left: 4px solid #a0522d;
+            text-align: center;
+        }
+
+        .poem-content {
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            letter-spacing: 0.3rem;
+            line-height: 2.5;
+        }
+
+        .blank-word {
+            display: inline-block;
+            width: 60px;
+            height: 40px;
+            margin: 0 0.5rem;
+            border-bottom: 3px solid #662e1c;
+            text-align: center;
+            line-height: 40px;
+            color: #8b4513;
+            font-weight: bold;
+        }
+
+        .option-list {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .option-item {
+            background-color: #fdfaf5;
+            border: 2px solid #d9c7b8;
+            border-radius: 4px;
+            padding: 0.8rem 1rem;
+            font-size: 1.1rem;
+            color: #5a3e2b;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .option-item:hover {
+            border-color: #a0522d;
+            background-color: #f5efe8;
+            transform: translateY(-3px);
+        }
+
+        .option-item.used {
+            background-color: #d7ccc8;
+            border-color: #bcaaa4;
+            cursor: not-allowed;
+            opacity: 0.7;
+            transform: none;
+        }
+
+        .option-item.correct {
+            background-color: #e8f5e9;
+            border-color: #4caf50;
+            color: #2e7d32;
+        }
+
+        .poem-status {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #662e1c;
+            margin-bottom: 2rem;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        /* 通用结果弹窗样式 */
+        .result-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .result-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background-color: #f8f3e9;
+            border: 4px solid #662e1c;
+            border-radius: 6px;
+            padding: 3rem 4rem;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            color: #8b4513;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.3rem;
+        }
+
+        .modal-desc {
+            font-size: 1.2rem;
+            color: #5a3e2b;
+            margin-bottom: 2rem;
+            line-height: 2;
+        }
+
+        .modal-score {
+            font-size: 1.5rem;
+            color: #662e1c;
+            margin-bottom: 2rem;
+            font-weight: bold;
+        }
+
+        /* 响应式优化 */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .game-panel {
+                padding: 1.5rem 2rem;
+            }
+
+            .poem-content {
+                font-size: 1.4rem;
+            }
+
+            .blank-word {
+                width: 40px;
+                height: 30px;
+                line-height: 30px;
+            }
+
+            .option-list {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .modal-content {
+                padding: 2rem 1.5rem;
+            }
+
+            .modal-title {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部牌匾 -->
+    <header>
+        <div class="title-box">
+            <h1>大明诗词填字</h1>
+            <p class="subtitle">吟诗作对 · 尽显文人风雅</p>
+        </div>
+    </header>
+
+    <!-- 大明诗词填字游戏 -->
+    <div class="game-wrapper" id="poem-game">
+        <div class="game-panel">
+            <h2 class="question-title">补全大明传世诗词，完成风雅之试</h2>
+            <div class="poem-status">
+                当前关卡：<span id="current-poem-level">1</span> / 5
+                正确填字：<span id="correct-word-count">0</span> / <span id="total-blank-count">2</span>
+            </div>
+            <div class="poem-content" id="poem-display">
+                请等待诗词加载...
+            </div>
+            <div class="option-list" id="poem-option-container">
+                <!-- 选项动态生成 -->
+            </div>
+            <div class="btn-group">
+                <button class="game-btn" id="next-poem-btn" disabled>下一首</button>
+                <button class="game-btn" id="restart-poem-btn">重新闯关</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 通用结果弹窗 -->
+    <div class="result-modal" id="result-modal">
+        <div class="modal-content">
+            <h2 class="modal-title">捷报！</h2>
+            <p class="modal-desc" id="modal-desc">你已完成游戏挑战，表现优异！</p>
+            <p class="modal-score" id="modal-score">最终成绩：0</p>
+            <button class="game-btn" id="modal-restart-btn">再次挑战</button>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        const resultModal = document.getElementById('result-modal');
+        const modalRestartBtn = document.getElementById('modal-restart-btn');
+
+        // 大明诗词填字游戏数据（精选明朝/古典诗词，含空白与选项）
+        const poemList = [
+            {
+                poem: "春风又绿江南岸，明月何时照我<span class='blank' data-index='0'>___</span>。",
+                blanks: ["还"],
+                options: ["还", "归", "来", "去"]
+            },
+            {
+                poem: "人生自古谁无死，留取丹心照汗<span class='blank' data-index='0'>___</span>。",
+                blanks: ["青"],
+                options: ["青", "史", "竹", "帛"]
+            },
+            {
+                poem: "飞流直下三千尺，疑是银河落九<span class='blank' data-index='0'>___</span>。",
+                blanks: ["天"],
+                options: ["天", "霄", "云", "空"]
+            },
+            {
+                poem: "床前明月光，疑是地上<span class='blank' data-index='0'>___</span>。",
+                blanks: ["霜"],
+                options: ["霜", "雪", "露", "冰"]
+            },
+            {
+                poem: "桃花潭水深千尺，不及汪伦送我<span class='blank' data-index='0'>___</span>。",
+                blanks: ["情"],
+                options: ["情", "意", "心", "恩"]
+            }
+        ];
+
+        // 诗词游戏状态变量
+        let currentPoemIndex = 0;
+        let correctWordCount = 0;
+        let currentBlankCount = 0;
+        const currentPoemLevelEl = document.getElementById('current-poem-level');
+        const correctWordCountEl = document.getElementById('correct-word-count');
+        const totalBlankCountEl = document.getElementById('total-blank-count');
+        const poemDisplayEl = document.getElementById('poem-display');
+        const poemOptionContainerEl = document.getElementById('poem-option-container');
+        const nextPoemBtnEl = document.getElementById('next-poem-btn');
+        const restartPoemBtnEl = document.getElementById('restart-poem-btn');
+
+        // 初始化诗词填字游戏
+        function initPoemGame() {
+            currentPoemIndex = 0;
+            correctWordCount = 0;
+            updatePoemStatus();
+            loadCurrentPoem();
+            nextPoemBtnEl.disabled = true;
+            resultModal.classList.remove('active');
+        }
+
+        // 更新诗词游戏状态
+        function updatePoemStatus() {
+            currentPoemLevelEl.textContent = currentPoemIndex + 1;
+            correctWordCountEl.textContent = correctWordCount;
+            const currentPoem = poemList[currentPoemIndex];
+            currentBlankCount = currentPoem.blanks.length;
+            totalBlankCountEl.textContent = currentBlankCount;
+        }
+
+        // 加载当前诗词
+        function loadCurrentPoem() {
+            const currentPoem = poemList[currentPoemIndex];
+            poemDisplayEl.innerHTML = currentPoem.poem;
+
+            // 替换空白为输入框样式
+            const blankElements = poemDisplayEl.querySelectorAll('.blank');
+            blankElements.forEach((blank, index) => {
+                const blankWord = document.createElement('span');
+                blankWord.className = 'blank-word';
+                blankWord.dataset.blankIndex = index;
+                blank.parentNode.replaceChild(blankWord, blank);
+            });
+
+            // 生成选项
+            poemOptionContainerEl.innerHTML = '';
+            currentPoem.options.forEach((option, index) => {
+                const optionItem = document.createElement('div');
+                optionItem.className = 'option-item';
+                optionItem.dataset.option = option;
+                optionItem.textContent = option;
+                optionItem.addEventListener('click', () => selectPoemOption(optionItem, option));
+                poemOptionContainerEl.appendChild(optionItem);
+            });
+        }
+
+        // 选择诗词选项
+        function selectPoemOption(optionEl, option) {
+            const currentPoem = poemList[currentPoemIndex];
+            const blankWordEl = poemDisplayEl.querySelector('.blank-word');
+
+            // 标记已使用选项
+            optionEl.classList.add('used');
+            optionEl.style.pointerEvents = 'none';
+
+            // 判断是否正确
+            if (option === currentPoem.blanks[0]) {
+                optionEl.classList.add('correct');
+                blankWordEl.textContent = option;
+                blankWordEl.style.color = '#4caf50';
+                correctWordCount++;
+                correctWordCountEl.textContent = correctWordCount;
+            } else {
+                blankWordEl.textContent = option;
+                blankWordEl.style.color = '#f44336';
+                // 2秒后清空错误答案
+                setTimeout(() => {
+                    blankWordEl.textContent = '';
+                }, 1000);
+            }
+
+            // 启用下一首按钮
+            nextPoemBtnEl.disabled = false;
+
+            // 最后一首直接显示结果
+            if (currentPoemIndex === poemList.length - 1) {
+                setTimeout(() => {
+                    showPoemResult();
+                }, 1500);
+            }
+        }
+
+        // 下一首诗词逻辑
+        nextPoemBtnEl.addEventListener('click', () => {
+            currentPoemIndex++;
+            if (currentPoemIndex < poemList.length) {
+                updatePoemStatus();
+                loadCurrentPoem();
+                nextPoemBtnEl.disabled = true;
+            }
+        });
+
+        // 重新开始诗词游戏（按钮绑定）
+        restartPoemBtnEl.addEventListener('click', initPoemGame);
+        modalRestartBtn.addEventListener('click', initPoemGame);
+
+        // 显示诗词填字结果
+        function showPoemResult() {
+            const modalTitle = document.querySelector('.modal-title');
+            const modalDesc = document.getElementById('modal-desc');
+            const modalScore = document.getElementById('modal-score');
+
+            const totalScore = (correctWordCount / poemList.length) * 100;
+            modalTitle.textContent = totalScore >= 80 ? "诗坛圣手！" : "再接再厉！";
+            modalDesc.textContent = totalScore >= 80 
+                ? "你已精通传世诗词，文采斐然，堪称大明文坛翘楚！" 
+                : "你对古典诗词尚有欠缺，需多诵多记，再战诗坛！";
+            modalScore.textContent = `最终得分：${Math.round(totalScore)} / 100`;
+
+            resultModal.classList.add('active');
+        }
+
+        // 页面加载完成初始化游戏
+        window.onload = function() {
+            initPoemGame();
+        };
+    </script>
+</body>
+</html>
