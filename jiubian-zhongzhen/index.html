@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大明迷宫寻路 | MingDynasty</title>
+      <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <style>
+        /* 全局样式重置与基础明朝风格设置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "SimSun", "宋体", "Microsoft YaHei", sans-serif;
+        }
+
+        body {
+            background-color: #f5f0e6;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d9c7b8' fill-opacity='0.3'/%3E%3C/svg%3E");
+            color: #5a3e2b;
+            line-height: 1.8;
+        }
+
+        /* 头部 - 明朝牌匾风格 */
+        header {
+            background: linear-gradient(135deg, #8b4513, #a0522d);
+            border-bottom: 5px solid #662e1c;
+            padding: 1.5rem 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        header::before,
+        header::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            width: 70px;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg width='20' height='100' viewBox='0 0 20 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20v100H0z' fill='%23662e1c'/%3E%3Cpath d='M5 5v90h10v-90H5z' fill='%23a0522d'/%3E%3C/svg%3E") repeat-y;
+        }
+
+        header::before {
+            left: 0;
+        }
+
+        header::after {
+            right: 0;
+        }
+
+        .title-box {
+            background-color: #f8f3e9;
+            border: 3px solid #662e1c;
+            display: inline-block;
+            padding: 0.8rem 3rem;
+            border-radius: 4px;
+            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: bold;
+            color: #662e1c;
+            text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.8);
+            letter-spacing: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #7a4020;
+            margin-top: 0.3rem;
+            letter-spacing: 0.2rem;
+        }
+
+        /* 游戏容器 - 统一样式 */
+        .game-wrapper {
+            max-width: 700px;
+            margin: 3rem auto 5rem;
+            padding: 0 2rem;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* 通用游戏面板 - 明朝试卷/木匣风格 */
+        .game-panel {
+            background-color: #f8f3e9;
+            border: 3px solid #a0522d;
+            border-radius: 6px;
+            padding: 2.5rem 3rem;
+            box-shadow: 0 6px 15px rgba(85, 45, 20, 0.2);
+            position: relative;
+            text-align: center;
+        }
+
+        .game-panel::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #662e1c, #a0522d, #662e1c);
+        }
+
+        /* 通用按钮样式 */
+        .game-btn {
+            background: linear-gradient(135deg, #8b4513, #a0522d);
+            color: #f8f3e9;
+            border: 2px solid #662e1c;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: 4px;
+        }
+
+        .game-btn:hover {
+            background: linear-gradient(135deg, #7c3f1f, #8b4513);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .game-btn:disabled {
+            background: linear-gradient(135deg, #bcaaa4, #d7ccc8);
+            border-color: #a0522d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* 大明迷宫寻路游戏专属样式 */
+        .question-title {
+            font-size: 1.5rem;
+            color: #662e1c;
+            margin-bottom: 1.8rem;
+            padding-left: 0.5rem;
+            border-left: 4px solid #a0522d;
+            display: inline-block;
+            text-align: left;
+        }
+
+        .maze-status {
+            font-size: 1.2rem;
+            color: #662e1c;
+            margin-bottom: 2rem;
+        }
+
+        .maze-tips {
+            font-size: 0.9rem;
+            color: #7a4020;
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+
+        .maze-grid {
+            display: grid;
+            grid-template-columns: repeat(15, 1fr);
+            gap: 1px;
+            margin: 0 auto 2.5rem;
+            background-color: #d9c7b8;
+            padding: 2px;
+            border-radius: 4px;
+            max-width: 500px;
+        }
+
+        .maze-cell {
+            width: 100%;
+            aspect-ratio: 1/1;
+            background-color: #f8f3e9;
+            transition: all 0.2s ease;
+        }
+
+        .maze-cell.wall {
+            background-color: #662e1c;
+        }
+
+        .maze-cell.start {
+            background-color: #4caf50;
+        }
+
+        .maze-cell.end {
+            background-color: #f44336;
+        }
+
+        .maze-cell.path {
+            background-color: #ffeb3b;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        /* 方向控制按钮 */
+        .direction-btns {
+            display: grid;
+            grid-template-areas:
+                ". up ."
+                "left down right";
+            gap: 0.5rem;
+            margin: 1rem auto 2rem;
+            max-width: 200px;
+        }
+
+        .dir-btn {
+            background: linear-gradient(135deg, #8b4513, #a0522d);
+            color: #f8f3e9;
+            border: 2px solid #662e1c;
+            font-size: 1rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dir-btn.up { grid-area: up; }
+        .dir-btn.down { grid-area: down; }
+        .dir-btn.left { grid-area: left; }
+        .dir-btn.right { grid-area: right; }
+
+        .dir-btn:hover {
+            background: linear-gradient(135deg, #7c3f1f, #8b4513);
+            transform: translateY(-2px);
+        }
+
+        /* 通用结果弹窗样式 */
+        .result-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .result-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background-color: #f8f3e9;
+            border: 4px solid #662e1c;
+            border-radius: 6px;
+            padding: 3rem 4rem;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            color: #8b4513;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.3rem;
+        }
+
+        .modal-desc {
+            font-size: 1.2rem;
+            color: #5a3e2b;
+            margin-bottom: 2rem;
+            line-height: 2;
+        }
+
+        .modal-score {
+            font-size: 1.5rem;
+            color: #662e1c;
+            margin-bottom: 2rem;
+            font-weight: bold;
+        }
+
+        /* 响应式优化 */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .game-panel {
+                padding: 1.5rem 2rem;
+            }
+
+            .maze-grid {
+                grid-template-columns: repeat(12, 1fr);
+            }
+
+            .dir-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 0.9rem;
+            }
+
+            .modal-content {
+                padding: 2rem 1.5rem;
+            }
+
+            .modal-title {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部牌匾 -->
+    <header>
+        <div class="title-box">
+            <h1>大明迷宫寻路</h1>
+            <p class="subtitle">皇城探路 · 成为御用引路使</p>
+        </div>
+    </header>
+
+    <!-- 大明迷宫寻路游戏 -->
+    <div class="game-wrapper" id="maze-game">
+        <div class="game-panel">
+            <h2 class="question-title">皇城迷宫：从起点（绿）寻路至终点（红）</h2>
+            <div class="maze-status">
+                移动步数：<span id="maze-step-count">0</span>
+            </div>
+            <div class="maze-tips">提示：使用方向按钮控制移动，不可穿过墙壁</div>
+            <div class="direction-btns">
+                <button class="dir-btn up">↑</button>
+                <button class="dir-btn down">↓</button>
+                <button class="dir-btn left">←</button>
+                <button class="dir-btn right">→</button>
+            </div>
+            <div class="maze-grid" id="maze-container">
+                <!-- 迷宫格子动态生成 -->
+            </div>
+            <div class="btn-group">
+                <button class="game-btn" id="restart-maze-btn">重新探路</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 通用结果弹窗 -->
+    <div class="result-modal" id="result-modal">
+        <div class="modal-content">
+            <h2 class="modal-title">捷报！</h2>
+            <p class="modal-desc" id="modal-desc">你已完成游戏挑战，表现优异！</p>
+            <p class="modal-score" id="modal-score">最终成绩：0</p>
+            <button class="game-btn" id="modal-restart-btn">再次挑战</button>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        const resultModal = document.getElementById('result-modal');
+        const modalRestartBtn = document.getElementById('modal-restart-btn');
+
+        // 大明迷宫数据（15x15 迷宫，0=空地，1=墙壁，2=起点，3=终点）
+        const mazeData = [
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,2,0,0,1,0,0,0,1,0,0,0,1,0,1],
+            [1,1,1,0,1,0,1,0,1,0,1,0,1,0,1],
+            [1,0,0,0,0,0,1,0,0,0,1,0,0,0,1],
+            [1,0,1,1,1,1,1,1,1,0,1,1,1,1,1],
+            [1,0,0,0,0,0,0,0,1,0,0,0,0,0,1],
+            [1,1,1,1,1,1,1,0,1,1,1,1,1,0,1],
+            [1,0,0,0,0,0,1,0,0,0,0,0,1,0,1],
+            [1,0,1,1,1,0,1,1,1,1,1,0,1,0,1],
+            [1,0,1,0,0,0,0,0,0,0,1,0,0,0,1],
+            [1,0,1,0,1,1,1,1,1,0,1,1,1,0,1],
+            [1,0,0,0,1,0,0,0,1,0,0,0,1,0,1],
+            [1,1,1,1,1,0,1,0,1,1,1,0,1,1,1],
+            [1,0,0,0,0,0,1,0,0,0,0,0,0,3,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+        ];
+        const mazeSize = mazeData.length;
+
+        // 迷宫游戏状态变量
+        let currentPosition = { x: 1, y: 1 }; // 起点坐标
+        let mazeStepCount = 0;
+        const mazeStepCountEl = document.getElementById('maze-step-count');
+        const mazeContainerEl = document.getElementById('maze-container');
+        const restartMazeBtnEl = document.getElementById('restart-maze-btn');
+        const dirBtns = document.querySelectorAll('.dir-btn');
+
+        // 初始化迷宫游戏
+        function initMazeGame() {
+            // 重置起点位置
+            for (let i = 0; i < mazeSize; i++) {
+                for (let j = 0; j < mazeSize; j++) {
+                    if (mazeData[i][j] === 2) {
+                        currentPosition = { x: i, y: j };
+                        break;
+                    }
+                }
+            }
+            mazeStepCount = 0;
+            updateMazeStatus();
+            renderMaze();
+            resultModal.classList.remove('active');
+        }
+
+        // 更新迷宫状态
+        function updateMazeStatus() {
+            mazeStepCountEl.textContent = mazeStepCount;
+        }
+
+        // 渲染迷宫
+        function renderMaze() {
+            mazeContainerEl.innerHTML = '';
+            mazeContainerEl.style.gridTemplateColumns = `repeat(${mazeSize}, 1fr)`;
+
+            for (let i = 0; i < mazeSize; i++) {
+                for (let j = 0; j < mazeSize; j++) {
+                    const mazeCell = document.createElement('div');
+                    mazeCell.className = 'maze-cell';
+                    mazeCell.dataset.x = i;
+                    mazeCell.dataset.y = j;
+
+                    // 标记墙壁、起点、终点
+                    if (mazeData[i][j] === 1) {
+                        mazeCell.classList.add('wall');
+                    } else if (mazeData[i][j] === 2) {
+                        mazeCell.classList.add('start');
+                    } else if (mazeData[i][j] === 3) {
+                        mazeCell.classList.add('end');
+                    }
+
+                    // 标记当前路径
+                    if (i === currentPosition.x && j === currentPosition.y) {
+                        mazeCell.classList.add('path');
+                    }
+
+                    mazeContainerEl.appendChild(mazeCell);
+                }
+            }
+        }
+
+        // 移动逻辑
+        function moveMaze(dx, dy) {
+            const newX = currentPosition.x + dx;
+            const newY = currentPosition.y + dy;
+
+            // 边界判断 + 不可穿过墙壁
+            if (newX >= 0 && newX < mazeSize && newY >= 0 && newY < mazeSize) {
+                const cellType = mazeData[newX][newY];
+                if (cellType !== 1) {
+                    // 更新位置和步数
+                    currentPosition = { x: newX, y: newY };
+                    mazeStepCount++;
+                    updateMazeStatus();
+                    renderMaze();
+
+                    // 检查是否到达终点
+                    if (cellType === 3) {
+                        setTimeout(() => {
+                            showMazeResult();
+                        }, 500);
+                    }
+                }
+            }
+        }
+
+        // 绑定方向按钮事件
+        dirBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (btn.classList.contains('up')) {
+                    moveMaze(-1, 0); // 上移（x减1）
+                } else if (btn.classList.contains('down')) {
+                    moveMaze(1, 0); // 下移（x加1）
+                } else if (btn.classList.contains('left')) {
+                    moveMaze(0, -1); // 左移（y减1）
+                } else if (btn.classList.contains('right')) {
+                    moveMaze(0, 1); // 右移（y加1）
+                }
+            });
+        });
+
+        // 重新开始迷宫游戏（按钮绑定）
+        restartMazeBtnEl.addEventListener('click', initMazeGame);
+        modalRestartBtn.addEventListener('click', initMazeGame);
+
+        // 显示迷宫结果
+        function showMazeResult() {
+            const modalTitle = document.querySelector('.modal-title');
+            const modalDesc = document.getElementById('modal-desc');
+            const modalScore = document.getElementById('modal-score');
+
+            modalTitle.textContent = "探路成功！";
+            modalDesc.textContent = "你已成功走出皇城迷宫，路径清晰，步伐稳健，堪称大明御用引路使！";
+            modalScore.textContent = `最终步数：${mazeStepCount}（步数越少，技艺越高）`;
+
+            resultModal.classList.add('active');
+        }
+
+        // 页面加载完成初始化游戏
+        window.onload = function() {
+            initMazeGame();
+        };
+    </script>
+</body>
+</html>
