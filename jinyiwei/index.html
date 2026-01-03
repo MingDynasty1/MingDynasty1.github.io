@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>锦衣卫找不同 | MingDynasty</title>
+      <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <style>
+        /* 全局样式重置与基础明朝风格设置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "SimSun", "宋体", "Microsoft YaHei", sans-serif;
+        }
+
+        body {
+            background-color: #f5f0e6;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d9c7b8' fill-opacity='0.3'/%3E%3C/svg%3E");
+            color: #5a3e2b;
+            line-height: 1.8;
+        }
+
+        /* 头部 - 明朝牌匾风格 */
+        header {
+            background: linear-gradient(135deg, #8b4513, #a0522d);
+            border-bottom: 5px solid #662e1c;
+            padding: 1.5rem 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        header::before,
+        header::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            width: 70px;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg width='20' height='100' viewBox='0 0 20 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20v100H0z' fill='%23662e1c'/%3E%3Cpath d='M5 5v90h10v-90H5z' fill='%23a0522d'/%3E%3C/svg%3E") repeat-y;
+        }
+
+        header::before {
+            left: 0;
+        }
+
+        header::after {
+            right: 0;
+        }
+
+        .title-box {
+            background-color: #f8f3e9;
+            border: 3px solid #662e1c;
+            display: inline-block;
+            padding: 0.8rem 3rem;
+            border-radius: 4px;
+            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: bold;
+            color: #662e1c;
+            text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.8);
+            letter-spacing: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #7a4020;
+            margin-top: 0.3rem;
+            letter-spacing: 0.2rem;
+        }
+
+        /* 游戏容器 - 统一样式 */
+        .game-wrapper {
+            max-width: 1000px;
+            margin: 3rem auto 5rem;
+            padding: 0 2rem;
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* 通用游戏面板 - 明朝试卷/木匣风格 */
+        .game-panel {
+            background-color: #f8f3e9;
+            border: 3px solid #a0522d;
+            border-radius: 6px;
+            padding: 2.5rem 3rem;
+            box-shadow: 0 6px 15px rgba(85, 45, 20, 0.2);
+            position: relative;
+        }
+
+        .game-panel::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #662e1c, #a0522d, #662e1c);
+        }
+
+        /* 通用按钮样式 */
+        .game-btn {
+            background: linear-gradient(135deg, #8b4513, #a0522d);
+            color: #f8f3e9;
+            border: 2px solid #662e1c;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: 4px;
+        }
+
+        .game-btn:hover {
+            background: linear-gradient(135deg, #7c3f1f, #8b4513);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .game-btn:disabled {
+            background: linear-gradient(135deg, #bcaaa4, #d7ccc8);
+            border-color: #a0522d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* 锦衣卫找不同游戏专属样式 */
+        .question-title {
+            font-size: 1.5rem;
+            color: #662e1c;
+            margin-bottom: 1.8rem;
+            padding-left: 0.5rem;
+            border-left: 4px solid #a0522d;
+        }
+
+        .find-diff-container {
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+
+        .diff-img-box {
+            width: 350px;
+            height: 250px;
+            border: 3px solid #a0522d;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+            background-color: #d9c7b8;
+        }
+
+        .diff-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .diff-mark {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border: 2px solid #ff0000;
+            background-color: rgba(255, 0, 0, 0.2);
+            border-radius: 50%;
+            display: none;
+            cursor: pointer;
+        }
+
+        .diff-mark.active {
+            display: block;
+        }
+
+        .diff-status {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #662e1c;
+            margin-bottom: 2rem;
+        }
+
+        .diff-count {
+            font-weight: bold;
+            color: #8b4513;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        /* 通用结果弹窗样式 */
+        .result-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .result-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background-color: #f8f3e9;
+            border: 4px solid #662e1c;
+            border-radius: 6px;
+            padding: 3rem 4rem;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            color: #8b4513;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.3rem;
+        }
+
+        .modal-desc {
+            font-size: 1.2rem;
+            color: #5a3e2b;
+            margin-bottom: 2rem;
+            line-height: 2;
+        }
+
+        .modal-score {
+            font-size: 1.5rem;
+            color: #662e1c;
+            margin-bottom: 2rem;
+            font-weight: bold;
+        }
+
+        /* 响应式优化 */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .game-panel {
+                padding: 1.5rem 2rem;
+            }
+
+            .find-diff-container {
+                gap: 2rem;
+            }
+
+            .diff-img-box {
+                width: 280px;
+                height: 200px;
+            }
+
+            .modal-content {
+                padding: 2rem 1.5rem;
+            }
+
+            .modal-title {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部牌匾 -->
+    <header>
+        <div class="title-box">
+            <h1>锦衣卫找不同</h1>
+            <p class="subtitle">密令任务 · 找出蛛丝马迹</p>
+        </div>
+    </header>
+
+    <!-- 锦衣卫找不同游戏 -->
+    <div class="game-wrapper" id="diff-game">
+        <div class="game-panel">
+            <h2 class="question-title">锦衣卫密令：找出两幅图的不同之处</h2>
+            <div class="diff-status">
+                剩余不同点：<span class="diff-count" id="diff-left">3</span> / 3
+                <p>点击右图标记不同之处</p>
+            </div>
+            <div class="find-diff-container">
+                <div class="diff-img-box">
+                    <img src="https://picsum.photos/seed/mingdiff1/400/300" alt="参考图" class="diff-img">
+                </div>
+                <div class="diff-img-box" id="target-img-box">
+                    <img src="https://picsum.photos/seed/mingdiff2/400/300" alt="待查图" class="diff-img">
+                    <!-- 不同点标记 -->
+                    <div class="diff-mark" style="top: 50px; left: 80px;" data-diff="1"></div>
+                    <div class="diff-mark" style="top: 120px; left: 200px;" data-diff="2"></div>
+                    <div class="diff-mark" style="top: 180px; left: 300px;" data-diff="3"></div>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="game-btn" id="restart-diff-btn">重新查找</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 通用结果弹窗 -->
+    <div class="result-modal" id="result-modal">
+        <div class="modal-content">
+            <h2 class="modal-title">捷报！</h2>
+            <p class="modal-desc" id="modal-desc">你已完成游戏挑战，表现优异！</p>
+            <p class="modal-score" id="modal-score">最终成绩：0</p>
+            <button class="game-btn" id="modal-restart-btn">再次挑战</button>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        const resultModal = document.getElementById('result-modal');
+        const modalRestartBtn = document.getElementById('modal-restart-btn');
+
+        // 锦衣卫找不同游戏状态变量
+        const diffLeftEl = document.getElementById('diff-left');
+        const restartDiffBtnEl = document.getElementById('restart-diff-btn');
+        const diffMarks = document.querySelectorAll('.diff-mark');
+        let remainingDiffs = 3;
+
+        // 初始化找不同游戏
+        function initDiffGame() {
+            remainingDiffs = 3;
+            diffLeftEl.textContent = remainingDiffs;
+            diffMarks.forEach(mark => {
+                mark.classList.remove('active');
+                mark.style.pointerEvents = 'auto';
+            });
+            resultModal.classList.remove('active');
+        }
+
+        // 绑定找不同点击事件
+        diffMarks.forEach(mark => {
+            mark.addEventListener('click', () => {
+                if (!mark.classList.contains('active')) {
+                    mark.classList.add('active');
+                    remainingDiffs--;
+                    diffLeftEl.textContent = remainingDiffs;
+
+                    if (remainingDiffs === 0) {
+                        setTimeout(() => {
+                            showDiffResult();
+                        }, 1000);
+                    }
+                }
+            });
+        });
+
+        // 重新开始找不同（按钮绑定）
+        restartDiffBtnEl.addEventListener('click', initDiffGame);
+        modalRestartBtn.addEventListener('click', initDiffGame);
+
+        // 显示找不同结果
+        function showDiffResult() {
+            const modalTitle = document.querySelector('.modal-title');
+            const modalDesc = document.getElementById('modal-desc');
+            const modalScore = document.getElementById('modal-score');
+
+            modalTitle.textContent = "密令完成！";
+            modalDesc.textContent = "你已找出所有不同之处，锦衣卫缇骑之名，实至名归！";
+            modalScore.textContent = "任务评价：优秀";
+
+            resultModal.classList.add('active');
+        }
+
+        // 页面加载完成初始化游戏
+        window.onload = function() {
+            initDiffGame();
+        };
+    </script>
+</body>
+</html>
