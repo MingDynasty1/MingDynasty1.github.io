@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大明科举 | MingDynasty</title>
+      <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <style>
+        /* 全局样式重置与基础明朝风格设置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "SimSun", "宋体", "Microsoft YaHei", sans-serif;
+        }
+
+        body {
+            background-color: #f5f0e6;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d9c7b8' fill-opacity='0.3'/%3E%3C/svg%3E");
+            color: #5a3e2b;
+            line-height: 1.8;
+        }
+
+        /* 头部 - 明朝牌匾风格 */
+        header {
+            background: linear-gradient(135deg, #8b4513, #a0522d);
+            border-bottom: 5px solid #662e1c;
+            padding: 1.5rem 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        header::before,
+        header::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            width: 70px;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg width='20' height='100' viewBox='0 0 20 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20v100H0z' fill='%23662e1c'/%3E%3Cpath d='M5 5v90h10v-90H5z' fill='%23a0522d'/%3E%3C/svg%3E") repeat-y;
+        }
+
+        header::before {
+            left: 0;
+        }
+
+        header::after {
+            right: 0;
+        }
+
+        .title-box {
+            background-color: #f8f3e9;
+            border: 3px solid #662e1c;
+            display: inline-block;
+            padding: 0.8rem 3rem;
+            border-radius: 4px;
+            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: bold;
+            color: #662e1c;
+            text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.8);
+            letter-spacing: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #7a4020;
+            margin-top: 0.3rem;
+            letter-spacing: 0.2rem;
+        }
+
+        /* 游戏容器 - 统一样式 */
+        .game-wrapper {
+            max-width: 1000px;
+            margin: 3rem auto 5rem;
+            padding: 0 2rem;
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* 通用游戏面板 - 明朝试卷/木匣风格 */
+        .game-panel {
+            background-color: #f8f3e9;
+            border: 3px solid #a0522d;
+            border-radius: 6px;
+            padding: 2.5rem 3rem;
+            box-shadow: 0 6px 15px rgba(85, 45, 20, 0.2);
+            position: relative;
+        }
+
+        .game-panel::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #662e1c, #a0522d, #662e1c);
+        }
+
+        /* 通用按钮样式 */
+        .game-btn {
+            background: linear-gradient(135deg, #8b4513, #a0522d);
+            color: #f8f3e9;
+            border: 2px solid #662e1c;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: 4px;
+        }
+
+        .game-btn:hover {
+            background: linear-gradient(135deg, #7c3f1f, #8b4513);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .game-btn:disabled {
+            background: linear-gradient(135deg, #bcaaa4, #d7ccc8);
+            border-color: #a0522d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* 大明科举答题游戏专属样式 */
+        .exam-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px dashed #d9c7b8;
+        }
+
+        .level-text, .score-box {
+            font-size: 1.2rem;
+            color: #662e1c;
+            font-weight: 600;
+        }
+
+        .question-title {
+            font-size: 1.5rem;
+            color: #662e1c;
+            margin-bottom: 1.8rem;
+            padding-left: 0.5rem;
+            border-left: 4px solid #a0522d;
+        }
+
+        .option-list {
+            display: grid;
+            gap: 1.2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .option-item {
+            background-color: #fdfaf5;
+            border: 2px solid #d9c7b8;
+            border-radius: 4px;
+            padding: 1rem 1.5rem;
+            font-size: 1.1rem;
+            color: #5a3e2b;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option-item:hover {
+            border-color: #a0522d;
+            background-color: #f5efe8;
+            transform: translateX(5px);
+        }
+
+        .option-item.correct {
+            background-color: #e8f5e9;
+            border-color: #4caf50;
+            color: #2e7d32;
+        }
+
+        .option-item.wrong {
+            background-color: #ffebee;
+            border-color: #f44336;
+            color: #c62828;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        /* 通用结果弹窗样式 */
+        .result-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .result-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background-color: #f8f3e9;
+            border: 4px solid #662e1c;
+            border-radius: 6px;
+            padding: 3rem 4rem;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            color: #8b4513;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.3rem;
+        }
+
+        .modal-desc {
+            font-size: 1.2rem;
+            color: #5a3e2b;
+            margin-bottom: 2rem;
+            line-height: 2;
+        }
+
+        .modal-score {
+            font-size: 1.5rem;
+            color: #662e1c;
+            margin-bottom: 2rem;
+            font-weight: bold;
+        }
+
+        /* 响应式优化 */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .game-panel {
+                padding: 1.5rem 2rem;
+            }
+
+            .modal-content {
+                padding: 2rem 1.5rem;
+            }
+
+            .modal-title {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部牌匾 -->
+    <header>
+        <div class="title-box">
+            <h1>大明科举</h1>
+            <p class="subtitle">秀才初试 · 精通大明文史</p>
+        </div>
+    </header>
+
+    <!-- 大明科举答题游戏 -->
+    <div class="game-wrapper" id="exam-game">
+        <div class="game-panel">
+            <!-- 游戏状态 -->
+            <div class="exam-status">
+                <div class="level-text">当前关卡：<span id="current-level">1</span>（秀才初试）</div>
+                <div class="score-box">累计得分：<span id="total-score">0</span></div>
+            </div>
+
+            <!-- 题目区域 -->
+            <div class="question-area">
+                <h2 class="question-title" id="question-text">请等待题目加载...</h2>
+                <div class="option-list" id="option-container"></div>
+            </div>
+
+            <!-- 按钮区域 -->
+            <div class="btn-group">
+                <button class="game-btn" id="next-btn" disabled>下一题</button>
+                <button class="game-btn" id="restart-exam-btn">重新闯关</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 通用结果弹窗 -->
+    <div class="result-modal" id="result-modal">
+        <div class="modal-content">
+            <h2 class="modal-title">捷报！</h2>
+            <p class="modal-desc" id="modal-desc">你已完成游戏挑战，表现优异！</p>
+            <p class="modal-score" id="modal-score">最终成绩：0</p>
+            <button class="game-btn" id="modal-restart-btn">再次挑战</button>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        const resultModal = document.getElementById('result-modal');
+        const modalRestartBtn = document.getElementById('modal-restart-btn');
+
+        // 大明科举答题游戏数据
+        const examQuestions = [
+            {
+                question: "明朝的开国皇帝是谁？",
+                options: ["A. 朱棣", "B. 朱元璋", "C. 朱由检", "D. 朱高炽"],
+                correctAnswer: 1
+            },
+            {
+                question: "《永乐大典》是在哪位皇帝时期编纂完成的？",
+                options: ["A. 洪武", "B. 永乐", "C. 万历", "D. 崇祯"],
+                correctAnswer: 1
+            },
+            {
+                question: "明朝的都城最初定在何处？",
+                options: ["A. 北京", "B. 南京", "C. 西安", "D. 洛阳"],
+                correctAnswer: 1
+            },
+            {
+                question: "以下哪个机构是明朝特有的特务机构？",
+                options: ["A. 御史台", "B. 大理寺", "C. 锦衣卫", "D. 刑部"],
+                correctAnswer: 2
+            },
+            {
+                question: "明朝中后期推行的「一条鞭法」是谁提出的？",
+                options: ["A. 张居正", "B. 海瑞", "C. 严嵩", "D. 徐阶"],
+                correctAnswer: 0
+            }
+        ];
+
+        // 科举游戏状态变量
+        let currentQuestionIndex = 0;
+        let totalScore = 0;
+        const currentLevelEl = document.getElementById('current-level');
+        const totalScoreEl = document.getElementById('total-score');
+        const questionTextEl = document.getElementById('question-text');
+        const optionContainerEl = document.getElementById('option-container');
+        const nextBtnEl = document.getElementById('next-btn');
+        const restartExamBtnEl = document.getElementById('restart-exam-btn');
+
+        // 初始化科举游戏
+        function initExamGame() {
+            currentQuestionIndex = 0;
+            totalScore = 0;
+            updateExamStatus();
+            loadCurrentQuestion();
+            nextBtnEl.disabled = true;
+            resultModal.classList.remove('active');
+        }
+
+        // 更新考试状态
+        function updateExamStatus() {
+            currentLevelEl.textContent = currentQuestionIndex + 1;
+            totalScoreEl.textContent = totalScore;
+        }
+
+        // 加载当前题目
+        function loadCurrentQuestion() {
+            const currentQuestion = examQuestions[currentQuestionIndex];
+            questionTextEl.textContent = currentQuestion.question;
+            optionContainerEl.innerHTML = '';
+
+            currentQuestion.options.forEach((option, index) => {
+                const optionItem = document.createElement('div');
+                optionItem.className = 'option-item';
+                optionItem.dataset.index = index;
+                optionItem.textContent = option;
+                optionItem.addEventListener('click', () => selectOption(optionItem, index));
+                optionContainerEl.appendChild(optionItem);
+            });
+        }
+
+        // 选择选项
+        function selectOption(optionEl, index) {
+            const currentQuestion = examQuestions[currentQuestionIndex];
+            // 禁用所有选项
+            const allOptions = document.querySelectorAll('.option-item');
+            allOptions.forEach(opt => opt.style.pointerEvents = 'none');
+
+            // 标记对错
+            if (index === currentQuestion.correctAnswer) {
+                optionEl.classList.add('correct');
+                totalScore += 20;
+                // 标记正确答案（仅当选错时额外标记，选对时当前元素已标记）
+                allOptions[currentQuestion.correctAnswer].classList.add('correct');
+            } else {
+                optionEl.classList.add('wrong');
+                allOptions[currentQuestion.correctAnswer].classList.add('correct');
+            }
+
+            // 更新分数，启用下一题按钮
+            updateExamStatus();
+            nextBtnEl.disabled = false;
+
+            // 最后一题直接显示结果
+            if (currentQuestionIndex === examQuestions.length - 1) {
+                setTimeout(() => {
+                    showExamResult();
+                }, 1500);
+            }
+        }
+
+        // 下一题逻辑
+        nextBtnEl.addEventListener('click', () => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < examQuestions.length) {
+                updateExamStatus();
+                loadCurrentQuestion();
+                nextBtnEl.disabled = true;
+            }
+        });
+
+        // 重新开始科举游戏（按钮绑定）
+        restartExamBtnEl.addEventListener('click', initExamGame);
+        modalRestartBtn.addEventListener('click', initExamGame);
+
+        // 显示科举结果
+        function showExamResult() {
+            const modalTitle = document.querySelector('.modal-title');
+            const modalDesc = document.getElementById('modal-desc');
+            const modalScore = document.getElementById('modal-score');
+
+            modalTitle.textContent = totalScore >= 80 ? "金榜题名！" : "再接再厉！";
+            modalDesc.textContent = totalScore >= 80 
+                ? "你已精通大明文史，堪称饱学之士，可入朝为官！" 
+                : "你对大明文史尚有欠缺，需加倍苦读，再战科举！";
+            modalScore.textContent = `最终得分：${totalScore} / 100`;
+
+            resultModal.classList.add('active');
+        }
+
+        // 页面加载完成初始化游戏
+        window.onload = function() {
+            initExamGame();
+        };
+    </script>
+</body>
+</html>
