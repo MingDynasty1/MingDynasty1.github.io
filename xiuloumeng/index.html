@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>货物消消乐 | MingDynasty</title>
+      <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <style>
+        /* 全局样式重置与基础明朝风格设置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "SimSun", "宋体", "Microsoft YaHei", sans-serif;
+        }
+
+        body {
+            background-color: #f5f0e6;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d9c7b8' fill-opacity='0.3'/%3E%3C/svg%3E");
+            color: #5a3e2b;
+            line-height: 1.8;
+        }
+
+        /* 头部 - 明朝牌匾风格 */
+        header {
+            background: linear-gradient(135deg, #8b4513, #a0522d);
+            border-bottom: 5px solid #662e1c;
+            padding: 1.5rem 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        header::before,
+        header::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            width: 70px;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg width='20' height='100' viewBox='0 0 20 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20v100H0z' fill='%23662e1c'/%3E%3Cpath d='M5 5v90h10v-90H5z' fill='%23a0522d'/%3E%3C/svg%3E") repeat-y;
+        }
+
+        header::before {
+            left: 0;
+        }
+
+        header::after {
+            right: 0;
+        }
+
+        .title-box {
+            background-color: #f8f3e9;
+            border: 3px solid #662e1c;
+            display: inline-block;
+            padding: 0.8rem 3rem;
+            border-radius: 4px;
+            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: bold;
+            color: #662e1c;
+            text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.8);
+            letter-spacing: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #7a4020;
+            margin-top: 0.3rem;
+            letter-spacing: 0.2rem;
+        }
+
+        /* 游戏容器 - 统一样式 */
+        .game-wrapper {
+            max-width: 800px;
+            margin: 3rem auto 5rem;
+            padding: 0 2rem;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* 通用游戏面板 - 明朝试卷/木匣风格 */
+        .game-panel {
+            background-color: #f8f3e9;
+            border: 3px solid #a0522d;
+            border-radius: 6px;
+            padding: 2.5rem 3rem;
+            box-shadow: 0 6px 15px rgba(85, 45, 20, 0.2);
+            position: relative;
+            text-align: center;
+        }
+
+        .game-panel::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #662e1c, #a0522d, #662e1c);
+        }
+
+        /* 通用按钮样式 */
+        .game-btn {
+            background: linear-gradient(135deg, #8b4513, #a0522d);
+            color: #f8f3e9;
+            border: 2px solid #662e1c;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: 4px;
+        }
+
+        .game-btn:hover {
+            background: linear-gradient(135deg, #7c3f1f, #8b4513);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .game-btn:disabled {
+            background: linear-gradient(135deg, #bcaaa4, #d7ccc8);
+            border-color: #a0522d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* 大明货物消消乐游戏专属样式 */
+        .question-title {
+            font-size: 1.5rem;
+            color: #662e1c;
+            margin-bottom: 1.8rem;
+            padding-left: 0.5rem;
+            border-left: 4px solid #a0522d;
+            display: inline-block;
+            text-align: left;
+        }
+
+        .match3-status {
+            font-size: 1.2rem;
+            color: #662e1c;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .score-count, .step-count {
+            font-weight: bold;
+            color: #8b4513;
+        }
+
+        .match3-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.8rem;
+            margin: 0 auto 2.5rem;
+            max-width: 500px;
+        }
+
+        .goods-item {
+            width: 100%;
+            height: 80px;
+            background-color: #fdfaf5;
+            border: 2px solid #d9c7b8;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #662e1c;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .goods-item:hover {
+            border-color: #a0522d;
+            background-color: #f5efe8;
+            transform: scale(1.05);
+        }
+
+        .goods-item.selected {
+            border-color: #4caf50;
+            background-color: #e8f5e9;
+        }
+
+        .goods-item.removed {
+            opacity: 0;
+            transform: scale(0);
+            pointer-events: none;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        /* 通用结果弹窗样式 */
+        .result-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .result-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background-color: #f8f3e9;
+            border: 4px solid #662e1c;
+            border-radius: 6px;
+            padding: 3rem 4rem;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            color: #8b4513;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.3rem;
+        }
+
+        .modal-desc {
+            font-size: 1.2rem;
+            color: #5a3e2b;
+            margin-bottom: 2rem;
+            line-height: 2;
+        }
+
+        .modal-score {
+            font-size: 1.5rem;
+            color: #662e1c;
+            margin-bottom: 2rem;
+            font-weight: bold;
+        }
+
+        /* 响应式优化 */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .game-panel {
+                padding: 1.5rem 2rem;
+            }
+
+            .match3-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .goods-item {
+                height: 60px;
+                font-size: 1.5rem;
+            }
+
+            .modal-content {
+                padding: 2rem 1.5rem;
+            }
+
+            .modal-title {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部牌匾 -->
+    <header>
+        <div class="title-box">
+            <h1>大明货物消消乐</h1>
+            <p class="subtitle">漕运整理 · 成为天下商埠</p>
+        </div>
+    </header>
+
+    <!-- 大明货物消消乐游戏 -->
+    <div class="game-wrapper" id="match3-game">
+        <div class="game-panel">
+            <h2 class="question-title">漕运货物整理：消除相同货物，积累财富</h2>
+            <div class="match3-status">
+                <div>当前得分：<span class="score-count" id="total-match-score">0</span></div>
+                <div>剩余步数：<span class="step-count" id="remaining-steps">20</span></div>
+            </div>
+            <div class="match3-grid" id="match3-container">
+                <!-- 货物格子动态生成 -->
+            </div>
+            <div class="btn-group">
+                <button class="game-btn" id="restart-match3-btn">重新整理</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 通用结果弹窗 -->
+    <div class="result-modal" id="result-modal">
+        <div class="modal-content">
+            <h2 class="modal-title">捷报！</h2>
+            <p class="modal-desc" id="modal-desc">你已完成游戏挑战，表现优异！</p>
+            <p class="modal-score" id="modal-score">最终成绩：0</p>
+            <button class="game-btn" id="modal-restart-btn">再次挑战</button>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        const resultModal = document.getElementById('result-modal');
+        const modalRestartBtn = document.getElementById('modal-restart-btn');
+
+        // 大明货物图标（对应漕运货物，用emoji简化展示，保持古风意境）
+        const goodsTypes = ["🍚", "🧣", "🏺", "💰", "📜", "🍵"];
+        const gridSize = 5; // 5x5 网格
+
+        // 消消乐游戏状态变量
+        let match3Grid = [];
+        let totalScore = 0;
+        let remainingSteps = 20;
+        let selectedItem = null;
+        const totalMatchScoreEl = document.getElementById('total-match-score');
+        const remainingStepsEl = document.getElementById('remaining-steps');
+        const match3ContainerEl = document.getElementById('match3-container');
+        const restartMatch3BtnEl = document.getElementById('restart-match3-btn');
+
+        // 初始化消消乐游戏
+        function initMatch3Game() {
+            totalScore = 0;
+            remainingSteps = 20;
+            selectedItem = null;
+            updateMatch3Status();
+            generateMatch3Grid();
+            renderMatch3Grid();
+            resultModal.classList.remove('active');
+        }
+
+        // 更新消消乐状态
+        function updateMatch3Status() {
+            totalMatchScoreEl.textContent = totalScore;
+            remainingStepsEl.textContent = remainingSteps;
+
+            // 步数用尽显示结果
+            if (remainingSteps <= 0) {
+                setTimeout(() => {
+                    showMatch3Result();
+                }, 1000);
+            }
+        }
+
+        // 生成消消乐网格数据
+        function generateMatch3Grid() {
+            match3Grid = [];
+            for (let i = 0; i < gridSize; i++) {
+                const row = [];
+                for (let j = 0; j < gridSize; j++) {
+                    const randomGoods = goodsTypes[Math.floor(Math.random() * goodsTypes.length)];
+                    row.push({
+                        goods: randomGoods,
+                        isRemoved: false,
+                        position: { x: i, y: j }
+                    });
+                }
+                match3Grid.push(row);
+            }
+        }
+
+        // 渲染消消乐网格
+        function renderMatch3Grid() {
+            match3ContainerEl.innerHTML = '';
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    const goods = match3Grid[i][j];
+                    if (goods.isRemoved) continue;
+
+                    const goodsItem = document.createElement('div');
+                    goodsItem.className = 'goods-item';
+                    goodsItem.dataset.x = i;
+                    goodsItem.dataset.y = j;
+                    goodsItem.textContent = goods.goods;
+                    goodsItem.addEventListener('click', () => selectGoodsItem(goodsItem));
+                    match3ContainerEl.appendChild(goodsItem);
+                }
+            }
+        }
+
+        // 选择货物项目
+        function selectGoodsItem(itemEl) {
+            if (remainingSteps <= 0) return;
+
+            const x = parseInt(itemEl.dataset.x);
+            const y = parseInt(itemEl.dataset.y);
+            const goods = match3Grid[x][y];
+
+            if (goods.isRemoved) return;
+
+            // 取消之前选择
+            if (selectedItem) {
+                selectedItem.classList.remove('selected');
+            }
+
+            // 选择当前项目
+            if (!selectedItem || (selectedItem.dataset.x !== x || selectedItem.dataset.y !== y)) {
+                selectedItem = itemEl;
+                selectedItem.classList.add('selected');
+                // 检查是否相邻且可消除
+                checkAdjacentGoods();
+            } else {
+                selectedItem = null;
+            }
+        }
+
+        // 检查相邻货物是否可消除
+        function checkAdjacentGoods() {
+            if (!selectedItem) return;
+
+            const selectedX = parseInt(selectedItem.dataset.x);
+            const selectedY = parseInt(selectedItem.dataset.y);
+            const selectedGoods = match3Grid[selectedX][selectedY].goods;
+
+            // 查找相邻相同货物
+            const adjacentPositions = [
+                [selectedX - 1, selectedY],
+                [selectedX + 1, selectedY],
+                [selectedX, selectedY - 1],
+                [selectedX, selectedY + 1]
+            ];
+
+            let hasMatch = false;
+            const toRemove = [{ x: selectedX, y: selectedY }];
+
+            // 检查相邻是否有相同货物（简单3消逻辑）
+            adjacentPositions.forEach(([x, y]) => {
+                if (x >= 0 && x < gridSize && y >= 0 && y < gridSize) {
+                    const goods = match3Grid[x][y];
+                    if (!goods.isRemoved && goods.goods === selectedGoods) {
+                        toRemove.push({ x, y });
+                        hasMatch = true;
+                    }
+                }
+            });
+
+            // 有匹配则消除
+            if (hasMatch && toRemove.length >= 3) {
+                remainingSteps--;
+                const addScore = toRemove.length * 10;
+                totalScore += addScore;
+
+                // 标记移除
+                toRemove.forEach(({ x, y }) => {
+                    match3Grid[x][y].isRemoved = true;
+                });
+
+                // 更新状态并重新渲染
+                setTimeout(() => {
+                    updateMatch3Status();
+                    renderMatch3Grid();
+                    selectedItem = null;
+
+                    // 填充空白格子
+                    fillBlankGrid();
+                }, 500);
+            }
+        }
+
+        // 填充空白格子（下落补位）
+        function fillBlankGrid() {
+            // 列方向下落
+            for (let j = 0; j < gridSize; j++) {
+                const column = [];
+                for (let i = 0; i < gridSize; i++) {
+                    if (!match3Grid[i][j].isRemoved) {
+                        column.push(match3Grid[i][j]);
+                    }
+                }
+
+                // 补充新货物
+                while (column.length < gridSize) {
+                    const randomGoods = goodsTypes[Math.floor(Math.random() * goodsTypes.length)];
+                    column.unshift({
+                        goods: randomGoods,
+                        isRemoved: false,
+                        position: { x: 0, y: j }
+                    });
+                }
+
+                // 更新网格
+                for (let i = 0; i < gridSize; i++) {
+                    match3Grid[i][j] = column[i];
+                    match3Grid[i][j].position = { x: i, y: j };
+                }
+            }
+
+            // 重新渲染
+            setTimeout(() => {
+                renderMatch3Grid();
+            }, 300);
+        }
+
+        // 重新开始消消乐游戏（按钮绑定）
+        restartMatch3BtnEl.addEventListener('click', initMatch3Game);
+        modalRestartBtn.addEventListener('click', initMatch3Game);
+
+        // 显示消消乐结果
+        function showMatch3Result() {
+            const modalTitle = document.querySelector('.modal-title');
+            const modalDesc = document.getElementById('modal-desc');
+            const modalScore = document.getElementById('modal-score');
+
+            modalTitle.textContent = totalScore >= 500 ? "富可敌国！" : "再接再厉！";
+            modalDesc.textContent = totalScore >= 500 
+                ? "你已成为大明漕运巨商，货物整理得心应手，天下商埠尽在掌握！" 
+                : "你对漕运货物整理尚有欠缺，需多加练习，再战商海！";
+            modalScore.textContent = `最终得分：${totalScore}（剩余步数：${remainingSteps}）`;
+
+            resultModal.classList.add('active');
+        }
+
+        // 页面加载完成初始化游戏
+        window.onload = function() {
+            initMatch3Game();
+        };
+    </script>
+</body>
+</html>
