@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文渊阁配对藏书 | MingDynasty</title>
+      <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <style>
+        /* 全局样式重置与基础明朝风格设置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "SimSun", "宋体", "Microsoft YaHei", sans-serif;
+        }
+
+        body {
+            background-color: #f5f0e6;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d9c7b8' fill-opacity='0.3'/%3E%3C/svg%3E");
+            color: #5a3e2b;
+            line-height: 1.8;
+        }
+
+        /* 头部 - 明朝牌匾风格 */
+        header {
+            background: linear-gradient(135deg, #8b4513, #a0522d);
+            border-bottom: 5px solid #662e1c;
+            padding: 1.5rem 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        header::before,
+        header::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            width: 70px;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg width='20' height='100' viewBox='0 0 20 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20v100H0z' fill='%23662e1c'/%3E%3Cpath d='M5 5v90h10v-90H5z' fill='%23a0522d'/%3E%3C/svg%3E") repeat-y;
+        }
+
+        header::before {
+            left: 0;
+        }
+
+        header::after {
+            right: 0;
+        }
+
+        .title-box {
+            background-color: #f8f3e9;
+            border: 3px solid #662e1c;
+            display: inline-block;
+            padding: 0.8rem 3rem;
+            border-radius: 4px;
+            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: bold;
+            color: #662e1c;
+            text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.8);
+            letter-spacing: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #7a4020;
+            margin-top: 0.3rem;
+            letter-spacing: 0.2rem;
+        }
+
+        /* 游戏容器 - 统一样式 */
+        .game-wrapper {
+            max-width: 1000px;
+            margin: 3rem auto 5rem;
+            padding: 0 2rem;
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* 通用游戏面板 - 明朝试卷/木匣风格 */
+        .game-panel {
+            background-color: #f8f3e9;
+            border: 3px solid #a0522d;
+            border-radius: 6px;
+            padding: 2.5rem 3rem;
+            box-shadow: 0 6px 15px rgba(85, 45, 20, 0.2);
+            position: relative;
+        }
+
+        .game-panel::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #662e1c, #a0522d, #662e1c);
+        }
+
+        /* 通用按钮样式 */
+        .game-btn {
+            background: linear-gradient(135deg, #8b4513, #a0522d);
+            color: #f8f3e9;
+            border: 2px solid #662e1c;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: 4px;
+        }
+
+        .game-btn:hover {
+            background: linear-gradient(135deg, #7c3f1f, #8b4513);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .game-btn:disabled {
+            background: linear-gradient(135deg, #bcaaa4, #d7ccc8);
+            border-color: #a0522d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* 文渊阁藏书配对游戏专属样式 */
+        .question-title {
+            font-size: 1.5rem;
+            color: #662e1c;
+            margin-bottom: 1.8rem;
+            padding-left: 0.5rem;
+            border-left: 4px solid #a0522d;
+        }
+
+        .book-pair-container {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .book-card {
+            width: 100%;
+            height: 120px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .book-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .book-card.flipped .book-inner {
+            transform: rotateY(180deg);
+        }
+
+        .book-card.matched .book-inner {
+            pointer-events: none;
+        }
+
+        .book-front, .book-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .book-front {
+            background: linear-gradient(135deg, #8b4513, #a0522d);
+            border: 2px solid #662e1c;
+            color: #f8f3e9;
+            font-size: 1.2rem;
+        }
+
+        .book-back {
+            background-color: #fdfaf5;
+            border: 2px solid #d9c7b8;
+            color: #662e1c;
+            font-size: 0.9rem;
+            transform: rotateY(180deg);
+        }
+
+        .pair-status {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #662e1c;
+            margin-bottom: 2rem;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        /* 通用结果弹窗样式 */
+        .result-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .result-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background-color: #f8f3e9;
+            border: 4px solid #662e1c;
+            border-radius: 6px;
+            padding: 3rem 4rem;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            color: #8b4513;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.3rem;
+        }
+
+        .modal-desc {
+            font-size: 1.2rem;
+            color: #5a3e2b;
+            margin-bottom: 2rem;
+            line-height: 2;
+        }
+
+        .modal-score {
+            font-size: 1.5rem;
+            color: #662e1c;
+            margin-bottom: 2rem;
+            font-weight: bold;
+        }
+
+        /* 响应式优化 */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .game-panel {
+                padding: 1.5rem 2rem;
+            }
+
+            .book-pair-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .modal-content {
+                padding: 2rem 1.5rem;
+            }
+
+            .modal-title {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部牌匾 -->
+    <header>
+        <div class="title-box">
+            <h1>文渊阁藏书配对</h1>
+            <p class="subtitle">整理典籍 · 成为藏书大家</p>
+        </div>
+    </header>
+
+    <!-- 文渊阁藏书配对游戏 -->
+    <div class="game-wrapper" id="pair-game">
+        <div class="game-panel">
+            <h2 class="question-title">文渊阁藏书：配对传世典籍</h2>
+            <div class="pair-status">
+                已配对：<span id="pair-count">0</span> / 6
+                剩余翻牌次数：<span id="flip-left">15</span>
+            </div>
+            <div class="book-pair-container" id="book-container">
+                <!-- 书籍卡片动态生成 -->
+            </div>
+            <div class="btn-group">
+                <button class="game-btn" id="restart-pair-btn">重新配对</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 通用结果弹窗 -->
+    <div class="result-modal" id="result-modal">
+        <div class="modal-content">
+            <h2 class="modal-title">捷报！</h2>
+            <p class="modal-desc" id="modal-desc">你已完成游戏挑战，表现优异！</p>
+            <p class="modal-score" id="modal-score">最终成绩：0</p>
+            <button class="game-btn" id="modal-restart-btn">再次挑战</button>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        const resultModal = document.getElementById('result-modal');
+        const modalRestartBtn = document.getElementById('modal-restart-btn');
+
+        // 文渊阁藏书配对游戏数据
+        const bookList = [
+            { name: "《永乐大典》", id: 1 },
+            { name: "《本草纲目》", id: 2 },
+            { name: "《天工开物》", id: 3 },
+            { name: "《农政全书》", id: 4 },
+            { name: "《徐霞客游记》", id: 5 },
+            { name: "《三国演义》", id: 6 },
+            { name: "《永乐大典》", id: 1 },
+            { name: "《本草纲目》", id: 2 },
+            { name: "《天工开物》", id: 3 },
+            { name: "《农政全书》", id: 4 },
+            { name: "《徐霞客游记》", id: 5 },
+            { name: "《三国演义》", id: 6 }
+        ];
+
+        // 文渊阁藏书配对游戏状态变量
+        const bookContainerEl = document.getElementById('book-container');
+        const pairCountEl = document.getElementById('pair-count');
+        const flipLeftEl = document.getElementById('flip-left');
+        const restartPairBtnEl = document.getElementById('restart-pair-btn');
+        let flippedCards = [];
+        let matchedPairs = 0;
+        let remainingFlips = 15;
+
+        // 初始化配对游戏
+        function initPairGame() {
+            flippedCards = [];
+            matchedPairs = 0;
+            remainingFlips = 15;
+            pairCountEl.textContent = matchedPairs;
+            flipLeftEl.textContent = remainingFlips;
+            bookContainerEl.innerHTML = '';
+
+            // 洗牌
+            const shuffledBooks = [...bookList].sort(() => Math.random() - 0.5);
+
+            shuffledBooks.forEach(book => {
+                const bookCard = document.createElement('div');
+                bookCard.className = 'book-card';
+                bookCard.dataset.id = book.id;
+                bookCard.innerHTML = `
+                    <div class="book-inner">
+                        <div class="book-front">文渊阁藏书</div>
+                        <div class="book-back">${book.name}</div>
+                    </div>
+                `;
+                bookCard.addEventListener('click', () => flipBookCard(bookCard));
+                bookContainerEl.appendChild(bookCard);
+            });
+
+            resultModal.classList.remove('active');
+        }
+
+        // 翻牌逻辑
+        function flipBookCard(cardEl) {
+            // 不能翻已配对、已翻转的牌，且剩余翻牌次数大于0
+            if (!cardEl.classList.contains('flipped') && 
+                !cardEl.classList.contains('matched') && 
+                flippedCards.length < 2 &&
+                remainingFlips > 0) {
+
+                cardEl.classList.add('flipped');
+                flippedCards.push(cardEl);
+                remainingFlips--;
+                flipLeftEl.textContent = remainingFlips;
+
+                // 两张牌翻转后判断是否配对
+                if (flippedCards.length === 2) {
+                    const card1Id = flippedCards[0].dataset.id;
+                    const card2Id = flippedCards[1].dataset.id;
+
+                    if (card1Id === card2Id) {
+                        // 配对成功
+                        setTimeout(() => {
+                            flippedCards.forEach(card => {
+                                card.classList.add('matched');
+                                card.style.pointerEvents = 'none';
+                            });
+                            matchedPairs++;
+                            pairCountEl.textContent = matchedPairs;
+                            flippedCards = [];
+
+                            // 全部配对完成
+                            if (matchedPairs === 6) {
+                                setTimeout(showPairResult, 1000);
+                            }
+                        }, 600);
+                    } else {
+                        // 配对失败
+                        setTimeout(() => {
+                            flippedCards.forEach(card => {
+                                card.classList.remove('flipped');
+                            });
+                            flippedCards = [];
+
+                            // 翻牌次数用尽
+                            if (remainingFlips === 0 && matchedPairs < 6) {
+                                setTimeout(showPairFailResult, 1000);
+                            }
+                        }, 1000);
+                    }
+                } else if (remainingFlips === 0 && matchedPairs < 6) {
+                    setTimeout(showPairFailResult, 1000);
+                }
+            }
+        }
+
+        // 重新开始配对游戏（按钮绑定）
+        restartPairBtnEl.addEventListener('click', initPairGame);
+        modalRestartBtn.addEventListener('click', initPairGame);
+
+        // 显示配对成功结果
+        function showPairResult() {
+            const modalTitle = document.querySelector('.modal-title');
+            const modalDesc = document.getElementById('modal-desc');
+            const modalScore = document.getElementById('modal-score');
+
+            modalTitle.textContent = "藏书整理完成！";
+            modalDesc.textContent = "你已成功配对所有传世典籍，文渊阁因你而熠熠生辉，堪称藏书大家！";
+            modalScore.textContent = `配对结果：6 / 6（剩余翻牌次数：${remainingFlips}）`;
+
+            resultModal.classList.add('active');
+        }
+
+        // 显示配对失败结果
+        function showPairFailResult() {
+            const modalTitle = document.querySelector('.modal-title');
+            const modalDesc = document.getElementById('modal-desc');
+            const modalScore = document.getElementById('modal-score');
+
+            modalTitle.textContent = "惜败！";
+            modalDesc.textContent = "你未能在规定翻牌次数内整理完所有藏书，需更加细心，再战文渊阁！";
+            modalScore.textContent = `配对结果：${matchedPairs} / 6（剩余翻牌次数：0）`;
+
+            resultModal.classList.add('active');
+        }
+
+        // 页面加载完成初始化游戏
+        window.onload = function() {
+            initPairGame();
+        };
+    </script>
+</body>
+</html>
