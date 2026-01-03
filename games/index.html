@@ -398,19 +398,6 @@
         <p class="footer-text">© 2013-2026 MingDynasty,Inc. 大明游艺阁 | 大明游戏</p>
     </footer>
 
-    <!-- 简单交互脚本 - 可选 -->
-    <script>
-        // 给所有游戏链接添加点击提示（增强用户体验）
-        const gameLinks = document.querySelectorAll('.game-link');
-        gameLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                // 仅在演示环境下添加提示，实际项目可移除
-                if (this.href.includes('mingdynasty1.github.io')) {
-                    e.preventDefault();
-                    alert(`《${this.parentElement.querySelector('.game-title').textContent}》游戏链接即将跳转，敬请期待！`);
-                }
-            });
-        });
-    </script>
+    
 </body>
 </html>
