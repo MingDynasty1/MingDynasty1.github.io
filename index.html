@@ -450,6 +450,32 @@
             opacity: 0.9;
         }
         
+        /* 一言功能样式 */
+        .hitokoto-container {
+            background: var(--time-bg);
+            color: #f8f3e6;
+            padding: 18px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px 0;
+            font-family: 'KaiTi', '楷体', serif;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .hitokoto-content {
+            font-size: 1.4rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            margin-bottom: 10px;
+            line-height: 1.8;
+        }
+        
+        .hitokoto-from {
+            font-size: 1rem;
+            opacity: 0.8;
+            font-style: italic;
+        }
+        
         /* 计算器样式 */
         .calculator-container {
             background: linear-gradient(145deg, var(--secondary-color), var(--primary-color));
@@ -975,6 +1001,12 @@
             <div id="current-date-en" data-lang="en" style="display: none;">Monday, January 1, 2000</div>
         </div>
         
+        <!-- 一言功能展示区 -->
+        <div class="hitokoto-container">
+            <div class="hitokoto-content" id="hitokoto-text">加载中...</div>
+            <div class="hitokoto-from" id="hitokoto-source">—— 一言</div>
+        </div>
+        
         <!-- 新增大明历史卡片 -->
         <div class="history-card">
             <h3><i class="fas fa-landmark"></i> <span data-lang="zh">探索大明历史</span><span data-lang="en" style="display: none;">Explore Ming Dynasty History</span></h3>
@@ -1418,15 +1450,48 @@
 
     <!-- 外部JavaScript文件 -->
     <script src="server_mingdynasty1.js"></script>
+    
+    <!-- 一言功能JavaScript -->
+    <script>
+        // 一言(Hitokoto)功能实现
+        function getHitokoto() {
+            // 调用Hitokoto官方API
+            fetch('https://v1.hitokoto.cn/')
+                .then(response => response.json())
+                .then(data => {
+                    // 获取页面元素
+                    const hitokotoText = document.getElementById('hitokoto-text');
+                    const hitokotoSource = document.getElementById('hitokoto-source');
+                    
+                    // 渲染一言内容和来源
+                    hitokotoText.textContent = data.hitokoto;
+                    // 处理来源显示，兼容不同格式的来源数据
+                    let sourceText = '';
+                    if (data.from_who) {
+                        sourceText = `—— ${data.from} · ${data.from_who}`;
+                    } else if (data.from) {
+                        sourceText = `—— ${data.from}`;
+                    } else {
+                        sourceText = '—— 未知来源';
+                    }
+                    hitokotoSource.textContent = sourceText;
+                })
+                .catch(error => {
+                    // 请求失败时显示默认内容
+                    console.error('获取一言失败：', error);
+                    document.getElementById('hitokoto-text').textContent = '纵使前路漫漫，亦要踏浪而行。';
+                    document.getElementById('hitokoto-source').textContent = '—— 自定义寄语';
+                });
+        }
+
+        // 页面加载完成后初始化一言
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化一言
+            getHitokoto();
+            
+            // 可选：设置定时刷新（每5分钟更新一条一言，可注释掉关闭该功能）
+            setInterval(getHitokoto, 5 * 60 * 1000);
+        });
+    </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
