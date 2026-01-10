@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大明坦克 | MingDynasty</title>
+    <style>
+        /* 基础样式与主题变量 */
+        :root {
+            /* 明色模式（明朝宫廷风） */
+            --bg-color: #f5e9d8;
+            --text-color: #2c1e0f;
+            --primary-color: #c8102e; /* 朱红 - 明朝代表色 */
+            --secondary-color: #8a7139; /* 明黄/金色 */
+            --border-color: #5c4033;
+            --tank-ming: #c8102e; /* 明军坦克色 */
+            --tank-rebel: #4a5d23; /* 起义军坦克色 */
+            --explosion-color: #ff6b35;
+            --grid-color: rgba(92, 64, 51, 0.2);
+        }
+
+        [data-theme="dark"] {
+            /* 暗色模式 */
+            --bg-color: #1a140f;
+            --text-color: #e8d9c1;
+            --primary-color: #a00c25;
+            --secondary-color: #705a2f;
+            --border-color: #8a7139;
+            --tank-ming: #a00c25;
+            --tank-rebel: #3a4b1b;
+            --explosion-color: #ff8a4c;
+            --grid-color: rgba(138, 113, 57, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "SimSun", "Microsoft YaHei", serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        /* 游戏容器 */
+        .game-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* 标题与控制区 */
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .game-title {
+            font-size: 28px;
+            color: var(--primary-color);
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .theme-toggle {
+            padding: 8px 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background-color: #a00c25;
+        }
+
+        /* 游戏信息区 */
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .player-info {
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .ming-army {
+            background-color: rgba(200, 16, 46, 0.1);
+            border: 1px solid var(--tank-ming);
+        }
+
+        .rebel-army {
+            background-color: rgba(74, 93, 35, 0.1);
+            border: 1px solid var(--tank-rebel);
+        }
+
+        /* 游戏画布 */
+        #gameCanvas {
+            width: 100%;
+            height: 400px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background-color: rgba(0,0,0,0.05);
+            cursor: crosshair;
+        }
+
+        /* 控制按钮区 */
+        .game-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .control-btn {
+            padding: 10px 20px;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+
+        .control-btn:hover {
+            background-color: #604e28;
+            transform: scale(1.05);
+        }
+
+        /* 游戏说明 */
+        .game-instructions {
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--border-color);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1 class="game-title">大明坦克战</h1>
+            <button id="themeSwitch" class="theme-toggle">切换暗色模式</button>
+        </div>
+
+        <div class="game-info">
+            <div class="player-info ming-army">
+                明军坦克 | 生命值: <span id="mingHealth">100</span> | 炮弹: <span id="mingAmmo">20</span>
+            </div>
+            <div class="player-info rebel-army">
+                起义军坦克 | 生命值: <span id="rebelHealth">100</span> | 炮弹: <span id="rebelAmmo">20</span>
+            </div>
+        </div>
+
+        <canvas id="gameCanvas"></canvas>
+
+        <div class="game-controls">
+            <button id="startBtn" class="control-btn">开始游戏</button>
+            <button id="resetBtn" class="control-btn">重置游戏</button>
+        </div>
+
+        <div class="game-instructions">
+            <p>🎮 游戏操作：</p>
+            <p>• 明军坦克（红色）：W/S 上下移动，空格键发射炮弹</p>
+            <p>• 起义军坦克（绿色）：↑/↓ 上下移动，Enter键发射炮弹</p>
+            <p>• 击毁对方坦克即可获胜！</p>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // 设置canvas实际尺寸（解决模糊问题）
+        function resizeCanvas() {
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // 游戏状态
+        let gameState = {
+            isRunning: false,
+            mingTank: {
+                x: 50,
+                y: canvas.height / 2,
+                width: 40,
+                height: 30,
+                speed: 5,
+                health: 100,
+                ammo: 20,
+                color: getComputedStyle(document.documentElement).getPropertyValue('--tank-ming'),
+                bullets: []
+            },
+            rebelTank: {
+                x: canvas.width - 90,
+                y: canvas.height / 2,
+                width: 40,
+                height: 30,
+                speed: 5,
+                health: 100,
+                ammo: 20,
+                color: getComputedStyle(document.documentElement).getPropertyValue('--tank-rebel'),
+                bullets: []
+            },
+            explosions: [],
+            keys: {}
+        };
+
+        // 主题切换功能
+        const themeSwitch = document.getElementById('themeSwitch');
+        const htmlElement = document.documentElement;
+        
+        // 初始化主题（从本地存储读取）
+        if (localStorage.getItem('theme') === 'dark') {
+            htmlElement.setAttribute('data-theme', 'dark');
+            themeSwitch.textContent = '切换明色模式';
+            updateTankColors();
+        }
+
+        themeSwitch.addEventListener('click', () => {
+            if (htmlElement.getAttribute('data-theme') === 'dark') {
+                htmlElement.removeAttribute('data-theme');
+                themeSwitch.textContent = '切换暗色模式';
+            } else {
+                htmlElement.setAttribute('data-theme', 'dark');
+                themeSwitch.textContent = '切换明色模式';
+            }
+            // 保存主题到本地存储
+            localStorage.setItem('theme', htmlElement.getAttribute('data-theme') || 'light');
+            // 更新坦克颜色
+            updateTankColors();
+        });
+
+        // 更新坦克颜色（主题切换时）
+        function updateTankColors() {
+            gameState.mingTank.color = getComputedStyle(document.documentElement).getPropertyValue('--tank-ming');
+            gameState.rebelTank.color = getComputedStyle(document.documentElement).getPropertyValue('--tank-rebel');
+        }
+
+        // 更新游戏信息显示
+        function updateGameInfo() {
+            document.getElementById('mingHealth').textContent = gameState.mingTank.health;
+            document.getElementById('mingAmmo').textContent = gameState.mingTank.ammo;
+            document.getElementById('rebelHealth').textContent = gameState.rebelTank.health;
+            document.getElementById('rebelAmmo').textContent = gameState.rebelTank.ammo;
+        }
+
+        // 绘制网格背景（模拟战场）
+        function drawGrid() {
+            ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--grid-color');
+            ctx.lineWidth = 1;
+            
+            // 绘制横线
+            for (let y = 0; y <= canvas.height; y += 20) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+            
+            // 绘制竖线
+            for (let x = 0; x <= canvas.width; x += 20) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+        }
+
+        // 绘制坦克
+        function drawTank(tank) {
+            // 坦克主体
+            ctx.fillStyle = tank.color;
+            ctx.fillRect(tank.x, tank.y, tank.width, tank.height);
+            
+            // 坦克炮管（明朝风格装饰）
+            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--secondary-color');
+            ctx.fillRect(
+                tank === gameState.mingTank ? tank.x + tank.width : tank.x - 10,
+                tank.y + tank.height / 2 - 3,
+                20,
+                6
+            );
+            
+            // 坦克轮子（简化）
+            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--border-color');
+            ctx.fillRect(tank.x, tank.y + tank.height, tank.width, 5);
+        }
+
+        // 绘制炮弹
+        function drawBullets() {
+            // 明军炮弹
+            gameState.mingTank.bullets.forEach(bullet => {
+                ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary-color');
+                ctx.beginPath();
+                ctx.arc(bullet.x, bullet.y, 4, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            
+            // 起义军炮弹
+            gameState.rebelTank.bullets.forEach(bullet => {
+                ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--tank-rebel');
+                ctx.beginPath();
+                ctx.arc(bullet.x, bullet.y, 4, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        // 绘制爆炸效果
+        function drawExplosions() {
+            gameState.explosions.forEach((explosion, index) => {
+                ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--explosion-color');
+                ctx.beginPath();
+                ctx.arc(explosion.x, explosion.y, explosion.radius, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // 爆炸扩散并消失
+                explosion.radius += 0.5;
+                explosion.alpha -= 0.02;
+                ctx.globalAlpha = explosion.alpha;
+                
+                if (explosion.alpha <= 0) {
+                    gameState.explosions.splice(index, 1);
+                }
+            });
+            ctx.globalAlpha = 1;
+        }
+
+        // 碰撞检测
+        function checkCollisions() {
+            // 明军炮弹击中起义军坦克
+            gameState.mingTank.bullets.forEach((bullet, index) => {
+                if (
+                    bullet.x > gameState.rebelTank.x &&
+                    bullet.x < gameState.rebelTank.x + gameState.rebelTank.width &&
+                    bullet.y > gameState.rebelTank.y &&
+                    bullet.y < gameState.rebelTank.y + gameState.rebelTank.height
+                ) {
+                    // 创建爆炸
+                    gameState.explosions.push({
+                        x: bullet.x,
+                        y: bullet.y,
+                        radius: 5,
+                        alpha: 1
+                    });
+                    
+                    // 扣血
+                    gameState.rebelTank.health -= 10;
+                    if (gameState.rebelTank.health < 0) gameState.rebelTank.health = 0;
+                    
+                    // 移除炮弹
+                    gameState.mingTank.bullets.splice(index, 1);
+                    
+                    // 检查游戏结束
+                    checkGameOver();
+                }
+            });
+            
+            // 起义军炮弹击中明军坦克
+            gameState.rebelTank.bullets.forEach((bullet, index) => {
+                if (
+                    bullet.x > gameState.mingTank.x &&
+                    bullet.x < gameState.mingTank.x + gameState.mingTank.width &&
+                    bullet.y > gameState.mingTank.y &&
+                    bullet.y < gameState.mingTank.y + gameState.mingTank.height
+                ) {
+                    // 创建爆炸
+                    gameState.explosions.push({
+                        x: bullet.x,
+                        y: bullet.y,
+                        radius: 5,
+                        alpha: 1
+                    });
+                    
+                    // 扣血
+                    gameState.mingTank.health -= 10;
+                    if (gameState.mingTank.health < 0) gameState.mingTank.health = 0;
+                    
+                    // 移除炮弹
+                    gameState.rebelTank.bullets.splice(index, 1);
+                    
+                    // 检查游戏结束
+                    checkGameOver();
+                }
+            });
+        }
+
+        // 检查游戏结束
+        function checkGameOver() {
+            if (gameState.mingTank.health <= 0) {
+                alert('起义军获胜！大明江山危矣！');
+                gameState.isRunning = false;
+            } else if (gameState.rebelTank.health <= 0) {
+                alert('明军获胜！大明江山稳固！');
+                gameState.isRunning = false;
+            }
+        }
+
+        // 更新游戏状态
+        function updateGame() {
+            if (!gameState.isRunning) return;
+            
+            // 移动明军坦克
+            if (gameState.keys['w'] && gameState.mingTank.y > 0) {
+                gameState.mingTank.y -= gameState.mingTank.speed;
+            }
+            if (gameState.keys['s'] && gameState.mingTank.y < canvas.height - gameState.mingTank.height) {
+                gameState.mingTank.y += gameState.mingTank.speed;
+            }
+            
+            // 移动起义军坦克
+            if (gameState.keys['ArrowUp'] && gameState.rebelTank.y > 0) {
+                gameState.rebelTank.y -= gameState.rebelTank.speed;
+            }
+            if (gameState.keys['ArrowDown'] && gameState.rebelTank.y < canvas.height - gameState.rebelTank.height) {
+                gameState.rebelTank.y += gameState.rebelTank.speed;
+            }
+            
+            // 移动炮弹
+            gameState.mingTank.bullets.forEach((bullet, index) => {
+                bullet.x += 8;
+                if (bullet.x > canvas.width) {
+                    gameState.mingTank.bullets.splice(index, 1);
+                }
+            });
+            
+            gameState.rebelTank.bullets.forEach((bullet, index) => {
+                bullet.x -= 8;
+                if (bullet.x < 0) {
+                    gameState.rebelTank.bullets.splice(index, 1);
+                }
+            });
+            
+            // 检测碰撞
+            checkCollisions();
+            
+            // 更新信息显示
+            updateGameInfo();
+        }
+
+        // 渲染游戏画面
+        function renderGame() {
+            // 清空画布
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // 绘制背景
+            drawGrid();
+            
+            // 绘制坦克
+            drawTank(gameState.mingTank);
+            drawTank(gameState.rebelTank);
+            
+            // 绘制炮弹
+            drawBullets();
+            
+            // 绘制爆炸
+            drawExplosions();
+        }
+
+        // 游戏主循环
+        function gameLoop() {
+            updateGame();
+            renderGame();
+            requestAnimationFrame(gameLoop);
+        }
+
+        // 初始化游戏
+        function initGame() {
+            gameState = {
+                isRunning: false,
+                mingTank: {
+                    x: 50,
+                    y: canvas.height / 2,
+                    width: 40,
+                    height: 30,
+                    speed: 5,
+                    health: 100,
+                    ammo: 20,
+                    color: getComputedStyle(document.documentElement).getPropertyValue('--tank-ming'),
+                    bullets: []
+                },
+                rebelTank: {
+                    x: canvas.width - 90,
+                    y: canvas.height / 2,
+                    width: 40,
+                    height: 30,
+                    speed: 5,
+                    health: 100,
+                    ammo: 20,
+                    color: getComputedStyle(document.documentElement).getPropertyValue('--tank-rebel'),
+                    bullets: []
+                },
+                explosions: [],
+                keys: {}
+            };
+            updateGameInfo();
+            renderGame();
+        }
+
+        // 键盘事件监听
+        document.addEventListener('keydown', (e) => {
+            gameState.keys[e.key] = true;
+            
+            // 明军发射炮弹（空格）
+            if (e.code === 'Space' && gameState.isRunning && gameState.mingTank.ammo > 0) {
+                gameState.mingTank.bullets.push({
+                    x: gameState.mingTank.x + gameState.mingTank.width + 20,
+                    y: gameState.mingTank.y + gameState.mingTank.height / 2
+                });
+                gameState.mingTank.ammo--;
+            }
+            
+            // 起义军发射炮弹（Enter）
+            if (e.code === 'Enter' && gameState.isRunning && gameState.rebelTank.ammo > 0) {
+                gameState.rebelTank.bullets.push({
+                    x: gameState.rebelTank.x - 10,
+                    y: gameState.rebelTank.y + gameState.rebelTank.height / 2
+                });
+                gameState.rebelTank.ammo--;
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            gameState.keys[e.key] = false;
+        });
+
+        // 按钮事件
+        document.getElementById('startBtn').addEventListener('click', () => {
+            if (!gameState.isRunning) {
+                gameState.isRunning = true;
+                document.getElementById('startBtn').textContent = '暂停游戏';
+            } else {
+                gameState.isRunning = false;
+                document.getElementById('startBtn').textContent = '继续游戏';
+            }
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            initGame();
+            document.getElementById('startBtn').textContent = '开始游戏';
+        });
+
+        // 启动游戏
+        initGame();
+        gameLoop();
+    </script>
+</body>
+</html>
