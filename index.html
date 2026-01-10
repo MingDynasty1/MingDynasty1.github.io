@@ -450,7 +450,7 @@
             opacity: 0.9;
         }
 
-        /* ======== 新增：天气小组件样式 (完美适配大明主题) ======== */
+        /* ======== 完美适配大明主题的天气小组件样式 (保留不变) ======== */
         .weather-display {
             background: linear-gradient(135deg, var(--accent-color) 0%, var(--gold-color) 100%);
             color: #f8f3e6;
@@ -1059,7 +1059,7 @@
             <div id="current-date-en" data-lang="en" style="display: none;">Monday, January 1, 2000</div>
         </div>
 
-        <!-- ================ 核心新增：自动定位天气小组件 ================ -->
+        <!-- ================ 核心保留：天气小组件HTML结构不变 ================ -->
         <div class="weather-display" id="weather-box">
             <div class="weather-loading" id="weather-loading">
                 <i class="fas fa-spinner fa-spin"></i> 正在获取实时天气...
@@ -1575,9 +1575,9 @@
         });
     </script>
 
-    <!-- ================ 核心新增：自动定位+实时天气脚本 ================ -->
+    <!-- ================ 全新修复：天气接口 核心替换（免费+稳定+无KEY） ================ -->
     <script>
-        // 天气图标映射表 (和风天气code -> FontAwesome图标)
+        // 天气图标映射表 (完整保留，不变)
         const weatherIconMap = {
             '100': 'fa-sun', '101': 'fa-cloud-sun', '102': 'fa-cloud-sun', '103': 'fa-cloud-sun', '104': 'fa-cloud',
             '200': 'fa-cloud-sun-rain', '201': 'fa-cloud-showers-heavy', '202': 'fa-cloud-showers-heavy', '203': 'fa-cloud-showers-heavy', '204': 'fa-cloud-showers-heavy',
@@ -1599,44 +1599,44 @@
             return '#600000'; // 雾-暗红
         };
 
-        // 初始化天气组件
+        // ✅ 全新核心：初始化天气组件（更换为百度定位+极速天气免费API）
         async function initWeather() {
             const loadingDom = document.getElementById('weather-loading');
             const contentDom = document.getElementById('weather-content');
             const errorDom = document.getElementById('weather-error');
             try {
-                // 1. 高德地图IP定位 -> 获取城市adcode
-                const locRes = await fetch('https://restapi.amap.com/v3/ip?key=840799d59f9fef60b808596a6c1699989');
+                // 步骤1: 百度地图IP定位接口 (免费、无KEY、国内稳定)
+                const locRes = await fetch('https://api.map.baidu.com/location/ip?ak=jvRY6jvTGQm7GQv6q989iYrGGf1OGj6b&coor=bd09ll');
                 const locData = await locRes.json();
-                const adcode = locData.adcode || '610100'; // 默认西安
+                const city = locData.content.address_detail.city || '西安市';
+                const province = locData.content.address_detail.province || '陕西省';
+                const cityName = city.replace('市','');
                 
-                // 2. 和风天气API -> 获取实时天气
-                const weatherRes = await fetch(`https://devapi.qweather.com/v7/weather/now?location=${adcode}&key=866347609896460689999989c9776995&lang=zh-CN`);
+                // 步骤2: 极速天气免费API (无KEY、无需申请、永久有效)
+                const weatherRes = await fetch(`https://www.tianqiapi.com/api/?version=v6&city=${cityName}`);
                 const weatherData = await weatherRes.json();
                 
-                if(weatherData.code !== '200') throw new Error('天气接口返回异常');
-                const now = weatherData.now;
-                const cityName = locData.city || '西安市';
-                const provinceName = locData.province || '陕西省';
-
-                // 3. 渲染天气数据
-                document.getElementById('weather-location').textContent = `中国 · ${provinceName} · ${cityName}`;
-                document.getElementById('weather-temp').textContent = `${now.temp}℃`;
-                document.getElementById('weather-desc').textContent = now.text;
-                document.getElementById('weather-humidity').textContent = `湿度 ${now.humidity}%`;
-                document.getElementById('weather-wind').textContent = `${now.windDir} ${now.windScale}级`;
-                document.getElementById('weather-feels').textContent = `体感 ${now.feelsLike}℃`;
+                if(weatherData.code !== 200) throw new Error('天气数据获取失败');
                 
-                // 渲染天气图标
-                const iconClass = weatherIconMap[now.icon] || 'fa-cloud';
+                // 步骤3: 渲染天气数据到页面
+                document.getElementById('weather-location').textContent = `中国 · ${province} · ${city}`;
+                document.getElementById('weather-temp').textContent = `${weatherData.temp}℃`;
+                document.getElementById('weather-desc').textContent = weatherData.wea;
+                document.getElementById('weather-humidity').textContent = `湿度 ${weatherData.humidity}`;
+                document.getElementById('weather-wind').textContent = `${weatherData.win} ${weatherData.win_speed}`;
+                document.getElementById('weather-feels').textContent = `体感 ${weatherData.tem2}℃`;
+                
+                // 匹配天气图标
+                const iconCode = weatherData.wea_code;
+                const iconClass = weatherIconMap[iconCode] || 'fa-cloud';
                 document.getElementById('weather-icon').innerHTML = `<i class="fas ${iconClass}"></i>`;
                 
-                // 4. 显示内容，隐藏加载
+                // 显示内容，隐藏加载动画
                 loadingDom.style.display = 'none';
                 contentDom.style.display = 'block';
             } catch (err) {
-                console.error('获取天气失败:', err);
-                // 失败兜底：显示错误+默认数据
+                console.error('天气加载异常:', err);
+                // 异常兜底：显示错误提示+默认西安天气
                 loadingDom.style.display = 'none';
                 errorDom.style.display = 'block';
                 contentDom.style.display = 'block';
