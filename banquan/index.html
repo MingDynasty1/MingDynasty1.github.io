@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <title>大明版权 | MingDynasty</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        /* 全局明朝风格基础样式 - 宣纸底色+水墨基调 */
+        body {
+            background-color: #F5F0E6; /* 仿古宣纸米黄色，大明书画御用底色 */
+            background-image: radial-gradient(#D9C7B8 1px, transparent 1px);
+            background-size: 20px 20px; /* 宣纸纹理 */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: "楷体", "宋体", SimSun, serif;
+            color: #2D2417; /* 墨黑色 */
+            position: relative;
+            overflow-x: hidden;
+        }
+        /* 水墨山水背景淡影 - 写意风 */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 800' fill='%23D9C7B8' fill-opacity='0.2'%3E%3Cpath d='M100,200 Q300,100 500,200 T700,200 L700,700 Q500,600 300,700 T100,700 Z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            z-index: 0;
+        }
+        /* 核心版权容器 - 回纹边框+祥云装饰 大明经典样式 */
+        .ming-copyright {
+            width: 90%;
+            max-width: 680px;
+            background-color: rgba(245, 240, 230, 0.95);
+            border: 2px solid #2D2417;
+            border-radius: 2px;
+            padding: 2.5rem 2rem;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 0 15px rgba(45, 36, 23, 0.15);
+        }
+        /* 回纹边框实现 - 明代器物经典回纹 */
+        .ming-copyright::before, .ming-copyright::after {
+            content: "";
+            position: absolute;
+            border: 1px solid #C8281E; /* 朱砂红，大明国色 */
+        }
+        .ming-copyright::before {
+            top: 12px; left: 12px; right: 12px; bottom: 12px;
+        }
+        .ming-copyright::after {
+            top: 18px; left: 18px; right: 18px; bottom: 18px;
+        }
+        /* 祥云装饰 - 顶部左右对称祥云 明代官式纹样 */
+        .ming-copyright .cloud {
+            position: absolute;
+            top: -15px;
+            width: 40px;
+            height: 30px;
+            color: #C8281E;
+            font-size: 30px;
+        }
+        .cloud.left { left: 20px; }
+        .cloud.right { right: 20px; transform: scaleX(-1); }
+
+        /* 主标题 - 毛笔书法体 大明风骨 */
+        .title {
+            font-family: "华文行楷", "楷体", serif;
+            font-size: 2rem;
+            text-align: center;
+            color: #9E2017;
+            margin-bottom: 1.5rem;
+            letter-spacing: 8px;
+            font-weight: normal;
+        }
+        /* 中式分割线 - 朱砂红水墨线 */
+        .divider {
+            width: 80%;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #C8281E, transparent);
+            margin: 0 auto 1.5rem;
+        }
+        /* 版权主体内容 */
+        .content {
+            text-align: center;
+            font-size: 0.95rem;
+            line-height: 2;
+            letter-spacing: 2px;
+        }
+        /* 印章样式 - 核心版权信息 仿明代官印 朱红方印 */
+        .seal {
+            width: 200px;
+            margin: 1.5rem auto;
+            padding: 10px;
+            border: 2px solid #C8281E;
+            background-color: rgba(200, 40, 30, 0.05);
+            text-align: center;
+            font-family: "宋体", SimSun, serif;
+            color: #9E2017;
+            font-weight: bold;
+            letter-spacing: 3px;
+        }
+        /* 底部小字落款 */
+        .footer-text {
+            font-size: 0.8rem;
+            text-align: center;
+            color: #665544;
+            margin-top: 1rem;
+            line-height: 1.8;
+        }
+        /* 响应式适配 - 移动端自动缩放 */
+        @media (max-width: 500px) {
+            .title { font-size: 1.6rem; letter-spacing: 4px; }
+            .ming-copyright { padding: 2rem 1rem; }
+            .seal { width: 160px; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="ming-copyright">
+        <div class="cloud left">☁️</div>
+        <div class="cloud right">☁️</div>
+        <h2 class="title">版权所有</h2>
+        <div class="divider"></div>
+        <div class="content">
+            本作品悉遵大明体例 匠心营造<br>
+            严禁盗用篡改 违者必究<br>
+            凡转载引用 需注明出处
+        </div>
+        <div class="seal">
+            © 大明洪武年间 版权<br>
+            侵权必究 · 万世不易
+        </div>
+        <div class="divider"></div>
+        <div class="footer-text">
+            © 2026 MingDynasty,Inc. 保留一切权利
+        </div>
+    </div>
+</body>
+</html>
