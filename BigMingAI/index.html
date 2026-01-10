@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大明AI | MingDynasty</title>
+      <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <style>
+        /* 基础变量定义 - 亮色/暗色模式 */
+        :root {
+            /* 明朝主题色 */
+            --ming-red: #C41E3A; /* 朱红 */
+            --ming-yellow: #FFC107; /* 明黄 */
+            --ming-blue: #1A5599; /* 青花蓝 */
+            --ming-black: #1A1A1A; /* 墨黑 */
+            --ming-white: #F5F0E1; /* 宣纸白 */
+            --ming-brown: #8B4513; /* 檀木棕 */
+            
+            /* 亮色模式 */
+            --bg-primary: var(--ming-white);
+            --bg-secondary: #FFFFFF;
+            --text-primary: var(--ming-black);
+            --text-secondary: #5C4033;
+            --border-color: var(--ming-brown);
+            --scroll-bg: #F9F6ED;
+            --scroll-border: var(--ming-red);
+            --btn-primary-bg: var(--ming-red);
+            --btn-primary-hover: #A0182E;
+            --btn-secondary-bg: var(--ming-blue);
+            --btn-secondary-hover: #144680;
+            --chat-user-bg: #E8F0FE;
+            --chat-ai-bg: #FDF5E6;
+            --shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        [data-theme="dark"] {
+            /* 暗色模式 */
+            --bg-primary: #121212;
+            --bg-secondary: #1E1E1E;
+            --text-primary: #F5F0E1;
+            --text-secondary: #D4C8B8;
+            --border-color: #6D4C41;
+            --scroll-bg: #2D2D2D;
+            --scroll-border: #D32F2F;
+            --btn-primary-bg: #D32F2F;
+            --btn-primary-hover: #B71C1C;
+            --btn-secondary-bg: #303F9F;
+            --btn-secondary-hover: #1A237E;
+            --chat-user-bg: #283593;
+            --chat-ai-bg: #4A2C2A;
+            --shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        /* 全局重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "仿宋", "KaiTi", "SimKai", serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+            min-height: 100vh;
+            padding: 20px;
+            background-image: 
+                radial-gradient(var(--border-color) 1px, transparent 1px),
+                radial-gradient(var(--border-color) 1px, transparent 1px);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            background-opacity: 0.1;
+        }
+
+        /* 容器样式 */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: var(--bg-secondary);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            border: 2px solid var(--border-color);
+            position: relative;
+        }
+
+        /* 顶部装饰 - 明朝牌匾风格 */
+        .header {
+            background: linear-gradient(135deg, var(--ming-red), #8B0000);
+            color: var(--ming-yellow);
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            border-bottom: 3px solid var(--ming-yellow);
+        }
+
+        .header::before, .header::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            width: 30px;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FFC107'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .header::before {
+            left: 10px;
+        }
+
+        .header::after {
+            right: 10px;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            letter-spacing: 2px;
+        }
+
+        .header p {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        /* 主题切换按钮 */
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: var(--bg-secondary);
+            border: 2px solid var(--ming-yellow);
+            color: var(--text-primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--ming-yellow);
+            color: var(--ming-black);
+        }
+
+        /* 对话区域 - 卷轴样式 */
+        .chat-container {
+            height: 500px;
+            overflow-y: auto;
+            padding: 20px;
+            background-color: var(--scroll-bg);
+            position: relative;
+        }
+
+        .chat-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: linear-gradient(to bottom, var(--scroll-border), transparent);
+            opacity: 0.5;
+        }
+
+        .chat-container::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: linear-gradient(to top, var(--scroll-border), transparent);
+            opacity: 0.5;
+        }
+
+        /* 滚动条样式 */
+        .chat-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-container::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+            border-radius: 4px;
+        }
+
+        .chat-container::-webkit-scrollbar-thumb {
+            background: var(--ming-red);
+            border-radius: 4px;
+        }
+
+        /* 对话气泡 */
+        .chat-message {
+            margin-bottom: 15px;
+            max-width: 80%;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .user-message {
+            margin-left: auto;
+            background-color: var(--chat-user-bg);
+            border: 1px solid var(--ming-blue);
+            border-radius: 15px 15px 0 15px;
+            padding: 12px 18px;
+        }
+
+        .ai-message {
+            margin-right: auto;
+            background-color: var(--chat-ai-bg);
+            border: 1px solid var(--ming-red);
+            border-radius: 15px 15px 15px 0;
+            padding: 12px 18px;
+            position: relative;
+        }
+
+        .ai-message::before {
+            content: "AI";
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            background-color: var(--ming-red);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .message-content {
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin-top: 5px;
+            text-align: right;
+        }
+
+        /* 思考动画 */
+        .thinking {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            padding-left: 10px;
+        }
+
+        .thinking-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--ming-red);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .thinking-dot:nth-child(1) { animation-delay: -0.32s; }
+        .thinking-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        /* 输入区域 */
+        .input-container {
+            padding: 20px;
+            background-color: var(--bg-secondary);
+            border-top: 2px solid var(--border-color);
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        #message-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 1rem;
+            resize: none;
+            height: 60px;
+            transition: border-color 0.3s ease;
+        }
+
+        #message-input:focus {
+            outline: none;
+            border-color: var(--ming-red);
+        }
+
+        /* 按钮样式 - 明朝官印风格 */
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-think {
+            background-color: var(--ming-blue);
+            color: white;
+            height: 60px;
+            min-width: 120px;
+        }
+
+        .btn-think:hover {
+            background-color: var(--btn-secondary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .btn-send {
+            background-color: var(--ming-red);
+            color: white;
+            height: 60px;
+            min-width: 80px;
+        }
+
+        .btn-send:hover {
+            background-color: var(--btn-primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                margin: 0;
+                height: 100vh;
+                border-radius: 0;
+            }
+
+            .chat-container {
+                height: calc(100vh - 220px);
+            }
+
+            .input-wrapper {
+                flex-direction: column;
+            }
+
+            #message-input, .btn-think, .btn-send {
+                width: 100%;
+                height: 50px;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+    <!-- 引入图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 头部区域 -->
+        <div class="header">
+            <button class="theme-toggle" id="theme-toggle">
+                <i class="fas fa-moon"></i>
+            </button>
+            <h1>大明文渊阁</h1>
+            <p>智能问答 | 明鉴古今</p>
+        </div>
+
+        <!-- 对话区域 -->
+        <div class="chat-container" id="chat-container">
+            <!-- 欢迎消息 -->
+            <div class="chat-message ai-message">
+                <div class="message-content">
+                    客官安好！吾乃大明文渊阁侍读，通晓本朝典章制度、历史典故、诗词文赋。有何垂询，尽管道来。
+                </div>
+                <div class="message-time">
+                    <i class="fas fa-clock"></i> 刚刚
+                </div>
+            </div>
+        </div>
+
+        <!-- 输入区域 -->
+        <div class="input-container">
+            <div class="input-wrapper">
+                <textarea id="message-input" placeholder="请输入您的问题（如：明朝开国皇帝是谁？）..." autofocus></textarea>
+                <button class="btn btn-think" id="think-btn">
+                    <i class="fas fa-brain"></i> 深度思考
+                </button>
+                <button class="btn btn-send" id="send-btn">
+                    <i class="fas fa-paper-plane"></i> 奏上
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        const chatContainer = document.getElementById('chat-container');
+        const messageInput = document.getElementById('message-input');
+        const sendBtn = document.getElementById('send-btn');
+        const thinkBtn = document.getElementById('think-btn');
+        const themeToggle = document.getElementById('theme-toggle');
+        
+        // 扩展后的明朝知识库（涵盖历史事件、人物、制度、文化、科技等）
+        const answerLibrary = {
+            // 基础历史
+            "明朝开国皇帝是谁": "明朝的开国皇帝是朱元璋，年号洪武，史称明太祖。他于1368年在应天（今南京）称帝，建立大明王朝，结束了元朝的统治。",
+            "明朝有多少位皇帝": "明朝共有16位皇帝，自明太祖朱元璋至明思宗朱由检（崇祯帝），享国276年（1368-1644年）。其中明英宗朱祁镇曾两度登基，年号分别为正统和天顺。",
+            "明朝灭亡时间": "明朝于1644年灭亡，李自成率领的农民起义军攻入北京，崇祯帝自缢于煤山（今景山），标志着明朝的覆灭。南明政权延续至1662年永历帝被俘，1683年台湾明郑政权灭亡，明祚方尽。",
+            "明朝首都在哪里": "明朝初都应天府（今南京），明成祖朱棣永乐十九年（1421年）迁都顺天府（今北京），南京仍为留都，设六部等机构，形成两京制度。",
+            
+            // 重要事件
+            "靖难之役": "靖难之役发生于建文元年至建文四年（1399-1402年），是燕王朱棣以“清君侧、靖国难”为名发动的夺位战争，最终朱棣攻破南京，建文帝下落不明，朱棣登基为明成祖（永乐帝）。",
+            "土木堡之变": "正统十四年（1449年），明英宗朱祁镇在王振怂恿下亲征瓦剌，于土木堡（今河北怀来）兵败被俘，明军精锐损失殆尽，史称“土木堡之变”，是明朝由盛转衰的重要节点。",
+            "北京保卫战": "土木堡之变后，瓦剌大军围攻北京，兵部尚书于谦力排南迁之议，拥立景泰帝，组织北京保卫战，最终击退瓦剌，保全了明朝江山。",
+            "壬寅宫变": "嘉靖二十一年（1542年），数十名宫女因不堪嘉靖帝暴虐，试图勒死皇帝，事败后均被凌迟处死，史称“壬寅宫变”，此后嘉靖帝移居西苑，怠于朝政。",
+            "万历三大征": "万历年间（1592-1600年），明朝先后发动宁夏之役（平定哱拜叛乱）、朝鲜之役（援朝抗倭）、播州之役（平定杨应龙叛乱），三役皆胜但耗费巨大，加剧了明朝财政危机。",
+            "萨尔浒之战": "万历四十七年（1619年），明朝调集11万大军分四路进攻后金，努尔哈赤以“凭你几路来，我只一路去”的战术，在萨尔浒大败明军，后金自此掌握辽东战场主动权。",
+            "郑和下西洋几次": "郑和率领船队七次下西洋，首次航行始于永乐三年（1405年），末次航行结束于宣德八年（1433年），船队远航至印度洋、阿拉伯半岛、东非等地，是中国古代规模最大的海上航行。",
+            "隆庆开关": "隆庆元年（1567年），明穆宗宣布开放漳州月港，允许民间出海贸易，史称“隆庆开关”，此举促进了中外经济交流，也增加了明朝的财政收入。",
+            
+            // 典章制度
+            "明朝内阁制度": "内阁制度始于永乐年间，最初为皇帝的咨询机构，洪熙、宣德年间逐渐掌握票拟权，嘉靖、万历时期（张居正辅政）内阁权力达到顶峰，成为事实上的行政中枢，但始终受制于皇权。",
+            "明朝厂卫制度": "厂卫是明朝特有的特务机构，包括东厂（永乐帝设）、西厂（成化帝设，后废）、内行厂（正德帝时刘瑾设）和锦衣卫，负责监察、缉捕、审讯，直接对皇帝负责，是君主专制强化的体现。",
+            "明朝科举制度": "明朝科举分乡试、会试、殿试三级，考试内容以八股文为主，取士标准僵化，但也为寒门子弟提供了上升通道。洪武三年（1370年）恢复科举，成化年间定型八股取士。",
+            "一条鞭法": "一条鞭法由张居正于万历九年（1581年）推行，将田赋、徭役、杂税合并，按亩征银，简化了税制，促进了商品经济发展，是中国赋役制度的重大变革。",
+            "考成法": "考成法是张居正改革的重要内容，通过立考成簿，层层考核官吏政绩，实现“立限考事”“以事责人”，提高了行政效率，强化了中央集权。",
+            
+            // 重要人物
+            "张居正": "张居正（1525-1582年），字叔大，号太岳，万历朝内阁首辅，推行一条鞭法、考成法等改革，史称“万历新政”，使明朝出现短暂中兴，死后被抄家，改革措施多被废除。",
+            "海瑞": "海瑞（1514-1587年），字汝贤，号刚峰，以清正廉洁、直言敢谏著称，曾抬棺上疏批评嘉靖帝，被称为“海青天”，任应天巡抚时推行清丈土地、平抑赋役，深受百姓爱戴。",
+            "戚继光": "戚继光（1528-1588年），字元敬，号南塘，明朝抗倭名将，在东南沿海扫平倭患，后镇守北方蓟镇，创制鸳鸯阵，著有《纪效新书》《练兵实纪》等兵书。",
+            "袁崇焕": "袁崇焕（1584-1630年），字元素，明末辽东名将，取得宁远大捷、宁锦大捷，击伤努尔哈赤（一说致死），后因崇祯帝中反间计，被凌迟处死，是明末冤案之一。",
+            "王阳明": "王阳明（1472-1529年），名守仁，字伯安，号阳明，心学集大成者，主张“心即理”“知行合一”“致良知”，平定宁王朱宸濠叛乱，其思想影响深远，形成阳明学派。",
+            "徐霞客": "徐霞客（1587-1641年），名弘祖，字振之，明代地理学家，历时30年游历考察，著《徐霞客游记》，详细记录了中国西南地区的地理、地质、水文等，具有极高的科学价值。",
+            "李时珍": "李时珍（1518-1593年），字东璧，明代医药学家，历时27年编撰《本草纲目》，全书52卷，收录药物1892种，附药方11096个，是中国古代药学的集大成之作。",
+            "徐光启": "徐光启（1562-1633年），字子先，明末科学家，与利玛窦合作翻译《几何原本》前六卷，编撰《农政全书》，引入西方科学技术，是中西文化交流的先驱。",
+            "宋应星": "宋应星（1587-约1666年），字长庚，明末科学家，著《天工开物》，详细记载了农业、手工业的生产技术，被誉为“中国17世纪的工艺百科全书”。",
+            
+            // 文化成就
+            "永乐大典编撰于何时": "《永乐大典》编撰于明成祖朱棣永乐年间（1403-1408年），由解缙、姚广孝等主持编纂，全书共计22877卷，装成11095册，是中国古代最大的类书，现存残卷不足原书4%。",
+            "明朝四大奇书": "明代四大奇书指《三国演义》（罗贯中）、《水浒传》（施耐庵）、《西游记》（吴承恩）、《金瓶梅》（兰陵笑笑生），代表了明代长篇小说的最高成就。",
+            "紫禁城建于何时": "紫禁城（今故宫）始建于明成祖永乐四年（1406年），建成于永乐十八年（1420年），是明清两代的皇宫，占地72万平方米，有殿宇9000余间，现为世界文化遗产。",
+            "明十三陵": "明十三陵位于北京昌平天寿山，是明朝13位皇帝的陵寝，自永乐帝长陵至崇祯帝思陵，除外葬的朱元璋（孝陵）、朱允炆（无陵）、朱祁钰（景泰陵）外，均葬于此。",
+            "明朝书法名家": "明代书法名家辈出，前期有“三宋二沈”（宋克、宋璲、宋广、沈度、沈粲），中期有文徵明、祝允明、王宠（吴门三家），晚期有董其昌，其“南北宗论”影响深远。",
+            "明朝绘画流派": "明代绘画以浙派（戴进、吴伟）、吴门画派（沈周、文徵明、唐寅、仇英）、松江派（董其昌）为代表，花鸟画有陈淳、徐渭，人物画有陈洪绶，各具特色。",
+            
+            // 对外交流与军事
+            "万历援朝抗倭": "万历二十年至二十六年（1592-1598年），日本丰臣秀吉两次出兵侵略朝鲜，明朝派军援朝，最终在露梁海战中击败日军，丰臣秀吉病死后日军撤退，史称“万历朝鲜之役”。",
+            "郑和下西洋的目的": "郑和下西洋的主要目的有：宣扬大明国威、寻找建文帝下落、发展朝贡贸易、安抚海外诸国，船队规模庞大，最多时船舰200余艘，人员27000余人。",
+            "红夷大炮": "红夷大炮（后称红衣大炮）是明朝从荷兰、葡萄牙引进的西洋火炮，天启年间开始仿制，在宁远之战、宁锦之战中发挥重要作用，是明末重要的军事装备。",
+            "澳门开埠": "嘉靖三十二年（1553年），葡萄牙人以晾晒货物为由获准在澳门居住，万历年间明朝设提调、备倭、巡缉三行署管理澳门，澳门成为中西交流的重要窗口。",
+            
+            // 经济与民生
+            "明朝白银货币化": "明朝中后期，随着商品经济发展和海外白银流入（主要来自西班牙在美洲的殖民地），白银逐渐成为主要流通货币，一条鞭法“计亩征银”进一步推动了白银货币化。",
+            "明朝手工业": "明代手工业高度发达，景德镇瓷器、苏杭丝绸、松江棉布、佛山冶铁闻名全国，资本主义萌芽在江南地区的纺织业中开始出现。",
+            "明末农民起义": "明末因天灾（小冰期）、赋税繁重、土地兼并严重，爆发大规模农民起义，主要有李自成（闯王）、张献忠等部，李自成建立大顺政权，张献忠建立大西政权，最终推翻了明朝统治。"
+        };
+
+        // 初始化主题
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            
+            // 更新图标
+            if (savedTheme === 'dark') {
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            } else {
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            }
+        }
+
+        // 切换主题
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // 更新图标
+            if (newTheme === 'dark') {
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            } else {
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            }
+        });
+
+        // 添加消息到聊天窗口
+        function addMessage(content, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${isUser ? 'user-message' : 'ai-message'}`;
+            
+            const time = new Date().toLocaleTimeString('zh-CN', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            messageDiv.innerHTML = `
+                <div class="message-content">${content}</div>
+                <div class="message-time">
+                    <i class="fas fa-clock"></i> ${time}
+                </div>
+            `;
+            
+            chatContainer.appendChild(messageDiv);
+            // 滚动到底部
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        // 获取AI回答
+        function getAIAnswer(question, deepThink = false) {
+            // 清洗问题文本
+            const cleanQuestion = question.trim().replace(/[？?。，,！!]/g, '');
+            
+            // 检查是否有匹配的答案
+            let answer = answerLibrary[cleanQuestion];
+            
+            // 如果没有匹配的答案，生成通用回复
+            if (!answer) {
+                answer = deepThink 
+                    ? `容吾三思...\n\n关于「${question}」此问，本朝典籍中未有详载。大明疆域万里，典章浩如烟海，若客官欲深究，可详叙所问，吾当遍查文渊阁藏书，务求详实。`
+                    : `关于「${question}」，吾略知一二：大明立国近三百年，相关史事繁杂，若客官能稍作细化，吾当尽心解答。`;
+            } else if (deepThink) {
+                // 深度思考模式：添加更多细节
+                answer = `臣谨按：\n\n${answer}\n\n以上乃据《明实录》《明史》《明会典》等官修典籍所载，确然可考。`;
+            }
+            
+            return answer;
+        }
+
+        // 发送消息
+        function sendMessage(deepThink = false) {
+            const message = messageInput.value.trim();
+            if (!message) return;
+            
+            // 添加用户消息
+            addMessage(message, true);
+            messageInput.value = '';
+            
+            // 显示思考中
+            const thinkingDiv = document.createElement('div');
+            thinkingDiv.className = 'chat-message ai-message';
+            thinkingDiv.innerHTML = `
+                <div class="message-content thinking">
+                    <span class="thinking-dot"></span>
+                    <span class="thinking-dot"></span>
+                    <span class="thinking-dot"></span>
+                    <span> 文渊阁侍读正在${deepThink ? '深思' : '查阅'}典籍...</span>
+                </div>
+            `;
+            chatContainer.appendChild(thinkingDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            
+            // 模拟思考延迟
+            const delay = deepThink ? 3000 : 1500;
+            setTimeout(() => {
+                // 移除思考动画
+                thinkingDiv.remove();
+                // 添加AI回答
+                const answer = getAIAnswer(message, deepThink);
+                addMessage(answer);
+            }, delay);
+        }
+
+        // 绑定发送按钮事件
+        sendBtn.addEventListener('click', () => sendMessage(false));
+        
+        // 绑定深度思考按钮事件
+        thinkBtn.addEventListener('click', () => sendMessage(true));
+        
+        // 回车发送（Shift+回车换行）
+        messageInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage(false);
+            }
+        });
+
+        // 初始化
+        initTheme();
+    </script>
+</body>
+</html>
