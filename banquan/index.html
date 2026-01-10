@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
     <title>大明版权 | MingDynasty</title>
     <style>
         * {
@@ -11,19 +11,44 @@
             padding: 0;
             box-sizing: border-box;
         }
+        /* 定义全局明/暗主题变量 - 核心新增 */
+        :root {
+            --bg-color: #F5F0E6;/*明-宣纸黄底*/
+            --bg-texture: #D9C7B8;/*明-宣纸纹理*/
+            --text-color: #2D2417;/*明-墨黑色字*/
+            --main-red: #C8281E;/*大明朱砂红主色*/
+            --deep-red: #9E2017;/*大明暗红*/
+            --border-color: #2D2417;/*明-墨色边框*/
+            --seal-bg: rgba(200, 40, 30, 0.05);/*明-印章浅红底*/
+            --footer-color: #665544;/*明-落款浅褐色*/
+            --shadow-color: rgba(45, 36, 23, 0.15);
+        }
+        body.dark {
+            --bg-color: #1C1814;/*暗-墨色绢布底*/
+            --bg-texture: #302820;/*暗-绢布纹理*/
+            --text-color: #E8E0D2;/*暗-宣纸白字*/
+            --main-red: #C63027;/*暗-朱砂红提亮*/
+            --deep-red: #E04038;/*暗-暗红提亮*/
+            --border-color: #665240;/*暗-褐色边框*/
+            --seal-bg: rgba(200, 40, 30, 0.15);/*暗-印章红底加深*/
+            --footer-color: #A89886;/*暗-落款浅米色*/
+            --shadow-color: rgba(0,0,0,0.3);
+        }
+
         /* 全局明朝风格基础样式 - 宣纸底色+水墨基调 */
         body {
-            background-color: #F5F0E6; /* 仿古宣纸米黄色，大明书画御用底色 */
-            background-image: radial-gradient(#D9C7B8 1px, transparent 1px);
+            background-color: var(--bg-color);
+            background-image: radial-gradient(var(--bg-texture) 1px, transparent 1px);
             background-size: 20px 20px; /* 宣纸纹理 */
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             font-family: "楷体", "宋体", SimSun, serif;
-            color: #2D2417; /* 墨黑色 */
+            color: var(--text-color);
             position: relative;
             overflow-x: hidden;
+            transition: all .5s ease;/*主题切换平滑过渡*/
         }
         /* 水墨山水背景淡影 - 写意风 */
         body::before {
@@ -38,24 +63,26 @@
             background-position: center;
             background-size: cover;
             z-index: 0;
+            opacity: 0.7;
         }
         /* 核心版权容器 - 回纹边框+祥云装饰 大明经典样式 */
         .ming-copyright {
             width: 90%;
             max-width: 680px;
-            background-color: rgba(245, 240, 230, 0.95);
-            border: 2px solid #2D2417;
+            background-color: rgba(var(--bg-color), 0.95);
+            border: 2px solid var(--border-color);
             border-radius: 2px;
             padding: 2.5rem 2rem;
             position: relative;
             z-index: 1;
-            box-shadow: 0 0 15px rgba(45, 36, 23, 0.15);
+            box-shadow: 0 0 15px var(--shadow-color);
+            display: none; /* 默认隐藏 密码正确后显示 */
         }
         /* 回纹边框实现 - 明代器物经典回纹 */
         .ming-copyright::before, .ming-copyright::after {
             content: "";
             position: absolute;
-            border: 1px solid #C8281E; /* 朱砂红，大明国色 */
+            border: 1px solid var(--main-red); /* 朱砂红，大明国色 */
         }
         .ming-copyright::before {
             top: 12px; left: 12px; right: 12px; bottom: 12px;
@@ -69,7 +96,7 @@
             top: -15px;
             width: 40px;
             height: 30px;
-            color: #C8281E;
+            color: var(--main-red);
             font-size: 30px;
         }
         .cloud.left { left: 20px; }
@@ -80,7 +107,7 @@
             font-family: "华文行楷", "楷体", serif;
             font-size: 2rem;
             text-align: center;
-            color: #9E2017;
+            color: var(--deep-red);
             margin-bottom: 1.5rem;
             letter-spacing: 8px;
             font-weight: normal;
@@ -89,7 +116,7 @@
         .divider {
             width: 80%;
             height: 1px;
-            background: linear-gradient(to right, transparent, #C8281E, transparent);
+            background: linear-gradient(to right, transparent, var(--main-red), transparent);
             margin: 0 auto 1.5rem;
         }
         /* 版权主体内容 */
@@ -104,11 +131,11 @@
             width: 200px;
             margin: 1.5rem auto;
             padding: 10px;
-            border: 2px solid #C8281E;
-            background-color: rgba(200, 40, 30, 0.05);
+            border: 2px solid var(--main-red);
+            background-color: var(--seal-bg);
             text-align: center;
             font-family: "宋体", SimSun, serif;
-            color: #9E2017;
+            color: var(--deep-red);
             font-weight: bold;
             letter-spacing: 3px;
         }
@@ -116,7 +143,7 @@
         .footer-text {
             font-size: 0.8rem;
             text-align: center;
-            color: #665544;
+            color: var(--footer-color);
             margin-top: 1rem;
             line-height: 1.8;
         }
@@ -126,9 +153,98 @@
             .ming-copyright { padding: 2rem 1rem; }
             .seal { width: 160px; font-size: 0.8rem; }
         }
+
+        /* ======== 新增：密码验证弹窗 大明令牌样式 ======== */
+        #password-modal {
+            position: fixed;
+            top:0;left:0;right:0;bottom:0;
+            background: var(--bg-color);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 1.2rem;
+            font-family: "楷体", "宋体", serif;
+        }
+        #password-modal .modal-title{
+            color: var(--deep-red);
+            font-size: 1.5rem;
+            letter-spacing: 5px;
+            font-family: "华文行楷";
+        }
+        #password-input {
+            width: 90%;
+            max-width: 350px;
+            padding: 12px 20px;
+            border: 2px solid var(--border-color);
+            background: rgba(var(--bg-color),0.8);
+            color: var(--text-color);
+            font-size: 1rem;
+            letter-spacing: 2px;
+            outline: none;
+            text-align: center;
+        }
+        #password-input:focus{
+            border-color: var(--main-red);
+        }
+        #password-btn {
+            padding: 8px 30px;
+            border: 2px solid var(--main-red);
+            background: var(--seal-bg);
+            color: var(--deep-red);
+            font-family: "楷体";
+            font-size: 1rem;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: all .3s;
+        }
+        #password-btn:hover{
+            background: var(--main-red);
+            color: #fff;
+        }
+        #error-tip{
+            color: var(--main-red);
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        /* ======== 新增：明/暗主题切换按钮 古风样式 ======== */
+        #theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 999;
+            padding: 6px 12px;
+            border: 1px solid var(--main-red);
+            background: var(--seal-bg);
+            color: var(--deep-red);
+            font-family: "楷体";
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            cursor: pointer;
+            outline: none;
+            transition: all .3s ease;
+        }
+        #theme-toggle:hover{
+            background: var(--main-red);
+            color: #fff;
+        }
     </style>
 </head>
 <body>
+    <!-- 主题切换按钮 -->
+    <button id="theme-toggle">切换主题</button>
+
+    <!-- 密码验证弹窗 -->
+    <div id="password-modal">
+        <div class="modal-title">请输入通行令牌</div>
+        <input type="password" id="password-input" placeholder="输入访问密码">
+        <button id="password-btn">验 证</button>
+        <div id="error-tip">令牌无效，请重新输入！</div>
+    </div>
+
+    <!-- 原版权内容 -->
     <div class="ming-copyright">
         <div class="cloud left">☁️</div>
         <div class="cloud right">☁️</div>
@@ -148,5 +264,47 @@
             © 2026 MingDynasty,Inc. 保留一切权利
         </div>
     </div>
+
+    <script>
+        // ========== 密码验证核心逻辑 ==========
+        const CORRECT_PASSWORD = 'asdgyu8wefbhiwfiibwer98234gsifd9'; // 你的指定密码
+        const modal = document.getElementById('password-modal');
+        const input = document.getElementById('password-input');
+        const btn = document.getElementById('password-btn');
+        const tip = document.getElementById('error-tip');
+        const copyrightBox = document.querySelector('.ming-copyright');
+        
+        // 密码验证方法
+        function checkPassword(){
+            const val = input.value.trim();
+            if(val === CORRECT_PASSWORD){
+                modal.style.display = 'none';
+                copyrightBox.style.display = 'block';
+            } else {
+                tip.style.display = 'block';
+                input.value = '';
+                input.focus();
+            }
+        }
+        // 按钮点击验证 + 回车验证
+        btn.addEventListener('click', checkPassword);
+        input.addEventListener('keyup', e => e.key === 'Enter' && checkPassword());
+
+        // ========== 明暗主题切换核心逻辑 ==========
+        const themeBtn = document.getElementById('theme-toggle');
+        const body = document.body;
+        const THEME_KEY = 'ming_theme_mode';
+        
+        // 初始化主题：读取本地缓存，无则为明色
+        const savedTheme = localStorage.getItem(THEME_KEY);
+        if(savedTheme === 'dark') body.classList.add('dark');
+
+        // 切换主题逻辑
+        themeBtn.addEventListener('click', ()=>{
+            body.classList.toggle('dark');
+            const isDark = body.classList.contains('dark');
+            localStorage.setItem(THEME_KEY, isDark ? 'dark' : 'light');
+        });
+    </script>
 </body>
 </html>
