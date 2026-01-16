@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大明代码对比 | MingDynasty</title>
+      <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/diff@5.2.0/dist/diff.min.js"></script>
+    <script>
+        // Tailwind 自定义配置 - 明朝风格配色
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        // 明式主色：朱红、雅灰、宣纸白、墨黑
+                        ming: {
+                            red: '#C41E3A',
+                            gray: '#8C8C8C',
+                            paper: '#F5F0E6',
+                            ink: '#232323',
+                            border: '#D4BFA7'
+                        }
+                    },
+                    fontFamily: {
+                        ming: ['"Noto Serif SC"', 'serif']
+                    },
+                    boxShadow: {
+                        'ming': '0 4px 8px rgba(196, 30, 58, 0.1)',
+                        'ming-dark': '0 4px 8px rgba(0, 0, 0, 0.3)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .bg-ming-paper-dark {
+                background-color: #1A1A1A;
+            }
+            .border-ming-pattern {
+                background-image: linear-gradient(to right, theme('colors.ming.border') 50%, transparent 50%),
+                                  linear-gradient(to bottom, theme('colors.ming.border') 50%, transparent 50%);
+                background-size: 10px 10px;
+            }
+            .text-shadow-ming {
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            }
+            .scrollbar-ming {
+                scrollbar-width: thin;
+                scrollbar-color: theme('colors.ming.red') theme('colors.ming.paper');
+            }
+            .scrollbar-ming-dark {
+                scrollbar-width: thin;
+                scrollbar-color: theme('colors.ming.red') theme('colors.ming.ink');
+            }
+            .scrollbar-ming::-webkit-scrollbar {
+                width: 6px;
+            }
+            .scrollbar-ming::-webkit-scrollbar-track {
+                background: theme('colors.ming.paper');
+            }
+            .scrollbar-ming::-webkit-scrollbar-thumb {
+                background-color: theme('colors.ming.red');
+                border-radius: 3px;
+            }
+            .scrollbar-ming-dark::-webkit-scrollbar {
+                width: 6px;
+            }
+            .scrollbar-ming-dark::-webkit-scrollbar-track {
+                background: theme('colors.ming.ink');
+            }
+            .scrollbar-ming-dark::-webkit-scrollbar-thumb {
+                background-color: theme('colors.ming.red');
+                border-radius: 3px;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-ming-paper dark:bg-ming-paper-dark transition-colors duration-300 min-h-screen font-ming">
+    <!-- 头部 -->
+    <header class="border-b-2 border-ming-red/80 dark:border-ming-red/60 py-4 px-6">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-ming-red dark:text-white text-shadow-ming">
+                <i class="fa fa-book mr-2"></i>明韵代码对比器
+            </h1>
+            <button id="themeToggle" class="p-2 rounded-lg bg-ming-red/10 dark:bg-ming-red/20 hover:bg-ming-red/20 dark:hover:bg-ming-red/30 transition-all duration-300">
+                <i class="fa fa-moon-o dark:hidden text-ming-ink text-xl"></i>
+                <i class="fa fa-sun-o hidden dark:block text-white text-xl"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- 操作区 -->
+        <div class="mb-8 flex flex-wrap gap-4 justify-between items-center">
+            <div class="flex flex-wrap gap-3">
+                <!-- 文件上传区 -->
+                <div class="relative">
+                    <label class="px-4 py-2 bg-ming-red/10 dark:bg-ming-red/20 border border-ming-red/50 dark:border-ming-red/70 rounded-lg cursor-pointer hover:bg-ming-red/20 dark:hover:bg-ming-red/30 transition-all duration-300 flex items-center">
+                        <i class="fa fa-file-code-o mr-2"></i>上传原文件
+                        <input type="file" id="file1" accept=".txt,.js,.html,.css,.py,.java,.cpp,.php" class="absolute opacity-0 inset-0 cursor-pointer">
+                    </label>
+                </div>
+                <div class="relative">
+                    <label class="px-4 py-2 bg-ming-red/10 dark:bg-ming-red/20 border border-ming-red/50 dark:border-ming-red/70 rounded-lg cursor-pointer hover:bg-ming-red/20 dark:hover:bg-ming-red/30 transition-all duration-300 flex items-center">
+                        <i class="fa fa-file-code-o mr-2"></i>上传对比文件
+                        <input type="file" id="file2" accept=".txt,.js,.html,.css,.py,.java,.cpp,.php" class="absolute opacity-0 inset-0 cursor-pointer">
+                    </label>
+                </div>
+                <!-- 对比按钮 -->
+                <button id="compareBtn" class="px-6 py-2 bg-ming-red dark:bg-ming-red/80 text-white rounded-lg hover:bg-ming-red/90 dark:hover:bg-ming-red/95 transition-all duration-300 flex items-center">
+                    <i class="fa fa-exchange mr-2"></i>开始对比
+                </button>
+                <!-- 清空按钮 -->
+                <button id="clearBtn" class="px-6 py-2 bg-ming-gray/20 dark:bg-ming-gray/40 text-ming-ink dark:text-white rounded-lg hover:bg-ming-gray/30 dark:hover:bg-ming-gray/50 transition-all duration-300 flex items-center">
+                    <i class="fa fa-trash mr-2"></i>清空内容
+                </button>
+            </div>
+            <!-- 文件名称显示 -->
+            <div class="text-sm text-ming-ink dark:text-white bg-ming-paper/50 dark:bg-ming-ink/50 px-3 py-2 rounded-lg">
+                <span id="fileName1" class="italic">未选择文件</span> 
+                <span class="mx-2">VS</span> 
+                <span id="fileName2" class="italic">未选择文件</span>
+            </div>
+        </div>
+
+        <!-- 代码编辑区 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- 原代码区 -->
+            <div class="border-2 border-ming-border dark:border-ming-red/50 rounded-lg overflow-hidden bg-white/80 dark:bg-gray-800/80 shadow-ming dark:shadow-ming-dark transition-all duration-300">
+                <div class="bg-ming-red/10 dark:bg-ming-red/20 px-4 py-2 border-b border-ming-red/50 dark:border-ming-red/70">
+                    <h2 class="text-lg font-semibold text-ming-ink dark:text-white">原代码</h2>
+                </div>
+                <textarea id="codeEditor1" class="w-full h-[400px] p-4 scrollbar-ming dark:scrollbar-ming-dark bg-transparent text-ming-ink dark:text-white focus:outline-none resize-none" placeholder="请输入或上传原代码..."></textarea>
+            </div>
+            
+            <!-- 对比代码区 -->
+            <div class="border-2 border-ming-border dark:border-ming-red/50 rounded-lg overflow-hidden bg-white/80 dark:bg-gray-800/80 shadow-ming dark:shadow-ming-dark transition-all duration-300">
+                <div class="bg-ming-red/10 dark:bg-ming-red/20 px-4 py-2 border-b border-ming-red/50 dark:border-ming-red/70">
+                    <h2 class="text-lg font-semibold text-ming-ink dark:text-white">对比代码</h2>
+                </div>
+                <textarea id="codeEditor2" class="w-full h-[400px] p-4 scrollbar-ming dark:scrollbar-ming-dark bg-transparent text-ming-ink dark:text-white focus:outline-none resize-none" placeholder="请输入或上传对比代码..."></textarea>
+            </div>
+        </div>
+
+        <!-- 差异展示区 -->
+        <div class="border-2 border-ming-red/70 dark:border-ming-red/50 rounded-lg overflow-hidden bg-white/90 dark:bg-gray-800/90 shadow-ming dark:shadow-ming-dark transition-all duration-300">
+            <div class="bg-ming-red/20 dark:bg-ming-red/30 px-4 py-3 border-b border-ming-red/60 dark:border-ming-red/80 flex justify-between items-center">
+                <h2 class="text-xl font-bold text-ming-ink dark:text-white">
+                    <i class="fa fa-list-alt mr-2"></i>代码差异详情
+                </h2>
+                <button id="copyDiffBtn" class="px-3 py-1 bg-ming-red/80 dark:bg-ming-red/70 text-white rounded hover:bg-ming-red/90 dark:hover:bg-ming-red/80 transition-all duration-300 flex items-center text-sm">
+                    <i class="fa fa-copy mr-1"></i>复制差异
+                </button>
+            </div>
+            <div id="diffContainer" class="p-4 min-h-[200px] scrollbar-ming dark:scrollbar-ming-dark">
+                <div class="text-center text-ming-gray/80 dark:text-gray-400 py-8">
+                    <i class="fa fa-info-circle text-2xl mb-2"></i>
+                    <p>上传文件或输入代码后，点击"开始对比"查看差异</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="mt-12 border-t-2 border-ming-red/80 dark:border-ming-red/60 py-4 px-6 text-center text-ming-gray dark:text-gray-400">
+        <p>&copy; 2013-2026 MingDynasty,Inc. 大明代码对比器 | 简洁实用</p>
+    </footer>
+
+    <script>
+        // 主题切换功能
+        const themeToggle = document.getElementById('themeToggle');
+        const htmlElement = document.documentElement;
+        
+        // 初始化主题
+        if (localStorage.getItem('theme') === 'dark' || 
+            (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            htmlElement.classList.add('dark');
+        } else {
+            htmlElement.classList.remove('dark');
+        }
+        
+        // 切换主题
+        themeToggle.addEventListener('click', () => {
+            htmlElement.classList.toggle('dark');
+            localStorage.setItem('theme', htmlElement.classList.contains('dark') ? 'dark' : 'light');
+        });
+
+        // 文件上传处理
+        const file1 = document.getElementById('file1');
+        const file2 = document.getElementById('file2');
+        const fileName1 = document.getElementById('fileName1');
+        const fileName2 = document.getElementById('fileName2');
+        const codeEditor1 = document.getElementById('codeEditor1');
+        const codeEditor2 = document.getElementById('codeEditor2');
+        
+        // 读取文件内容
+        const readFileContent = (file, editor, nameDisplay) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                editor.value = e.target.result;
+                nameDisplay.textContent = file.name;
+            };
+            reader.readAsText(file);
+        };
+        
+        // 原文件上传
+        file1.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                readFileContent(e.target.files[0], codeEditor1, fileName1);
+            }
+        });
+        
+        // 对比文件上传
+        file2.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                readFileContent(e.target.files[0], codeEditor2, fileName2);
+            }
+        });
+
+        // 代码对比功能
+        const compareBtn = document.getElementById('compareBtn');
+        const diffContainer = document.getElementById('diffContainer');
+        const clearBtn = document.getElementById('clearBtn');
+        const copyDiffBtn = document.getElementById('copyDiffBtn');
+        
+        // 生成差异HTML
+        const generateDiffHTML = (diff) => {
+            let html = '<div class="diff-content text-sm leading-relaxed">';
+            let hasDifferences = false;
+            
+            diff.forEach((part) => {
+                // 差异类型：added (新增), removed (删除), unchanged (无变化)
+                const color = part.added ? 'text-green-600 dark:text-green-400' :
+                             part.removed ? 'text-red-600 dark:text-red-400' :
+                             'text-ming-ink/70 dark:text-gray-300/70';
+                const marker = part.added ? '+' : part.removed ? '-' : ' ';
+                
+                // 只显示有差异的行，无差异的行省略显示
+                if (part.added || part.removed) {
+                    hasDifferences = true;
+                    const lines = part.value.split('\n');
+                    lines.forEach((line, index) => {
+                        if (line || index < lines.length - 1) {
+                            html += `<div class="flex mb-1">
+                                <span class="inline-block w-6 font-mono font-bold ${color}">${marker}</span>
+                                <span class="font-mono ${color}">${line === '' ? '&nbsp;' : escapeHtml(line)}</span>
+                            </div>`;
+                        }
+                    });
+                }
+            });
+            
+            html += '</div>';
+            
+            if (!hasDifferences) {
+                html = `<div class="text-center text-green-600 dark:text-green-400 py-8">
+                    <i class="fa fa-check-circle text-2xl mb-2"></i>
+                    <p>两段代码完全一致，未检测到差异</p>
+                </div>`;
+            }
+            
+            return html;
+        };
+        
+        // HTML转义
+        const escapeHtml = (text) => {
+            return text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        };
+        
+        // 执行对比
+        compareBtn.addEventListener('click', () => {
+            const code1 = codeEditor1.value;
+            const code2 = codeEditor2.value;
+            
+            if (!code1 || !code2) {
+                diffContainer.innerHTML = `<div class="text-center text-orange-600 dark:text-orange-400 py-8">
+                    <i class="fa fa-exclamation-circle text-2xl mb-2"></i>
+                    <p>请输入或上传两段代码进行对比</p>
+                </div>`;
+                return;
+            }
+            
+            // 使用diff库进行文本对比
+            const diff = Diff.diffLines(code1, code2);
+            diffContainer.innerHTML = generateDiffHTML(diff);
+        });
+        
+        // 清空内容
+        clearBtn.addEventListener('click', () => {
+            codeEditor1.value = '';
+            codeEditor2.value = '';
+            fileName1.textContent = '未选择文件';
+            fileName2.textContent = '未选择文件';
+            diffContainer.innerHTML = `<div class="text-center text-ming-gray/80 dark:text-gray-400 py-8">
+                <i class="fa fa-info-circle text-2xl mb-2"></i>
+                <p>上传文件或输入代码后，点击"开始对比"查看差异</p>
+            </div>`;
+            
+            // 重置文件输入
+            file1.value = '';
+            file2.value = '';
+        });
+        
+        // 复制差异内容
+        copyDiffBtn.addEventListener('click', async () => {
+            const diffContent = diffContainer.textContent.trim();
+            
+            if (diffContent.includes('上传文件或输入代码后') || diffContent.includes('请输入或上传两段代码')) {
+                alert('暂无差异内容可复制');
+                return;
+            }
+            
+            try {
+                await navigator.clipboard.writeText(diffContent);
+                alert('差异内容已复制到剪贴板');
+            } catch (err) {
+                console.error('复制失败:', err);
+                alert('复制失败，请手动复制');
+            }
+        });
+    </script>
+</body>
+</html>
