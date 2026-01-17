@@ -1,0 +1,1737 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大明跑酷  | MingDynasty</title>
+     <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#C41E3A', // 朱红
+                        secondary: '#FFD700', // 明黄
+                        dark: '#1A1A1A', // 墨黑
+                        light: '#F5F5F5', // 玉白
+                        accent: '#70B8C2', // 青瓷
+                        bronze: '#B87333', // 古铜
+                    },
+                    fontFamily: {
+                        sans: ['Arial', 'sans-serif'],
+                        serif: ['SimSun', 'serif'],
+                        fangsong: ['FangSong', 'serif'],
+                        kaiti: ['KaiTi', 'serif'],
+                    },
+                    animation: {
+                        'float': 'float 3s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            }
+            .text-shadow-lg {
+                text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
+            }
+            .bg-pattern {
+                background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23C41E3A' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+        }
+    </style>
+    <style>
+        body {
+            overflow: hidden;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        
+        canvas {
+            display: block;
+            background-color: #f0f0f0;
+        }
+        
+        .button-3d {
+            position: relative;
+            transition: all 0.2s ease;
+            transform-style: preserve-3d;
+        }
+        
+        .button-3d:before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            bottom: -4px;
+            background-color: rgba(0, 0, 0, 0.2);
+            transform: translateZ(-1px);
+            border-radius: inherit;
+        }
+        
+        .button-3d:active {
+            transform: translateY(2px);
+        }
+        
+        .button-3d:active:before {
+            bottom: -2px;
+        }
+        
+        .character-shadow {
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+        }
+        
+        .collectible-glow {
+            filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.8));
+            animation: glow 1.5s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from {
+                filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.8));
+            }
+            to {
+                filter: drop-shadow(0 0 16px rgba(255, 215, 0, 1));
+            }
+        }
+        
+        .obstacle-shadow {
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
+        }
+        
+        .menu-bg {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/e3ea28d417f94a74bd016e4415052003~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026011721160287D1E8A2ECD990773C14&rrcfp=f06b921b&x-expires=1771247820&x-signature=GIKaC54VLBC%2BJqmOp%2FTA41Fl%2BJg%3D');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        
+        .game-over-bg {
+            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/e3ea28d417f94a74bd016e4415052003~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026011721160287D1E8A2ECD990773C14&rrcfp=f06b921b&x-expires=1771247820&x-signature=GIKaC54VLBC%2BJqmOp%2FTA41Fl%2BJg%3D');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .score-popup {
+            position: absolute;
+            color: #FFD700;
+            font-weight: bold;
+            font-size: 18px;
+            pointer-events: none;
+            animation: scorePopup 1s ease-out forwards;
+            z-index: 100;
+        }
+        
+        @keyframes scorePopup {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+        }
+        
+        .particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: #FFD700;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: particle 1s ease-out forwards;
+            z-index: 100;
+        }
+        
+        @keyframes particle {
+            0% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.5) translateY(-100px);
+            }
+        }
+    </style>
+</head>
+<body class="bg-dark text-light overflow-hidden">
+    <!-- 游戏容器 -->
+    <div id="gameContainer" class="relative w-full h-screen flex items-center justify-center">
+        <!-- 游戏画布 -->
+        <canvas id="gameCanvas" class="absolute top-0 left-0 w-full h-full"></canvas>
+        
+        <!-- 开始菜单 -->
+        <div id="startMenu" class="menu-bg absolute inset-0 flex flex-col items-center justify-center z-10">
+            <div class="text-center mb-8 animate-float">
+                <h1 class="text-[clamp(2.5rem,8vw,5rem)] font-fangsong font-bold text-secondary text-shadow-lg mb-2">明朝跑酷</h1>
+                <p class="text-[clamp(1rem,3vw,1.5rem)] font-kaiti text-light text-shadow">锦衣卫传奇</p>
+            </div>
+            
+            <div class="flex flex-col gap-4 w-[clamp(200px,50vw,300px)]">
+                <button id="startButton" class="button-3d bg-primary hover:bg-opacity-90 text-light py-3 px-6 rounded-lg text-lg font-kaiti transition-all duration-300 transform hover:scale-105 active:scale-95">
+                    开始游戏
+                </button>
+                <button id="characterSelectButton" class="button-3d bg-accent hover:bg-opacity-90 text-dark py-3 px-6 rounded-lg text-lg font-kaiti transition-all duration-300 transform hover:scale-105 active:scale-95">
+                    角色选择
+                </button>
+                <button id="highScoreButton" class="button-3d bg-bronze hover:bg-opacity-90 text-light py-3 px-6 rounded-lg text-lg font-kaiti transition-all duration-300 transform hover:scale-105 active:scale-95">
+                    最高分
+                </button>
+                <button id="settingsButton" class="button-3d bg-dark hover:bg-opacity-80 text-light py-3 px-6 rounded-lg text-lg font-kaiti transition-all duration-300 transform hover:scale-105 active:scale-95 border border-light border-opacity-30">
+                    设置
+                </button>
+            </div>
+            
+            <div class="absolute bottom-4 left-0 right-0 flex justify-center">
+                <p class="text-sm text-light text-opacity-70 font-serif">滑动屏幕或使用方向键控制角色</p>
+            </div>
+        </div>
+        
+        <!-- 角色选择菜单 -->
+        <div id="characterSelectMenu" class="hidden menu-bg absolute inset-0 flex flex-col items-center justify-center z-20">
+            <div class="absolute top-4 left-4">
+                <button id="backToMenuButton" class="button-3d bg-dark hover:bg-opacity-80 text-light py-2 px-4 rounded-lg text-lg font-kaiti transition-all duration-300 transform hover:scale-105 active:scale-95 border border-light border-opacity-30">
+                    <i class="fa fa-arrow-left mr-2"></i>返回
+                </button>
+            </div>
+            
+            <h2 class="text-[clamp(1.5rem,5vw,3rem)] font-fangsong font-bold text-secondary text-shadow-lg mb-6">选择角色</h2>
+            
+            <div class="flex flex-wrap justify-center gap-6 w-full max-w-3xl px-4">
+                <!-- 锦衣卫角色 -->
+                <div class="character-option bg-dark bg-opacity-70 rounded-xl p-4 flex flex-col items-center cursor-pointer border-2 border-transparent hover:border-secondary transition-all duration-300 transform hover:scale-105" data-character="jinyiwei">
+                    <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/95a7e3ff34484962aef0d78df63574d6~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026011721160287D1E8A2ECD990773C14&rrcfp=f06b921b&x-expires=1771247821&x-signature=HdkENfMkZimDR%2F353CO4nDlQDco%3D" alt="锦衣卫" class="w-32 h-32 object-contain mb-3 character-shadow floating">
+                    <h3 class="text-xl font-kaiti text-light mb-1">锦衣卫</h3>
+                    <p class="text-sm text-light text-opacity-70 font-serif text-center">速度快，跳跃高</p>
+                </div>
+                
+                <!-- 书生角色 -->
+                <div class="character-option bg-dark bg-opacity-70 rounded-xl p-4 flex flex-col items-center cursor-pointer border-2 border-transparent hover:border-secondary transition-all duration-300 transform hover:scale-105" data-character="scholar">
+                    <div class="w-32 h-32 flex items-center justify-center mb-3 character-shadow floating">
+                        <div class="w-24 h-24 bg-accent rounded-full flex items-center justify-center">
+                            <i class="fa fa-book text-4xl text-dark"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-kaiti text-light mb-1">书生</h3>
+                    <p class="text-sm text-light text-opacity-70 font-serif text-center">收集品得分翻倍</p>
+                </div>
+                
+                <!-- 绣女角色 -->
+                <div class="character-option bg-dark bg-opacity-70 rounded-xl p-4 flex flex-col items-center cursor-pointer border-2 border-transparent hover:border-secondary transition-all duration-300 transform hover:scale-105" data-character="embroidery">
+                    <div class="w-32 h-32 flex items-center justify-center mb-3 character-shadow floating">
+                        <div class="w-24 h-24 bg-primary rounded-full flex items-center justify-center">
+                            <i class="fa fa-scissors text-4xl text-light"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-kaiti text-light mb-1">绣女</h3>
+                    <p class="text-sm text-light text-opacity-70 font-serif text-center">可短暂滑行穿过障碍物</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 最高分菜单 -->
+        <div id="highScoreMenu" class="hidden menu-bg absolute inset-0 flex flex-col items-center justify-center z-20">
+            <div class="absolute top-4 left-4">
+                <button id="backFromHighScoreButton" class="button-3d bg-dark hover:bg-opacity-80 text-light py-2 px-4 rounded-lg text-lg font-kaiti transition-all duration-300 transform hover:scale-105 active:scale-95 border border-light border-opacity-30">
+                    <i class="fa fa-arrow-left mr-2"></i>返回
+                </button>
+            </div>
+            
+            <h2 class="text-[clamp(1.5rem,5vw,3rem)] font-fangsong font-bold text-secondary text-shadow-lg mb-6">最高分数</h2>
+            
+            <div class="bg-dark bg-opacity-70 rounded-xl p-6 w-full max-w-md">
+                <div class="flex justify-between items-center border-b border-light border-opacity-30 pb-3 mb-3">
+                    <span class="text-xl font-kaiti text-light">最高分</span>
+                    <span id="highScoreValue" class="text-2xl font-bold text-secondary">0</span>
+                </div>
+                
+                <div class="space-y-3" id="scoreList">
+                    <div class="flex justify-between items-center py-2">
+                        <span class="font-kaiti text-light">锦衣卫</span>
+                        <span class="font-bold text-light">0</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2">
+                        <span class="font-kaiti text-light">书生</span>
+                        <span class="font-bold text-light">0</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2">
+                        <span class="font-kaiti text-light">绣女</span>
+                        <span class="font-bold text-light">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 设置菜单 -->
+        <div id="settingsMenu" class="hidden menu-bg absolute inset-0 flex flex-col items-center justify-center z-20">
+            <div class="absolute top-4 left-4">
+                <button id="backFromSettingsButton" class="button-3d bg-dark hover:bg-opacity-80 text-light py-2 px-4 rounded-lg text-lg font-kaiti transition-all duration-300 transform hover:scale-105 active:scale-95 border border-light border-opacity-30">
+                    <i class="fa fa-arrow-left mr-2"></i>返回
+                </button>
+            </div>
+            
+            <h2 class="text-[clamp(1.5rem,5vw,3rem)] font-fangsong font-bold text-secondary text-shadow-lg mb-6">游戏设置</h2>
+            
+            <div class="bg-dark bg-opacity-70 rounded-xl p-6 w-full max-w-md">
+                <div class="flex justify-between items-center py-3 border-b border-light border-opacity-30">
+                    <span class="text-xl font-kaiti text-light">背景音乐</span>
+                    <label class="switch">
+                        <input type="checkbox" id="musicToggle" checked>
+                        <span class="w-12 h-6 bg-gray-600 rounded-full relative inline-block transition-all duration-300 cursor-pointer">
+                            <span class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 transition-all duration-300 transform music-toggle-dot"></span>
+                        </span>
+                    </label>
+                </div>
+                
+                <div class="flex justify-between items-center py-3 border-b border-light border-opacity-30">
+                    <span class="text-xl font-kaiti text-light">音效</span>
+                    <label class="switch">
+                        <input type="checkbox" id="soundToggle" checked>
+                        <span class="w-12 h-6 bg-gray-600 rounded-full relative inline-block transition-all duration-300 cursor-pointer">
+                            <span class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 transition-all duration-300 transform sound-toggle-dot"></span>
+                        </span>
+                    </label>
+                </div>
+                
+                <div class="py-3">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xl font-kaiti text-light">游戏难度</span>
+                        <span id="difficultyValue" class="text-lg font-bold text-secondary">中等</span>
+                    </div>
+                    <input type="range" id="difficultySlider" min="1" max="3" value="2" class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer">
+                    <div class="flex justify-between text-xs text-light text-opacity-70 mt-1">
+                        <span>简单</span>
+                        <span>中等</span>
+                        <span>困难</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 游戏中UI -->
+        <div id="inGameUI" class="hidden absolute top-0 left-0 right-0 z-10 p-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <div class="bg-dark bg-opacity-70 rounded-lg px-4 py-2 flex items-center">
+                        <i class="fa fa-star text-secondary mr-2"></i>
+                        <span id="scoreDisplay" class="text-xl font-bold text-light">0</span>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                    <div class="bg-dark bg-opacity-70 rounded-lg px-4 py-2 flex items-center">
+                        <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/24d018d345fd428ab1bdcc949115a6c7~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026011721160287D1E8A2ECD990773C14&rrcfp=f06b921b&x-expires=1771247821&x-signature=wRS%2ByRtRKEyrcHueF61s3hsZCQ8%3D" alt="通宝" class="w-6 h-6 mr-2 collectible-glow">
+                        <span id="collectiblesDisplay" class="text-xl font-bold text-light">0</span>
+                    </div>
+                    
+                    <button id="pauseButton" class="bg-dark bg-opacity-70 hover:bg-opacity-90 text-light p-2 rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95">
+                        <i class="fa fa-pause text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 暂停菜单 -->
+        <div id="pauseMenu" class="hidden menu-bg absolute inset-0 flex flex-col items-center justify-center z-20">
+            <h2 class="text-[clamp(1.5rem,5vw,3rem)] font-fangsong font-bold text-secondary text-shadow-lg mb-6">游戏暂停</h2>
+            
+            <div class="flex flex-col gap-4 w-[clamp(200px,50vw,300px)]">
+                <button id="resumeButton" class="button-3d bg-primary hover:bg-opacity-90 text-light py-3 px-6 rounded-lg text-lg font-kaiti transition-all duration-300 transform hover:scale-105 active:scale-95">
+                    继续游戏
+                </button>
+                <button id="restartButton" class="button-3d bg-accent hover:bg-opacity-90 text-dark py-3 px-6 rounded-lg text-lg font-kaiti transition-all duration-300 transform hover:scale-105 active:scale-95">
+                    重新开始
+                </button>
+                <button id="exitToMenuButton" class="button-3d bg-dark hover:bg-opacity-80 text-light py-3 px-6 rounded-lg text-lg font-kaiti transition-all duration-300 transform hover:scale-105 active:scale-95 border border-light border-opacity-30">
+                    返回主菜单
+                </button>
+            </div>
+        </div>
+        
+        <!-- 游戏结束菜单 -->
+        <div id="gameOverMenu" class="hidden game-over-bg absolute inset-0 flex flex-col items-center justify-center z-20">
+            <h2 class="text-[clamp(1.5rem,5vw,3rem)] font-fangsong font-bold text-primary text-shadow-lg mb-2">游戏结束</h2>
+            
+            <div class="bg-dark bg-opacity-70 rounded-xl p-6 w-full max-w-md mb-6">
+                <div class="flex justify-between items-center border-b border-light border-opacity-30 pb-3 mb-3">
+                    <span class="text-xl font-kaiti text-light">最终得分</span>
+                    <span id="finalScoreDisplay" class="text-2xl font-bold text-secondary">0</span>
+                </div>
+                
+                <div class="flex justify-between items-center border-b border-light border-opacity-30 pb-3 mb-3">
+                    <span class="text-xl font-kaiti text-light">收集物品</span>
+                    <span id="finalCollectiblesDisplay" class="text-2xl font-bold text-light">0</span>
+                </div>
+                
+                <div class="flex justify-between items-center py-3">
+                    <span class="text-xl font-kaiti text-light">最高记录</span>
+                    <span id="newHighScoreDisplay" class="text-2xl font-bold text-secondary">0</span>
+                </div>
+            </div>
+            
+            <div class="flex flex-col gap-4 w-[clamp(200px,50vw,300px)]">
+                <button id="playAgainButton" class="button-3d bg-primary hover:bg-opacity-90 text-light py-3 px-6 rounded-lg text-lg font-kaiti transition-all duration-300 transform hover:scale-105 active:scale-95">
+                    再玩一次
+                </button>
+                <button id="gameOverToMenuButton" class="button-3d bg-dark hover:bg-opacity-80 text-light py-3 px-6 rounded-lg text-lg font-kaiti transition-all duration-300 transform hover:scale-105 active:scale-95 border border-light border-opacity-30">
+                    返回主菜单
+                </button>
+            </div>
+        </div>
+        
+        <!-- 游戏操作按钮 (移动端) -->
+        <div id="mobileControls" class="hidden absolute bottom-4 left-0 right-0 flex justify-between px-4 z-10">
+            <div class="flex gap-4">
+                <button id="mobileLeftButton" class="bg-dark bg-opacity-50 hover:bg-opacity-70 text-light w-16 h-16 rounded-full flex items-center justify-center transition-all duration-300 transform hover:scale-105 active:scale-95">
+                    <i class="fa fa-arrow-left text-2xl"></i>
+                </button>
+                <button id="mobileRightButton" class="bg-dark bg-opacity-50 hover:bg-opacity-70 text-light w-16 h-16 rounded-full flex items-center justify-center transition-all duration-300 transform hover:scale-105 active:scale-95">
+                    <i class="fa fa-arrow-right text-2xl"></i>
+                </button>
+            </div>
+            
+            <div class="flex gap-4">
+                <button id="mobileSlideButton" class="bg-dark bg-opacity-50 hover:bg-opacity-70 text-light w-16 h-16 rounded-full flex items-center justify-center transition-all duration-300 transform hover:scale-105 active:scale-95">
+                    <i class="fa fa-arrow-down text-2xl"></i>
+                </button>
+                <button id="mobileJumpButton" class="bg-dark bg-opacity-50 hover:bg-opacity-70 text-light w-16 h-16 rounded-full flex items-center justify-center transition-all duration-300 transform hover:scale-105 active:scale-95">
+                    <i class="fa fa-arrow-up text-2xl"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 游戏主类
+        class MingDynastyRunner {
+            constructor() {
+                this.canvas = document.getElementById('gameCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.gameState = 'menu'; // menu, playing, paused, gameOver
+                this.score = 0;
+                this.collectibles = 0;
+                this.highScores = JSON.parse(localStorage.getItem('highScores')) || {
+                    jinyiwei: 0,
+                    scholar: 0,
+                    embroidery: 0
+                };
+                this.currentCharacter = 'jinyiwei';
+                this.difficulty = 2; // 1: 简单, 2: 中等, 3: 困难
+                this.musicEnabled = true;
+                this.soundEnabled = true;
+                
+                // 游戏对象
+                this.character = null;
+                this.obstacles = [];
+                this.collectibleItems = [];
+                this.background = null;
+                this.particles = [];
+                
+                // 游戏参数
+                this.speed = 5 + this.difficulty;
+                this.obstacleSpawnRate = 100 - (this.difficulty * 20); // 越小生成越快
+                this.collectibleSpawnRate = 150;
+                this.gravity = 0.5 + (this.difficulty * 0.1);
+                this.jumpPower = 12 - (this.difficulty * 1);
+                this.gameTime = 0;
+                this.spawnTimer = 0;
+                this.collectibleTimer = 0;
+                
+                // 控制状态
+                this.keys = {
+                    left: false,
+                    right: false,
+                    up: false,
+                    down: false
+                };
+                
+                // 资源加载
+                this.images = {};
+                this.sounds = {};
+                this.loadResources();
+                
+                // 初始化游戏
+                this.init();
+            }
+            
+            // 初始化游戏
+            init() {
+                // 设置画布尺寸
+                this.resizeCanvas();
+                window.addEventListener('resize', () => this.resizeCanvas());
+                
+                // 加载保存的设置
+                this.loadSettings();
+                
+                // 初始化UI事件
+                this.initUIEvents();
+                
+                // 初始化输入控制
+                this.initInput();
+                
+                // 显示开始菜单
+                this.showMenu('startMenu');
+                
+                // 更新最高分显示
+                this.updateHighScoreDisplay();
+            }
+            
+            // 调整画布尺寸
+            resizeCanvas() {
+                // 设置画布尺寸为窗口大小
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+                
+                // 如果游戏正在运行，重新计算游戏对象位置
+                if (this.gameState === 'playing') {
+                    if (this.character) this.character.updatePosition();
+                    if (this.background) this.background.updateDimensions();
+                }
+            }
+            
+            // 加载游戏资源
+            loadResources() {
+                // 角色图片
+                this.images.character = new Image();
+                this.images.character.src = 'https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/95a7e3ff34484962aef0d78df63574d6~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026011721160287D1E8A2ECD990773C14&rrcfp=f06b921b&x-expires=1771247821&x-signature=HdkENfMkZimDR%2F353CO4nDlQDco%3D';
+                
+                // 背景图片
+                this.images.background = new Image();
+                this.images.background.src = 'https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/e3ea28d417f94a74bd016e4415052003~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026011721160287D1E8A2ECD990773C14&rrcfp=f06b921b&x-expires=1771247820&x-signature=GIKaC54VLBC%2BJqmOp%2FTA41Fl%2BJg%3D';
+                
+                // 障碍物图片
+                this.images.obstacles = new Image();
+                this.images.obstacles.src = 'https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/4e77114cc8a04390afa4c5f1bdb5440c~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026011721160287D1E8A2ECD990773C14&rrcfp=f06b921b&x-expires=1771247821&x-signature=hUbD8TLx%2FMYiWh9VQK2zPAXeIQY%3D';
+                
+                // 收集品图片
+                this.images.collectibles = new Image();
+                this.images.collectibles.src = 'https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/24d018d345fd428ab1bdcc949115a6c7~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026011721160287D1E8A2ECD990773C14&rrcfp=f06b921b&x-expires=1771247821&x-signature=wRS%2ByRtRKEyrcHueF61s3hsZCQ8%3D';
+                
+                // 模拟音效加载
+                this.sounds.jump = { play: () => {} };
+                this.sounds.collect = { play: () => {} };
+                this.sounds.collision = { play: () => {} };
+                this.sounds.bgMusic = { play: () => {}, pause: () => {} };
+            }
+            
+            // 加载保存的设置
+            loadSettings() {
+                const savedSettings = JSON.parse(localStorage.getItem('gameSettings')) || {};
+                
+                if (savedSettings.difficulty) {
+                    this.difficulty = savedSettings.difficulty;
+                    document.getElementById('difficultySlider').value = this.difficulty;
+                    this.updateDifficultyDisplay();
+                }
+                
+                if (savedSettings.musicEnabled !== undefined) {
+                    this.musicEnabled = savedSettings.musicEnabled;
+                    document.getElementById('musicToggle').checked = this.musicEnabled;
+                    this.updateMusicToggleDisplay();
+                }
+                
+                if (savedSettings.soundEnabled !== undefined) {
+                    this.soundEnabled = savedSettings.soundEnabled;
+                    document.getElementById('soundToggle').checked = this.soundEnabled;
+                    this.updateSoundToggleDisplay();
+                }
+                
+                if (savedSettings.currentCharacter) {
+                    this.currentCharacter = savedSettings.currentCharacter;
+                }
+                
+                // 更新游戏参数
+                this.updateGameParameters();
+            }
+            
+            // 保存设置
+            saveSettings() {
+                const settings = {
+                    difficulty: this.difficulty,
+                    musicEnabled: this.musicEnabled,
+                    soundEnabled: this.soundEnabled,
+                    currentCharacter: this.currentCharacter
+                };
+                
+                localStorage.setItem('gameSettings', JSON.stringify(settings));
+            }
+            
+            // 更新游戏参数
+            updateGameParameters() {
+                this.speed = 5 + this.difficulty;
+                this.obstacleSpawnRate = 100 - (this.difficulty * 20);
+                this.gravity = 0.5 + (this.difficulty * 0.1);
+                this.jumpPower = 12 - (this.difficulty * 1);
+            }
+            
+            // 初始化UI事件
+            initUIEvents() {
+                // 开始菜单按钮
+                document.getElementById('startButton').addEventListener('click', () => this.startGame());
+                document.getElementById('characterSelectButton').addEventListener('click', () => this.showMenu('characterSelectMenu'));
+                document.getElementById('highScoreButton').addEventListener('click', () => this.showMenu('highScoreMenu'));
+                document.getElementById('settingsButton').addEventListener('click', () => this.showMenu('settingsMenu'));
+                
+                // 返回按钮
+                document.getElementById('backToMenuButton').addEventListener('click', () => this.showMenu('startMenu'));
+                document.getElementById('backFromHighScoreButton').addEventListener('click', () => this.showMenu('startMenu'));
+                document.getElementById('backFromSettingsButton').addEventListener('click', () => this.showMenu('startMenu'));
+                
+                // 角色选择
+                document.querySelectorAll('.character-option').forEach(option => {
+                    option.addEventListener('click', () => {
+                        this.selectCharacter(option.dataset.character);
+                        this.showMenu('startMenu');
+                    });
+                });
+                
+                // 设置控制
+                document.getElementById('difficultySlider').addEventListener('input', (e) => {
+                    this.difficulty = parseInt(e.target.value);
+                    this.updateDifficultyDisplay();
+                    this.updateGameParameters();
+                    this.saveSettings();
+                });
+                
+                document.getElementById('musicToggle').addEventListener('change', (e) => {
+                    this.musicEnabled = e.target.checked;
+                    this.updateMusicToggleDisplay();
+                    this.saveSettings();
+                });
+                
+                document.getElementById('soundToggle').addEventListener('change', (e) => {
+                    this.soundEnabled = e.target.checked;
+                    this.updateSoundToggleDisplay();
+                    this.saveSettings();
+                });
+                
+                // 游戏中控制
+                document.getElementById('pauseButton').addEventListener('click', () => this.pauseGame());
+                
+                // 暂停菜单按钮
+                document.getElementById('resumeButton').addEventListener('click', () => this.resumeGame());
+                document.getElementById('restartButton').addEventListener('click', () => this.restartGame());
+                document.getElementById('exitToMenuButton').addEventListener('click', () => this.exitToMenu());
+                
+                // 游戏结束菜单按钮
+                document.getElementById('playAgainButton').addEventListener('click', () => this.restartGame());
+                document.getElementById('gameOverToMenuButton').addEventListener('click', () => this.exitToMenu());
+                
+                // 移动端控制
+                document.getElementById('mobileLeftButton').addEventListener('touchstart', () => this.keys.left = true);
+                document.getElementById('mobileLeftButton').addEventListener('touchend', () => this.keys.left = false);
+                document.getElementById('mobileRightButton').addEventListener('touchstart', () => this.keys.right = true);
+                document.getElementById('mobileRightButton').addEventListener('touchend', () => this.keys.right = false);
+                document.getElementById('mobileJumpButton').addEventListener('touchstart', () => this.jump());
+                document.getElementById('mobileSlideButton').addEventListener('touchstart', () => this.slide());
+                document.getElementById('mobileSlideButton').addEventListener('touchend', () => this.stopSlide());
+            }
+            
+            // 初始化输入控制
+            initInput() {
+                // 键盘控制
+                document.addEventListener('keydown', (e) => {
+                    switch(e.key) {
+                        case 'ArrowLeft':
+                            this.keys.left = true;
+                            break;
+                        case 'ArrowRight':
+                            this.keys.right = true;
+                            break;
+                        case 'ArrowUp':
+                            this.jump();
+                            break;
+                        case 'ArrowDown':
+                            this.slide();
+                            break;
+                        case ' ':// 空格键
+                            if (this.gameState === 'playing') {
+                                this.jump();
+                            } else if (this.gameState === 'paused') {
+                                this.resumeGame();
+                            } else if (this.gameState === 'menu') {
+                                this.startGame();
+                            } else if (this.gameState === 'gameOver') {
+                                this.restartGame();
+                            }
+                            break;
+                        case 'Escape':
+                            if (this.gameState === 'playing') {
+                                this.pauseGame();
+                            } else if (this.gameState === 'paused') {
+                                this.resumeGame();
+                            }
+                            break;
+                    }
+                });
+                
+                document.addEventListener('keyup', (e) => {
+                    switch(e.key) {
+                        case 'ArrowLeft':
+                            this.keys.left = false;
+                            break;
+                        case 'ArrowRight':
+                            this.keys.right = false;
+                            break;
+                        case 'ArrowDown':
+                            this.stopSlide();
+                            break;
+                    }
+                });
+                
+                // 触摸控制
+                let touchStartX = 0;
+                let touchStartY = 0;
+                
+                this.canvas.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    touchStartX = e.touches[0].clientX;
+                    touchStartY = e.touches[0].clientY;
+                });
+                
+                this.canvas.addEventListener('touchmove', (e) => {
+                    e.preventDefault();
+                });
+                
+                this.canvas.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    
+                    if (this.gameState !== 'playing') return;
+                    
+                    const touchEndX = e.changedTouches[0].clientX;
+                    const touchEndY = e.changedTouches[0].clientY;
+                    
+                    const deltaX = touchEndX - touchStartX;
+                    const deltaY = touchEndY - touchStartY;
+                    
+                    // 检测滑动方向
+                    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
+                        // 水平滑动
+                        if (deltaX > 0) {
+                            // 向右滑动
+                            this.moveRight();
+                        } else {
+                            // 向左滑动
+                            this.moveLeft();
+                        }
+                    } else if (Math.abs(deltaY) > 50) {
+                        // 垂直滑动
+                        if (deltaY < 0) {
+                            // 向上滑动 - 跳跃
+                            this.jump();
+                        } else {
+                            // 向下滑动 - 滑行
+                            this.slide();
+                        }
+                    }
+                });
+            }
+            
+            // 显示菜单
+            showMenu(menuId) {
+                // 隐藏所有菜单
+                document.getElementById('startMenu').classList.add('hidden');
+                document.getElementById('characterSelectMenu').classList.add('hidden');
+                document.getElementById('highScoreMenu').classList.add('hidden');
+                document.getElementById('settingsMenu').classList.add('hidden');
+                document.getElementById('pauseMenu').classList.add('hidden');
+                document.getElementById('gameOverMenu').classList.add('hidden');
+                document.getElementById('inGameUI').classList.add('hidden');
+                document.getElementById('mobileControls').classList.add('hidden');
+                
+                // 显示指定菜单
+                document.getElementById(menuId).classList.remove('hidden');
+                
+                // 如果是设置菜单，更新显示
+                if (menuId === 'settingsMenu') {
+                    this.updateDifficultyDisplay();
+                    this.updateMusicToggleDisplay();
+                    this.updateSoundToggleDisplay();
+                }
+                
+                // 如果是最高分菜单，更新显示
+                if (menuId === 'highScoreMenu') {
+                    this.updateHighScoreDisplay();
+                }
+                
+                // 更新游戏状态
+                this.gameState = 'menu';
+                
+                // 暂停背景音乐
+                if (this.sounds.bgMusic && this.musicEnabled) {
+                    this.sounds.bgMusic.pause();
+                }
+            }
+            
+            // 更新难度显示
+            updateDifficultyDisplay() {
+                const difficultyText = ['简单', '中等', '困难'];
+                document.getElementById('difficultyValue').textContent = difficultyText[this.difficulty - 1];
+            }
+            
+            // 更新音乐开关显示
+            updateMusicToggleDisplay() {
+                const dot = document.querySelector('.music-toggle-dot');
+                if (this.musicEnabled) {
+                    dot.style.transform = 'translateX(24px)';
+                    dot.parentElement.classList.add('bg-secondary');
+                    dot.parentElement.classList.remove('bg-gray-600');
+                } else {
+                    dot.style.transform = 'translateX(0)';
+                    dot.parentElement.classList.remove('bg-secondary');
+                    dot.parentElement.classList.add('bg-gray-600');
+                }
+            }
+            
+            // 更新音效开关显示
+            updateSoundToggleDisplay() {
+                const dot = document.querySelector('.sound-toggle-dot');
+                if (this.soundEnabled) {
+                    dot.style.transform = 'translateX(24px)';
+                    dot.parentElement.classList.add('bg-secondary');
+                    dot.parentElement.classList.remove('bg-gray-600');
+                } else {
+                    dot.style.transform = 'translateX(0)';
+                    dot.parentElement.classList.remove('bg-secondary');
+                    dot.parentElement.classList.add('bg-gray-600');
+                }
+            }
+            
+            // 更新最高分显示
+            updateHighScoreDisplay() {
+                // 计算总体最高分
+                let overallHighScore = 0;
+                for (const character in this.highScores) {
+                    if (this.highScores[character] > overallHighScore) {
+                        overallHighScore = this.highScores[character];
+                    }
+                }
+                
+                document.getElementById('highScoreValue').textContent = overallHighScore;
+                
+                // 更新各角色最高分
+                const scoreList = document.getElementById('scoreList');
+                scoreList.innerHTML = '';
+                
+                const characterNames = {
+                    jinyiwei: '锦衣卫',
+                    scholar: '书生',
+                    embroidery: '绣女'
+                };
+                
+                for (const character in this.highScores) {
+                    const scoreItem = document.createElement('div');
+                    scoreItem.className = 'flex justify-between items-center py-2';
+                    scoreItem.innerHTML = `
+                        <span class="font-kaiti text-light">${characterNames[character]}</span>
+                        <span class="font-bold text-light">${this.highScores[character]}</span>
+                    `;
+                    scoreList.appendChild(scoreItem);
+                }
+            }
+            
+            // 选择角色
+            selectCharacter(character) {
+                this.currentCharacter = character;
+                this.saveSettings();
+                
+                // 更新角色选择UI
+                document.querySelectorAll('.character-option').forEach(option => {
+                    option.classList.remove('border-secondary');
+                    option.classList.add('border-transparent');
+                });
+                
+                document.querySelector(`[data-character="${character}"]`).classList.remove('border-transparent');
+                document.querySelector(`[data-character="${character}"]`).classList.add('border-secondary');
+            }
+            
+            // 开始游戏
+            startGame() {
+                // 隐藏菜单，显示游戏UI
+                document.getElementById('startMenu').classList.add('hidden');
+                document.getElementById('inGameUI').classList.remove('hidden');
+                
+                // 如果是移动设备，显示控制按钮
+                if (this.isMobileDevice()) {
+                    document.getElementById('mobileControls').classList.remove('hidden');
+                }
+                
+                // 初始化游戏对象
+                this.initGameObjects();
+                
+                // 更新游戏状态
+                this.gameState = 'playing';
+                
+                // 开始游戏循环
+                this.gameLoop();
+                
+                // 播放背景音乐
+                if (this.sounds.bgMusic && this.musicEnabled) {
+                    this.sounds.bgMusic.play();
+                }
+            }
+            
+            // 初始化游戏对象
+            initGameObjects() {
+                // 重置游戏数据
+                this.score = 0;
+                this.collectibles = 0;
+                this.gameTime = 0;
+                this.spawnTimer = 0;
+                this.collectibleTimer = 0;
+                this.obstacles = [];
+                this.collectibleItems = [];
+                this.particles = [];
+                
+                // 更新UI显示
+                document.getElementById('scoreDisplay').textContent = this.score;
+                document.getElementById('collectiblesDisplay').textContent = this.collectibles;
+                
+                // 创建角色
+                this.character = new Character(this);
+                
+                // 创建背景
+                this.background = new Background(this);
+                
+                // 生成初始障碍物和收集品
+                this.generateInitialObjects();
+            }
+            
+            // 生成初始游戏对象
+            generateInitialObjects() {
+                // 生成一些初始障碍物
+                for (let i = 0; i < 3; i++) {
+                    this.spawnTimer = this.obstacleSpawnRate;
+                    this.spawnObstacle();
+                }
+                
+                // 生成一些初始收集品
+                for (let i = 0; i < 2; i++) {
+                    this.collectibleTimer = this.collectibleSpawnRate;
+                    this.spawnCollectible();
+                }
+            }
+            
+            // 游戏主循环
+            gameLoop() {
+                if (this.gameState !== 'playing') return;
+                
+                // 更新游戏状态
+                this.update();
+                
+                // 渲染游戏画面
+                this.render();
+                
+                // 继续游戏循环
+                requestAnimationFrame(() => this.gameLoop());
+            }
+            
+            // 更新游戏状态
+            update() {
+                // 更新游戏时间
+                this.gameTime++;
+                
+                // 更新背景
+                this.background.update();
+                
+                // 更新角色
+                this.character.update();
+                
+                // 生成障碍物
+                this.spawnTimer++;
+                if (this.spawnTimer >= this.obstacleSpawnRate) {
+                    this.spawnTimer = 0;
+                    this.spawnObstacle();
+                }
+                
+                // 生成收集品
+                this.collectibleTimer++;
+                if (this.collectibleTimer >= this.collectibleSpawnRate) {
+                    this.collectibleTimer = 0;
+                    this.spawnCollectible();
+                }
+                
+                // 更新障碍物
+                for (let i = this.obstacles.length - 1; i >= 0; i--) {
+                    this.obstacles[i].update();
+                    
+                    // 检查是否与角色碰撞
+                    if (this.checkCollision(this.character, this.obstacles[i])) {
+                        this.handleCollision();
+                        return;
+                    }
+                    
+                    // 移除屏幕外的障碍物
+                    if (this.obstacles[i].x < -this.obstacles[i].width) {
+                        this.obstacles.splice(i, 1);
+                    }
+                }
+                
+                // 更新收集品
+                for (let i = this.collectibleItems.length - 1; i >= 0; i--) {
+                    this.collectibleItems[i].update();
+                    
+                    // 检查是否被角色收集
+                    if (this.checkCollision(this.character, this.collectibleItems[i])) {
+                        this.collectCollectible(this.collectibleItems[i], i);
+                        continue;
+                    }
+                    
+                    // 移除屏幕外的收集品
+                    if (this.collectibleItems[i].x < -this.collectibleItems[i].width) {
+                        this.collectibleItems.splice(i, 1);
+                    }
+                }
+                
+                // 更新粒子效果
+                for (let i = this.particles.length - 1; i >= 0; i--) {
+                    this.particles[i].update();
+                    
+                    // 移除完成动画的粒子
+                    if (this.particles[i].life <= 0) {
+                        this.particles.splice(i, 1);
+                    }
+                }
+                
+                // 增加分数
+                this.score += 0.1;
+                document.getElementById('scoreDisplay').textContent = Math.floor(this.score);
+            }
+            
+            // 渲染游戏画面
+            render() {
+                // 清空画布
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // 绘制背景
+                this.background.render();
+                
+                // 绘制障碍物
+                for (const obstacle of this.obstacles) {
+                    obstacle.render();
+                }
+                
+                // 绘制收集品
+                for (const collectible of this.collectibleItems) {
+                    collectible.render();
+                }
+                
+                // 绘制角色
+                this.character.render();
+                
+                // 绘制粒子效果
+                for (const particle of this.particles) {
+                    particle.render();
+                }
+            }
+            
+            // 生成障碍物
+            spawnObstacle() {
+                const obstacleTypes = ['sedanChair', 'lionStatue', 'pottedPlant'];
+                const type = obstacleTypes[Math.floor(Math.random() * obstacleTypes.length)];
+                
+                const obstacle = new Obstacle(this, type);
+                this.obstacles.push(obstacle);
+            }
+            
+            // 生成收集品
+            spawnCollectible() {
+                const collectibleTypes = ['coin', 'jade', 'vase'];
+                const type = collectibleTypes[Math.floor(Math.random() * collectibleTypes.length)];
+                
+                const collectible = new Collectible(this, type);
+                this.collectibleItems.push(collectible);
+            }
+            
+            // 检查碰撞
+            checkCollision(obj1, obj2) {
+                // 简化的碰撞检测
+                return obj1.x < obj2.x + obj2.width &&
+                       obj1.x + obj1.width > obj2.x &&
+                       obj1.y < obj2.y + obj2.height &&
+                       obj1.y + obj1.height > obj2.y;
+            }
+            
+            // 处理碰撞
+            handleCollision() {
+                // 播放碰撞音效
+                if (this.sounds.collision && this.soundEnabled) {
+                    this.sounds.collision.play();
+                }
+                
+                // 生成碰撞粒子效果
+                this.createCollisionParticles(this.character.x + this.character.width / 2, this.character.y + this.character.height / 2);
+                
+                // 游戏结束
+                this.gameOver();
+            }
+            
+            // 创建碰撞粒子效果
+            createCollisionParticles(x, y) {
+                for (let i = 0; i < 10; i++) {
+                    const particle = new Particle(this, x, y);
+                    this.particles.push(particle);
+                }
+            }
+            
+            // 收集物品
+            collectCollectible(collectible, index) {
+                // 播放收集音效
+                if (this.sounds.collect && this.soundEnabled) {
+                    this.sounds.collect.play();
+                }
+                
+                // 增加分数和收集品数量
+                let points = 10;
+                if (this.currentCharacter === 'scholar') {
+                    points *= 2; // 书生角色收集品得分翻倍
+                }
+                
+                this.score += points;
+                this.collectibles++;
+                
+                // 更新UI显示
+                document.getElementById('scoreDisplay').textContent = Math.floor(this.score);
+                document.getElementById('collectiblesDisplay').textContent = this.collectibles;
+                
+                // 创建收集粒子效果
+                this.createCollectParticles(collectible.x + collectible.width / 2, collectible.y + collectible.height / 2);
+                
+                // 显示得分弹出效果
+                this.showScorePopup(collectible.x, collectible.y, points);
+                
+                // 移除收集品
+                this.collectibleItems.splice(index, 1);
+            }
+            
+            // 创建收集粒子效果
+            createCollectParticles(x, y) {
+                for (let i = 0; i < 5; i++) {
+                    const particle = new Particle(this, x, y, '#FFD700', 1.5);
+                    this.particles.push(particle);
+                }
+            }
+            
+            // 显示得分弹出效果
+            showScorePopup(x, y, points) {
+                const popup = document.createElement('div');
+                popup.className = 'score-popup';
+                popup.textContent = `+${points}`;
+                popup.style.left = `${x}px`;
+                popup.style.top = `${y}px`;
+                
+                document.getElementById('gameContainer').appendChild(popup);
+                
+                // 动画结束后移除
+                setTimeout(() => {
+                    popup.remove();
+                }, 1000);
+            }
+            
+            // 跳跃
+            jump() {
+                if (this.gameState !== 'playing') return;
+                
+                if (this.character.jump()) {
+                    // 播放跳跃音效
+                    if (this.sounds.jump && this.soundEnabled) {
+                        this.sounds.jump.play();
+                    }
+                }
+            }
+            
+            // 滑行
+            slide() {
+                if (this.gameState !== 'playing') return;
+                this.character.slide();
+            }
+            
+            // 停止滑行
+            stopSlide() {
+                if (this.gameState !== 'playing') return;
+                this.character.stopSlide();
+            }
+            
+            // 向左移动
+            moveLeft() {
+                if (this.gameState !== 'playing') return;
+                this.character.moveLeft();
+            }
+            
+            // 向右移动
+            moveRight() {
+                if (this.gameState !== 'playing') return;
+                this.character.moveRight();
+            }
+            
+            // 暂停游戏
+            pauseGame() {
+                if (this.gameState !== 'playing') return;
+                
+                this.gameState = 'paused';
+                document.getElementById('pauseMenu').classList.remove('hidden');
+                
+                // 暂停背景音乐
+                if (this.sounds.bgMusic && this.musicEnabled) {
+                    this.sounds.bgMusic.pause();
+                }
+            }
+            
+            // 恢复游戏
+            resumeGame() {
+                if (this.gameState !== 'paused') return;
+                
+                this.gameState = 'playing';
+                document.getElementById('pauseMenu').classList.add('hidden');
+                
+                // 继续游戏循环
+                this.gameLoop();
+                
+                // 播放背景音乐
+                if (this.sounds.bgMusic && this.musicEnabled) {
+                    this.sounds.bgMusic.play();
+                }
+            }
+            
+            // 重新开始游戏
+            restartGame() {
+                // 隐藏所有菜单
+                document.getElementById('pauseMenu').classList.add('hidden');
+                document.getElementById('gameOverMenu').classList.add('hidden');
+                
+                // 初始化游戏对象
+                this.initGameObjects();
+                
+                // 更新游戏状态
+                this.gameState = 'playing';
+                
+                // 开始游戏循环
+                this.gameLoop();
+                
+                // 播放背景音乐
+                if (this.sounds.bgMusic && this.musicEnabled) {
+                    this.sounds.bgMusic.play();
+                }
+            }
+            
+            // 退出到主菜单
+            exitToMenu() {
+                this.showMenu('startMenu');
+            }
+            
+            // 游戏结束
+            gameOver() {
+                this.gameState = 'gameOver';
+                
+                // 计算最终得分
+                const finalScore = Math.floor(this.score);
+                
+                // 更新最高分
+                if (finalScore > this.highScores[this.currentCharacter]) {
+                    this.highScores[this.currentCharacter] = finalScore;
+                    localStorage.setItem('highScores', JSON.stringify(this.highScores));
+                }
+                
+                // 更新游戏结束菜单显示
+                document.getElementById('finalScoreDisplay').textContent = finalScore;
+                document.getElementById('finalCollectiblesDisplay').textContent = this.collectibles;
+                
+                // 检查是否创造新纪录
+                const isNewHighScore = finalScore >= Math.max(...Object.values(this.highScores));
+                document.getElementById('newHighScoreDisplay').textContent = isNewHighScore ? '新纪录！' : Math.max(...Object.values(this.highScores));
+                
+                // 显示游戏结束菜单
+                document.getElementById('gameOverMenu').classList.remove('hidden');
+                
+                // 暂停背景音乐
+                if (this.sounds.bgMusic && this.musicEnabled) {
+                    this.sounds.bgMusic.pause();
+                }
+                
+                // 更新最高分显示
+                this.updateHighScoreDisplay();
+            }
+            
+            // 检测是否为移动设备
+            isMobileDevice() {
+                return (typeof window.orientation !== 'undefined') || (navigator.userAgent.indexOf('IEMobile') !== -1);
+            }
+        }
+        
+        // 角色类
+        class Character {
+            constructor(game) {
+                this.game = game;
+                this.canvas = game.canvas;
+                this.ctx = game.ctx;
+                
+                // 角色属性
+                this.width = 80;
+                this.height = 120;
+                this.x = this.canvas.width / 4;
+                this.y = this.canvas.height - this.height - 20;
+                this.speed = 5;
+                this.jumping = false;
+                this.sliding = false;
+                this.jumpVelocity = 0;
+                this.slideDuration = 0;
+                this.slideMaxDuration = 60; // 滑行持续帧数
+                
+                // 角色状态
+                this.state = 'running'; // running, jumping, sliding, hit
+                
+                // 角色图像
+                this.image = this.game.images.character;
+                
+                // 角色特殊能力
+                this.abilities = this.getCharacterAbilities();
+            }
+            
+            // 获取角色特殊能力
+            getCharacterAbilities() {
+                switch(this.game.currentCharacter) {
+                    case 'jinyiwei':
+                        return {
+                            speed: 1.2, // 速度提升
+                            jumpPower: 1.1 // 跳跃高度提升
+                        };
+                    case 'scholar':
+                        return {
+                            collectibleMultiplier: 2 // 收集品得分翻倍
+                        };
+                    case 'embroidery':
+                        return {
+                            slideThrough: true // 可短暂滑行穿过障碍物
+                        };
+                    default:
+                        return {};
+                }
+            }
+            
+            // 更新角色位置
+            updatePosition() {
+                this.y = this.canvas.height - this.height - 20;
+            }
+            
+            // 更新角色状态
+            update() {
+                // 处理跳跃
+                if (this.jumping) {
+                    this.y += this.jumpVelocity;
+                    this.jumpVelocity += this.game.gravity;
+                    
+                    // 检查是否着陆
+                    if (this.y >= this.canvas.height - this.height - 20) {
+                        this.y = this.canvas.height - this.height - 20;
+                        this.jumping = false;
+                        this.state = 'running';
+                    }
+                }
+                
+                // 处理滑行
+                if (this.sliding) {
+                    this.slideDuration++;
+                    
+                    // 检查滑行是否结束
+                    if (this.slideDuration >= this.slideMaxDuration) {
+                        this.stopSlide();
+                    }
+                }
+                
+                // 处理左右移动
+                if (this.game.keys.left) {
+                    this.x -= this.speed;
+                    if (this.x < 0) {
+                        this.x = 0;
+                    }
+                }
+                
+                if (this.game.keys.right) {
+                    this.x += this.speed;
+                    if (this.x > this.canvas.width - this.width) {
+                        this.x = this.canvas.width - this.width;
+                    }
+                }
+            }
+            
+            // 渲染角色
+            render() {
+                // 绘制角色图像
+                this.ctx.drawImage(
+                    this.image,
+                    this.x,
+                    this.sliding ? this.y + this.height * 0.4 : this.y,
+                    this.width,
+                    this.sliding ? this.height * 0.6 : this.height
+                );
+            }
+            
+            // 跳跃
+            jump() {
+                if (!this.jumping && !this.sliding) {
+                    this.jumping = true;
+                    this.state = 'jumping';
+                    
+                    // 应用角色跳跃能力加成
+                    let jumpPower = this.game.jumpPower;
+                    if (this.abilities.jumpPower) {
+                        jumpPower *= this.abilities.jumpPower;
+                    }
+                    
+                    this.jumpVelocity = -jumpPower;
+                    return true;
+                }
+                return false;
+            }
+            
+            // 滑行
+            slide() {
+                if (!this.jumping && !this.sliding) {
+                    this.sliding = true;
+                    this.slideDuration = 0;
+                    this.state = 'sliding';
+                }
+            }
+            
+            // 停止滑行
+            stopSlide() {
+                this.sliding = false;
+                this.state = 'running';
+            }
+            
+            // 向左移动
+            moveLeft() {
+                this.x -= this.speed * 2;
+                if (this.x < 0) {
+                    this.x = 0;
+                }
+            }
+            
+            // 向右移动
+            moveRight() {
+                this.x += this.speed * 2;
+                if (this.x > this.canvas.width - this.width) {
+                    this.x = this.canvas.width - this.width;
+                }
+            }
+        }
+        
+        // 背景类
+        class Background {
+            constructor(game) {
+                this.game = game;
+                this.canvas = game.canvas;
+                this.ctx = game.ctx;
+                
+                // 背景属性
+                this.image = this.game.images.background;
+                this.width = this.image.width;
+                this.height = this.image.height;
+                this.x1 = 0;
+                this.x2 = this.width;
+                this.speed = 2;
+                
+                // 调整背景尺寸以适应画布
+                this.updateDimensions();
+            }
+            
+            // 更新背景尺寸
+            updateDimensions() {
+                // 计算缩放比例以适应画布高度
+                this.scale = this.canvas.height / this.height;
+                
+                // 更新背景宽度
+                this.scaledWidth = this.width * this.scale;
+                this.scaledHeight = this.canvas.height;
+                
+                // 重置背景位置
+                this.x1 = 0;
+                this.x2 = this.scaledWidth;
+            }
+            
+            // 更新背景位置
+            update() {
+                // 移动背景
+                this.x1 -= this.speed;
+                this.x2 -= this.speed;
+                
+                // 检查背景是否完全移出屏幕
+                if (this.x1 <= -this.scaledWidth) {
+                    this.x1 = this.x2 + this.scaledWidth;
+                }
+                
+                if (this.x2 <= -this.scaledWidth) {
+                    this.x2 = this.x1 + this.scaledWidth;
+                }
+            }
+            
+            // 渲染背景
+            render() {
+                // 绘制背景图像
+                this.ctx.drawImage(
+                    this.image,
+                    0, 0, this.width, this.height,
+                    this.x1, 0, this.scaledWidth, this.scaledHeight
+                );
+                
+                this.ctx.drawImage(
+                    this.image,
+                    0, 0, this.width, this.height,
+                    this.x2, 0, this.scaledWidth, this.scaledHeight
+                );
+            }
+        }
+        
+        // 障碍物类
+        class Obstacle {
+            constructor(game, type) {
+                this.game = game;
+                this.canvas = game.canvas;
+                this.ctx = game.ctx;
+                
+                // 障碍物类型
+                this.type = type;
+                
+                // 根据类型设置障碍物属性
+                this.setupObstacle();
+                
+                // 障碍物图像
+                this.image = this.game.images.obstacles;
+            }
+            
+            // 设置障碍物属性
+            setupObstacle() {
+                switch(this.type) {
+                    case 'sedanChair':
+                        this.width = 80;
+                        this.height = 120;
+                        this.frameX = 0;
+                        this.frameY = 0;
+                        break;
+                    case 'lionStatue':
+                        this.width = 100;
+                        this.height = 100;
+                        this.frameX = 1;
+                        this.frameY = 0;
+                        break;
+                    case 'pottedPlant':
+                        this.width = 60;
+                        this.height = 80;
+                        this.frameX = 2;
+                        this.frameY = 0;
+                        break;
+                    default:
+                        this.width = 80;
+                        this.height = 100;
+                        this.frameX = 0;
+                        this.frameY = 0;
+                }
+                
+                // 设置障碍物位置
+                this.x = this.canvas.width;
+                this.y = this.canvas.height - this.height - 20;
+                this.speed = this.game.speed;
+            }
+            
+            // 更新障碍物位置
+            update() {
+                this.x -= this.speed;
+            }
+            
+            // 渲染障碍物
+            render() {
+                // 绘制障碍物图像
+                this.ctx.drawImage(
+                    this.image,
+                    this.frameX * this.width, this.frameY * this.height, this.width, this.height,
+                    this.x, this.y, this.width, this.height
+                );
+            }
+        }
+        
+        // 收集品类
+        class Collectible {
+            constructor(game, type) {
+                this.game = game;
+                this.canvas = game.canvas;
+                this.ctx = game.ctx;
+                
+                // 收集品类型
+                this.type = type;
+                
+                // 根据类型设置收集品属性
+                this.setupCollectible();
+                
+                // 收集品图像
+                this.image = this.game.images.collectibles;
+                
+                // 动画属性
+                this.animationFrame = 0;
+                this.animationSpeed = 0.1;
+                this.bobOffset = 0;
+                this.bobSpeed = 0.05;
+                this.bobAmplitude = 5;
+            }
+            
+            // 设置收集品属性
+            setupCollectible() {
+                switch(this.type) {
+                    case 'coin':
+                        this.width = 40;
+                        this.height = 40;
+                        this.frameX = 0;
+                        this.frameY = 0;
+                        this.value = 10;
+                        break;
+                    case 'jade':
+                        this.width = 40;
+                        this.height = 40;
+                        this.frameX = 1;
+                        this.frameY = 0;
+                        this.value = 20;
+                        break;
+                    case 'vase':
+                        this.width = 40;
+                        this.height = 40;
+                        this.frameX = 2;
+                        this.frameY = 0;
+                        this.value = 30;
+                        break;
+                    default:
+                        this.width = 40;
+                        this.height = 40;
+                        this.frameX = 0;
+                        this.frameY = 0;
+                        this.value = 10;
+                }
+                
+                // 设置收集品位置
+                this.x = this.canvas.width;
+                this.y = this.canvas.height - this.height - 150 - Math.random() * 100;
+                this.speed = this.game.speed;
+            }
+            
+            // 更新收集品位置和动画
+            update() {
+                this.x -= this.speed;
+                
+                // 更新动画
+                this.animationFrame += this.animationSpeed;
+                if (this.animationFrame >= 4) {
+                    this.animationFrame = 0;
+                }
+                
+                // 更新上下浮动效果
+                this.bobOffset = Math.sin(Date.now() * this.bobSpeed) * this.bobAmplitude;
+            }
+            
+            // 渲染收集品
+            render() {
+                // 绘制收集品图像
+                this.ctx.drawImage(
+                    this.image,
+                    this.frameX * this.width, this.frameY * this.height, this.width, this.height,
+                    this.x, this.y + this.bobOffset, this.width, this.height
+                );
+                
+                // 添加发光效果
+                this.ctx.save();
+                this.ctx.shadowColor = '#FFD700';
+                this.ctx.shadowBlur = 10;
+                this.ctx.drawImage(
+                    this.image,
+                    this.frameX * this.width, this.frameY * this.height, this.width, this.height,
+                    this.x, this.y + this.bobOffset, this.width, this.height
+                );
+                this.ctx.restore();
+            }
+        }
+        
+        // 粒子类
+        class Particle {
+            constructor(game, x, y, color = '#FFD700', lifeMultiplier = 1) {
+                this.game = game;
+                this.ctx = game.ctx;
+                
+                // 粒子属性
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.size = Math.random() * 5 + 3;
+                this.speedX = (Math.random() - 0.5) * 10;
+                this.speedY = (Math.random() - 0.5) * 10;
+                this.gravity = 0.3;
+                this.life = 60 * lifeMultiplier;
+                this.maxLife = this.life;
+                this.alpha = 1;
+            }
+            
+            // 更新粒子位置和生命周期
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.speedY += this.gravity;
+                
+                // 更新生命周期和透明度
+                this.life--;
+                this.alpha = this.life / this.maxLife;
+            }
+            
+            // 渲染粒子
+            render() {
+                this.ctx.save();
+                this.ctx.globalAlpha = this.alpha;
+                this.ctx.fillStyle = this.color;
+                this.ctx.beginPath();
+                this.ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                this.ctx.fill();
+                this.ctx.restore();
+            }
+        }
+        
+        // 初始化游戏
+        window.addEventListener('DOMContentLoaded', () => {
+            const game = new MingDynastyRunner();
+        });
+    </script>
+</body>
+</html>
