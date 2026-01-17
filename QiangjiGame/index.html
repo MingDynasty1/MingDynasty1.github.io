@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大明射箭 | MingDynasty</title>
+      <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#A62424', // 明朝红
+                        secondary: '#D4AF37', // 金色
+                        dark: '#1C1C1C',
+                        light: '#F5F5DC', // 宣纸色
+                        accent: '#2E8B57', // 青绿色
+                    },
+                    fontFamily: {
+                        sans: ['Arial', 'sans-serif'],
+                        serif: ['SimSun', 'serif'],
+                    },
+                    backgroundImage: {
+                        'pattern-light': "url('https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/1ea3f9ad1ea84193ad9503d1e755c3f8~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026011720223464033CDA40D8D1593F4A&rrcfp=f06b921b&x-expires=1771244608&x-signature=JsMeRnWYZr263QB61pJW23RXATk%3D')",
+                        'pattern-dark': "url('https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/1ea3f9ad1ea84193ad9503d1e755c3f8~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026011720223464033CDA40D8D1593F4A&rrcfp=f06b921b&x-expires=1771244608&x-signature=JsMeRnWYZr263QB61pJW23RXATk%3D')",
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            }
+            .border-pattern {
+                border-image: url('https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/1ea3f9ad1ea84193ad9503d1e755c3f8~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026011720223464033CDA40D8D1593F4A&rrcfp=f06b921b&x-expires=1771244608&x-signature=JsMeRnWYZr263QB61pJW23RXATk%3D') 30 round;
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+        }
+    </style>
+    <style>
+        body {
+            transition: background-color 0.5s, color 0.5s;
+        }
+        .light-mode {
+            background-color: #F5F5DC;
+            color: #1C1C1C;
+        }
+        .dark-mode {
+            background-color: #1C1C1C;
+            color: #F5F5DC;
+        }
+        .target {
+            transition: transform 0.3s ease-out;
+        }
+        .arrow {
+            transition: transform 0.5s linear;
+        }
+        .btn {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn:after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+        .btn:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            20% {
+                transform: scale(25, 25);
+                opacity: 0.5;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(40, 40);
+            }
+        }
+        .game-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+        #gameCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .ui-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        .ui-overlay > * {
+            pointer-events: auto;
+        }
+        .menu-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-size: cover;
+            background-position: center;
+            transition: opacity 0.5s ease;
+        }
+        .light-mode .menu-screen {
+            background-image: url('https://p9-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/043dc0448e124307a109aa43579841a8~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026011720223464033CDA40D8D1593F4A&rrcfp=f06b921b&x-expires=1771244592&x-signature=1mCB7l4Iv9A4t0Os7PO32Z8oTWM%3D');
+        }
+        .dark-mode .menu-screen {
+            background-image: url('https://p9-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/043dc0448e124307a109aa43579841a8~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026011720223464033CDA40D8D1593F4A&rrcfp=f06b921b&x-expires=1771244592&x-signature=1mCB7l4Iv9A4t0Os7PO32Z8oTWM%3D');
+            filter: brightness(0.5);
+        }
+        .menu-title {
+            font-size: 3.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+        .light-mode .menu-title {
+            background-color: rgba(245, 245, 220, 0.7);
+            color: #A62424;
+        }
+        .dark-mode .menu-title {
+            background-color: rgba(28, 28, 28, 0.7);
+            color: #D4AF37;
+        }
+        .menu-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        .light-mode .menu-buttons {
+            background-color: rgba(245, 245, 220, 0.8);
+        }
+        .dark-mode .menu-buttons {
+            background-color: rgba(28, 28, 28, 0.8);
+        }
+        .menu-btn {
+            padding: 0.8rem 2rem;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .light-mode .menu-btn {
+            background-color: #A62424;
+            color: #F5F5DC;
+        }
+        .dark-mode .menu-btn {
+            background-color: #D4AF37;
+            color: #1C1C1C;
+        }
+        .menu-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .menu-btn:active {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        .game-ui {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            right: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+        .score-display, .timer-display {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .light-mode .score-display, .light-mode .timer-display {
+            background-color: rgba(245, 245, 220, 0.8);
+            color: #A62424;
+        }
+        .dark-mode .score-display, .dark-mode .timer-display {
+            background-color: rgba(28, 28, 28, 0.8);
+            color: #D4AF37;
+        }
+        .mode-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        .light-mode .mode-toggle {
+            color: #A62424;
+        }
+        .dark-mode .mode-toggle {
+            color: #D4AF37;
+        }
+        .mode-toggle:hover {
+            transform: scale(1.1);
+        }
+        .game-over-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+        .light-mode .game-over-screen {
+            background-image: url('https://p9-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/043dc0448e124307a109aa43579841a8~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026011720223464033CDA40D8D1593F4A&rrcfp=f06b921b&x-expires=1771244592&x-signature=1mCB7l4Iv9A4t0Os7PO32Z8oTWM%3D');
+        }
+        .dark-mode .game-over-screen {
+            background-image: url('https://p9-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/043dc0448e124307a109aa43579841a8~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026011720223464033CDA40D8D1593F4A&rrcfp=f06b921b&x-expires=1771244592&x-signature=1mCB7l4Iv9A4t0Os7PO32Z8oTWM%3D');
+            filter: brightness(0.5);
+        }
+        .game-over-screen.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .game-over-content {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            max-width: 80%;
+        }
+        .light-mode .game-over-content {
+            background-color: rgba(245, 245, 220, 0.8);
+            color: #A62424;
+        }
+        .dark-mode .game-over-content {
+            background-color: rgba(28, 28, 28, 0.8);
+            color: #D4AF37;
+        }
+        .game-over-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .final-score {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .restart-btn {
+            padding: 0.8rem 2rem;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .light-mode .restart-btn {
+            background-color: #A62424;
+            color: #F5F5DC;
+        }
+        .dark-mode .restart-btn {
+            background-color: #D4AF37;
+            color: #1C1C1C;
+        }
+        .restart-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .bow-container {
+            position: absolute;
+            bottom: 2rem;
+            left: 2rem;
+            transform-origin: bottom left;
+            transition: transform 0.1s ease;
+        }
+        .bow {
+            width: 150px;
+            height: auto;
+        }
+        .arrow-container {
+            position: absolute;
+            bottom: 2rem;
+            left: 2rem;
+            transform-origin: bottom left;
+            transition: transform 0.1s ease;
+            z-index: 5;
+        }
+        .arrow {
+            width: 100px;
+            height: auto;
+            transform: rotate(-45deg);
+        }
+        .power-bar {
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 20px;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .power-fill {
+            height: 100%;
+            transition: width 0.1s ease;
+            border-radius: 10px;
+        }
+        .light-mode .power-fill {
+            background-color: #A62424;
+        }
+        .dark-mode .power-fill {
+            background-color: #D4AF37;
+        }
+    </style>
+</head>
+<body class="light-mode">
+    <div class="game-container">
+        <!-- 游戏画布 -->
+        <canvas id="gameCanvas"></canvas>
+        
+        <!-- UI覆盖层 -->
+        <div class="ui-overlay">
+            <!-- 游戏UI -->
+            <div class="game-ui" id="gameUI" style="display: none;">
+                <div class="score-display">得分: <span id="score">0</span></div>
+                <div class="timer-display">时间: <span id="timer">60</span>秒</div>
+            </div>
+            
+            <!-- 模式切换按钮 -->
+            <button class="mode-toggle" id="modeToggle">
+                <i class="fa fa-moon-o"></i>
+            </button>
+            
+            <!-- 弓箭 -->
+            <div class="bow-container" id="bowContainer">
+                <img src="https://p9-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/280089d524204d8bbc5f7c8eca2fdf72~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026011720223464033CDA40D8D1593F4A&rrcfp=f06b921b&x-expires=1771244591&x-signature=BYlW3lNNkJpPyUG9fucp6B8dn%2Bc%3D" alt="弓" class="bow" id="bow">
+            </div>
+            
+            <!-- 箭矢 -->
+            <div class="arrow-container" id="arrowContainer">
+                <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/b38f2f7c64a14df483568dd686aaa708~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026011720223464033CDA40D8D1593F4A&rrcfp=f06b921b&x-expires=1771244608&x-signature=XnvqeDQcgKyVshd7JAA6LJdvgYA%3D" alt="箭" class="arrow" id="arrow">
+            </div>
+            
+            <!-- 力度条 -->
+            <div class="power-bar" id="powerBar" style="display: none;">
+                <div class="power-fill" id="powerFill" style="width: 0%;"></div>
+            </div>
+        </div>
+        
+        <!-- 菜单屏幕 -->
+        <div class="menu-screen" id="menuScreen">
+            <h1 class="menu-title font-serif text-shadow">大明射艺</h1>
+            <div class="menu-buttons">
+                <button class="menu-btn" id="startGameBtn">
+                    <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/16b3aeab38ea486eaa3491afcc57f81c~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026011720223464033CDA40D8D1593F4A&rrcfp=f06b921b&x-expires=1771244608&x-signature=qy1bZslVregQng8ZvykU5kMi0To%3D" alt="开始游戏" style="width: 24px; height: 24px;">
+                    开始游戏
+                </button>
+                <button class="menu-btn" id="instructionsBtn">
+                    <i class="fa fa-info-circle"></i>
+                    游戏说明
+                </button>
+                <button class="menu-btn" id="exitBtn">
+                    <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/16b3aeab38ea486eaa3491afcc57f81c~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026011720223464033CDA40D8D1593F4A&rrcfp=f06b921b&x-expires=1771244608&x-signature=qy1bZslVregQng8ZvykU5kMi0To%3D" alt="退出" style="width: 24px; height: 24px;">
+                    退出游戏
+                </button>
+            </div>
+        </div>
+        
+        <!-- 游戏结束屏幕 -->
+        <div class="game-over-screen" id="gameOverScreen">
+            <div class="game-over-content">
+                <h2 class="game-over-title font-serif">游戏结束</h2>
+                <p class="final-score">最终得分: <span id="finalScore">0</span></p>
+                <button class="restart-btn" id="restartBtn">再来一局</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 游戏说明模态框 -->
+    <div id="instructionsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-lg mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-primary dark:text-secondary">游戏说明</h3>
+                <button id="closeInstructionsBtn" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <div class="text-gray-800 dark:text-gray-200">
+                <p class="mb-2"><strong>游戏目标：</strong>在规定时间内射中尽可能多的靶心，获得高分。</p>
+                <p class="mb-2"><strong>操作方法：</strong></p>
+                <ul class="list-disc pl-5 mb-2">
+                    <li>移动鼠标瞄准靶心</li>
+                    <li>按住鼠标左键蓄力</li>
+                    <li>松开鼠标左键发射箭矢</li>
+                </ul>
+                <p class="mb-2"><strong>得分规则：</strong></p>
+                <ul class="list-disc pl-5 mb-2">
+                    <li>射中靶心（红色区域）：10分</li>
+                    <li>射中第二环（金色区域）：8分</li>
+                    <li>射中第三环（金色区域）：6分</li>
+                    <li>射中第四环（金色区域）：4分</li>
+                    <li>射中第五环（金色区域）：2分</li>
+                </ul>
+                <p><strong>游戏时间：</strong>60秒</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 游戏状态
+        const gameState = {
+            isPlaying: false,
+            score: 0,
+            timeLeft: 60,
+            arrows: [],
+            targets: [],
+            power: 0,
+            isCharging: false,
+            gameTimer: null,
+            spawnTimer: null,
+            mouseX: 0,
+            mouseY: 0,
+            highScore: localStorage.getItem('highScore') || 0
+        };
+        
+        // DOM元素
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const modeToggle = document.getElementById('modeToggle');
+        const menuScreen = document.getElementById('menuScreen');
+        const gameOverScreen = document.getElementById('gameOverScreen');
+        const gameUI = document.getElementById('gameUI');
+        const scoreElement = document.getElementById('score');
+        const timerElement = document.getElementById('timer');
+        const finalScoreElement = document.getElementById('finalScore');
+        const startGameBtn = document.getElementById('startGameBtn');
+        const instructionsBtn = document.getElementById('instructionsBtn');
+        const exitBtn = document.getElementById('exitBtn');
+        const restartBtn = document.getElementById('restartBtn');
+        const bowContainer = document.getElementById('bowContainer');
+        const arrowContainer = document.getElementById('arrowContainer');
+        const powerBar = document.getElementById('powerBar');
+        const powerFill = document.getElementById('powerFill');
+        const instructionsModal = document.getElementById('instructionsModal');
+        const closeInstructionsBtn = document.getElementById('closeInstructionsBtn');
+        
+        // 图片资源
+        const targetImage = new Image();
+        targetImage.src = 'https://p9-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/4e1f3cc695564803b95288dc989e9b07~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026011720223464033CDA40D8D1593F4A&rrcfp=f06b921b&x-expires=1771244592&x-signature=9eCyVgx8PJpNffTxT4L5slbdcxA%3D';
+        
+        const arrowImage = new Image();
+        arrowImage.src = 'https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/b38f2f7c64a14df483568dd686aaa708~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026011720223464033CDA40D8D1593F4A&rrcfp=f06b921b&x-expires=1771244608&x-signature=XnvqeDQcgKyVshd7JAA6LJdvgYA%3D';
+        
+        // 初始化画布
+        function initCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        
+        // 切换暗/亮模式
+        function toggleMode() {
+            document.body.classList.toggle('light-mode');
+            document.body.classList.toggle('dark-mode');
+            
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            modeToggle.innerHTML = isDarkMode ? '<i class="fa fa-sun-o"></i>' : '<i class="fa fa-moon-o"></i>';
+            
+            // 保存用户偏好
+            localStorage.setItem('darkMode', isDarkMode);
+        }
+        
+        // 初始化游戏
+        function initGame() {
+            // 设置画布大小
+            initCanvas();
+            
+            // 加载用户偏好
+            const isDarkMode = localStorage.getItem('darkMode') === 'true';
+            if (isDarkMode) {
+                toggleMode();
+            }
+            
+            // 添加事件监听器
+            modeToggle.addEventListener('click', toggleMode);
+            startGameBtn.addEventListener('click', startGame);
+            instructionsBtn.addEventListener('click', showInstructions);
+            exitBtn.addEventListener('click', exitGame);
+            restartBtn.addEventListener('click', restartGame);
+            closeInstructionsBtn.addEventListener('click', hideInstructions);
+            
+            canvas.addEventListener('mousedown', startCharge);
+            canvas.addEventListener('mouseup', releaseArrow);
+            canvas.addEventListener('mousemove', updateMousePosition);
+            
+            // 触摸设备支持
+            canvas.addEventListener('touchstart', handleTouchStart);
+            canvas.addEventListener('touchend', handleTouchEnd);
+            canvas.addEventListener('touchmove', handleTouchMove);
+            
+            // 窗口大小改变时重新调整画布
+            window.addEventListener('resize', initCanvas);
+            
+            // 预加载音效（实际项目中可以添加音效）
+            // loadSounds();
+        }
+        
+        // 显示游戏说明
+        function showInstructions() {
+            instructionsModal.classList.remove('hidden');
+        }
+        
+        // 隐藏游戏说明
+        function hideInstructions() {
+            instructionsModal.classList.add('hidden');
+        }
+        
+        // 开始游戏
+        function startGame() {
+            // 重置游戏状态
+            gameState.isPlaying = true;
+            gameState.score = 0;
+            gameState.timeLeft = 60;
+            gameState.arrows = [];
+            gameState.targets = [];
+            gameState.power = 0;
+            
+            // 更新UI
+            scoreElement.textContent = gameState.score;
+            timerElement.textContent = gameState.timeLeft;
+            
+            // 显示游戏UI
+            menuScreen.style.display = 'none';
+            gameUI.style.display = 'flex';
+            powerBar.style.display = 'block';
+            
+            // 开始生成目标
+            startSpawningTargets();
+            
+            // 开始游戏计时器
+            startGameTimer();
+            
+            // 开始游戏循环
+            gameLoop();
+        }
+        
+        // 游戏循环
+        function gameLoop() {
+            if (!gameState.isPlaying) return;
+            
+            // 清除画布
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // 绘制背景
+            drawBackground();
+            
+            // 更新和绘制目标
+            updateTargets();
+            drawTargets();
+            
+            // 更新和绘制箭矢
+            updateArrows();
+            drawArrows();
+            
+            // 检测碰撞
+            checkCollisions();
+            
+            // 继续游戏循环
+            requestAnimationFrame(gameLoop);
+        }
+        
+        // 绘制背景
+        function drawBackground() {
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            ctx.fillStyle = isDarkMode ? '#1C1C1C' : '#F5F5DC';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // 添加一些装饰性元素
+            ctx.save();
+            
+            // 绘制云纹装饰
+            ctx.strokeStyle = isDarkMode ? 'rgba(212, 175, 55, 0.2)' : 'rgba(166, 36, 36, 0.2)';
+            ctx.lineWidth = 2;
+            
+            // 绘制几个简单的云纹
+            for (let i = 0; i < 5; i++) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height * 0.7;
+                const size = 50 + Math.random() * 100;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, size * 0.5, 0, Math.PI * 2);
+                ctx.arc(x + size * 0.3, y - size * 0.1, size * 0.4, 0, Math.PI * 2);
+                ctx.arc(x + size * 0.6, y, size * 0.5, 0, Math.PI * 2);
+                ctx.arc(x + size * 0.3, y + size * 0.1, size * 0.4, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+            
+            ctx.restore();
+        }
+        
+        // 开始生成目标
+        function startSpawningTargets() {
+            // 立即生成一个目标
+            spawnTarget();
+            
+            // 设置定时器定期生成目标
+            gameState.spawnTimer = setInterval(() => {
+                if (gameState.isPlaying) {
+                    spawnTarget();
+                }
+            }, 2000); // 每2秒生成一个目标
+        }
+        
+        // 生成目标
+        function spawnTarget() {
+            // 确保屏幕上的目标数量不超过5个
+            if (gameState.targets.length >= 5) return;
+            
+            const target = {
+                x: canvas.width * 0.6 + Math.random() * canvas.width * 0.3,
+                y: canvas.height * 0.2 + Math.random() * canvas.height * 0.5,
+                size: 60 + Math.random() * 40,
+                speed: 1 + Math.random() * 2,
+                direction: Math.random() > 0.5 ? 1 : -1,
+                rotation: 0,
+                rotationSpeed: (Math.random() - 0.5) * 0.05,
+                hit: false,
+                points: [10, 8, 6, 4, 2] // 从中心到外圈的得分
+            };
+            
+            gameState.targets.push(target);
+        }
+        
+        // 更新目标
+        function updateTargets() {
+            gameState.targets = gameState.targets.filter(target => {
+                // 更新位置
+                target.x += target.speed * target.direction;
+                target.rotation += target.rotationSpeed;
+                
+                // 检查是否超出屏幕
+                if (target.x < -target.size || target.x > canvas.width + target.size) {
+                    return false; // 移除目标
+                }
+                
+                // 检查是否被击中且动画已完成
+                if (target.hit && target.size < 10) {
+                    return false; // 移除目标
+                }
+                
+                // 如果被击中，缩小目标
+                if (target.hit) {
+                    target.size *= 0.95;
+                }
+                
+                return true;
+            });
+        }
+        
+        // 绘制目标
+        function drawTargets() {
+            gameState.targets.forEach(target => {
+                ctx.save();
+                
+                // 移动到目标位置
+                ctx.translate(target.x, target.y);
+                
+                // 应用旋转
+                ctx.rotate(target.rotation);
+                
+                // 绘制目标
+                const size = target.size;
+                ctx.drawImage(targetImage, -size/2, -size/2, size, size);
+                
+                ctx.restore();
+            });
+        }
+        
+        // 更新鼠标位置
+        function updateMousePosition(e) {
+            const rect = canvas.getBoundingClientRect();
+            gameState.mouseX = e.clientX - rect.left;
+            gameState.mouseY = e.clientY - rect.top;
+            
+            // 更新弓箭方向
+            updateBowDirection();
+        }
+        
+        // 处理触摸开始
+        function handleTouchStart(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent('mousedown', {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            canvas.dispatchEvent(mouseEvent);
+        }
+        
+        // 处理触摸结束
+        function handleTouchEnd(e) {
+            e.preventDefault();
+            const mouseEvent = new MouseEvent('mouseup', {});
+            canvas.dispatchEvent(mouseEvent);
+        }
+        
+        // 处理触摸移动
+        function handleTouchMove(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent('mousemove', {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            canvas.dispatchEvent(mouseEvent);
+        }
+        
+        // 更新弓箭方向
+        function updateBowDirection() {
+            const bowX = 100; // 弓箭的X位置
+            const bowY = canvas.height - 100; // 弓箭的Y位置
+            
+            // 计算角度
+            let angle = Math.atan2(gameState.mouseY - bowY, gameState.mouseX - bowX);
+            
+            // 限制角度范围，防止弓箭指向下方
+            angle = Math.max(-Math.PI/2, Math.min(Math.PI/2, angle));
+            
+            // 转换为度数
+            const degrees = angle * 180 / Math.PI;
+            
+            // 更新弓箭和箭矢的旋转
+            bowContainer.style.transform = `rotate(${degrees}deg)`;
+            arrowContainer.style.transform = `rotate(${degrees}deg)`;
+        }
+        
+        // 开始蓄力
+        function startCharge(e) {
+            if (!gameState.isPlaying) return;
+            
+            gameState.isCharging = true;
+            gameState.power = 0;
+            
+            // 更新力度条
+            updatePowerBar();
+            
+            // 开始蓄力动画
+            chargeInterval = setInterval(() => {
+                if (gameState.isCharging) {
+                    gameState.power = Math.min(100, gameState.power + 2);
+                    updatePowerBar();
+                }
+            }, 20);
+        }
+        
+        // 释放箭矢
+        function releaseArrow() {
+            if (!gameState.isPlaying || !gameState.isCharging) return;
+            
+            gameState.isCharging = false;
+            clearInterval(chargeInterval);
+            
+            // 创建新箭矢
+            const bowX = 100;
+            const bowY = canvas.height - 100;
+            
+            // 计算角度
+            const angle = Math.atan2(gameState.mouseY - bowY, gameState.mouseX - bowX);
+            
+            // 创建箭矢对象
+            const arrow = {
+                x: bowX,
+                y: bowY,
+                angle: angle,
+                speed: (gameState.power / 100) * 15 + 5, // 速度基于蓄力
+                size: 30,
+                hit: false
+            };
+            
+            // 添加到箭矢数组
+            gameState.arrows.push(arrow);
+            
+            // 重置力度
+            gameState.power = 0;
+            updatePowerBar();
+            
+            // 播放发射音效（实际项目中可以添加音效）
+            // playSound('shoot');
+        }
+        
+        // 更新力度条
+        function updatePowerBar() {
+            powerFill.style.width = `${gameState.power}%`;
+        }
+        
+        // 更新箭矢
+        function updateArrows() {
+            gameState.arrows = gameState.arrows.filter(arrow => {
+                // 更新位置
+                arrow.x += Math.cos(arrow.angle) * arrow.speed;
+                arrow.y += Math.sin(arrow.angle) * arrow.speed;
+                
+                // 检查是否超出屏幕
+                if (arrow.x < -50 || arrow.x > canvas.width + 50 || 
+                    arrow.y < -50 || arrow.y > canvas.height + 50) {
+                    return false; // 移除箭矢
+                }
+                
+                return true;
+            });
+        }
+        
+        // 绘制箭矢
+        function drawArrows() {
+            gameState.arrows.forEach(arrow => {
+                ctx.save();
+                
+                // 移动到箭矢位置
+                ctx.translate(arrow.x, arrow.y);
+                
+                // 应用旋转
+                ctx.rotate(arrow.angle);
+                
+                // 绘制箭矢
+                ctx.drawImage(arrowImage, -arrow.size/2, -arrow.size/4, arrow.size, arrow.size/2);
+                
+                ctx.restore();
+            });
+        }
+        
+        // 检测碰撞
+        function checkCollisions() {
+            gameState.arrows.forEach(arrow => {
+                if (arrow.hit) return;
+                
+                gameState.targets.forEach(target => {
+                    if (target.hit) return;
+                    
+                    // 计算箭矢和目标之间的距离
+                    const dx = arrow.x - target.x;
+                    const dy = arrow.y - target.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    // 检查是否击中
+                    if (distance < target.size / 2) {
+                        // 标记箭矢和目标为已击中
+                        arrow.hit = true;
+                        target.hit = true;
+                        
+                        // 计算得分
+                        let points = 0;
+                        
+                        // 根据击中的环数计算得分
+                        const ringRadius = target.size / 10; // 每个环的半径
+                        const hitRing = Math.floor(distance / ringRadius);
+                        
+                        if (hitRing < target.points.length) {
+                            points = target.points[hitRing];
+                        }
+                        
+                        // 更新得分
+                        gameState.score += points;
+                        scoreElement.textContent = gameState.score;
+                        
+                        // 播放击中音效（实际项目中可以添加音效）
+                        // playSound('hit');
+                        
+                        // 显示得分动画
+                        showScoreAnimation(target.x, target.y, points);
+                    }
+                });
+            });
+        }
+        
+        // 显示得分动画
+        function showScoreAnimation(x, y, points) {
+            const scoreText = document.createElement('div');
+            scoreText.textContent = `+${points}`;
+            scoreText.style.position = 'absolute';
+            scoreText.style.left = `${x}px`;
+            scoreText.style.top = `${y}px`;
+            scoreText.style.fontSize = '24px';
+            scoreText.style.fontWeight = 'bold';
+            scoreText.style.pointerEvents = 'none';
+            scoreText.style.zIndex = '100';
+            scoreText.style.transition = 'all 1s ease-out';
+            
+            // 根据模式设置颜色
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            scoreText.style.color = isDarkMode ? '#D4AF37' : '#A62424';
+            
+            document.body.appendChild(scoreText);
+            
+            // 触发动画
+            setTimeout(() => {
+                scoreText.style.transform = 'translateY(-50px)';
+                scoreText.style.opacity = '0';
+            }, 10);
+            
+            // 移除元素
+            setTimeout(() => {
+                document.body.removeChild(scoreText);
+            }, 1000);
+        }
+        
+        // 开始游戏计时器
+        function startGameTimer() {
+            gameState.gameTimer = setInterval(() => {
+                gameState.timeLeft--;
+                timerElement.textContent = gameState.timeLeft;
+                
+                if (gameState.timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+        
+        // 结束游戏
+        function endGame() {
+            gameState.isPlaying = false;
+            
+            // 清除计时器
+            clearInterval(gameState.gameTimer);
+            clearInterval(gameState.spawnTimer);
+            
+            // 更新最高分
+            if (gameState.score > gameState.highScore) {
+                gameState.highScore = gameState.score;
+                localStorage.setItem('highScore', gameState.highScore);
+            }
+            
+            // 显示游戏结束屏幕
+            finalScoreElement.textContent = gameState.score;
+            gameOverScreen.classList.add('active');
+        }
+        
+        // 重新开始游戏
+        function restartGame() {
+            gameOverScreen.classList.remove('active');
+            startGame();
+        }
+        
+        // 退出游戏
+        function exitGame() {
+            if (confirm('确定要退出游戏吗？')) {
+                window.close(); // 在浏览器中可能无法工作
+                // 或者返回主菜单
+                menuScreen.style.display = 'flex';
+            }
+        }
+        
+        // 加载音效（实际项目中可以添加音效）
+        function loadSounds() {
+            // const sounds = {
+            //     shoot: new Audio('sounds/shoot.mp3'),
+            //     hit: new Audio('sounds/hit.mp3'),
+            //     miss: new Audio('sounds/miss.mp3'),
+            //     gameOver: new Audio('sounds/game-over.mp3')
+            // };
+            
+            // return sounds;
+        }
+        
+        // 播放音效（实际项目中可以添加音效）
+        function playSound(soundName) {
+            // if (sounds[soundName]) {
+            //     sounds[soundName].currentTime = 0;
+            //     sounds[soundName].play();
+            // }
+        }
+        
+        // 初始化游戏
+        window.onload = initGame;
+    </script>
+</body>
+</html>
