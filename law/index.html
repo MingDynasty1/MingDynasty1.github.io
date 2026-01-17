@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>隐私政策 | MingDynasty</title>
+      <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <style>
+        /* 基础变量定义 - 亮色模式 */
+        :root {
+            --bg-primary: #f8f5f0; /* 宣纸色 */
+            --bg-secondary: #ffffff;
+            --text-primary: #2d2416; /* 墨黑色 */
+            --text-secondary: #5c4b32;
+            --accent-color: #b72424; /* 朱红色 - 明代宫廷色 */
+            --border-color: #d9c8a9;
+            --pattern-bg: rgba(217, 200, 169, 0.1);
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        /* 暗色模式变量 */
+        .dark-mode {
+            --bg-primary: #1a1610; /* 墨色底 */
+            --bg-secondary: #282015;
+            --text-primary: #f0e6d2; /* 米白色文字 */
+            --text-secondary: #c9b89b;
+            --accent-color: #d44848; /* 亮朱红 */
+            --border-color: #4a3f2e;
+            --pattern-bg: rgba(74, 63, 46, 0.2);
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 全局样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        body {
+            font-family: "Noto Serif SC", "SimSun", "STSong", serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            background-image: 
+                radial-gradient(var(--pattern-bg) 2px, transparent 2px),
+                radial-gradient(var(--pattern-bg) 2px, transparent 2px);
+            background-size: 40px 40px;
+            background-position: 0 0, 20px 20px;
+            line-height: 1.8;
+        }
+
+        /* 容器样式 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* 头部样式 - 仿明代牌匾 */
+        header {
+            text-align: center;
+            padding: 3rem 0;
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+            z-index: 1;
+            transform: translateY(-50%);
+        }
+
+        .title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            position: relative;
+            z-index: 2;
+            display: inline-block;
+            background-color: var(--bg-primary);
+            padding: 0 2rem;
+            letter-spacing: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-top: 1rem;
+            letter-spacing: 0.2rem;
+        }
+
+        /* 模式切换按钮 */
+        .mode-toggle {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.8rem 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow);
+            z-index: 100;
+        }
+
+        .mode-toggle:hover {
+            background-color: var(--pattern-bg);
+        }
+
+        /* 内容区域样式 - 仿明代线装书 */
+        .content {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 3rem;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        .content::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background-color: var(--accent-color);
+            border-radius: 8px 0 0 8px;
+        }
+
+        /* 章节样式 */
+        .chapter {
+            margin-bottom: 3rem;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 2rem;
+        }
+
+        .chapter:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .chapter-title {
+            font-size: 1.8rem;
+            color: var(--accent-color);
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .chapter-title::before {
+            content: "◆";
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+        }
+
+        .article {
+            margin-left: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .article-content {
+            color: var(--text-secondary);
+            text-indent: 2rem;
+        }
+
+        /* 隐私条款特殊样式 */
+        .privacy-note {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .effective-date {
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        /* 页脚样式 */
+        footer {
+            text-align: center;
+            margin-top: 4rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            padding: 2rem 0;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .title {
+                font-size: 2.5rem;
+                letter-spacing: 0.3rem;
+            }
+            
+            .content {
+                padding: 1.5rem;
+            }
+            
+            .mode-toggle {
+                top: 1rem;
+                right: 1rem;
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+    <!-- 引入谷歌字体 - 思源宋体 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 模式切换按钮 -->
+    <button class="mode-toggle" id="modeToggle">
+        <span id="modeIcon">🌙</span>
+        <span id="modeText">切换暗色模式</span>
+    </button>
+
+    <div class="container">
+        <!-- 头部区域 -->
+        <header>
+            <h1 class="title">大明律</h1>
+            <p class="subtitle">大明王朝 · 洪武三十年定版</p>
+        </header>
+
+        <!-- 主要内容区域 -->
+        <main class="content">
+            <!-- 律典总述 -->
+            <section class="chapter">
+                <h2 class="chapter-title">律典总述</h2>
+                <div class="article">
+                    <p class="article-content">《大明律》是明朝的主要法典，由明太祖朱元璋下诏编纂，历经三十年修订而成，于洪武三十年（1397年）正式颁行。全律共30卷，460条，分为名例律、吏律、户律、礼律、兵律、刑律、工律七篇，其立法精神为"重典治国"，同时简化条文，体例严谨，成为中国古代法律体系的重要里程碑。</p>
+                </div>
+            </section>
+
+            <!-- 名例律 -->
+            <section class="chapter">
+                <h2 class="chapter-title">名例律</h2>
+                <div class="article">
+                    <h3 class="article-title">五刑</h3>
+                    <p class="article-content">笞刑：五等，自一十至五十；杖刑：五等，自六十至一百；徒刑：五等，自一年至三年；流刑：三等，自二千里至三千里；死刑：二等，绞、斩。</p>
+                </div>
+                <div class="article">
+                    <h3 class="article-title">八议</h3>
+                    <p class="article-content">议亲、议故、议功、议贤、议能、议勤、议贵、议宾，八类特殊身份之人犯罪，可减免刑罚。</p>
+                </div>
+            </section>
+
+            <!-- 刑律 -->
+            <section class="chapter">
+                <h2 class="chapter-title">刑律</h2>
+                <div class="article">
+                    <h3 class="article-title">盗贼律</h3>
+                    <p class="article-content">凡强盗已行而不得财者，皆杖一百、流三千里；得财者，不分首从，皆斩。窃盗已行而不得财者，笞五十，免刺；得财者，以赃计赃，准窃盗论，免刺。</p>
+                </div>
+                <div class="article">
+                    <h3 class="article-title">人命律</h3>
+                    <p class="article-content">凡谋杀人，造意者斩，从而加功者绞，不加功者杖一百、流三千里；杀讫乃坐。若伤而未死，造意者绞，从而加功者杖一百、流三千里，不加功者杖一百、徒三年。</p>
+                </div>
+            </section>
+
+            <!-- 吏律 -->
+            <section class="chapter">
+                <h2 class="chapter-title">吏律</h2>
+                <div class="article">
+                    <h3 class="article-title">职制</h3>
+                    <p class="article-content">凡官吏受财枉法者，一贯以下杖七十，每五贯加一等，至八十贯绞；受财不枉法者，一贯以下杖六十，每五贯加一等，至一百二十贯杖一百、流三千里。</p>
+                </div>
+            </section>
+
+            <!-- 新增：隐私条款章节 -->
+            <section class="chapter">
+                <h2 class="chapter-title">隐私条款</h2>
+                <div class="article">
+                    <h3 class="article-title">关于Cookie</h3>
+                    <p class="article-content">本网站所涉及的Cookie技术仅用于登录论坛、游戏等配套功能场景，我们承诺不会将您的Cookie信息泄露给任何第三方机构或个人。需要特别说明的是，本网站为纯静态展示网站，技术上无法抓取或获取您的Cookie数据，您的账户信息和个人数据始终处于安全状态。</p>
+                </div>
+                <div class="article">
+                    <h3 class="article-title">条款生效说明</h3>
+                    <p class="article-content">本隐私条款自<span class="effective-date">2025年6月6日</span>起正式生效，如后续条款内容有更新，我们将在本页面进行公示，请您定期查阅。</p>
+                </div>
+                <div class="article">
+                    <h3 class="article-title">用户权利说明</h3>
+                    <p class="article-content">您有权根据自身需求管理浏览器的Cookie权限，包括启用、禁用或删除Cookie，关闭Cookie功能可能会影响部分配套功能的使用体验，但不会影响本网站核心的《大明律》内容展示功能。</p>
+                </div>
+            </section>
+        </main>
+
+        <!-- 页脚 -->
+        <footer>
+            <p>© 2013-2026 MingDynasty,Inc. 大明法律 | 隐私条款</p>
+            <p class="privacy-note">隐私条款生效时间：<span class="effective-date">2025年6月6日</span></p>
+        </footer>
+    </div>
+
+    <script>
+        // 模式切换逻辑
+        const modeToggle = document.getElementById('modeToggle');
+        const modeIcon = document.getElementById('modeIcon');
+        const modeText = document.getElementById('modeText');
+        
+        // 检查本地存储的模式偏好
+        const isDarkMode = localStorage.getItem('darkMode') === 'true';
+        
+        // 初始化模式
+        if (isDarkMode) {
+            document.body.classList.add('dark-mode');
+            modeIcon.textContent = "☀️";
+            modeText.textContent = "";
+        }
+        
+        // 切换模式事件
+        modeToggle.addEventListener('click', () => {
+            const isDark = document.body.classList.toggle('dark-mode');
+            
+            // 更新UI文本和图标
+            if (isDark) {
+                modeIcon.textContent = "☀️";
+                modeText.textContent = "";
+                localStorage.setItem('darkMode', 'true');
+            } else {
+                modeIcon.textContent = "🌙";
+                modeText.textContent = "";
+                localStorage.setItem('darkMode', 'false');
+            }
+        });
+    </script>
+</body>
+</html>
