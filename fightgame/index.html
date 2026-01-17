@@ -1,0 +1,1714 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>明朝安南战争 - 明军VS安南军队</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#8B0000',
+                        secondary: '#006400',
+                        accent: '#DAA520',
+                        dark: '#2D2D2D',
+                        light: '#F5F5DC'
+                    },
+                    fontFamily: {
+                        sans: ['Arial', 'sans-serif'],
+                        serif: ['SimSun', 'serif']
+                    },
+                    backgroundImage: {
+                        'paper-texture': "url('https://www.transparenttextures.com/patterns/old-paper.png')"
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .ancient-scroll {
+                background-color: #F5F5DC;
+                background-image: url('https://www.transparenttextures.com/patterns/old-paper.png');
+                border: 8px solid #8B4513;
+                border-radius: 5px;
+                box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+                position: relative;
+            }
+            .ancient-scroll::before, .ancient-scroll::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                right: 0;
+                height: 20px;
+                background: #8B4513;
+            }
+            .ancient-scroll::before {
+                top: 0;
+                border-bottom: 3px solid #A0522D;
+            }
+            .ancient-scroll::after {
+                bottom: 0;
+                border-top: 3px solid #A0522D;
+            }
+            .ancient-button {
+                background-color: #8B4513;
+                color: #F5F5DC;
+                border: 2px solid #A0522D;
+                border-radius: 5px;
+                padding: 8px 16px;
+                font-family: 'SimSun', serif;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            .ancient-button:hover {
+                background-color: #A0522D;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+            .ancient-button:active {
+                transform: translateY(0);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            }
+            .ancient-text {
+                font-family: 'SimSun', serif;
+                color: #5D4037;
+                text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+            }
+            .ancient-title {
+                font-family: 'SimSun', serif;
+                color: #8B4513;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+                border-bottom: 3px solid #8B4513;
+                padding-bottom: 5px;
+            }
+            .soldier {
+                position: absolute;
+                width: 40px;
+                height: 60px;
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: center;
+                transition: all 0.5s ease;
+                z-index: 10;
+            }
+            .flag {
+                position: absolute;
+                width: 60px;
+                height: 80px;
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: center;
+                z-index: 5;
+            }
+            .chariot {
+                position: absolute;
+                width: 80px;
+                height: 60px;
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: center;
+                z-index: 8;
+            }
+            .elephant {
+                position: absolute;
+                width: 100px;
+                height: 80px;
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: center;
+                z-index: 7;
+            }
+            .bullet {
+                position: absolute;
+                width: 10px;
+                height: 10px;
+                background-color: #000;
+                border-radius: 50%;
+                z-index: 15;
+            }
+            .explosion {
+                position: absolute;
+                width: 30px;
+                height: 30px;
+                background-color: #FF4500;
+                border-radius: 50%;
+                z-index: 20;
+                animation: explode 0.5s ease-out forwards;
+            }
+            @keyframes explode {
+                0% {
+                    transform: scale(0);
+                    opacity: 1;
+                }
+                100% {
+                    transform: scale(2);
+                    opacity: 0;
+                }
+            }
+            .casualty {
+                position: absolute;
+                width: 30px;
+                height: 30px;
+                background-color: #8B0000;
+                border-radius: 50%;
+                z-index: 12;
+                animation: fadeOut 2s ease-out forwards;
+            }
+            @keyframes fadeOut {
+                0% {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+                100% {
+                    opacity: 0;
+                    transform: scale(0.5);
+                }
+            }
+            .message-box {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: rgba(245, 245, 220, 0.95);
+                border: 5px solid #8B4513;
+                border-radius: 10px;
+                padding: 20px;
+                z-index: 100;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+                max-width: 80%;
+                max-height: 80%;
+                overflow-y: auto;
+            }
+            .minimap {
+                position: absolute;
+                bottom: 20px;
+                right: 20px;
+                width: 200px;
+                height: 150px;
+                background-color: rgba(245, 245, 220, 0.7);
+                border: 2px solid #8B4513;
+                border-radius: 5px;
+                z-index: 50;
+            }
+            .minimap-soldier {
+                position: absolute;
+                width: 4px;
+                height: 4px;
+                border-radius: 50%;
+            }
+            .minimap-flag {
+                position: absolute;
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+            }
+            .tooltip {
+                position: absolute;
+                background-color: rgba(0, 0, 0, 0.8);
+                color: white;
+                padding: 5px 10px;
+                border-radius: 5px;
+                font-size: 12px;
+                z-index: 100;
+                pointer-events: none;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+            .resource-bar {
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                background-color: rgba(245, 245, 220, 0.7);
+                border: 2px solid #8B4513;
+                border-radius: 5px;
+                padding: 10px;
+                z-index: 50;
+            }
+            .resource-item {
+                display: flex;
+                align-items: center;
+                margin-bottom: 5px;
+            }
+            .resource-icon {
+                width: 20px;
+                height: 20px;
+                margin-right: 5px;
+                background-size: contain;
+                background-repeat: no-repeat;
+            }
+            .progress-bar {
+                width: 100%;
+                height: 10px;
+                background-color: #ddd;
+                border-radius: 5px;
+                margin-top: 5px;
+                overflow: hidden;
+            }
+            .progress {
+                height: 100%;
+                background-color: #8B4513;
+                transition: width 0.3s ease;
+            }
+        }
+    </style>
+</head>
+<body class="bg-light paper-texture min-h-screen flex flex-col">
+    <!-- 游戏标题 -->
+    <header class="text-center py-6">
+        <h1 class="text-4xl ancient-title font-bold">大明安南之战</h1>
+        <p class="ancient-text mt-2">指挥明军，征服安南！</p>
+    </header>
+
+    <!-- 游戏主容器 -->
+    <main class="flex-grow flex flex-col md:flex-row p-4 gap-4">
+        <!-- 左侧明军指挥区 -->
+        <div class="w-full md:w-1/4 ancient-scroll p-4 flex flex-col">
+            <h2 class="text-2xl ancient-title mb-4">明军指挥</h2>
+            
+            <!-- 部队选择 -->
+            <div class="mb-6">
+                <h3 class="text-xl ancient-text mb-2">选择部队</h3>
+                <div class="grid grid-cols-2 gap-2">
+                    <button id="infantry-btn" class="ancient-button flex items-center justify-center">
+                        <span class="mr-2">步兵</span>
+                        <span class="bg-red-800 text-white px-2 py-1 rounded text-xs">50</span>
+                    </button>
+                    <button id="archer-btn" class="ancient-button flex items-center justify-center">
+                        <span class="mr-2">弓箭手</span>
+                        <span class="bg-red-800 text-white px-2 py-1 rounded text-xs">30</span>
+                    </button>
+                    <button id="cavalry-btn" class="ancient-button flex items-center justify-center">
+                        <span class="mr-2">骑兵</span>
+                        <span class="bg-red-800 text-white px-2 py-1 rounded text-xs">20</span>
+                    </button>
+                    <button id="chariot-btn" class="ancient-button flex items-center justify-center">
+                        <span class="mr-2">战车</span>
+                        <span class="bg-red-800 text-white px-2 py-1 rounded text-xs">10</span>
+                    </button>
+                    <button id="firearm-btn" class="ancient-button flex items-center justify-center">
+                        <span class="mr-2">神机营</span>
+                        <span class="bg-red-800 text-white px-2 py-1 rounded text-xs">15</span>
+                    </button>
+                    <button id="general-btn" class="ancient-button flex items-center justify-center">
+                        <span class="mr-2">将军</span>
+                        <span class="bg-red-800 text-white px-2 py-1 rounded text-xs">3</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 战术选择 -->
+            <div class="mb-6">
+                <h3 class="text-xl ancient-text mb-2">战术选择</h3>
+                <div class="grid grid-cols-1 gap-2">
+                    <button id="tactic-frontal" class="ancient-button">正面进攻</button>
+                    <button id="tactic-flank" class="ancient-button">侧翼包抄</button>
+                    <button id="tactic-defend" class="ancient-button">防守反击</button>
+                    <button id="tactic-fire" class="ancient-button">火器齐射</button>
+                </div>
+            </div>
+            
+            <!-- 资源显示 -->
+            <div class="mb-6">
+                <h3 class="text-xl ancient-text mb-2">资源状况</h3>
+                <div class="resource-bar">
+                    <div class="resource-item">
+                        <div class="resource-icon" style="background-image: url('https://cdn-icons-png.flaticon.com/512/123/123515.png');"></div>
+                        <span>兵力: <span id="troops-count">128</span>/200</span>
+                        <div class="progress-bar ml-2 flex-grow">
+                            <div id="troops-progress" class="progress" style="width: 64%;"></div>
+                        </div>
+                    </div>
+                    <div class="resource-item">
+                        <div class="resource-icon" style="background-image: url('https://cdn-icons-png.flaticon.com/512/1081/1081803.png');"></div>
+                        <span>士气: <span id="morale-count">85</span>/100</span>
+                        <div class="progress-bar ml-2 flex-grow">
+                            <div id="morale-progress" class="progress" style="width: 85%;"></div>
+                        </div>
+                    </div>
+                    <div class="resource-item">
+                        <div class="resource-icon" style="background-image: url('https://cdn-icons-png.flaticon.com/512/1679/1679703.png');"></div>
+                        <span>粮草: <span id="food-count">75</span>/100</span>
+                        <div class="progress-bar ml-2 flex-grow">
+                            <div id="food-progress" class="progress" style="width: 75%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 游戏控制 -->
+            <div class="mt-auto">
+                <button id="start-btn" class="ancient-button w-full py-3 text-lg">开始战斗</button>
+                <button id="pause-btn" class="ancient-button w-full py-3 text-lg mt-2" disabled>暂停战斗</button>
+                <button id="reset-btn" class="ancient-button w-full py-3 text-lg mt-2">重置战场</button>
+            </div>
+        </div>
+        
+        <!-- 中间战场区域 -->
+        <div class="w-full md:w-2/4 relative ancient-scroll">
+            <div id="battlefield" class="w-full h-[600px] relative overflow-hidden bg-[#DEB887]">
+                <!-- 战场背景 -->
+                <div class="absolute inset-0 bg-[url('https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/99997c460bf0404696f5b86650967076~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260117204934767A793414A4995C4E15&rrcfp=f06b921b&x-expires=1771246220&x-signature=lgbJX5oETWPHqLkuHBHlQDhQVDc%3D')] bg-cover bg-center opacity-30"></div>
+                
+                <!-- 明军初始位置 -->
+                <div id="ming-army" class="absolute top-0 left-0 w-full h-1/2 border-b-2 border-dashed border-gray-500 flex items-center justify-center">
+                    <div class="flag" style="background-image: url('https://p9-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/096566c237c649319a3f0634d06d08d8~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260117204934767A793414A4995C4E15&rrcfp=f06b921b&x-expires=1771246217&x-signature=Hs1IRpUROnAHa%2FINrxPta9XSFmc%3D'); top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+                </div>
+                
+                <!-- 安南军初始位置 -->
+                <div id="annam-army" class="absolute bottom-0 left-0 w-full h-1/2 flex items-center justify-center">
+                    <div class="flag" style="background-image: url('https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/a47b467fa7524186b95ec69b08bc65bc~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260117204934767A793414A4995C4E15&rrcfp=f06b921b&x-expires=1771246216&x-signature=sBaBcjeU%2BGar70EFLUrgNkMmtjc%3D'); top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+                </div>
+                
+                <!-- 小地图 -->
+                <div class="minimap">
+                    <div id="minimap-content" class="w-full h-full relative">
+                        <!-- 小地图内容将由JS动态生成 -->
+                    </div>
+                </div>
+                
+                <!-- 提示框 -->
+                <div id="tooltip" class="tooltip"></div>
+            </div>
+        </div>
+        
+        <!-- 右侧战役信息栏 -->
+        <div class="w-full md:w-1/4 ancient-scroll p-4 flex flex-col">
+            <h2 class="text-2xl ancient-title mb-4">战役信息</h2>
+            
+            <!-- 战场状态 -->
+            <div class="mb-6">
+                <h3 class="text-xl ancient-text mb-2">战场状态</h3>
+                <div class="bg-white bg-opacity-50 p-3 rounded">
+                    <p class="ancient-text">战斗阶段: <span id="battle-phase">准备阶段</span></p>
+                    <p class="ancient-text">明军伤亡: <span id="ming-casualties">0</span></p>
+                    <p class="ancient-text">安南伤亡: <span id="annam-casualties">0</span></p>
+                    <p class="ancient-text">战场天气: <span id="weather">晴朗</span></p>
+                </div>
+            </div>
+            
+            <!-- 历史背景 -->
+            <div class="mb-6">
+                <h3 class="text-xl ancient-text mb-2">历史背景</h3>
+                <div class="bg-white bg-opacity-50 p-3 rounded h-48 overflow-y-auto">
+                    <p class="ancient-text text-sm">明建文元年(1399年)，安南国相黎季牦杀其主自称太上皇，立子苍为帝，并改名胡一元。明廷误信安南王陈氏嗣绝，封黎季牦为王。</p>
+                    <p class="ancient-text text-sm mt-2">永乐四年(1406年)正月，明成祖派遣都督黄中率兵5000送陈天平回国，但三月遭到黎季牦伏兵袭击，黄中战败。七月，明成祖命令朱能为征夷将军，张辅、沐晟为副将军，率兵号称八十万征讨安南。</p>
+                    <p class="ancient-text text-sm mt-2">明军此次南征，集全国精锐之师，展现了当时东亚最先进的装备水平和军事体系，以京营精锐为主力，辅以湖广、云南、贵州等地卫所军及土司部队，名将张辅、沐晟等协同作战。</p>
+                </div>
+            </div>
+            
+            <!-- 明军特色 -->
+            <div class="mb-6">
+                <h3 class="text-xl ancient-text mb-2">明军特色</h3>
+                <div class="bg-white bg-opacity-50 p-3 rounded h-48 overflow-y-auto">
+                    <p class="ancient-text text-sm"><strong>神机营:</strong> 中国历史上首个成建制的火器部队，配备"神机铳"(单兵火铳)、"碗口铳"(舰载火炮)、"神火飞鸦"(火箭类燃烧武器)等热兵器。</p>
+                    <p class="ancient-text text-sm mt-2"><strong>狼筅:</strong> 特制长竹制刺击兵器，专门用来破安南藤甲兵。</p>
+                    <p class="ancient-text text-sm mt-2"><strong>改良版陌刀:</strong> 专砍象腿，有效克制安南象兵。</p>
+                    <p class="ancient-text text-sm mt-2"><strong>吓象犬:</strong> 训练专门的犬队以克制越军象兵。</p>
+                </div>
+            </div>
+            
+            <!-- 安南军特色 -->
+            <div class="mb-6">
+                <h3 class="text-xl ancient-text mb-2">安南军特色</h3>
+                <div class="bg-white bg-opacity-50 p-3 rounded h-48 overflow-y-auto">
+                    <p class="ancient-text text-sm"><strong>象兵军团:</strong> 战象皆披甲，背负战楼，楼中载兵，数四冲突，势甚锐。每头战象配属步兵百人，形成"象步协同"战术。</p>
+                    <p class="ancient-text text-sm mt-2"><strong>藤甲兵:</strong> 以藤条浸油制成铠甲，抗刀箭，据守山林。</p>
+                    <p class="ancient-text text-sm mt-2"><strong>水师:</strong> 控制河道实施游击战术。</p>
+                    <p class="ancient-text text-sm mt-2"><strong>地形优势:</strong> 利用"山林连属，水道纵横"的地形，在多邦城、咸子关等要地构筑防御工事。</p>
+                </div>
+            </div>
+            
+            <!-- 战斗日志 -->
+            <div class="mt-auto">
+                <h3 class="text-xl ancient-text mb-2">战斗日志</h3>
+                <div id="battle-log" class="bg-black bg-opacity-70 text-white p-3 rounded h-32 overflow-y-auto text-sm">
+                    <p>战斗即将开始，请部署你的部队...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 游戏结束弹窗 -->
+    <div id="game-over-modal" class="message-box hidden">
+        <h2 class="text-2xl ancient-title mb-4 text-center">战斗结束</h2>
+        <div id="game-result" class="ancient-text text-center text-xl mb-4">胜负未分</div>
+        <div id="game-stats" class="ancient-text mb-4">
+            <!-- 战斗统计将由JS动态生成 -->
+        </div>
+        <div class="text-center">
+            <button id="play-again-btn" class="ancient-button">再次挑战</button>
+            <button id="close-modal-btn" class="ancient-button ml-4">关闭</button>
+        </div>
+    </div>
+
+    <script>
+        // 游戏状态
+        const gameState = {
+            isPlaying: false,
+            isPaused: false,
+            selectedUnit: null,
+            selectedTactic: null,
+            mingTroops: [],
+            annamTroops: [],
+            mingResources: {
+                troops: 128,
+                maxTroops: 200,
+                morale: 85,
+                food: 75
+            },
+            annamResources: {
+                troops: 150,
+                maxTroops: 150,
+                morale: 70,
+                food: 60
+            },
+            battlePhase: '准备阶段',
+            mingCasualties: 0,
+            annamCasualties: 0,
+            weather: '晴朗',
+            currentTurn: 0,
+            turnTimer: null
+        };
+
+        // 单位类型定义
+        const unitTypes = {
+            ming: {
+                infantry: {
+                    name: '步兵',
+                    health: 100,
+                    attack: 30,
+                    defense: 40,
+                    range: 1,
+                    speed: 2,
+                    cost: 1,
+                    count: 50,
+                    image: 'https://p26-doubao-search-sign.byteimg.com/labis/e16a1dbb2977b8d2181992e800be542f~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1784206190&x-signature=LDI70rH39dHJ825U6nTRzGoK2Lk%3D'
+                },
+                archer: {
+                    name: '弓箭手',
+                    health: 80,
+                    attack: 40,
+                    defense: 20,
+                    range: 3,
+                    speed: 2,
+                    cost: 2,
+                    count: 30,
+                    image: 'https://p3-doubao-search-sign.byteimg.com/labis/36a05823a3d9c6680664ee5acfcaace6~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1784206190&x-signature=csKnBSWX69hYXAN%2BzOEnFGBGvuU%3D'
+                },
+                cavalry: {
+                    name: '骑兵',
+                    health: 120,
+                    attack: 50,
+                    defense: 30,
+                    range: 1,
+                    speed: 4,
+                    cost: 3,
+                    count: 20,
+                    image: 'https://p11-doubao-search-sign.byteimg.com/tos-cn-i-qvj2lq49k0/cdf7083c0bf1417fb0f0e9a1e4b49b72~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1784206190&x-signature=AMIzcP1mjXs8rJPC%2BoS8FURfkzY%3D'
+                },
+                chariot: {
+                    name: '战车',
+                    health: 150,
+                    attack: 60,
+                    defense: 50,
+                    range: 2,
+                    speed: 2,
+                    cost: 4,
+                    count: 10,
+                    image: 'https://p26-doubao-search-sign.byteimg.com/tos-cn-i-6w9my0ksvp/d556c6386d45474981783950806b439d~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1784206190&x-signature=iD1qawCidpkIAS2TFXFRuEghW3w%3D'
+                },
+                firearm: {
+                    name: '神机营',
+                    health: 90,
+                    attack: 70,
+                    defense: 25,
+                    range: 4,
+                    speed: 1,
+                    cost: 3,
+                    count: 15,
+                    image: 'https://p11-doubao-search-sign.byteimg.com/mosaic-legacy/37ee0004bd42e653b8f3~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1784206190&x-signature=SGVsqlVbvpI4DqOAmyISx1FoTG4%3D'
+                },
+                general: {
+                    name: '将军',
+                    health: 200,
+                    attack: 80,
+                    defense: 60,
+                    range: 2,
+                    speed: 3,
+                    cost: 10,
+                    count: 3,
+                    image: 'https://p26-doubao-search-sign.byteimg.com/labis/c9109a65b1537fd1fab2c779ea40759d~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1784206191&x-signature=HcIAq%2BI2XkRGvV9bXFtXpS0za7E%3D'
+                }
+            },
+            annam: {
+                infantry: {
+                    name: '步兵',
+                    health: 90,
+                    attack: 25,
+                    defense: 35,
+                    range: 1,
+                    speed: 2,
+                    count: 60,
+                    image: 'https://p11-doubao-search-sign.byteimg.com/labis/eaa0d8c7468540a8e1c68ab481483a2d~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1784206191&x-signature=viQ3SUm2uVwvbYMABCIfEYWVjc8%3D'
+                },
+                archer: {
+                    name: '弓箭手',
+                    health: 75,
+                    attack: 35,
+                    defense: 15,
+                    range: 3,
+                    speed: 2,
+                    count: 30,
+                    image: 'https://p11-doubao-search-sign.byteimg.com/labis/6dd76a03ee08c012efa0419403ba2d99~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1784206191&x-signature=NjX%2FkaFJlK4yKOGcj9x6yMrHxT8%3D'
+                },
+                elephant: {
+                    name: '象兵',
+                    health: 200,
+                    attack: 80,
+                    defense: 70,
+                    range: 2,
+                    speed: 1,
+                    count: 10,
+                    image: 'https://p26-doubao-search-sign.byteimg.com/tos-cn-i-qvj2lq49k0/3e5fa705dd624f0ebcfbed5cac4fc3e1~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1784206190&x-signature=IJnFPN8nXg3%2F1dwhK1bgK%2FKsZd4%3D'
+                },
+                cavalry: {
+                    name: '骑兵',
+                    health: 110,
+                    attack: 45,
+                    defense: 25,
+                    range: 1,
+                    speed: 3,
+                    count: 20,
+                    image: 'https://p26-doubao-search-sign.byteimg.com/tos-cn-i-qvj2lq49k0/dab22e1c10b54238b0a78b490ec58a46~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1784206190&x-signature=sVQcDswZX1ZteuGrKHkArBM004c%3D'
+                },
+                general: {
+                    name: '将军',
+                    health: 180,
+                    attack: 70,
+                    defense: 50,
+                    range: 2,
+                    speed: 2,
+                    count: 5,
+                    image: 'https://p3-doubao-search-sign.byteimg.com/labis/a19b9720daf1fa95bc61c6ef7b73263c~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1784206191&x-signature=zJScr%2F0wObFUtoSg4NBx3JHcHLc%3D'
+                }
+            }
+        };
+
+        // 战术定义
+        const tactics = {
+            'tactic-frontal': {
+                name: '正面进攻',
+                description: '集中兵力正面突破敌人防线',
+                effect: {
+                    attackBonus: 1.2,
+                    defensePenalty: 0.8,
+                    moraleBonus: 5
+                }
+            },
+            'tactic-flank': {
+                name: '侧翼包抄',
+                description: '主力牵制，奇兵绕后包抄',
+                effect: {
+                    attackBonus: 1.0,
+                    defenseBonus: 1.0,
+                    speedBonus: 0.5,
+                    moraleBonus: 3
+                }
+            },
+            'tactic-defend': {
+                name: '防守反击',
+                description: '先守后攻，伺机反击',
+                effect: {
+                    defenseBonus: 1.3,
+                    attackPenalty: 0.9,
+                    moraleBonus: 2
+                }
+            },
+            'tactic-fire': {
+                name: '火器齐射',
+                description: '集中火器部队进行覆盖射击',
+                effect: {
+                    rangeBonus: 1,
+                    attackBonus: 1.5,
+                    moraleBonus: 8,
+                    foodConsumption: 2
+                }
+            }
+        };
+
+        // DOM元素
+        const battlefield = document.getElementById('battlefield');
+        const minimapContent = document.getElementById('minimap-content');
+        const tooltip = document.getElementById('tooltip');
+        const gameOverModal = document.getElementById('game-over-modal');
+
+        // 初始化游戏
+        function initGame() {
+            // 设置单位选择按钮事件
+            document.querySelectorAll('[id$="-btn"]').forEach(btn => {
+                if (btn.id === 'start-btn' || btn.id === 'pause-btn' || btn.id === 'reset-btn' || 
+                    btn.id === 'play-again-btn' || btn.id === 'close-modal-btn') {
+                    return;
+                }
+                
+                btn.addEventListener('click', function() {
+                    if (gameState.isPlaying) return;
+                    
+                    // 处理战术按钮
+                    if (this.id.startsWith('tactic-')) {
+                        document.querySelectorAll('[id^="tactic-"]').forEach(tbtn => {
+                            tbtn.classList.remove('bg-red-800');
+                            tbtn.classList.add('bg-[#8B4513]');
+                        });
+                        this.classList.remove('bg-[#8B4513]');
+                        this.classList.add('bg-red-800');
+                        gameState.selectedTactic = this.id;
+                        addBattleLog(`选择战术: ${tactics[this.id].name}`);
+                    } 
+                    // 处理单位按钮
+                    else {
+                        document.querySelectorAll('[id$="-btn"]').forEach(ubtn => {
+                            if (ubtn.id.startsWith('tactic-') || ubtn.id === 'start-btn' || 
+                                ubtn.id === 'pause-btn' || ubtn.id === 'reset-btn') {
+                                return;
+                            }
+                            ubtn.classList.remove('bg-red-800');
+                            ubtn.classList.add('bg-[#8B4513]');
+                        });
+                        this.classList.remove('bg-[#8B4513]');
+                        this.classList.add('bg-red-800');
+                        gameState.selectedUnit = this.id.replace('-btn', '');
+                        addBattleLog(`选择部队: ${unitTypes.ming[gameState.selectedUnit].name}`);
+                    }
+                });
+            });
+
+            // 开始战斗按钮
+            document.getElementById('start-btn').addEventListener('click', startBattle);
+            
+            // 暂停战斗按钮
+            document.getElementById('pause-btn').addEventListener('click', togglePause);
+            
+            // 重置战场按钮
+            document.getElementById('reset-btn').addEventListener('click', resetBattle);
+            
+            // 再次挑战按钮
+            document.getElementById('play-again-btn').addEventListener('click', resetBattle);
+            
+            // 关闭弹窗按钮
+            document.getElementById('close-modal-btn').addEventListener('click', () => {
+                gameOverModal.classList.add('hidden');
+            });
+
+            // 初始化战场
+            initializeBattlefield();
+            
+            // 更新UI
+            updateUI();
+        }
+
+        // 初始化战场
+        function initializeBattlefield() {
+            // 清空现有部队
+            gameState.mingTroops = [];
+            gameState.annamTroops = [];
+            
+            // 清空战场
+            const soldiers = document.querySelectorAll('.soldier, .flag, .chariot, .elephant, .bullet, .explosion, .casualty');
+            soldiers.forEach(soldier => soldier.remove());
+            
+            // 初始化明军部队
+            const mingTypes = Object.keys(unitTypes.ming);
+            mingTypes.forEach(type => {
+                const unitType = unitTypes.ming[type];
+                for (let i = 0; i < unitType.count; i++) {
+                    const x = Math.random() * (battlefield.offsetWidth * 0.4) + battlefield.offsetWidth * 0.1;
+                    const y = Math.random() * (battlefield.offsetHeight * 0.3) + battlefield.offsetHeight * 0.1;
+                    
+                    const unit = {
+                        id: `ming-${type}-${i}`,
+                        type: type,
+                        faction: 'ming',
+                        health: unitType.health,
+                        maxHealth: unitType.health,
+                        attack: unitType.attack,
+                        defense: unitType.defense,
+                        range: unitType.range,
+                        speed: unitType.speed,
+                        x: x,
+                        y: y,
+                        targetX: x,
+                        targetY: y,
+                        attacking: false,
+                        target: null,
+                        cooldown: 0,
+                        width: type === 'chariot' ? 80 : 40,
+                        height: type === 'chariot' ? 60 : 60
+                    };
+                    
+                    gameState.mingTroops.push(unit);
+                    
+                    // 创建DOM元素
+                    const soldierElement = document.createElement('div');
+                    soldierElement.id = unit.id;
+                    soldierElement.className = type === 'chariot' ? 'chariot' : 'soldier';
+                    soldierElement.style.left = `${x}px`;
+                    soldierElement.style.top = `${y}px`;
+                    soldierElement.style.backgroundImage = `url('${unitType.image}')`;
+                    soldierElement.dataset.unitId = unit.id;
+                    
+                    battlefield.appendChild(soldierElement);
+                    
+                    // 添加鼠标悬停事件
+                    soldierElement.addEventListener('mouseover', (e) => {
+                        showTooltip(e, unit);
+                    });
+                    
+                    soldierElement.addEventListener('mouseout', () => {
+                        hideTooltip();
+                    });
+                }
+            });
+            
+            // 初始化安南部队
+            const annamTypes = Object.keys(unitTypes.annam);
+            annamTypes.forEach(type => {
+                const unitType = unitTypes.annam[type];
+                for (let i = 0; i < unitType.count; i++) {
+                    const x = Math.random() * (battlefield.offsetWidth * 0.4) + battlefield.offsetWidth * 0.5;
+                    const y = Math.random() * (battlefield.offsetHeight * 0.3) + battlefield.offsetHeight * 0.6;
+                    
+                    const unit = {
+                        id: `annam-${type}-${i}`,
+                        type: type,
+                        faction: 'annam',
+                        health: unitType.health,
+                        maxHealth: unitType.health,
+                        attack: unitType.attack,
+                        defense: unitType.defense,
+                        range: unitType.range,
+                        speed: unitType.speed,
+                        x: x,
+                        y: y,
+                        targetX: x,
+                        targetY: y,
+                        attacking: false,
+                        target: null,
+                        cooldown: 0,
+                        width: type === 'elephant' ? 100 : 40,
+                        height: type === 'elephant' ? 80 : 60
+                    };
+                    
+                    gameState.annamTroops.push(unit);
+                    
+                    // 创建DOM元素
+                    const soldierElement = document.createElement('div');
+                    soldierElement.id = unit.id;
+                    soldierElement.className = type === 'elephant' ? 'elephant' : 'soldier';
+                    soldierElement.style.left = `${x}px`;
+                    soldierElement.style.top = `${y}px`;
+                    soldierElement.style.backgroundImage = `url('${unitType.image}')`;
+                    soldierElement.dataset.unitId = unit.id;
+                    
+                    battlefield.appendChild(soldierElement);
+                    
+                    // 添加鼠标悬停事件
+                    soldierElement.addEventListener('mouseover', (e) => {
+                        showTooltip(e, unit);
+                    });
+                    
+                    soldierElement.addEventListener('mouseout', () => {
+                        hideTooltip();
+                    });
+                }
+            });
+            
+            // 更新小地图
+            updateMinimap();
+        }
+
+        // 开始战斗
+        function startBattle() {
+            if (gameState.isPlaying) return;
+            
+            gameState.isPlaying = true;
+            gameState.battlePhase = '战斗阶段';
+            document.getElementById('start-btn').disabled = true;
+            document.getElementById('pause-btn').disabled = false;
+            
+            // 禁用所有选择按钮
+            document.querySelectorAll('[id$="-btn"]').forEach(btn => {
+                if (btn.id === 'pause-btn' || btn.id === 'reset-btn') return;
+                btn.disabled = true;
+            });
+            
+            // 添加战斗日志
+            addBattleLog('战斗开始！明军向安南军队发起进攻！');
+            
+            // 设置战术效果
+            if (gameState.selectedTactic) {
+                applyTactic(gameState.selectedTactic);
+            }
+            
+            // 开始回合循环
+            startTurnCycle();
+            
+            // 更新UI
+            updateUI();
+        }
+
+        // 暂停/继续战斗
+        function togglePause() {
+            if (!gameState.isPlaying) return;
+            
+            gameState.isPaused = !gameState.isPaused;
+            
+            if (gameState.isPaused) {
+                clearInterval(gameState.turnTimer);
+                document.getElementById('pause-btn').textContent = '继续战斗';
+                addBattleLog('战斗已暂停');
+            } else {
+                startTurnCycle();
+                document.getElementById('pause-btn').textContent = '暂停战斗';
+                addBattleLog('战斗继续');
+            }
+            
+            updateUI();
+        }
+
+        // 重置战斗
+        function resetBattle() {
+            // 停止回合循环
+            clearInterval(gameState.turnTimer);
+            
+            // 重置游戏状态
+            gameState.isPlaying = false;
+            gameState.isPaused = false;
+            gameState.selectedUnit = null;
+            gameState.selectedTactic = null;
+            gameState.battlePhase = '准备阶段';
+            gameState.mingCasualties = 0;
+            gameState.annamCasualties = 0;
+            gameState.currentTurn = 0;
+            
+            // 重置资源
+            gameState.mingResources = {
+                troops: 128,
+                maxTroops: 200,
+                morale: 85,
+                food: 75
+            };
+            
+            gameState.annamResources = {
+                troops: 150,
+                maxTroops: 150,
+                morale: 70,
+                food: 60
+            };
+            
+            // 重置按钮状态
+            document.getElementById('start-btn').disabled = false;
+            document.getElementById('pause-btn').disabled = true;
+            document.getElementById('pause-btn').textContent = '暂停战斗';
+            
+            document.querySelectorAll('[id$="-btn"]').forEach(btn => {
+                if (btn.id === 'start-btn' || btn.id === 'pause-btn' || btn.id === 'reset-btn') return;
+                btn.disabled = false;
+                btn.classList.remove('bg-red-800');
+                btn.classList.add('bg-[#8B4513]');
+            });
+            
+            // 重新初始化战场
+            initializeBattlefield();
+            
+            // 清空战斗日志
+            document.getElementById('battle-log').innerHTML = '<p>战斗即将开始，请部署你的部队...</p>';
+            
+            // 更新UI
+            updateUI();
+            
+            // 关闭游戏结束弹窗
+            gameOverModal.classList.add('hidden');
+        }
+
+        // 开始回合循环
+        function startTurnCycle() {
+            gameState.turnTimer = setInterval(() => {
+                if (gameState.isPaused) return;
+                
+                gameState.currentTurn++;
+                
+                // 每5回合更新天气
+                if (gameState.currentTurn % 5 === 0) {
+                    updateWeather();
+                }
+                
+                // 执行明军行动
+                executeMingTurn();
+                
+                // 执行安南军行动
+                executeAnnamTurn();
+                
+                // 检查战斗结束条件
+                checkGameOver();
+                
+                // 更新UI
+                updateUI();
+            }, 1000);
+        }
+
+        // 执行明军回合
+        function executeMingTurn() {
+            // 为每个明军单位执行行动
+            gameState.mingTroops.forEach(unit => {
+                if (unit.health <= 0) return;
+                
+                // 减少冷却时间
+                if (unit.cooldown > 0) {
+                    unit.cooldown--;
+                    return;
+                }
+                
+                // 寻找目标
+                const target = findTarget(unit, gameState.annamTroops);
+                
+                if (target) {
+                    const distance = calculateDistance(unit, target);
+                    
+                    // 如果在攻击范围内，进行攻击
+                    if (distance <= unit.range) {
+                        attack(unit, target);
+                        unit.cooldown = 2; // 设置冷却时间
+                    } 
+                    // 否则向目标移动
+                    else {
+                        moveUnit(unit, target.x, target.y);
+                    }
+                } 
+                // 如果没有目标，向战场中央移动
+                else {
+                    moveUnit(unit, battlefield.offsetWidth / 2, battlefield.offsetHeight / 2);
+                }
+            });
+            
+            // 更新明军单位位置
+            updateUnitPositions(gameState.mingTroops);
+        }
+
+        // 执行安南军回合
+        function executeAnnamTurn() {
+            // 为每个安南军单位执行行动
+            gameState.annamTroops.forEach(unit => {
+                if (unit.health <= 0) return;
+                
+                // 减少冷却时间
+                if (unit.cooldown > 0) {
+                    unit.cooldown--;
+                    return;
+                }
+                
+                // 寻找目标
+                const target = findTarget(unit, gameState.mingTroops);
+                
+                if (target) {
+                    const distance = calculateDistance(unit, target);
+                    
+                    // 如果在攻击范围内，进行攻击
+                    if (distance <= unit.range) {
+                        attack(unit, target);
+                        unit.cooldown = 2; // 设置冷却时间
+                    } 
+                    // 否则向目标移动
+                    else {
+                        moveUnit(unit, target.x, target.y);
+                    }
+                } 
+                // 如果没有目标，向战场中央移动
+                else {
+                    moveUnit(unit, battlefield.offsetWidth / 2, battlefield.offsetHeight / 2);
+                }
+            });
+            
+            // 更新安南军单位位置
+            updateUnitPositions(gameState.annamTroops);
+        }
+
+        // 寻找目标
+        function findTarget(unit, enemyTroops) {
+            let closestTarget = null;
+            let closestDistance = Infinity;
+            
+            enemyTroops.forEach(enemy => {
+                if (enemy.health <= 0) return;
+                
+                const distance = calculateDistance(unit, enemy);
+                
+                if (distance < closestDistance) {
+                    closestDistance = distance;
+                    closestTarget = enemy;
+                }
+            });
+            
+            return closestTarget;
+        }
+
+        // 计算两点之间的距离
+        function calculateDistance(unit1, unit2) {
+            const dx = unit1.x - unit2.x;
+            const dy = unit1.y - unit2.y;
+            return Math.sqrt(dx * dx + dy * dy);
+        }
+
+        // 移动单位
+        function moveUnit(unit, targetX, targetY) {
+            unit.targetX = targetX;
+            unit.targetY = targetY;
+            
+            // 计算移动方向
+            const dx = targetX - unit.x;
+            const dy = targetY - unit.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance > 0) {
+                // 计算移动步长
+                const stepX = (dx / distance) * unit.speed;
+                const stepY = (dy / distance) * unit.speed;
+                
+                // 更新单位位置
+                unit.x += stepX;
+                unit.y += stepY;
+                
+                // 确保单位不会移出战场
+                unit.x = Math.max(0, Math.min(unit.x, battlefield.offsetWidth - unit.width));
+                unit.y = Math.max(0, Math.min(unit.y, battlefield.offsetHeight - unit.height));
+            }
+        }
+
+        // 更新单位位置
+        function updateUnitPositions(troops) {
+            troops.forEach(unit => {
+                if (unit.health <= 0) return;
+                
+                const element = document.getElementById(unit.id);
+                if (element) {
+                    element.style.left = `${unit.x}px`;
+                    element.style.top = `${unit.y}px`;
+                    
+                    // 更新单位朝向
+                    if (unit.targetX > unit.x) {
+                        element.style.transform = 'scaleX(1)';
+                    } else if (unit.targetX < unit.x) {
+                        element.style.transform = 'scaleX(-1)';
+                    }
+                }
+            });
+        }
+
+        // 攻击目标
+        function attack(attacker, defender) {
+            // 计算伤害
+            let damage = attacker.attack - defender.defense / 2;
+            
+            // 应用天气效果
+            if (gameState.weather === '雨天') {
+                if (attacker.type === 'firearm' || attacker.type === 'archer') {
+                    damage *= 0.7; // 雨天降低远程攻击
+                }
+            } else if (gameState.weather === '大风') {
+                if (attacker.type === 'archer') {
+                    damage *= 0.8; // 大风影响弓箭精度
+                }
+            }
+            
+            // 应用战术效果
+            if (gameState.selectedTactic) {
+                const tactic = tactics[gameState.selectedTactic];
+                
+                if (attacker.faction === 'ming') {
+                    if (tactic.effect.attackBonus) {
+                        damage *= tactic.effect.attackBonus;
+                    }
+                    if (tactic.effect.attackPenalty) {
+                        damage *= tactic.effect.attackPenalty;
+                    }
+                    if (tactic.effect.rangeBonus && (attacker.type === 'archer' || attacker.type === 'firearm')) {
+                        damage *= 1.2; // 增加远程攻击伤害
+                    }
+                }
+            }
+            
+            // 确保伤害至少为1
+            damage = Math.max(1, Math.floor(damage));
+            
+            // 应用伤害
+            defender.health -= damage;
+            
+            // 创建攻击动画
+            createAttackAnimation(attacker, defender, damage);
+            
+            // 检查目标是否被击败
+            if (defender.health <= 0) {
+                defender.health = 0;
+                killUnit(defender);
+                
+                // 增加士气
+                if (attacker.faction === 'ming') {
+                    gameState.mingResources.morale = Math.min(100, gameState.mingResources.morale + 1);
+                    gameState.annamResources.morale = Math.max(0, gameState.annamResources.morale - 1);
+                } else {
+                    gameState.annamResources.morale = Math.min(100, gameState.annamResources.morale + 1);
+                    gameState.mingResources.morale = Math.max(0, gameState.mingResources.morale - 1);
+                }
+            }
+        }
+
+        // 创建攻击动画
+        function createAttackAnimation(attacker, defender, damage) {
+            // 创建子弹或箭矢
+            const projectile = document.createElement('div');
+            projectile.className = 'bullet';
+            projectile.style.left = `${attacker.x + attacker.width / 2}px`;
+            projectile.style.top = `${attacker.y + attacker.height / 2}px`;
+            
+            // 根据攻击类型设置不同的样式
+            if (attacker.type === 'firearm') {
+                projectile.style.backgroundColor = '#FF4500';
+                projectile.style.width = '8px';
+                projectile.style.height = '8px';
+            } else if (attacker.type === 'archer') {
+                projectile.style.backgroundColor = '#8B4513';
+                projectile.style.width = '12px';
+                projectile.style.height = '4px';
+                projectile.style.borderRadius = '0';
+            } else {
+                projectile.style.backgroundColor = '#000';
+            }
+            
+            battlefield.appendChild(projectile);
+            
+            // 动画持续时间
+            const duration = 500; // 毫秒
+            
+            // 动画开始时间
+            const startTime = Date.now();
+            
+            // 起始位置
+            const startX = attacker.x + attacker.width / 2;
+            const startY = attacker.y + attacker.height / 2;
+            
+            // 目标位置
+            const endX = defender.x + defender.width / 2;
+            const endY = defender.y + defender.height / 2;
+            
+            // 动画函数
+            function animate() {
+                const currentTime = Date.now();
+                const elapsed = currentTime - startTime;
+                
+                if (elapsed < duration) {
+                    const progress = elapsed / duration;
+                    
+                    // 计算当前位置
+                    const currentX = startX + (endX - startX) * progress;
+                    const currentY = startY + (endY - startY) * progress;
+                    
+                    // 更新子弹位置
+                    projectile.style.left = `${currentX}px`;
+                    projectile.style.top = `${currentY}px`;
+                    
+                    // 继续动画
+                    requestAnimationFrame(animate);
+                } else {
+                    // 动画结束，创建爆炸效果
+                    createExplosion(endX, endY);
+                    
+                    // 显示伤害数值
+                    showDamageNumber(endX, endY, damage);
+                    
+                    // 移除子弹
+                    projectile.remove();
+                }
+            }
+            
+            // 开始动画
+            animate();
+        }
+
+        // 创建爆炸效果
+        function createExplosion(x, y) {
+            const explosion = document.createElement('div');
+            explosion.className = 'explosion';
+            explosion.style.left = `${x - 15}px`;
+            explosion.style.top = `${y - 15}px`;
+            
+            battlefield.appendChild(explosion);
+            
+            // 动画结束后移除
+            setTimeout(() => {
+                explosion.remove();
+            }, 500);
+        }
+
+        // 显示伤害数值
+        function showDamageNumber(x, y, damage) {
+            const damageElement = document.createElement('div');
+            damageElement.className = 'ancient-text';
+            damageElement.style.position = 'absolute';
+            damageElement.style.left = `${x}px`;
+            damageElement.style.top = `${y - 20}px`;
+            damageElement.style.color = '#FF0000';
+            damageElement.style.fontWeight = 'bold';
+            damageElement.style.zIndex = '25';
+            damageElement.style.pointerEvents = 'none';
+            damageElement.textContent = `-${damage}`;
+            
+            battlefield.appendChild(damageElement);
+            
+            // 动画
+            let opacity = 1;
+            let top = y - 20;
+            
+            const animation = setInterval(() => {
+                opacity -= 0.05;
+                top -= 1;
+                
+                damageElement.style.opacity = opacity;
+                damageElement.style.top = `${top}px`;
+                
+                if (opacity <= 0) {
+                    clearInterval(animation);
+                    damageElement.remove();
+                }
+            }, 30);
+        }
+
+        // 杀死单位
+        function killUnit(unit) {
+            // 更新伤亡统计
+            if (unit.faction === 'ming') {
+                gameState.mingCasualties++;
+                gameState.mingResources.troops--;
+            } else {
+                gameState.annamCasualties++;
+                gameState.annamResources.troops--;
+            }
+            
+            // 创建伤亡标记
+            const casualty = document.createElement('div');
+            casualty.className = 'casualty';
+            casualty.style.left = `${unit.x + unit.width / 2 - 15}px`;
+            casualty.style.top = `${unit.y + unit.height / 2 - 15}px`;
+            
+            battlefield.appendChild(casualty);
+            
+            // 移除单位元素
+            const element = document.getElementById(unit.id);
+            if (element) {
+                element.style.opacity = '0.3';
+                element.style.pointerEvents = 'none';
+            }
+            
+            // 动画结束后移除伤亡标记
+            setTimeout(() => {
+                casualty.remove();
+            }, 2000);
+        }
+
+        // 应用战术效果
+        function applyTactic(tacticId) {
+            const tactic = tactics[tacticId];
+            
+            if (!tactic) return;
+            
+            // 应用战术效果到明军
+            gameState.mingTroops.forEach(unit => {
+                if (unit.health <= 0) return;
+                
+                // 攻击加成
+                if (tactic.effect.attackBonus) {
+                    unit.attack *= tactic.effect.attackBonus;
+                }
+                
+                // 攻击惩罚
+                if (tactic.effect.attackPenalty) {
+                    unit.attack *= tactic.effect.attackPenalty;
+                }
+                
+                // 防御加成
+                if (tactic.effect.defenseBonus) {
+                    unit.defense *= tactic.effect.defenseBonus;
+                }
+                
+                // 防御惩罚
+                if (tactic.effect.defensePenalty) {
+                    unit.defense *= tactic.effect.defensePenalty;
+                }
+                
+                // 速度加成
+                if (tactic.effect.speedBonus) {
+                    unit.speed *= (1 + tactic.effect.speedBonus);
+                }
+                
+                // 射程加成
+                if (tactic.effect.rangeBonus) {
+                    unit.range += tactic.effect.rangeBonus;
+                }
+            });
+            
+            // 增加士气
+            if (tactic.effect.moraleBonus) {
+                gameState.mingResources.morale = Math.min(100, gameState.mingResources.morale + tactic.effect.moraleBonus);
+            }
+            
+            // 增加粮草消耗
+            if (tactic.effect.foodConsumption) {
+                gameState.mingResources.food = Math.max(0, gameState.mingResources.food - tactic.effect.foodConsumption);
+            }
+            
+            // 添加战斗日志
+            addBattleLog(`明军使用战术"${tactic.name}"！${tactic.description}`);
+        }
+
+        // 更新天气
+        function updateWeather() {
+            const weathers = ['晴朗', '多云', '雨天', '大风', '大雾'];
+            const newWeather = weathers[Math.floor(Math.random() * weathers.length)];
+            
+            // 避免连续两次相同天气
+            if (newWeather === gameState.weather) {
+                return;
+            }
+            
+            gameState.weather = newWeather;
+            
+            // 添加战斗日志
+            addBattleLog(`天气变为${newWeather}！`);
+            
+            // 应用天气效果
+            applyWeatherEffects();
+        }
+
+        // 应用天气效果
+        function applyWeatherEffects() {
+            switch (gameState.weather) {
+                case '雨天':
+                    // 降低远程单位攻击力
+                    gameState.mingTroops.forEach(unit => {
+                        if (unit.type === 'firearm' || unit.type === 'archer') {
+                            unit.attack *= 0.9; // 临时降低攻击
+                        }
+                    });
+                    
+                    gameState.annamTroops.forEach(unit => {
+                        if (unit.type === 'archer') {
+                            unit.attack *= 0.9; // 临时降低攻击
+                        }
+                    });
+                    break;
+                    
+                case '大风':
+                    // 影响弓箭精度
+                    gameState.mingTroops.forEach(unit => {
+                        if (unit.type === 'archer') {
+                            unit.attack *= 0.9; // 临时降低攻击
+                        }
+                    });
+                    
+                    gameState.annamTroops.forEach(unit => {
+                        if (unit.type === 'archer') {
+                            unit.attack *= 0.9; // 临时降低攻击
+                        }
+                    });
+                    break;
+                    
+                case '大雾':
+                    // 降低所有单位视野
+                    gameState.mingTroops.forEach(unit => {
+                        unit.range = Math.max(1, unit.range - 1); // 临时降低射程
+                    });
+                    
+                    gameState.annamTroops.forEach(unit => {
+                        unit.range = Math.max(1, unit.range - 1); // 临时降低射程
+                    });
+                    break;
+                    
+                case '晴朗':
+                case '多云':
+                    // 恢复正常状态
+                    resetUnitStats();
+                    break;
+            }
+        }
+
+        // 重置单位状态
+        function resetUnitStats() {
+            gameState.mingTroops.forEach(unit => {
+                if (unit.health <= 0) return;
+                
+                const baseUnit = unitTypes.ming[unit.type];
+                unit.attack = baseUnit.attack;
+                unit.defense = baseUnit.defense;
+                unit.range = baseUnit.range;
+                unit.speed = baseUnit.speed;
+                
+                // 重新应用战术效果
+                if (gameState.selectedTactic) {
+                    const tactic = tactics[gameState.selectedTactic];
+                    
+                    if (tactic.effect.attackBonus) {
+                        unit.attack *= tactic.effect.attackBonus;
+                    }
+                    
+                    if (tactic.effect.attackPenalty) {
+                        unit.attack *= tactic.effect.attackPenalty;
+                    }
+                    
+                    if (tactic.effect.defenseBonus) {
+                        unit.defense *= tactic.effect.defenseBonus;
+                    }
+                    
+                    if (tactic.effect.defensePenalty) {
+                        unit.defense *= tactic.effect.defensePenalty;
+                    }
+                    
+                    if (tactic.effect.speedBonus) {
+                        unit.speed *= (1 + tactic.effect.speedBonus);
+                    }
+                    
+                    if (tactic.effect.rangeBonus) {
+                        unit.range += tactic.effect.rangeBonus;
+                    }
+                }
+            });
+            
+            gameState.annamTroops.forEach(unit => {
+                if (unit.health <= 0) return;
+                
+                const baseUnit = unitTypes.annam[unit.type];
+                unit.attack = baseUnit.attack;
+                unit.defense = baseUnit.defense;
+                unit.range = baseUnit.range;
+                unit.speed = baseUnit.speed;
+            });
+        }
+
+        // 检查游戏结束条件
+        function checkGameOver() {
+            // 检查明军是否全军覆没
+            const activeMingTroops = gameState.mingTroops.filter(unit => unit.health > 0).length;
+            if (activeMingTroops === 0 || gameState.mingResources.troops <= 0) {
+                endGame('安南胜利');
+                return;
+            }
+            
+            // 检查安南军是否全军覆没
+            const activeAnnamTroops = gameState.annamTroops.filter(unit => unit.health > 0).length;
+            if (activeAnnamTroops === 0 || gameState.annamResources.troops <= 0) {
+                endGame('明军胜利');
+                return;
+            }
+            
+            // 检查士气是否归零
+            if (gameState.mingResources.morale <= 0) {
+                endGame('明军士气崩溃，安南胜利');
+                return;
+            }
+            
+            if (gameState.annamResources.morale <= 0) {
+                endGame('安南士气崩溃，明军胜利');
+                return;
+            }
+            
+            // 检查粮草是否耗尽
+            if (gameState.mingResources.food <= 0) {
+                endGame('明军粮草耗尽，安南胜利');
+                return;
+            }
+            
+            if (gameState.annamResources.food <= 0) {
+                endGame('安南粮草耗尽，明军胜利');
+                return;
+            }
+            
+            // 检查战斗回合数
+            if (gameState.currentTurn >= 100) {
+                // 根据剩余兵力决定胜负
+                if (gameState.mingResources.troops > gameState.annamResources.troops) {
+                    endGame('战斗超时，明军以兵力优势获胜');
+                } else if (gameState.annamResources.troops > gameState.mingResources.troops) {
+                    endGame('战斗超时，安南以兵力优势获胜');
+                } else {
+                    endGame('战斗超时，双方平局');
+                }
+            }
+        }
+
+        // 结束游戏
+        function endGame(result) {
+            // 停止回合循环
+            clearInterval(gameState.turnTimer);
+            
+            // 更新游戏状态
+            gameState.isPlaying = false;
+            gameState.battlePhase = '战斗结束';
+            
+            // 添加战斗日志
+            addBattleLog(`战斗结束！${result}`);
+            
+            // 显示游戏结束弹窗
+            showGameOverModal(result);
+            
+            // 更新UI
+            updateUI();
+        }
+
+        // 显示游戏结束弹窗
+        function showGameOverModal(result) {
+            // 设置结果文本
+            document.getElementById('game-result').textContent = result;
+            
+            // 生成战斗统计
+            const statsHTML = `
+                <p class="mb-2">战斗统计:</p>
+                <p>明军伤亡: ${gameState.mingCasualties}</p>
+                <p>安南伤亡: ${gameState.annamCasualties}</p>
+                <p>剩余明军: ${gameState.mingResources.troops}/${gameState.mingResources.maxTroops}</p>
+                <p>剩余安南: ${gameState.annamResources.troops}/${gameState.annamResources.maxTroops}</p>
+                <p>明军士气: ${gameState.mingResources.morale}</p>
+                <p>安南士气: ${gameState.annamResources.morale}</p>
+                <p>战斗回合: ${gameState.currentTurn}</p>
+                <p>最终天气: ${gameState.weather}</p>
+            `;
+            
+            document.getElementById('game-stats').innerHTML = statsHTML;
+            
+            // 显示弹窗
+            gameOverModal.classList.remove('hidden');
+        }
+
+        // 更新小地图
+        function updateMinimap() {
+            // 清空小地图
+            minimapContent.innerHTML = '';
+            
+            // 添加明军单位
+            gameState.mingTroops.forEach(unit => {
+                if (unit.health <= 0) return;
+                
+                const minimapUnit = document.createElement('div');
+                minimapUnit.className = 'minimap-soldier';
+                minimapUnit.style.backgroundColor = '#8B0000'; // 红色表示明军
+                minimapUnit.style.left = `${(unit.x / battlefield.offsetWidth) * minimapContent.offsetWidth}px`;
+                minimapUnit.style.top = `${(unit.y / battlefield.offsetHeight) * minimapContent.offsetHeight}px`;
+                
+                minimapContent.appendChild(minimapUnit);
+            });
+            
+            // 添加安南军单位
+            gameState.annamTroops.forEach(unit => {
+                if (unit.health <= 0) return;
+                
+                const minimapUnit = document.createElement('div');
+                minimapUnit.className = 'minimap-soldier';
+                minimapUnit.style.backgroundColor = '#006400'; // 绿色表示安南军
+                minimapUnit.style.left = `${(unit.x / battlefield.offsetWidth) * minimapContent.offsetWidth}px`;
+                minimapUnit.style.top = `${(unit.y / battlefield.offsetHeight) * minimapContent.offsetHeight}px`;
+                
+                minimapContent.appendChild(minimapUnit);
+            });
+            
+            // 添加明军旗帜
+            const mingFlag = document.createElement('div');
+            mingFlag.className = 'minimap-flag';
+            mingFlag.style.backgroundColor = '#FF0000'; // 红色表示明军旗帜
+            mingFlag.style.left = `${(battlefield.offsetWidth * 0.25 / battlefield.offsetWidth) * minimapContent.offsetWidth}px`;
+            mingFlag.style.top = `${(battlefield.offsetHeight * 0.25 / battlefield.offsetHeight) * minimapContent.offsetHeight}px`;
+            
+            minimapContent.appendChild(mingFlag);
+            
+            // 添加安南军旗帜
+            const annamFlag = document.createElement('div');
+            annamFlag.className = 'minimap-flag';
+            annamFlag.style.backgroundColor = '#008000'; // 绿色表示安南军旗帜
+            annamFlag.style.left = `${(battlefield.offsetWidth * 0.75 / battlefield.offsetWidth) * minimapContent.offsetWidth}px`;
+            annamFlag.style.top = `${(battlefield.offsetHeight * 0.75 / battlefield.offsetHeight) * minimapContent.offsetHeight}px`;
+            
+            minimapContent.appendChild(annamFlag);
+        }
+
+        // 显示提示框
+        function showTooltip(event, unit) {
+            const unitType = unit.faction === 'ming' ? unitTypes.ming[unit.type] : unitTypes.annam[unit.type];
+            
+            tooltip.innerHTML = `
+                <div><strong>${unitType.name}</strong></div>
+                <div>生命值: ${Math.floor(unit.health)}/${unit.maxHealth}</div>
+                <div>攻击力: ${Math.floor(unit.attack)}</div>
+                <div>防御力: ${Math.floor(unit.defense)}</div>
+                <div>射程: ${unit.range}</div>
+                <div>速度: ${unit.speed}</div>
+            `;
+            
+            tooltip.style.left = `${event.pageX + 10}px`;
+            tooltip.style.top = `${event.pageY + 10}px`;
+            tooltip.style.opacity = '1';
+        }
+
+        // 隐藏提示框
+        function hideTooltip() {
+            tooltip.style.opacity = '0';
+        }
+
+        // 添加战斗日志
+        function addBattleLog(message) {
+            const battleLog = document.getElementById('battle-log');
+            const logEntry = document.createElement('p');
+            logEntry.textContent = `[回合 ${gameState.currentTurn}] ${message}`;
+            
+            battleLog.appendChild(logEntry);
+            battleLog.scrollTop = battleLog.scrollHeight;
+        }
+
+        // 更新UI
+        function updateUI() {
+            // 更新资源显示
+            document.getElementById('troops-count').textContent = gameState.mingResources.troops;
+            document.getElementById('morale-count').textContent = gameState.mingResources.morale;
+            document.getElementById('food-count').textContent = gameState.mingResources.food;
+            
+            // 更新进度条
+            document.getElementById('troops-progress').style.width = `${(gameState.mingResources.troops / gameState.mingResources.maxTroops) * 100}%`;
+            document.getElementById('morale-progress').style.width = `${gameState.mingResources.morale}%`;
+            document.getElementById('food-progress').style.width = `${gameState.mingResources.food}%`;
+            
+            // 更新战场状态
+            document.getElementById('battle-phase').textContent = gameState.battlePhase;
+            document.getElementById('ming-casualties').textContent = gameState.mingCasualties;
+            document.getElementById('annam-casualties').textContent = gameState.annamCasualties;
+            document.getElementById('weather').textContent = gameState.weather;
+            
+            // 更新小地图
+            updateMinimap();
+            
+            // 更新单位数量显示
+            Object.keys(unitTypes.ming).forEach(type => {
+                const count = gameState.mingTroops.filter(unit => unit.type === type && unit.health > 0).length;
+                const btn = document.getElementById(`${type}-btn`);
+                if (btn) {
+                    const countSpan = btn.querySelector('span:last-child');
+                    if (countSpan) {
+                        countSpan.textContent = count;
+                    }
+                }
+            });
+        }
+
+        // 初始化游戏
+        window.addEventListener('DOMContentLoaded', initGame);
+    </script>
+</body>
+</html>
