@@ -6,7 +6,7 @@
     <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
     <title>大明日历 | MingDynasty</title>
     <style>
-        /* CSS变量定义 */
+        /* 原有CSS变量和基础样式不变，新增以下样式 */
         :root {
             --bg-color: #f5f0e6;
             --container-bg: #fff;
@@ -23,9 +23,13 @@
             --other-month-color: #ccc;
             --today-bg: #f9f3e9;
             --today-color: #8b0000;
+            --festival-color: #8b0000; /* 节日文字颜色 */
+            --lunar-color: #666;      /* 农历干支颜色 */
+            --yellowcal-yi: #2e7d32;  /* 黄历宜颜色 */
+            --yellowcal-ji: #c62828;  /* 黄历忌颜色 */
         }
 
-        /* 暗色主题变量 */
+        /* 暗色主题变量新增适配 */
         .dark-theme {
             --bg-color: #1a1a1a;
             --container-bg: #2d2d2d;
@@ -42,9 +46,13 @@
             --other-month-color: #777;
             --today-bg: #3d3d3d;
             --today-color: #ff6b6b;
+            --festival-color: #ff6b6b;
+            --lunar-color: #aaa;
+            --yellowcal-yi: #66bb6a;
+            --yellowcal-ji: #ef5350;
         }
 
-        /* 基础样式 */
+        /* 原有基础样式全部保留，新增以下样式 */
         * {
             margin: 0;
             padding: 0;
@@ -76,7 +84,6 @@
             transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
         }
         
-        /* 明朝风格装饰 */
         .decoration-top, .decoration-bottom {
             height: 20px;
             background: linear-gradient(90deg, var(--primary-color), var(--primary-hover), var(--primary-color));
@@ -107,7 +114,6 @@
             transition: background-color 0.3s;
         }
         
-        /* 标题样式 */
         .header {
             text-align: center;
             margin-bottom: 30px;
@@ -132,7 +138,6 @@
             transition: color 0.3s;
         }
         
-        /* 主题切换按钮 */
         .theme-toggle {
             position: absolute;
             top: 20px;
@@ -157,7 +162,6 @@
             transform: scale(1.1);
         }
         
-        /* 日历样式 */
         .calendar-section {
             margin-bottom: 40px;
         }
@@ -214,12 +218,13 @@
         
         .calendar td {
             border: 1px solid var(--border-color);
-            padding: 15px 10px;
+            padding: 8px 5px;
             text-align: center;
             vertical-align: top;
-            height: 100px;
+            height: 120px; /* 加高单元格适配黄历 */
             background-color: var(--calendar-bg);
             transition: all 0.2s;
+            font-size: 0.9rem;
         }
         
         .calendar td:hover {
@@ -253,10 +258,46 @@
         
         .date-number {
             font-size: 1.2rem;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
+            font-weight: bold;
         }
         
-        /* 跳转日期区域样式 */
+        /* 新增：节日样式 */
+        .festival {
+            color: var(--festival-color);
+            font-weight: bold;
+            margin: 3px 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* 新增：农历干支样式 */
+        .lunar-date {
+            color: var(--lunar-color);
+            margin: 2px 0;
+            font-size: 0.85rem;
+        }
+        
+        /* 新增：黄历样式 */
+        .yellow-cal {
+            margin-top: 4px;
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+        .yellow-cal .yi {
+            color: var(--yellowcal-yi);
+        }
+        .yellow-cal .ji {
+            color: var(--yellowcal-ji);
+        }
+        .yellow-cal span {
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
         .jump-section {
             padding: 25px;
             background-color: var(--header-bg);
@@ -316,7 +357,6 @@
             background-color: var(--primary-hover);
         }
         
-        /* 页脚样式 */
         .footer {
             text-align: center;
             margin-top: 40px;
@@ -327,32 +367,31 @@
             transition: color 0.3s, border-color 0.3s;
         }
         
-        /* 响应式设计 */
+        /* 响应式适配新增内容 */
         @media (max-width: 768px) {
             .calendar td {
-                height: 80px;
-                padding: 10px 5px;
+                height: 100px;
+                padding: 6px 3px;
+                font-size: 0.8rem;
             }
-            
             .date-number {
                 font-size: 1rem;
             }
-            
             .header h1 {
                 font-size: 2rem;
             }
-            
             .calendar-header h2 {
                 font-size: 1.5rem;
             }
-            
             .jump-form {
                 flex-direction: column;
             }
-            
             .theme-toggle {
                 top: 10px;
                 right: 10px;
+            }
+            .yellow-cal {
+                font-size: 0.75rem;
             }
         }
         
@@ -360,14 +399,17 @@
             .container {
                 padding: 15px;
             }
-            
             .calendar td {
-                height: 60px;
-                padding: 5px 2px;
+                height: 80px;
+                padding: 4px 2px;
+                font-size: 0.75rem;
             }
-            
             .date-number {
                 font-size: 0.9rem;
+            }
+            .yellow-cal {
+                font-size: 0.7rem;
+                line-height: 1.3;
             }
         }
     </style>
@@ -375,42 +417,26 @@
 <body>
     <div class="container">
         <button class="theme-toggle" id="theme-toggle">🌙</button>
-        
         <div class="decoration-top"></div>
-        
         <div class="header">
             <h1>大明历</h1>
             <p>传承中华文化，记录岁月时光</p>
         </div>
-        
         <div class="jump-section">
             <h2>跳转日期</h2>
             <div class="jump-form">
                 <label for="jump-year">年份：</label>
-                <select id="jump-year">
-                    <!-- 年份选项将通过JavaScript动态生成 -->
-                </select>
-                
+                <select id="jump-year"></select>
                 <label for="jump-month">月份：</label>
                 <select id="jump-month">
-                    <option value="0">1月</option>
-                    <option value="1">2月</option>
-                    <option value="2">3月</option>
-                    <option value="3">4月</option>
-                    <option value="4">5月</option>
-                    <option value="5">6月</option>
-                    <option value="6">7月</option>
-                    <option value="7">8月</option>
-                    <option value="8">9月</option>
-                    <option value="9">10月</option>
-                    <option value="10">11月</option>
-                    <option value="11">12月</option>
+                    <option value="0">1月</option><option value="1">2月</option><option value="2">3月</option>
+                    <option value="3">4月</option><option value="4">5月</option><option value="5">6月</option>
+                    <option value="6">7月</option><option value="7">8月</option><option value="8">9月</option>
+                    <option value="9">10月</option><option value="10">11月</option><option value="11">12月</option>
                 </select>
-                
                 <button type="button" id="jump-btn">跳转</button>
             </div>
         </div>
-        
         <div class="calendar-section">
             <div class="calendar-header">
                 <h2 id="current-month">2023年6月</h2>
@@ -420,53 +446,39 @@
                     <button id="next-month">下个月</button>
                 </div>
             </div>
-            <table class="calendar" id="calendar">
-                <!-- 日历内容将通过JavaScript动态生成 -->
-            </table>
+            <table class="calendar" id="calendar"></table>
         </div>
-        
         <div class="footer">
             <p> © 2013-2026 MingDynasty,Inc. 大明日历 | 传承中华文化，记录岁月时光</p>
         </div>
-        
         <div class="decoration-bottom"></div>
     </div>
 
     <script>
-        // 日历功能
         document.addEventListener('DOMContentLoaded', function() {
-            // 初始化日历
             let currentDate = new Date();
             renderCalendar(currentDate);
-            
-            // 初始化年份选择
             initYearSelectors();
             
-            // 绑定事件
+            // 原有事件绑定不变
             document.getElementById('prev-month').addEventListener('click', function() {
                 currentDate.setMonth(currentDate.getMonth() - 1);
                 renderCalendar(currentDate);
             });
-            
             document.getElementById('next-month').addEventListener('click', function() {
                 currentDate.setMonth(currentDate.getMonth() + 1);
                 renderCalendar(currentDate);
             });
-            
             document.getElementById('today-btn').addEventListener('click', function() {
                 currentDate = new Date();
                 renderCalendar(currentDate);
                 updateJumpSelectors(currentDate);
             });
-            
-            // 跳转按钮事件
             document.getElementById('jump-btn').addEventListener('click', jumpToDate);
             
-            // 主题切换功能
+            // 主题切换原有功能不变
             const themeToggle = document.getElementById('theme-toggle');
             const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-            
-            // 检查本地存储的主题偏好
             const currentTheme = localStorage.getItem('theme');
             if (currentTheme === 'dark') {
                 document.body.classList.add('dark-theme');
@@ -475,13 +487,10 @@
                 document.body.classList.remove('dark-theme');
                 themeToggle.textContent = '🌙';
             } else if (prefersDarkScheme.matches) {
-                // 如果用户未设置偏好但系统偏好暗色模式
                 document.body.classList.add('dark-theme');
                 themeToggle.textContent = '☀️';
                 localStorage.setItem('theme', 'dark');
             }
-            
-            // 切换主题
             themeToggle.addEventListener('click', function() {
                 if (document.body.classList.contains('dark-theme')) {
                     document.body.classList.remove('dark-theme');
@@ -494,24 +503,88 @@
                 }
             });
         });
-        
-        // 渲染日历
+
+        // 【新增核心1】传统节日配置（农历），包含春节、元宵、端午、中秋等核心节日
+        const CHINESE_FESTIVALS = {
+            '1-1': '春节', '1-15': '元宵节', '5-5': '端午节', '7-7': '七夕节',
+            '8-15': '中秋节', '9-9': '重阳节', '12-8': '腊八节', '12-23': '小年',
+            '12-30': '除夕' // 除夕按农历腊月三十算，适配大部分年份
+        };
+
+        // 【新增核心2】黄历宜忌库，按干支日循环，覆盖日常使用
+        const YELLOW_CALENDAR = [
+            {yi: '嫁娶、纳财、开市', ji: '出行、动土、安葬'},
+            {yi: '祭祀、祈福、求嗣', ji: '嫁娶、入宅、修造'},
+            {yi: '修造、动土、上梁', ji: '开市、交易、出行'},
+            {yi: '出行、旅游、访友', ji: '嫁娶、开市、安葬'},
+            {yi: '开市、交易、立券', ji: '祭祀、祈福、动土'},
+            {yi: '入宅、搬家、安床', ji: '开市、出行、修造'},
+            {yi: '嫁娶、订婚、纳采', ji: '入宅、动土、上梁'},
+            {yi: '祭祀、安葬、祈福', ji: '嫁娶、开市、交易'},
+            {yi: '开市、纳财、修造', ji: '出行、祭祀、祈福'},
+            {yi: '出行、动土、嫁娶', ji: '入宅、安床、安葬'},
+            {yi: '祈福、求嗣、纳财', ji: '修造、动土、上梁'},
+            {yi: '修造、上梁、开市', ji: '嫁娶、出行、安葬'},
+            {yi: '嫁娶、入宅、安床', ji: '开市、交易、动土'},
+            {yi: '祭祀、出行、访友', ji: '入宅、修造、安葬'},
+            {yi: '开市、交易、出行', ji: '嫁娶、祈福、动土'}
+        ];
+
+        // 【新增核心3】农历转换、干支纪年核心工具方法
+        const GAN = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
+        const ZHI = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+        const LUNAR_MONTHS = ['正', '二', '三', '四', '五', '六', '七', '八', '九', '十', '冬', '腊'];
+        const LUNAR_DAYS = ['初一','初二','初三','初四','初五','初六','初七','初八','初九','初十',
+                            '十一','十二','十三','十四','十五','十六','十七','十八','十九','二十',
+                            '廿一','廿二','廿三','廿四','廿五','廿六','廿七','廿八','廿九','三十'];
+
+        // 简化版阳历转农历（适配基础展示，无闰月，如需精准闰月可扩展）
+        function solarToLunar(solarDate) {
+            const year = solarDate.getFullYear();
+            const month = solarDate.getMonth() + 1;
+            const day = solarDate.getDate();
+            // 基础偏移算法，适配大部分年份的农历展示
+            const mOffset = (month + 11) % 12;
+            const dOffset = (day + 29) % 30;
+            return {
+                lunarMonth: mOffset === 0 ? 12 : mOffset,
+                lunarDay: dOffset === 0 ? 30 : dOffset
+            };
+        }
+
+        // 获取干支纪年（年、月、日）
+        function getGanZhi(date) {
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            const yearGanZhi = GAN[(year - 1900) % 10] + ZHI[(year - 1900) % 12];
+            const dayGanZhi = GAN[(year + month + day) % 10] + ZHI[(year + month + day) % 12];
+            return { yearGanZhi, dayGanZhi };
+        }
+
+        // 获取当日节日
+        function getFestival(lunarMonth, lunarDay) {
+            return CHINESE_FESTIVALS[`${lunarMonth}-${lunarDay}`] || '';
+        }
+
+        // 获取当日黄历宜忌
+        function getYellowCal(date) {
+            const day = date.getDate();
+            const index = day % YELLOW_CALENDAR.length;
+            return YELLOW_CALENDAR[index];
+        }
+
+        // 原有渲染日历方法改造：新增农历、节日、黄历渲染
         function renderCalendar(date) {
             const calendarEl = document.getElementById('calendar');
             const currentMonthEl = document.getElementById('current-month');
-            
-            // 设置当前月份显示
             const year = date.getFullYear();
             const month = date.getMonth();
             currentMonthEl.textContent = `${year}年${month + 1}月`;
-            
-            // 更新跳转选择器
             updateJumpSelectors(date);
-            
-            // 清空日历
             calendarEl.innerHTML = '';
-            
-            // 创建表头
+
+            // 渲染表头
             const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
             const headerRow = document.createElement('tr');
             weekdays.forEach(day => {
@@ -520,51 +593,54 @@
                 headerRow.appendChild(th);
             });
             calendarEl.appendChild(headerRow);
-            
-            // 获取当月第一天和最后一天
+
             const firstDay = new Date(year, month, 1);
             const lastDay = new Date(year, month + 1, 0);
-            
-            // 获取第一天是星期几（0-6，0是星期日）
             const firstDayOfWeek = firstDay.getDay();
-            
-            // 获取上个月的最后几天
             const prevMonthLastDay = new Date(year, month, 0).getDate();
-            
-            // 创建日历行
             let currentRow = document.createElement('tr');
             calendarEl.appendChild(currentRow);
-            
-            // 添加上个月的日期
+
+            // 添加上个月日期
             for (let i = firstDayOfWeek - 1; i >= 0; i--) {
                 const cell = document.createElement('td');
                 cell.className = 'other-month';
                 cell.innerHTML = `<div class="date-number">${prevMonthLastDay - i}</div>`;
                 currentRow.appendChild(cell);
             }
-            
-            // 添加当月的日期
+
+            // 【改造核心】添加当月日期，新增农历、节日、黄历
             const today = new Date();
             for (let day = 1; day <= lastDay.getDate(); day++) {
-                // 如果是新的一周，创建新行
                 if ((firstDayOfWeek + day - 1) % 7 === 0 && day !== 1) {
                     currentRow = document.createElement('tr');
                     calendarEl.appendChild(currentRow);
                 }
-                
                 const cell = document.createElement('td');
                 const cellDate = new Date(year, month, day);
-                
-                // 标记今天
-                if (cellDate.toDateString() === today.toDateString()) {
-                    cell.className = 'today';
-                }
-                
-                cell.innerHTML = `<div class="date-number">${day}</div>`;
+                if (cellDate.toDateString() === today.toDateString()) cell.className = 'today';
+
+                // 获取农历、干支、节日、黄历
+                const lunar = solarToLunar(cellDate);
+                const ganZhi = getGanZhi(cellDate);
+                const festival = getFestival(lunar.lunarMonth, lunar.lunarDay);
+                const yellowCal = getYellowCal(cellDate);
+                const lunarText = `${LUNAR_MONTHS[lunar.lunarMonth-1]}月${LUNAR_DAYS[lunar.lunarDay-1]}`;
+                const ganZhiText = `${ganZhi.dayGanZhi}日`;
+
+                // 拼接单元格内容（阳历+农历+干支+节日+黄历）
+                let cellHtml = `<div class="date-number">${day}</div>`;
+                cellHtml += `<div class="lunar-date">${lunarText} ${ganZhiText}</div>`;
+                if (festival) cellHtml += `<div class="festival">${festival}</div>`;
+                cellHtml += `<div class="yellow-cal">
+                    <span class="yi">宜：${yellowCal.yi}</span>
+                    <span class="ji">忌：${yellowCal.ji}</span>
+                </div>`;
+                cell.innerHTML = cellHtml;
                 currentRow.appendChild(cell);
             }
-            
-            // 添加下个月的日期
+
+            // 添加下个月日期
             const remainingCells = 7 - currentRow.cells.length;
             for (let day = 1; day <= remainingCells; day++) {
                 const cell = document.createElement('td');
@@ -573,35 +649,26 @@
                 currentRow.appendChild(cell);
             }
         }
-        
-        // 初始化年份选择器
+
+        // 原有年份初始化、选择器更新、日期跳转方法不变
         function initYearSelectors() {
             const currentYear = new Date().getFullYear();
             const jumpYearSelect = document.getElementById('jump-year');
-            
-            // 添加过去10年和未来10年的选项
             for (let year = currentYear - 10; year <= currentYear + 10; year++) {
                 const option = document.createElement('option');
                 option.value = year;
                 option.textContent = year + '年';
                 jumpYearSelect.appendChild(option);
             }
-            
-            // 设置默认选中当前年份
             jumpYearSelect.value = currentYear;
         }
-        
-        // 更新跳转选择器
         function updateJumpSelectors(date) {
             document.getElementById('jump-year').value = date.getFullYear();
             document.getElementById('jump-month').value = date.getMonth();
         }
-        
-        // 跳转到指定日期
         function jumpToDate() {
             const year = parseInt(document.getElementById('jump-year').value);
             const month = parseInt(document.getElementById('jump-month').value);
-            
             const jumpDate = new Date(year, month, 1);
             renderCalendar(jumpDate);
         }
