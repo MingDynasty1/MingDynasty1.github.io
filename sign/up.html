@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>明朝风格用户注册</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'ming-red': '#A62424',
+                        'ming-gold': '#D4AF37',
+                        'ming-ivory': '#FFFFF0',
+                        'ming-black': '#2C2C2C',
+                        'ming-green': '#4B6C54',
+                        'ming-blue': '#3B5998'
+                    },
+                    fontFamily: {
+                        'ming': ['serif', 'SimSun', 'FangSong']
+                    },
+                    backgroundImage: {
+                        'wood-pattern': "url('https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/dfc94625bda34ad4bb5a98c64bf8e641~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=202602011947131EC4ED518A5E6032BB25&rrcfp=f06b921b&x-expires=1772538471&x-signature=OteYZR8cuHdqZzFVLS5%2BEG12SUI%3D')",
+                        'cloud-pattern': "url('https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/e2398590da5547eca9e68b9dc27582b0~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=202602011947131EC4ED518A5E6032BB25&rrcfp=f06b921b&x-expires=1772538471&x-signature=4D8Zu%2BE1zODpTvkzC4kaMz157ss%3D')",
+                        'stamp-pattern': "url('https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/13684b48939f481a9274157420f91699~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=202602011947131EC4ED518A5E6032BB25&rrcfp=f06b921b&x-expires=1772538472&x-signature=KO3r8ZXbSuK%2FprCK8kNxv648RCk%3D')"
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .chinese-pattern-border {
+                border-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M0,0 L100,0 L100,100 L0,100 Z" fill="none" stroke="%23D4AF37" stroke-width="4" stroke-dasharray="10,5"/></svg>') 10;
+            }
+            .paper-texture {
+                background-color: #FFFFF0;
+                background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEWFhYWDg4N3d3dtbW17e3t1dXWBgYGHh4d5eXlzc3OLi4ubm5uVlZWPj4+NjY19fX2JiYl/f39ra2uRkZGZmZlpaWmXl5dvb29xcXGTk5NnZ2c8TV1mAAAAG3RSTlNAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAvEOwtAAAFVklEQVR4XpWWB67c2BUFb3g557T/hRo9/WUMZHlgr4Bg8Z4qQgQJlHI4A8SzFVrapvmTF9O7dmYRFZ60YiBhJRCgh1FYhiLAmdvX0CzTOpNE77ME0Zty/nWWzchDtiqrmQDeuv3powQ5ta2eN0FY0InkqDD73lT9c9lEzwUNqgFHs9VQce3TVClFCQrSTfOiYkVJQBmpbq2L6iZavPnAPcoU0dSw0SUTqz/GtrGuXfbyyBniKykOWQWGqwwMA7QiYAxi+IlPdqo+hYHnUt5ZPfnsHJyNiDtnpJyayNBkF6cWoYGAMY92U2hXHF/C1M8uP/ZtYdiuj26UdAdQQSXQErwSOMzt/XWRWAz5GuSBIkwG1H3FabJ2OsUOUhGC6tK4EMtJO0ttC6IBD3kM0ve0tJwMdSfjZo+EEISaeTr9P3wYrGjXqyC1krcKdhMpxEnt5JetoulscpyzhXN5FRpuPHvbeQaKxFAEB6EN+cYN6xD7RYGpXpNndMmZgM5Dcs3YSNFDHUo2LGfZuukSWyUYirJAdYbF3MfqEKmjM+I2EfhA94iG3L7uKrR+GdWD73ydlIB+6hgref1QTlmgmbM3/LeX5GI1Ux1RWpgxpLuZ2+I+IjzZ8wqE4nilvQdkUdfhzI5QDWy+kw5Wgg2pGpeEVeCCA7b85BO3F9DzxB3cdqvBzWcmzbyMiqhzuYqtHRVG2y4x+KOlnyqla8AoWWpuBoYRxzXrfKuILl6SfiWCbjxoZJUaCBj1CjH7GIaDbc9kqBY3W/Rgjda1iqQcOJu2WW+76pZC9QG7M00dffe9hNnseupFL53r8F7YHSwJWUKP2q+k7RdsxyOB11n0xtOvnW4irMMFNV4H0uqwS5ExsmP9AxbDTc9JwgneAT5vTiUSm1E7BSflSt3bfa1tv8Di3R8n3Af7MNWzs49hmauE2wP+ttrq+AsWpFG2awvsuOqbipWHgtuvuaAE+A1Z/7gC9hesnr+7wqCwG8c5yAg3AL1fm8T9AZtp/bbJGwl1pNrE7RuOX7PeMRUERVaPpEs+yqeoSmuOlokqw49pgomjLeh7icHNlG19yjs6XXOMedYm5xH2YxpV2tc0Ro2jJfxC50ApuxGob7lMsxfTbeUv07TyYxpeLucEH1gNd4IKH2LAg5TdVhlCafZvpskfncCfx8pOhJzd76bJWeYFnFciwcYfubRc12Ip/ppIhA1/mSZ/RxjFDrJC5xifFjJpY2Xl5zXdguFqYyTR1zSp1Y9p+tktDYYSNflcxI0iyO4TPBdlRcpeqjK/piF5bklq77VSEaA+z8qmJTFzIWiitbnzR794USKBUaT0NTEsVjZqLaFVqJoPN9ODG70IPbfBHKK+/q/AWR0tJzYHRULOa4MP+W/HfGadZUbfw177G7j/OGbIs8TahLyynl4X4RinF793Oz+BU0saXtUHrVBFT/DnA3ctNPoGbs4hRIjTok8i+algT1lTHi4SxFvONKNrgQFAq2/gFnWMXgwffgYMJpiKYkmW3tTg3ZQ9Jq+f8XN+A5eeUKHWvJWJ2sgJ1Sop+wwhqFVijqWaJhwtD8MNlSBeWNNWTa5Z5kPZw5+LbVT99wqTdx29lMUH4OIG/D86ruKEauBjvH5xy6um/Sfj7ei6UUVk4AIl3MyD4MSSTOFgSwsH/QJWaQ5as7ZcmgBZkzjjU1UrQ74ci1gWBCSGHtuV1H2mhSnO3Wp/3fEV5a+4wz//6qy8JxjZsmxxy5+4w9CDNJY09T072iKG0EnOS0arEYgXqYnXcYHwjTtUNAcMelOd4xpkoqiTYICWFq0JSiPfPDQdnt+4/wuqcXY47QILbgAAAABJRU5ErkJggg==');
+            }
+            .seal-button {
+                background-color: #A62424;
+                color: #FFFFF0;
+                border: 2px solid #8B0000;
+                border-radius: 4px;
+                padding: 0.5rem 1rem;
+                font-family: 'ming', serif;
+                font-size: 1.2rem;
+                position: relative;
+                overflow: hidden;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 0 #8B0000;
+                text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+            }
+            .seal-button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 0 #8B0000;
+            }
+            .seal-button:active {
+                transform: translateY(2px);
+                box-shadow: 0 2px 0 #8B0000;
+            }
+            .input-paper {
+                background-color: #FFFFF0;
+                border: 1px solid #D4AF37;
+                border-radius: 4px;
+                padding: 0.5rem;
+                font-family: 'ming', serif;
+                box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+            }
+            .input-paper:focus {
+                outline: none;
+                border-color: #A62424;
+                box-shadow: inset 0 0 5px rgba(166, 36, 36, 0.2);
+            }
+            .cloud-decoration {
+                background-image: url('https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/e2398590da5547eca9e68b9dc27582b0~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=202602011947131EC4ED518A5E6032BB25&rrcfp=f06b921b&x-expires=1772538471&x-signature=4D8Zu%2BE1zODpTvkzC4kaMz157ss%3D');
+                background-repeat: no-repeat;
+                background-size: contain;
+                opacity: 0.8;
+            }
+            .chinese-shadow {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            }
+            .scroll-down {
+                animation: scrollDown 3s infinite;
+            }
+            @keyframes scrollDown {
+                0% { transform: translateY(0); }
+                50% { transform: translateY(10px); }
+                100% { transform: translateY(0); }
+            }
+            .fade-in {
+                animation: fadeIn 1s ease-in-out;
+            }
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            .slide-in {
+                animation: slideIn 1s ease-in-out;
+            }
+            @keyframes slideIn {
+                from { transform: translateY(50px); opacity: 0; }
+                to { transform: translateY(0); opacity: 1; }
+            }
+        }
+    </style>
+</head>
+<body class="bg-ming-ivory font-ming min-h-screen">
+    <!-- 背景装饰 -->
+    <div class="fixed inset-0 z-0 opacity-10 pointer-events-none">
+        <div class="absolute top-0 left-0 w-full h-full bg-wood-pattern bg-cover"></div>
+    </div>
+    
+    <!-- 顶部装饰 -->
+    <div class="relative z-10 w-full">
+        <div class="w-full h-16 bg-ming-red shadow-lg flex items-center justify-center">
+            <div class="w-3/4 h-full border-b-4 border-ming-gold flex items-center justify-center">
+                <h1 class="text-3xl md:text-4xl text-ming-gold font-bold chinese-shadow">
+                    大明王朝 - 用户注册
+                </h1>
+            </div>
+        </div>
+        
+        <!-- 装饰性云纹 -->
+        <div class="relative h-16 w-full overflow-hidden">
+            <div class="absolute -top-4 left-0 w-32 h-16 cloud-decoration transform -rotate-12"></div>
+            <div class="absolute -top-2 left-1/4 w-24 h-16 cloud-decoration"></div>
+            <div class="absolute -top-4 right-1/4 w-32 h-16 cloud-decoration transform rotate-12"></div>
+            <div class="absolute -top-2 right-0 w-24 h-16 cloud-decoration transform rotate-6"></div>
+        </div>
+    </div>
+    
+    <!-- 主内容区 -->
+    <main class="relative z-20 container mx-auto px-4 py-8 md:py-16">
+        <!-- 注册表单容器 -->
+        <div class="max-w-2xl mx-auto bg-ming-ivory rounded-lg shadow-xl overflow-hidden border-2 border-ming-gold slide-in">
+            <!-- 表单标题 -->
+            <div class="relative bg-ming-red py-6 px-8 text-center">
+                <h2 class="text-2xl md:text-3xl text-ming-gold font-bold chinese-shadow">
+                    注册新用户
+                </h2>
+                <div class="absolute top-0 left-0 w-full h-2 bg-ming-gold"></div>
+                <div class="absolute bottom-0 left-0 w-full h-2 bg-ming-gold"></div>
+            </div>
+            
+            <!-- 表单内容 -->
+            <div class="p-6 md:p-8 paper-texture">
+                <form id="registrationForm" class="space-y-6">
+                    <!-- 用户名 -->
+                    <div class="space-y-2">
+                        <label for="username" class="block text-ming-black text-lg">
+                            用户名 <span class="text-ming-red">*</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-ming-black">
+                                <i class="fa fa-user"></i>
+                            </span>
+                            <input type="text" id="username" name="username" 
+                                class="input-paper w-full pl-10 pr-4 py-2 text-ming-black placeholder-gray-500"
+                                placeholder="请输入用户名" required>
+                        </div>
+                        <p id="usernameError" class="hidden text-ming-red text-sm"></p>
+                    </div>
+                    
+                    <!-- 密码 -->
+                    <div class="space-y-2">
+                        <label for="password" class="block text-ming-black text-lg">
+                            密码 <span class="text-ming-red">*</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-ming-black">
+                                <i class="fa fa-lock"></i>
+                            </span>
+                            <input type="password" id="password" name="password" 
+                                class="input-paper w-full pl-10 pr-4 py-2 text-ming-black placeholder-gray-500"
+                                placeholder="请输入密码" required>
+                            <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 flex items-center pr-3 text-ming-black">
+                                <i class="fa fa-eye"></i>
+                            </button>
+                        </div>
+                        <p id="passwordError" class="hidden text-ming-red text-sm"></p>
+                    </div>
+                    
+                    <!-- 确认密码 -->
+                    <div class="space-y-2">
+                        <label for="confirmPassword" class="block text-ming-black text-lg">
+                            确认密码 <span class="text-ming-red">*</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-ming-black">
+                                <i class="fa fa-lock"></i>
+                            </span>
+                            <input type="password" id="confirmPassword" name="confirmPassword" 
+                                class="input-paper w-full pl-10 pr-4 py-2 text-ming-black placeholder-gray-500"
+                                placeholder="请再次输入密码" required>
+                        </div>
+                        <p id="confirmPasswordError" class="hidden text-ming-red text-sm"></p>
+                    </div>
+                    
+                    <!-- 邮箱 -->
+                    <div class="space-y-2">
+                        <label for="email" class="block text-ming-black text-lg">
+                            电子邮箱 <span class="text-ming-red">*</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-ming-black">
+                                <i class="fa fa-envelope"></i>
+                            </span>
+                            <input type="email" id="email" name="email" 
+                                class="input-paper w-full pl-10 pr-4 py-2 text-ming-black placeholder-gray-500"
+                                placeholder="请输入电子邮箱" required>
+                        </div>
+                        <p id="emailError" class="hidden text-ming-red text-sm"></p>
+                    </div>
+                    
+                    <!-- 验证码 -->
+                    <div class="space-y-2">
+                        <label for="captcha" class="block text-ming-black text-lg">
+                            验证码 <span class="text-ming-red">*</span>
+                        </label>
+                        <div class="flex space-x-4">
+                            <div class="relative flex-grow">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-ming-black">
+                                    <i class="fa fa-shield"></i>
+                                </span>
+                                <input type="text" id="captcha" name="captcha" 
+                                    class="input-paper w-full pl-10 pr-4 py-2 text-ming-black placeholder-gray-500"
+                                    placeholder="请输入验证码" required>
+                            </div>
+                            <div class="relative w-32 h-10 bg-ming-ivory border border-ming-gold flex items-center justify-center overflow-hidden">
+                                <canvas id="captchaCanvas" class="w-full h-full"></canvas>
+                            </div>
+                        </div>
+                        <p id="captchaError" class="hidden text-ming-red text-sm"></p>
+                    </div>
+                    
+                    <!-- 同意条款 -->
+                    <div class="flex items-start space-x-3">
+                        <div class="flex items-center h-5">
+                            <input id="terms" name="terms" type="checkbox" 
+                                class="h-4 w-4 text-ming-red border-ming-gold rounded focus:ring-ming-red" required>
+                        </div>
+                        <div class="text-sm">
+                            <label for="terms" class="text-ming-black">
+                                我已阅读并同意 <a href="#" class="text-ming-red hover:underline">用户协议</a> 和 <a href="#" class="text-ming-red hover:underline">隐私政策</a>
+                            </label>
+                            <p id="termsError" class="hidden text-ming-red text-sm mt-1"></p>
+                        </div>
+                    </div>
+                    
+                    <!-- 提交按钮 -->
+                    <div class="pt-4">
+                        <button type="submit" class="seal-button w-full py-3 px-6 text-lg font-bold hover:bg-opacity-90 transition-all duration-300">
+                            确认注册
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- 登录链接 -->
+        <div class="mt-8 text-center fade-in">
+            <p class="text-ming-black text-lg">
+                已有账号？ <a href="#" class="text-ming-red hover:underline font-bold">立即登录</a>
+            </p>
+        </div>
+    </main>
+    
+    <!-- 底部装饰 -->
+    <footer class="relative z-10 mt-16">
+        <div class="relative h-16 w-full overflow-hidden">
+            <div class="absolute -bottom-4 left-0 w-32 h-16 cloud-decoration transform rotate-12"></div>
+            <div class="absolute -bottom-2 left-1/4 w-24 h-16 cloud-decoration"></div>
+            <div class="absolute -bottom-4 right-1/4 w-32 h-16 cloud-decoration transform -rotate-12"></div>
+            <div class="absolute -bottom-2 right-0 w-24 h-16 cloud-decoration transform -rotate-6"></div>
+        </div>
+        
+        <div class="w-full h-16 bg-ming-red shadow-lg flex items-center justify-center">
+            <div class="w-3/4 h-full border-t-4 border-ming-gold flex items-center justify-center">
+                <p class="text-ming-gold font-medium">
+                    © 大明王朝 2026 版权所有
+                </p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- 注册成功弹窗 -->
+    <div id="successModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-ming-ivory rounded-lg shadow-xl max-w-md w-full mx-4 border-2 border-ming-gold">
+            <div class="bg-ming-red py-4 px-6 border-b-2 border-ming-gold">
+                <h3 class="text-xl text-ming-gold font-bold text-center">注册成功</h3>
+            </div>
+            <div class="p-6 paper-texture text-center">
+                <div class="w-24 h-24 mx-auto mb-4 bg-contain bg-no-repeat bg-center" style="background-image: url('https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/13684b48939f481a9274157420f91699~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=202602011947131EC4ED518A5E6032BB25&rrcfp=f06b921b&x-expires=1772538472&x-signature=KO3r8ZXbSuK%2FprCK8kNxv648RCk%3D')"></div>
+                <p class="text-ming-black text-lg mb-6">恭喜您，注册成功！</p>
+                <p class="text-ming-black mb-6">您的账号已创建，即将跳转至登录页面...</p>
+                <div class="w-full bg-ming-gold h-2 rounded-full overflow-hidden">
+                    <div id="progressBar" class="bg-ming-red h-full w-0 transition-all duration-300"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 验证码生成
+        function generateCaptcha() {
+            const canvas = document.getElementById('captchaCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // 设置画布尺寸
+            canvas.width = 120;
+            canvas.height = 40;
+            
+            // 背景
+            ctx.fillStyle = '#FFFFF0';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // 添加干扰线
+            for (let i = 0; i < 5; i++) {
+                ctx.beginPath();
+                ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
+                ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
+                ctx.strokeStyle = `rgba(${Math.floor(Math.random()*80+150)}, ${Math.floor(Math.random()*80+150)}, ${Math.floor(Math.random()*80+150)}, 0.5)`;
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            }
+            
+            // 添加干扰点
+            for (let i = 0; i < 30; i++) {
+                ctx.beginPath();
+                ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, 1, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${Math.floor(Math.random()*80+150)}, ${Math.floor(Math.random()*80+150)}, ${Math.floor(Math.random()*80+150)}, 0.5)`;
+                ctx.fill();
+            }
+            
+            // 生成验证码文本
+            const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+            let captchaText = '';
+            for (let i = 0; i < 4; i++) {
+                captchaText += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            
+            // 绘制验证码文本
+            ctx.font = 'bold 24px serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            // 为每个字符设置不同的颜色和旋转角度
+            for (let i = 0; i < captchaText.length; i++) {
+                const char = captchaText.charAt(i);
+                const x = 20 + i * 25;
+                const y = canvas.height / 2;
+                
+                // 随机旋转角度
+                const angle = (Math.random() - 0.5) * 0.5;
+                
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.rotate(angle);
+                
+                // 随机颜色
+                const colors = ['#A62424', '#4B6C54', '#3B5998', '#8B4513', '#6B4226'];
+                ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
+                
+                ctx.fillText(char, 0, 0);
+                ctx.restore();
+            }
+            
+            // 存储验证码文本用于验证
+            canvas.dataset.captcha = captchaText;
+            
+            return captchaText;
+        }
+        
+        // 初始化验证码
+        document.addEventListener('DOMContentLoaded', function() {
+            generateCaptcha();
+            
+            // 点击验证码刷新
+            document.getElementById('captchaCanvas').addEventListener('click', function() {
+                generateCaptcha();
+            });
+            
+            // 密码显示/隐藏切换
+            const togglePassword = document.getElementById('togglePassword');
+            const password = document.getElementById('password');
+            
+            togglePassword.addEventListener('click', function() {
+                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                password.setAttribute('type', type);
+                this.querySelector('i').classList.toggle('fa-eye');
+                this.querySelector('i').classList.toggle('fa-eye-slash');
+            });
+            
+            // 表单验证
+            const form = document.getElementById('registrationForm');
+            
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                // 清除之前的错误信息
+                clearErrors();
+                
+                // 验证表单
+                let isValid = true;
+                
+                // 用户名验证
+                const username = document.getElementById('username').value.trim();
+                if (username.length < 3) {
+                    showError('usernameError', '用户名至少需要3个字符');
+                    isValid = false;
+                }
+                
+                // 密码验证
+                const password = document.getElementById('password').value;
+                if (password.length < 6) {
+                    showError('passwordError', '密码至少需要6个字符');
+                    isValid = false;
+                }
+                
+                // 确认密码验证
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                if (password !== confirmPassword) {
+                    showError('confirmPasswordError', '两次输入的密码不一致');
+                    isValid = false;
+                }
+                
+                // 邮箱验证
+                const email = document.getElementById('email').value.trim();
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    showError('emailError', '请输入有效的电子邮箱地址');
+                    isValid = false;
+                }
+                
+                // 验证码验证
+                const captcha = document.getElementById('captcha').value.trim();
+                const canvasCaptcha = document.getElementById('captchaCanvas').dataset.captcha;
+                if (captcha.toLowerCase() !== canvasCaptcha.toLowerCase()) {
+                    showError('captchaError', '验证码不正确');
+                    isValid = false;
+                }
+                
+                // 同意条款验证
+                const terms = document.getElementById('terms');
+                if (!terms.checked) {
+                    showError('termsError', '请阅读并同意用户协议和隐私政策');
+                    isValid = false;
+                }
+                
+                // 如果验证通过，显示成功弹窗
+                if (isValid) {
+                    showSuccessModal();
+                }
+            });
+            
+            // 实时验证
+            document.getElementById('username').addEventListener('blur', function() {
+                const username = this.value.trim();
+                if (username.length > 0 && username.length < 3) {
+                    showError('usernameError', '用户名至少需要3个字符');
+                } else {
+                    hideError('usernameError');
+                }
+            });
+            
+            document.getElementById('password').addEventListener('blur', function() {
+                const password = this.value;
+                if (password.length > 0 && password.length < 6) {
+                    showError('passwordError', '密码至少需要6个字符');
+                } else {
+                    hideError('passwordError');
+                }
+            });
+            
+            document.getElementById('confirmPassword').addEventListener('blur', function() {
+                const password = document.getElementById('password').value;
+                const confirmPassword = this.value;
+                if (confirmPassword.length > 0 && password !== confirmPassword) {
+                    showError('confirmPasswordError', '两次输入的密码不一致');
+                } else {
+                    hideError('confirmPasswordError');
+                }
+            });
+            
+            document.getElementById('email').addEventListener('blur', function() {
+                const email = this.value.trim();
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (email.length > 0 && !emailRegex.test(email)) {
+                    showError('emailError', '请输入有效的电子邮箱地址');
+                } else {
+                    hideError('emailError');
+                }
+            });
+            
+            document.getElementById('captcha').addEventListener('blur', function() {
+                const captcha = this.value.trim();
+                const canvasCaptcha = document.getElementById('captchaCanvas').dataset.captcha;
+                if (captcha.length > 0 && captcha.toLowerCase() !== canvasCaptcha.toLowerCase()) {
+                    showError('captchaError', '验证码不正确');
+                } else {
+                    hideError('captchaError');
+                }
+            });
+            
+            document.getElementById('terms').addEventListener('change', function() {
+                if (this.checked) {
+                    hideError('termsError');
+                }
+            });
+        });
+        
+        // 显示错误信息
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            errorElement.classList.remove('hidden');
+        }
+        
+        // 隐藏错误信息
+        function hideError(elementId) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.classList.add('hidden');
+        }
+        
+        // 清除所有错误信息
+        function clearErrors() {
+            const errorElements = document.querySelectorAll('[id$="Error"]');
+            errorElements.forEach(function(element) {
+                element.classList.add('hidden');
+            });
+        }
+        
+        // 显示成功弹窗
+        function showSuccessModal() {
+            const modal = document.getElementById('successModal');
+            const progressBar = document.getElementById('progressBar');
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            // 进度条动画
+            let width = 0;
+            const interval = setInterval(function() {
+                if (width >= 100) {
+                    // 找到 showSuccessModal 函数中的这段代码：
+setTimeout(function() {
+    alert('注册成功！即将跳转到登录页面...');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    document.getElementById('registrationForm').reset();
+    generateCaptcha();
+    // 添加跳转逻辑
+    window.location.href = 'https://mingdynasty1.github.io/sign/in.html';
+}, 500);
+                } else {
+                    width++;
+                    progressBar.style.width = width + '%';
+                }
+            }, 30);
+        }
+    </script>
+</body>
+</html>
