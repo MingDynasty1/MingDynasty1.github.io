@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>大明注册 | MingDynasty</title>
-      <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
@@ -116,6 +116,10 @@
             @keyframes slideIn {
                 from { transform: translateY(50px); opacity: 0; }
                 to { transform: translateY(0); opacity: 1; }
+            }
+            /* 协议链接专属样式 - 保持中式风格 */
+            .law-link {
+                @apply text-ming-red hover:underline hover:text-ming-red/80 transition-colors font-medium;
             }
         }
     </style>
@@ -249,7 +253,7 @@
                         <p id="captchaError" class="hidden text-ming-red text-sm"></p>
                     </div>
                     
-                    <!-- 同意条款 -->
+                    <!-- 同意条款 - 核心修改：更新用户协议+隐私政策链接 -->
                     <div class="flex items-start space-x-3">
                         <div class="flex items-center h-5">
                             <input id="terms" name="terms" type="checkbox" 
@@ -257,7 +261,7 @@
                         </div>
                         <div class="text-sm">
                             <label for="terms" class="text-ming-black">
-                                我已阅读并同意 <a href="#" class="text-ming-red hover:underline">用户协议</a> 和 <a href="#" class="text-ming-red hover:underline">隐私政策</a>
+                                我已阅读并同意 <a href="https://mingdynasty1.github.io/law/user-agreement.html" target="_blank" class="law-link">用户协议</a> 和 <a href="https://mingdynasty1.github.io/law/" target="_blank" class="law-link">隐私政策</a>
                             </label>
                             <p id="termsError" class="hidden text-ming-red text-sm mt-1"></p>
                         </div>
@@ -276,7 +280,7 @@
         <!-- 登录链接 -->
         <div class="mt-8 text-center fade-in">
             <p class="text-ming-black text-lg">
-                已有账号？ <a href="#" class="text-ming-red hover:underline font-bold">立即登录</a>
+                已有账号？ <a href="https://mingdynasty1.github.io/sign/in.html" class="law-link">立即登录</a>
             </p>
         </div>
     </main>
@@ -547,66 +551,65 @@
         }
         
         // 显示成功弹窗
-        // 替换原有的 showSuccessModal 函数
-function showSuccessModal() {
-    const modal = document.getElementById('successModal');
-    const progressBar = document.getElementById('progressBar');
-    
-    // 获取表单数据
-    const username = document.getElementById('username').value.trim();
-    const password = document.getElementById('password').value;
-    const email = document.getElementById('email').value.trim();
-    
-    // 构建用户信息对象
-    const userData = {
-        username: username,
-        password: password,
-        email: email,
-        registerTime: new Date().toISOString()
-    };
-    
-    // 存储到 Register_user Cookie（有效期30天）
-    setCookie('Register_user', JSON.stringify(userData), 30);
-    
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
-    
-    // 进度条动画
-    let width = 0;
-    const interval = setInterval(function() {
-        if (width >= 100) {
-            clearInterval(interval);
-            // 跳转到登录页面
-            setTimeout(function() {
-                window.location.href = 'https://mingdynasty1.github.io/sign/in.html';
-            }, 500);
-        } else {
-            width++;
-            progressBar.style.width = width + '%';
+        function showSuccessModal() {
+            const modal = document.getElementById('successModal');
+            const progressBar = document.getElementById('progressBar');
+            
+            // 获取表单数据
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const email = document.getElementById('email').value.trim();
+            
+            // 构建用户信息对象
+            const userData = {
+                username: username,
+                password: password,
+                email: email,
+                registerTime: new Date().toISOString()
+            };
+            
+            // 存储到 Register_user Cookie（有效期30天）
+            setCookie('Register_user', JSON.stringify(userData), 30);
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            // 进度条动画
+            let width = 0;
+            const interval = setInterval(function() {
+                if (width >= 100) {
+                    clearInterval(interval);
+                    // 跳转到登录页面
+                    setTimeout(function() {
+                        window.location.href = 'https://mingdynasty1.github.io/sign/in.html';
+                    }, 500);
+                } else {
+                    width++;
+                    progressBar.style.width = width + '%';
+                }
+            }, 30);
         }
-    }, 30);
-}
 
-// 添加 Cookie 操作函数（放在注册页面的 script 中）
-function setCookie(name, value, days = 7) {
-    const date = new Date();
-    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-    const expires = "expires=" + date.toUTCString();
-    document.cookie = `${name}=${encodeURIComponent(value)}; ${expires}; path=/; SameSite=Lax`;
-}
-
-function getCookie(name) {
-    const nameEQ = `${name}=`;
-    const cookies = document.cookie.split(';');
-    for(let i = 0; i < cookies.length; i++) {
-        let cookie = cookies[i];
-        while (cookie.charAt(0) === ' ') cookie = cookie.substring(1);
-        if (cookie.indexOf(nameEQ) === 0) {
-            return decodeURIComponent(cookie.substring(nameEQ.length));
+        // Cookie 操作函数
+        function setCookie(name, value, days = 7) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            const expires = "expires=" + date.toUTCString();
+            document.cookie = `${name}=${encodeURIComponent(value)}; ${expires}; path=/; SameSite=Lax`;
         }
-    }
-    return null;
-}
+
+        function getCookie(name) {
+            const nameEQ = `${name}=`;
+            const cookies = document.cookie.split(';');
+            for(let i = 0; i < cookies.length; i++) {
+                let cookie = cookies[i];
+                while (cookie.charAt(0) === ' ') cookie = cookie.substring(1);
+                if (cookie.indexOf(nameEQ) === 0) {
+                    return decodeURIComponent(cookie.substring(nameEQ.length));
+                }
+            }
+            return null;
+        }
     </script>
 </body>
 </html>
