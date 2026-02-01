@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>大明登录 | MingDynasty</title>
-    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+      <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
@@ -267,17 +267,24 @@
                     <!-- 提交按钮 -->
                     <div class="pt-4">
                         <button type="submit" class="seal-button w-full py-3 px-6 text-lg font-bold hover:bg-opacity-90 transition-all duration-300">
-                            登录
+                            登录系统
                         </button>
                     </div>
                 </form>
+                
+                <!-- 无账户提示 -->
+                <div id="noAccountTip" class="mt-4 text-center hidden">
+                    <p class="text-ming-red text-sm">
+                        <i class="fa fa-exclamation-circle mr-1"></i> 该用户未注册，请先完成注册
+                    </p>
+                </div>
             </div>
         </div>
         
         <!-- 注册链接 -->
         <div class="mt-8 text-center fade-in">
             <p class="text-ming-black dark:text-dark-text text-lg">
-                还没有账号？ <a href="https://mingdynasty1.github.io/sign/up.html" class="text-ming-red dark:text-[#C0392B] hover:underline font-bold">立即注册</a>
+                还没有账号？ <a href="#" class="text-ming-red dark:text-[#C0392B] hover:underline font-bold">立即注册</a>
             </p>
         </div>
         
@@ -302,7 +309,7 @@
         <div class="w-full h-16 bg-ming-red dark:bg-[#8B1A1A] shadow-lg flex items-center justify-center transition-colors duration-300">
             <div class="w-3/4 h-full border-t-4 border-ming-gold dark:border-dark-border flex items-center justify-center">
                 <p class="text-ming-gold dark:text-[#C9B037] font-medium">
-                    © 2013-2026 MingDynasty,Inc. 大明登录 | MingEmperor
+                    © 大明王朝 2026 版权所有
                 </p>
             </div>
         </div>
@@ -377,28 +384,80 @@
             });
         }
 
+        // 从 Register_user Cookie 验证登录
+        function validateLoginFromCookie(username, password) {
+            // 获取注册用户信息
+            const registerUserStr = CookieUtils.getCookie('Register_user');
+            
+            // 检查是否有注册信息
+            if (!registerUserStr) {
+                return {
+                    success: false,
+                    message: '未找到注册信息，请先注册'
+                };
+            }
+            
+            try {
+                // 解析用户信息
+                const userData = JSON.parse(registerUserStr);
+                
+                // 验证用户名和密码
+                if (userData.username !== username) {
+                    return {
+                        success: false,
+                        message: '用户名不正确'
+                    };
+                }
+                
+                if (userData.password !== password) {
+                    return {
+                        success: false,
+                        message: '密码不正确'
+                    };
+                }
+                
+                // 验证通过
+                return {
+                    success: true,
+                    message: '登录成功',
+                    userData: userData
+                };
+            } catch (e) {
+                return {
+                    success: false,
+                    message: '用户信息解析失败'
+                };
+            }
+        }
+
         // 表单验证和登录处理
         function initLoginForm() {
             const form = document.getElementById('loginForm');
             const loginStatus = document.getElementById('loginStatus');
             const statusMessage = document.getElementById('statusMessage');
+            const noAccountTip = document.getElementById('noAccountTip');
             
-            // 检查是否已有登录信息
-            const savedUsername = CookieUtils.getCookie('username');
-            const savedToken = CookieUtils.getCookie('token');
-            
-            if (savedUsername && savedToken) {
-                document.getElementById('username').value = savedUsername;
-                document.getElementById('rememberMe').checked = true;
-                showStatus('检测到已保存的登录信息，可直接登录', 'info');
+            // 检查是否已有注册用户信息
+            const registerUserStr = CookieUtils.getCookie('Register_user');
+            if (registerUserStr) {
+                try {
+                    const userData = JSON.parse(registerUserStr);
+                    // 自动填充用户名
+                    document.getElementById('username').value = userData.username;
+                    showStatus('检测到已注册用户信息', 'info');
+                } catch (e) {
+                    console.error('解析用户信息失败:', e);
+                }
             }
             
             // 表单提交处理
             form.addEventListener('submit', function(event) {
                 event.preventDefault();
                 
-                // 清除之前的错误信息
+                // 清除之前的错误信息和提示
                 clearErrors();
+                loginStatus.classList.add('hidden');
+                noAccountTip.classList.add('hidden');
                 
                 // 获取表单数据
                 const username = document.getElementById('username').value.trim();
@@ -417,37 +476,40 @@
                     isValid = false;
                 }
                 
-                // 模拟登录验证
+                // 验证通过后，从Cookie验证登录
                 if (isValid) {
-                    // 这里可以替换为真实的 API 请求
-                    simulateLogin(username, password, rememberMe);
+                    const result = validateLoginFromCookie(username, password);
+                    
+                    if (result.success) {
+                        // 登录成功，设置登录状态Cookie
+                        const expireDays = rememberMe ? 7 : 1;
+                        CookieUtils.setCookie('username', result.userData.username, expireDays);
+                        // 生成简单的token
+                        const token = generateRandomToken();
+                        CookieUtils.setCookie('token', token, expireDays);
+                        
+                        // 显示成功信息
+                        showStatus(`欢迎回来，${result.userData.username}！${result.message}`, 'success');
+                        
+                        // 模拟跳转到首页
+                        setTimeout(() => {
+                            alert(`登录成功！欢迎您，${result.userData.username}`);
+                            // window.location.href = '/dashboard.html'; // 替换为实际的首页地址
+                        }, 1500);
+                    } else {
+                        // 登录失败
+                        if (result.message.includes('未找到注册信息')) {
+                            noAccountTip.classList.remove('hidden');
+                        } else if (result.message.includes('用户名不正确')) {
+                            showError('usernameError', result.message);
+                        } else if (result.message.includes('密码不正确')) {
+                            showError('passwordError', result.message);
+                        } else {
+                            showStatus(result.message, 'error');
+                        }
+                    }
                 }
             });
-        }
-
-        // 模拟登录请求
-        function simulateLogin(username, password, rememberMe) {
-            // 模拟网络延迟
-            showStatus('正在验证身份...', 'info');
-            
-            setTimeout(() => {
-                // 模拟登录成功（实际项目中替换为真实的后端验证）
-                const token = generateRandomToken();
-                
-                // 设置 Cookie
-                const expireDays = rememberMe ? 14 : 1; // 记住我则保存7天，否则保存1天
-                CookieUtils.setCookie('username', username, expireDays);
-                CookieUtils.setCookie('token', token, expireDays);
-                
-                // 显示成功信息
-                showStatus(`欢迎回来，${username}！登录成功`, 'success');
-                
-                // 模拟跳转到首页
-                setTimeout(() => {
-                    alert('登录成功！即将跳转到系统首页');
-                     window.location.href = 'https://mingdynasty1.github.io'; // 替换为实际的首页地址
-                }, 1500);
-            }, 1000);
         }
 
         // 生成随机 Token
