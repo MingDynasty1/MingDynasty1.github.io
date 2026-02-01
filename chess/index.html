@@ -1005,121 +1005,139 @@
             return false;
         }
         
+        // ========== 优化后的AI核心代码开始 ==========
         // AI移动
         function makeAIMove() {
-            // 根据难度设置搜索深度
-            let depth;
+            // 根据难度设置搜索深度和落子策略
+            let depth, useAdvancedEval, useMoveOrdering;
             switch (gameState.difficulty) {
                 case 'easy':
-                    depth = 2;
+                    depth = 1; // 初级：浅搜索，不使用高级策略
+                    useAdvancedEval = false;
+                    useMoveOrdering = false;
                     break;
                 case 'medium':
-                    depth = 3;
+                    depth = 3; // 中级：中等搜索，使用基础优化
+                    useAdvancedEval = true;
+                    useMoveOrdering = true;
                     break;
                 case 'hard':
-                    depth = 4;
+                    depth = 5; // 高级：深搜索，使用全部优化策略
+                    useAdvancedEval = true;
+                    useMoveOrdering = true;
                     break;
                 default:
-                    depth = 2;
+                    depth = 1;
+                    useAdvancedEval = false;
+                    useMoveOrdering = false;
             }
             
-            // 使用minimax算法找到最佳移动
-            const bestMove = minimax(depth, -Infinity, Infinity, true).move;
+            // 使用优化后的minimax算法找到最佳移动
+            const bestMove = minimaxOptimized(depth, -Infinity, Infinity, true, useAdvancedEval, useMoveOrdering).move;
             
             if (bestMove) {
-                // 执行移动
+                // 执行移动（保留原延迟效果，让玩家看清AI落子）
                 handleMove(bestMove.fromRow, bestMove.fromCol, bestMove.toRow, bestMove.toCol);
             }
         }
-        
-        // Minimax算法
-        function minimax(depth, alpha, beta, isMaximizingPlayer) {
-            // 如果到达搜索深度或游戏结束，返回评估值
+
+        // 优化后的Minimax算法（带Alpha-Beta剪枝、移动排序、高级评估）
+        function minimaxOptimized(depth, alpha, beta, isMaximizingPlayer, useAdvancedEval, useMoveOrdering) {
+            // 终止条件：搜索深度耗尽 或 游戏结束
             if (depth === 0 || isGameOver()) {
-                return { value: evaluateBoard() };
+                return { value: evaluateBoardOptimized(useAdvancedEval) };
             }
             
             let bestMove = null;
             let bestValue = isMaximizingPlayer ? -Infinity : Infinity;
             
-            // 获取所有可能的移动
-            const possibleMoves = getAllPossibleMoves(isMaximizingPlayer);
-            
-            // 如果没有可能的移动，返回当前评估值
-            if (possibleMoves.length === 0) {
-                return { value: evaluateBoard() };
+            // 获取所有可能的移动，并可选进行移动排序（提升Alpha-Beta剪枝效率）
+            let possibleMoves = getAllPossibleMoves(isMaximizingPlayer);
+            if (useMoveOrdering) {
+                possibleMoves = orderMoves(possibleMoves, isMaximizingPlayer);
             }
             
-            // 对每个可能的移动进行评估
+            // 无合法移动，返回当前局面评估值
+            if (possibleMoves.length === 0) {
+                return { value: evaluateBoardOptimized(useAdvancedEval) };
+            }
+            
+            // 遍历所有可能的移动
             for (const move of possibleMoves) {
-                // 执行移动
+                // 保存当前棋盘状态（用于回溯）
                 const capturedPiece = gameState.board[move.toRow][move.toCol];
                 gameState.board[move.fromRow][move.fromCol] = 0;
                 gameState.board[move.toRow][move.toCol] = move.pieceType;
                 
-                // 递归评估
-                const result = minimax(depth - 1, alpha, beta, !isMaximizingPlayer);
+                // 递归搜索下一层（切换玩家）
+                const result = minimaxOptimized(depth - 1, alpha, beta, !isMaximizingPlayer, useAdvancedEval, useMoveOrdering);
                 
-                // 恢复状态
+                // 回溯：恢复棋盘原始状态
                 gameState.board[move.fromRow][move.fromCol] = move.pieceType;
                 gameState.board[move.toRow][move.toCol] = capturedPiece;
                 
                 // 更新最佳值和最佳移动
                 if (isMaximizingPlayer) {
+                    // AI（黑方）最大化局面价值
                     if (result.value > bestValue) {
                         bestValue = result.value;
                         bestMove = move;
                     }
+                    // Alpha-Beta剪枝：更新上界
                     alpha = Math.max(alpha, bestValue);
+                    if (beta <= alpha) {
+                        break; // 剪枝，无需继续遍历后续移动
+                    }
                 } else {
+                    // 玩家（红方）最小化局面价值
                     if (result.value < bestValue) {
                         bestValue = result.value;
                         bestMove = move;
                     }
+                    // Alpha-Beta剪枝：更新下界
                     beta = Math.min(beta, bestValue);
-                }
-                
-                // Alpha-Beta剪枝
-                if (beta <= alpha) {
-                    break;
+                    if (beta <= alpha) {
+                        break; // 剪枝，无需继续遍历后续移动
+                    }
                 }
             }
             
             return { value: bestValue, move: bestMove };
         }
-        
-        // 获取所有可能的移动
-        function getAllPossibleMoves(isMaximizingPlayer) {
-            const moves = [];
-            const isRed = !isMaximizingPlayer; // AI是黑方，所以isMaximizingPlayer为true时，AI在移动
+
+        // 移动排序（提升Alpha-Beta剪枝效率，优先搜索高价值移动）
+        function orderMoves(moves, isMaximizingPlayer) {
+            // 棋子价值映射（用于评估移动优先级）
+            const pieceValueMap = {
+                [PIECE_TYPES.GENERAL_RED]: 10000, [PIECE_TYPES.GENERAL_BLACK]: -10000,
+                [PIECE_TYPES.ROOK_RED]: 900, [PIECE_TYPES.ROOK_BLACK]: -900,
+                [PIECE_TYPES.CANNON_RED]: 450, [PIECE_TYPES.CANNON_BLACK]: -450,
+                [PIECE_TYPES.HORSE_RED]: 400, [PIECE_TYPES.HORSE_BLACK]: -400,
+                [PIECE_TYPES.ELEPHANT_RED]: 200, [PIECE_TYPES.ELEPHANT_BLACK]: -200,
+                [PIECE_TYPES.ADVISOR_RED]: 200, [PIECE_TYPES.ADVISOR_BLACK]: -200,
+                [PIECE_TYPES.PAWN_RED]: 100, [PIECE_TYPES.PAWN_BLACK]: -100
+            };
             
-            for (let row = 0; row < 10; row++) {
-                for (let col = 0; col < 9; col++) {
-                    const pieceType = gameState.board[row][col];
-                    if (pieceType !== 0 && (isRed ? pieceType > 0 : pieceType < 0)) {
-                        const validMoves = getValidMoves(row, col);
-                        
-                        for (const move of validMoves) {
-                            moves.push({
-                                fromRow: row,
-                                fromCol: col,
-                                toRow: move.row,
-                                toCol: move.col,
-                                pieceType: pieceType
-                            });
-                        }
-                    }
-                }
-            }
-            
-            return moves;
+            // 对移动进行排序：吃子移动 > 普通移动；吃高价值棋子 > 吃低价值棋子
+            return moves.sort((a, b) => {
+                // 计算移动a的价值
+                const aCapturedValue = a.capturedPiece ? Math.abs(pieceValueMap[a.capturedPiece]) : 0;
+                const aMoveValue = isMaximizingPlayer ? aCapturedValue : -aCapturedValue;
+                
+                // 计算移动b的价值
+                const bCapturedValue = b.capturedPiece ? Math.abs(pieceValueMap[b.capturedPiece]) : 0;
+                const bMoveValue = isMaximizingPlayer ? bCapturedValue : -bCapturedValue;
+                
+                // 降序排列（高价值移动优先）
+                return bMoveValue - aMoveValue;
+            });
         }
-        
-        // 评估棋盘
-        function evaluateBoard() {
+
+        // 优化后的局面评估函数（包含基础棋子价值+高级位置评估+局面态势评估）
+        function evaluateBoardOptimized(useAdvancedEval) {
             let score = 0;
             
-            // 棋子价值
+            // 1. 基础棋子价值（核心：棋子的固有价值）
             const pieceValues = {
                 [PIECE_TYPES.ROOK_RED]: 900,
                 [PIECE_TYPES.HORSE_RED]: 400,
@@ -1138,11 +1156,10 @@
                 [PIECE_TYPES.PAWN_BLACK]: -100
             };
             
-            // 位置评估表
+            // 2. 高级位置评估表（仅在开启高级评估时使用）
             const positionTables = {
-                // 红方车的位置评估
+                // 红方车的位置评估（中心/底线价值更高）
                 [PIECE_TYPES.ROOK_RED]: [
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
                     [0, 0, 0, 0, 0, 0, 0, 0, 0],
                     [0, 0, 0, 0, 0, 0, 0, 0, 0],
                     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -1151,10 +1168,10 @@
                     [5, 5, 5, 5, 5, 5, 5, 5, 5],
                     [5, 10, 10, 10, 10, 10, 10, 10, 5],
                     [5, 10, 15, 15, 20, 15, 15, 10, 5],
-                    [5, 10, 15, 20, 25, 20, 15, 10, 5]
+                    [5, 10, 15, 20, 25, 20, 15, 10, 5],
+                    [5, 10, 15, 20, 30, 20, 15, 10, 5]
                 ],
-                
-                // 红方马的位置评估
+                // 红方马的位置评估（过河后中心价值更高）
                 [PIECE_TYPES.HORSE_RED]: [
                     [0, 0, 0, 0, 0, 0, 0, 0, 0],
                     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -1167,64 +1184,20 @@
                     [0, 0, 0, 10, 10, 10, 0, 0, 0],
                     [0, 0, 0, 0, 0, 0, 0, 0, 0]
                 ],
-                
-                // 红方相的位置评估
-                [PIECE_TYPES.ELEPHANT_RED]: [
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 5, 0, 0, 0, 5, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 5, 0, 0, 0, 5, 0, 0],
-                    [0, 0, 0, 10, 10, 10, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0]
-                ],
-                
-                // 红方仕的位置评估
-                [PIECE_TYPES.ADVISOR_RED]: [
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 5, 0, 5, 0, 0, 0],
-                    [0, 0, 0, 0, 10, 0, 0, 0, 0],
-                    [0, 0, 0, 5, 0, 5, 0, 0, 0]
-                ],
-                
-                // 红方帅的位置评估
-                [PIECE_TYPES.GENERAL_RED]: [
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 10, 20, 10, 0, 0, 0],
-                    [0, 0, 0, 20, 30, 20, 0, 0, 0],
-                    [0, 0, 0, 30, 40, 30, 0, 0, 0]
-                ],
-                
-                // 红方炮的位置评估
+                // 红方炮的位置评估（中线/河沿价值更高）
                 [PIECE_TYPES.CANNON_RED]: [
                     [0, 0, 0, 0, 0, 0, 0, 0, 0],
                     [0, 0, 0, 0, 0, 0, 0, 0, 0],
                     [0, 0, 5, 0, 0, 0, 5, 0, 0],
                     [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [5, 10, 10, 10, 10, 10, 10, 10, 5],
-                    [5, 10, 10, 10, 10, 10, 10, 10, 5],
-                    [5, 10, 10, 10, 10, 10, 10, 10, 5],
+                    [5, 10, 10, 10, 20, 10, 10, 10, 5],
+                    [5, 10, 10, 10, 20, 10, 10, 10, 5],
+                    [5, 10, 10, 10, 20, 10, 10, 10, 5],
                     [0, 0, 0, 0, 0, 0, 0, 0, 0],
                     [0, 0, 5, 0, 0, 0, 5, 0, 0],
                     [0, 0, 0, 0, 0, 0, 0, 0, 0]
                 ],
-                
-                // 红方兵的位置评估
+                // 红方兵的位置评估（过河后/靠近将府价值更高）
                 [PIECE_TYPES.PAWN_RED]: [
                     [0, 0, 0, 0, 0, 0, 0, 0, 0],
                     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -1239,43 +1212,98 @@
                 ]
             };
             
-            // 为黑方创建对称的位置评估表
-            for (const [pieceType, table] of Object.entries(positionTables)) {
-                if (pieceType > 0) {
-                    const blackPieceType = -pieceType;
-                    const blackTable = [];
-                    
-                    for (let i = 0; i < 10; i++) {
-                        blackTable[i] = [...table[9 - i]];
-                    }
-                    
-                    positionTables[blackPieceType] = blackTable;
+            // 为黑方创建对称的位置评估表（镜像翻转）
+            function getBlackPositionTable(redTable) {
+                const blackTable = [];
+                for (let i = 0; i < 10; i++) {
+                    blackTable[i] = [...redTable[9 - i]];
                 }
+                return blackTable;
             }
             
-            // 计算棋子价值和位置价值
+            // 3. 遍历棋盘计算总分
             for (let row = 0; row < 10; row++) {
                 for (let col = 0; col < 9; col++) {
                     const pieceType = gameState.board[row][col];
-                    if (pieceType !== 0) {
-                        // 棋子价值
-                        score += pieceValues[pieceType];
+                    if (pieceType === 0) continue;
+                    
+                    // 3.1 基础棋子价值得分
+                    score += pieceValues[pieceType];
+                    
+                    // 3.2 高级位置价值得分（仅开启高级评估时生效）
+                    if (useAdvancedEval) {
+                        let positionScore = 0;
+                        const isRed = pieceType > 0;
+                        const absPieceType = Math.abs(pieceType);
                         
-                        // 位置价值
-                        if (positionTables[pieceType]) {
-                            score += positionTables[pieceType][row][col];
+                        // 红方位置评估
+                        if (isRed && positionTables[pieceType]) {
+                            positionScore = positionTables[pieceType][row][col];
+                        }
+                        // 黑方位置评估（镜像翻转）
+                        else if (!isRed && positionTables[-pieceType]) {
+                            const blackTable = getBlackPositionTable(positionTables[-pieceType]);
+                            positionScore = -blackTable[row][col]; // 黑方得分取反（与红方对立）
+                        }
+                        
+                        // 累加位置得分（位置得分权重低于基础棋子价值，避免喧宾夺主）
+                        score += positionScore * 0.1;
+                    }
+                }
+            }
+            
+            // 3.3 局面态势评估（仅开启高级评估时生效）
+            if (useAdvancedEval) {
+                // 3.3.1 将军加分（对当前将军方有利）
+                if (isCurrentPlayerInCheck()) {
+                    score += gameState.currentPlayer === 'red' ? -200 : 200;
+                }
+                
+                // 3.3.2 兵（卒）过河加分（过河后价值提升）
+                for (let row = 0; row < 10; row++) {
+                    for (let col = 0; col < 9; col++) {
+                        const pieceType = gameState.board[row][col];
+                        if (pieceType === PIECE_TYPES.PAWN_RED && row <= 4) {
+                            score += 50; // 红兵过河加分
+                        } else if (pieceType === PIECE_TYPES.PAWN_BLACK && row >= 5) {
+                            score -= 50; // 黑卒过河加分（对应红方得分减少）
                         }
                     }
                 }
             }
             
-            // 检查将军情况
-            if (isCurrentPlayerInCheck()) {
-                score += gameState.currentPlayer === 'red' ? -100 : 100;
-            }
-            
+            // 返回最终得分（AI（黑方）追求得分最小化，玩家（红方）追求得分最大化）
             return score;
         }
+
+        // 补充：更新getAllPossibleMoves，添加吃子信息（用于移动排序）
+        function getAllPossibleMoves(isMaximizingPlayer) {
+            const moves = [];
+            const isRed = !isMaximizingPlayer; // AI是黑方，isMaximizingPlayer=true对应黑方移动
+            
+            for (let row = 0; row < 10; row++) {
+                for (let col = 0; col < 9; col++) {
+                    const pieceType = gameState.board[row][col];
+                    if (pieceType !== 0 && (isRed ? pieceType > 0 : pieceType < 0)) {
+                        const validMoves = getValidMoves(row, col);
+                        
+                        for (const move of validMoves) {
+                            moves.push({
+                                fromRow: row,
+                                fromCol: col,
+                                toRow: move.row,
+                                toCol: move.col,
+                                pieceType: pieceType,
+                                capturedPiece: gameState.board[move.row][move.col] // 记录被吃棋子（用于移动排序）
+                            });
+                        }
+                    }
+                }
+            }
+            
+            return moves;
+        }
+        // ========== 优化后的AI核心代码结束 ==========
         
         // 检查游戏是否结束
         function isGameOver() {
