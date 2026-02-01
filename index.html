@@ -367,7 +367,7 @@
                 margin: 10px 0;
             }
             
-            .theme-switch, .language-switch {
+            .theme-switch, .language-switch, .auth-buttons {
                 margin: 10px 0;
             }
         }
@@ -871,6 +871,27 @@ padding-bottom: 10px;
         .snake-game-instructions li {
             margin-bottom: 5px;
         }
+        /* 登录注册按钮样式 - 适配现有导航风格 */
+        .auth-buttons {
+            margin-left: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .auth-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: #f8f3e6;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 5px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+            text-decoration: none;
+        }
+        .auth-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
     </style>
     
     <!-- 人机验证检查脚本 -->
@@ -1076,6 +1097,14 @@ padding-bottom: 10px;
                     <span data-lang="zh">EN</span>
                     <span data-lang="en" style="display: none;">中文</span>
                 </button>
+            </div>
+
+            <!-- ========== 新增：登录注册按钮 ========== -->
+            <div class="auth-buttons">
+                <a href="https://mingdynasty1.github.io/sign/in.html" class="auth-btn" data-lang="zh">登录</a>
+                <a href="https://mingdynasty1.github.io/sign/in.html" class="auth-btn" data-lang="en" style="display: none;">Login</a>
+                <a href="https://mingdynasty1.github.io/sign/up.html" class="auth-btn" data-lang="zh">注册</a>
+                <a href="https://mingdynasty1.github.io/sign/up.html" class="auth-btn" data-lang="en" style="display: none;">Register</a>
             </div>
         </div>
     </nav>
@@ -1748,11 +1777,3 @@ padding-bottom: 10px;
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
