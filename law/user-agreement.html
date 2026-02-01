@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户协议 | MingDynasty/title>
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'ming-red': '#A62424',
+                        'ming-gold': '#D4AF37',
+                        'ming-ivory': '#FFFFF0',
+                        'ming-black': '#2C2C2C',
+                        'ming-green': '#4B6C54',
+                        'ming-brown': '#8B4513'
+                    },
+                    fontFamily: {
+                        'ming': ['serif', 'SimSun', 'FangSong', 'STSong']
+                    },
+                    backgroundImage: {
+                        'wood-pattern': "url('https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/dfc94625bda34ad4bb5a98c64bf8e641~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=202602011947131EC4ED518A5E6032BB25&rrcfp=f06b921b&x-expires=1772538471&x-signature=OteYZR8cuHdqZzFVLS5%2BEG12SUI%3D')",
+                        'cloud-pattern': "url('https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/e2398590da5547eca9e68b9dc27582b0~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=202602011947131EC4ED518A5E6032BB25&rrcfp=f06b921b&x-expires=1772538471&x-signature=4D8Zu%2BE1zODpTvkzC4kaMz157ss%3D')",
+                        'stamp-pattern': "url('https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/13684b48939f481a9274157420f91699~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=202602011947131EC4ED518A5E6032BB25&rrcfp=f06b921b&x-expires=1772538472&x-signature=KO3r8ZXbSuK%2FprCK8kNxv648RCk%3D')"
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .paper-texture {
+                background-color: #FFFFF0;
+                background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEWFhYWDg4N3d3dtbW17e3t1dXWBgYGHh4d5eXlzc3OLi4ubm5uVlZWPj4+NjY19fX2JiYl/f39ra2uRkZGZmZlpaWmXl5dvb29xcXGTk5NnZ2c8TV1mAAAAG3RSTlNAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAvEOwtAAAFVklEQVR4XpWWB67c2BUFb3g557T/hRo9/WUMZHlgr4Bg8Z4qQgQJlHI4A8SzFVrapvmTF9O7dmYRFZ60YiBhJRCgh1FYhiLAmdvX0CzTOpNE77ME0Zty/nWWzchDtiqrmQDeuv3powQ5ta2eN0FY0InkqDD73lT9c9lEzwUNqgFHs9VQce3TVClFCQrSTfOiYkVJQBmpbq2L6iZavPnAPcoU0dSw0SUTqz/GtrGuXfbyyBniKykOWQWGqwwMA7QiYAxi+IlPdqo+hYHnUt5ZPfnsHJyNiDtnpJyayNBkF6cWoYGAMY92U2hXHF/C1M8uP/ZtYdiuj26UdAdQQSXQErwSOMzt/XWRWAz5GuSBIkwG1H3FabJ2OsUOUhGC6tK4EMtJO0ttC6IBD3kM0ve0tJwMdSfjZo+EEISaeTr9P3wYrGjXqyC1krcKdhMpxEnt5JetoulscpyzhXN5FRpuPHvbeQaKxFAEB6EN+cYN6xD7RYGpXpNndMmZgM5Dcs3YSNFDHUo2LGfZuukSWyUYirJAdYbF3MfqEKmjM+I2EfhA94iG3L7uKrR+GdWD73ydlIB+6hgref1QTlmgmbM3/LeX5GI1Ux1RWpgxpLuZ2+I+IjzZ8wqE4nilvQdkUdfhzI5QDWy+kw5Wgg2pGpeEVeCCA7b85BO3F9DzxB3cdqvBzWcmzbyMiqhzuYqtHRVG2y4x+KOlnyqla8AoWWpuBoYRxzXrfKuILl6SfiWCbjxoZJUaCBj1CjH7GIaDbc9kqBY3W/Rgjda1iqQcOJu2WW+76pZC9QG7M00dffe9hNnseupFL53r8F7YHSwJWUKP2q+k7RdsxyOB11n0xtOvnW4irMMFNV4H0uqwS5ExsmP9AxbDTc9JwgneAT5vTiUSm1E7BSflSt3bfa1tv8Di3R8n3Af7MNWzs49hmauE2wP+ttrq+AsWpFG2awvsuOqbipWHgtuvuaAE+A1Z/7gC9hesnr+7wqCwG8c5yAg3AL1fm8T9AZtp/bbJGwl1pNrE7RuOX7PeMRUERVaPpEs+yqeoSmuOlokqw49pgomjLeh7icHNlG19yjs6XXOMedYm5xH2YxpV2tc0Ro2jJfxC50ApuxGob7lMsxfTbeUv07TyYxpeLucEH1gNd4IKH2LAg5TdVhlCafZvpskfncCfx8pOhJzd76bJWeYFnFciwcYfubRc12Ip/ppIhA1/mSZ/RxjFDrJC5xifFjJpY2Xl5zXdguFqYyTR1zSp1Y9p+tktDYYSNflcxI0iyO4TPBdlRcpeqjK/piF5bklq77VSEaA+z8qmJTFzIWiitbnzR794USKBUaT0NTEsVjZqLaFVqJoPN9ODG70IPbfBHKK+/q/AWR0tJzYHRULOa4MP+W/HfGadZUbfw177G7j/OGbIs8TahLyynl4X4RinF793Oz+BU0saXtUHrVBFT/DnA3ctNPoGbs4hRIjTok8i+algT1lTHi4SxFvONKNrgQFAq2/gFnWMXgwffgYMJpiKYkmW3tTg3ZQ9Jq+f8XN+A5eeUKHWvJWJ2sgJ1Sop+wwhqFVijqWaJhwtD8MNlSBeWNNWTa5Z5kPZw5+LbVT99wqTdx29lMUH4OIG/D86ruKEauBjvH5xy6um/Sfj7ei6UUVk4AIl3MyD4MSSTOFgSwsH/QJWaQ5as7ZcmgBZkzjjU1UrQ74ci1gWBCSGHtuV1H2mhSnO3Wp/3fEV5a+4wz//6qy8JxjZsmxxy5+4w9CDNJY09T072iKG0EnOS0arEYgXqYnXcYHwjTtUNAcMelOd4xpkoqiTYICWFq0JSiPfPDQdnt+4/wuqcXY47QILbgAAAABJRU5ErkJggg==');
+            }
+            .chinese-shadow {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            }
+            .seal-red {
+                color: #A62424;
+                text-shadow: 1px 1px 0 #8B0000;
+            }
+            .article-title {
+                border-bottom: 2px solid #D4AF37;
+                position: relative;
+            }
+            .article-title::after {
+                content: '';
+                position: absolute;
+                bottom: -2px;
+                left: 0;
+                width: 60px;
+                height: 2px;
+                background-color: #A62424;
+            }
+            .back-button {
+                background-color: #A62424;
+                color: #FFFFF0;
+                border: 2px solid #8B0000;
+                border-radius: 4px;
+                transition: all 0.3s ease;
+                box-shadow: 0 3px 0 #8B0000;
+            }
+            .back-button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 0 #8B0000;
+            }
+            .back-button:active {
+                transform: translateY(1px);
+                box-shadow: 0 1px 0 #8B0000;
+            }
+            .law-link {
+                @apply text-ming-red hover:underline hover:text-ming-red/80 transition-colors font-medium;
+            }
+            .chinese-list {
+                list-style: none;
+                position: relative;
+                padding-left: 1.5rem;
+            }
+            .chinese-list::before {
+                content: '●';
+                color: #A62424;
+                position: absolute;
+                left: 0;
+                top: 0.1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-ming-ivory font-ming min-h-screen text-ming-black">
+    <!-- 木纹背景底纹 -->
+    <div class="fixed inset-0 z-0 opacity-10 pointer-events-none">
+        <div class="absolute top-0 left-0 w-full h-full bg-wood-pattern bg-cover"></div>
+    </div>
+
+    <!-- 顶部导航栏 -->
+    <header class="relative z-10 w-full sticky top-0 bg-ming-red shadow-lg">
+        <div class="container mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center">
+                <h1 class="text-2xl md:text-3xl text-ming-gold font-bold chinese-shadow">
+                    大明王朝
+                </h1>
+                <span class="ml-4 text-ming-ivory text-sm md:text-base">· 官方文书</span>
+            </div>
+            <!-- 返回按钮 -->
+            <button onclick="window.history.back()" class="back-button px-4 py-2 flex items-center gap-2">
+                <i class="fa fa-arrow-left"></i>
+                <span>返回上页</span>
+            </button>
+        </div>
+        <!-- 顶部云纹装饰 -->
+        <div class="relative h-10 w-full overflow-hidden">
+            <div class="absolute -top-6 left-10 w-24 h-12 cloud-decoration transform -rotate-12 opacity-80"></div>
+            <div class="absolute -top-4 right-10 w-20 h-10 cloud-decoration transform rotate-6 opacity-80"></div>
+        </div>
+    </header>
+
+    <!-- 主内容区 - 宣纸样式 -->
+    <main class="relative z-20 container mx-auto px-4 py-8 md:py-12">
+        <div class="max-w-4xl mx-auto paper-texture rounded-lg shadow-xl border-2 border-ming-gold p-6 md:p-10">
+            <!-- 协议标题 - 仿明朝圣旨/文书标题 -->
+            <div class="text-center mb-10 md:mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-ming-red mb-4">大明王朝用户服务协议</h2>
+                <div class="flex items-center justify-center gap-6 text-sm md:text-base text-ming-black/80">
+                    <span>本府字〔2026〕第001号</span>
+                    <span>发布日期：2026年02月01日</span>
+                    <span>生效日期：2026年02月01日</span>
+                </div>
+                <!-- 印章装饰 -->
+                <div class="w-20 h-20 mx-auto mt-6 bg-contain bg-no-repeat bg-center" style="background-image: url('https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/13684b48939f481a9274157420f91699~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=202602011947131EC4ED518A5E6032BB25&rrcfp=f06b921b&x-expires=1772538472&x-signature=KO3r8ZXbSuK%2FprCK8kNxv648RCk%3D')"></div>
+            </div>
+
+            <!-- 协议前言 -->
+            <div class="mb-8 md:mb-12">
+                <p class="text-lg leading-relaxed mb-4">
+                    兹有大明王朝（以下简称「本府」）为规范平台服务秩序，保障用户（以下简称「阁下列」）合法权益，特立本协议。阁下列通过本府平台完成注册、使用服务，即视为已阅知、理解并同意本协议全部条款，愿受本协议约束。本协议与大明王朝<a href="https://mingdynasty1.github.io/law/" target="_blank" class="law-link">隐私政策</a>互为补充，共同构成本府与阁下列之间的服务约定。
+                </p>
+                <p class="text-lg leading-relaxed">
+                    本府保留随时修订本协议之权利，修订后将通过平台公告予以公示，公示期满即生效。阁下列若继续使用本府服务，视为认可修订后的协议；若不认可，可停止使用本府全部服务。
+                </p>
+            </div>
+
+            <!-- 协议条款 -->
+            <div class="space-y-10 md:space-y-14">
+                <!-- 第一条 服务范围 -->
+                <section>
+                    <h3 class="article-title text-2xl font-bold text-ming-black pb-2 mb-6">一、服务范围</h3>
+                    <ol class="space-y-4 pl-4 md:pl-6">
+                        <li class="text-lg leading-relaxed">1.1 本府为阁下列提供大明王朝平台账号注册、信息发布、互动交流、内容浏览等网络服务，具体服务内容以平台实际提供为准。</li>
+                        <li class="text-lg leading-relaxed">1.2 本府有权根据技术发展、运营需要调整服务内容，新增或终止部分服务，调整后将通过平台公告告知阁下列。</li>
+                        <li class="text-lg leading-relaxed">1.3 阁下列使用本府服务，需自备符合要求的网络设备、终端，并自行承担网络使用费用。</li>
+                    </ol>
+                </section>
+
+                <!-- 第二条 账号注册与使用 -->
+                <section>
+                    <h3 class="article-title text-2xl font-bold text-ming-black pb-2 mb-6">二、账号注册与使用</h3>
+                    <ol class="space-y-4 pl-4 md:pl-6">
+                        <li class="text-lg leading-relaxed">2.1 阁下列注册账号时，需提供真实、准确、完整的信息（含用户名、电子邮箱等），若信息发生变更，应及时更新。</li>
+                        <li class="text-lg leading-relaxed">2.2 账号用户名不得包含违法、违规、淫秽、侮辱、诽谤、仿冒官方等内容，不得侵犯他人合法权益，本府有权对违规用户名进行修改或封禁。</li>
+                        <li class="text-lg leading-relaxed">2.3 阁下列应对自身账号的安全性负责，妥善保管账号及密码，不得转借、出租、出售账号。若因账号泄露、被盗造成损失，由阁下列自行承担。</li>
+                        <li class="text-lg leading-relaxed">2.4 阁下列发现账号异常登录、被盗等情况，应立即通过平台渠道通知本府，本府将协助采取安全措施。</li>
+                        <li class="text-lg leading-relaxed">2.5 账号长期未使用（连续12个月及以上），本府有权回收账号，清空账号内相关数据，且无需承担赔偿责任。</li>
+                    </ol>
+                </section>
+
+                <!-- 第三条 用户行为规范 -->
+                <section>
+                    <h3 class="article-title text-2xl font-bold text-ming-black pb-2 mb-6">三、用户行为规范</h3>
+                    <p class="text-lg leading-relaxed mb-4">阁下列使用本府服务时，应遵守国家法律法规及平台规则，不得实施下列行为：</p>
+                    <ul class="space-y-3 pl-4 md:pl-6">
+                        <li class="chinese-list text-lg leading-relaxed">发布、传播违法、违规、危害国家安全、破坏民族团结、淫秽色情、暴力恐怖等内容；</li>
+                        <li class="chinese-list text-lg leading-relaxed">侮辱、诽谤、恐吓他人，侵犯他人姓名权、肖像权、名誉权、隐私权等合法权益；</li>
+                        <li class="chinese-list text-lg leading-relaxed">发布、传播虚假信息、垃圾广告、恶意链接等，干扰平台正常运营；</li>
+                        <li class="chinese-list text-lg leading-relaxed">利用平台从事诈骗、赌博、洗钱等违法犯罪活动；</li>
+                        <li class="chinese-list text-lg leading-relaxed">破解、攻击平台系统，利用外挂、脚本等非法工具干扰服务正常运行；</li>
+                        <li class="chinese-list text-lg leading-relaxed">其他违反法律法规、公序良俗及本府平台规则的行为。</li>
+                    </ul>
+                    <p class="text-lg leading-relaxed mt-4">若阁下列存在上述行为，本府有权视情节轻重采取警告、删除内容、限制账号功能、封禁账号等措施，情节严重的将移交有关部门处理。</p>
+                </section>
+
+                <!-- 第四条 知识产权约定 -->
+                <section>
+                    <h3 class="article-title text-2xl font-bold text-ming-black pb-2 mb-6">四、知识产权约定</h3>
+                    <ol class="space-y-4 pl-4 md:pl-6">
+                        <li class="text-lg leading-relaxed">4.1 本府平台的所有内容（含文字、图片、图标、界面设计、程序代码等）的知识产权均归本府所有，受法律法规保护。</li>
+                        <li class="text-lg leading-relaxed">4.2 阁下列在平台发布的原创内容，知识产权归阁下列所有，但阁下列授予本府全球范围内、永久、免费的使用权，包括展示、传播、修改、汇编等权利。</li>
+                        <li class="text-lg leading-relaxed">4.3 阁下列不得擅自复制、修改、传播、转让本府平台的知识产权，不得将平台内容用于商业用途，除非获得本府书面授权。</li>
+                    </ol>
+                </section>
+
+                <!-- 第五条 服务免责 -->
+                <section>
+                    <h3 class="article-title text-2xl font-bold text-ming-black pb-2 mb-6">五、服务免责</h3>
+                    <ol class="space-y-4 pl-4 md:pl-6">
+                        <li class="text-lg leading-relaxed">5.1 因网络故障、服务器维护、自然灾害、政府行为等不可抗力因素导致服务中断、数据丢失的，本府不承担赔偿责任，但将尽力协助恢复服务。</li>
+                        <li class="text-lg leading-relaxed">5.2 本府对平台上的第三方内容、链接不承担审核责任，阁下列点击第三方链接产生的风险，由阁下列自行承担。</li>
+                        <li class="text-lg leading-relaxed">5.3 因阁下列自身操作失误、账号泄露、设备故障等原因造成的损失，本府不承担赔偿责任。</li>
+                    </ol>
+                </section>
+
+                <!-- 第六条 协议终止 -->
+                <section>
+                    <h3 class="article-title text-2xl font-bold text-ming-black pb-2 mb-6">六、协议终止</h3>
+                    <ol class="space-y-4 pl-4 md:pl-6">
+                        <li class="text-lg leading-relaxed">6.1 阁下列可随时申请注销账号，账号注销后，本协议自动终止，本府将删除阁下列的个人信息（法律法规要求保留的除外）。</li>
+                        <li class="text-lg leading-relaxed">6.2 阁下列违反本协议约定，本府有权单方终止协议，停止提供服务，并保留追究阁下列法律责任的权利。</li>
+                        <li class="text-lg leading-relaxed">6.3 协议终止后，本府仍享有对阁下列在协议履行期间的违规行为追究责任的权利。</li>
+                    </ol>
+                </section>
+
+                <!-- 第七条 其他约定 -->
+                <section>
+                    <h3 class="article-title text-2xl font-bold text-ming-black pb-2 mb-6">七、其他约定</h3>
+                    <ol class="space-y-4 pl-4 md:pl-6">
+          
+                        <li class="text-lg leading-relaxed">7.1 阁下列在使用本府服务过程中，应遵守本府发布的其他平台规则、公告，该等规则、公告均为本协议的组成部分。</li>
+                        <li class="text-lg leading-relaxed">7.2 本府的联系方式：大明王朝官方邮箱（wangzyy1368@163.com），阁下列有任何疑问、投诉，可通过上述方式联系。</li>
+                    </ol>
+                </section>
+            </div>
+
+            <!-- 协议底部 - 仿文书落款 -->
+            <div class="mt-16 md:mt-20 pt-8 border-t-2 border-ming-gold/50 flex flex-col md:flex-row justify-between items-center">
+                <div class="text-center md:text-left mb-6 md:mb-0">
+                    <p class="text-xl font-bold text-ming-red">大明王朝府衙</p>
+                    <p class="text-ming-black/80 mt-2">运营主体：MingDynasty,Inc.</p>
+                </div>
+                <div class="text-center md:text-right seal-red font-bold text-xl">
+                    宣德年造<br>
+                    <span class="text-sm text-ming-black/80 mt-2 block">公元二零二六年</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部导航 -->
+        <div class="max-w-4xl mx-auto mt-8 text-center">
+            <div class="flex flex-wrap justify-center gap-4 md:gap-8 text-sm">
+                <a href="https://mingdynasty1.github.io/law/" target="_blank" class="law-link">隐私政策</a>
+                <a href="#" class="law-link">平台规则</a>
+                <a href="#" class="law-link">联系我们</a>
+                <a href="https://mingdynasty1.github.io/" target="_blank" class="law-link">返回官网</a>
+            </div>
+            <p class="text-ming-black/60 mt-4">© 2013-2026 MingDynasty,Inc. 大明王朝 保留所有权利</p>
+        </div>
+    </main>
+
+    <!-- 底部云纹装饰 -->
+    <footer class="relative z-10 mt-12">
+        <div class="relative h-12 w-full overflow-hidden">
+            <div class="absolute -bottom-8 left-1/4 w-28 h-16 cloud-decoration transform rotate-12 opacity-80"></div>
+            <div class="absolute -bottom-6 right-1/4 w-24 h-14 cloud-decoration transform -rotate-6 opacity-80"></div>
+        </div>
+        <div class="w-full h-10 bg-ming-red shadow-lg"></div>
+    </footer>
+
+    <script>
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // 页面载入淡入效果
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.classList.add('fade-in');
+        });
+    </script>
+</body>
+</html>
