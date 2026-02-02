@@ -17,49 +17,49 @@
         }
         
         :root {
-            /* 亮色主题变量 */
-            --bg-color: #f8f3e6;
+            /* 亮色主题变量 - 更加鲜艳 */
+            --bg-color: #fdf7f0;
             --text-color: #333;
             --card-bg: #fff;
-            --header-bg: linear-gradient(to right, #8b0000, #a52a2a);
-            --nav-bg: #8b0000;
-            --accent-color: #8b0000;
-            --gold-color: #d4af37;
-            --border-color: #e0c987;
-            --shadow-color: rgba(0, 0, 0, 0.08);
+            --header-bg: linear-gradient(to right, #b22222, #dc143c);
+            --nav-bg: #b22222;
+            --accent-color: #dc143c;
+            --gold-color: #ffd700;
+            --border-color: #ffcc00;
+            --shadow-color: rgba(0, 0, 0, 0.12);
             --code-bg: #2b2b2b;
-            --time-bg: linear-gradient(135deg, #8b0000, #d4af37);
-            --pattern-opacity: 0.05;
-            --primary-color: #8b0000;
-            --secondary-color: #d4af37;
-            --display-bg: #f8f3e6;
-            --btn-bg: #e8d5c0;
-            --btn-operator-bg: #8b0000;
-            --btn-equals-bg: #d4af37;
-            --btn-clear-bg: #a52a2a;
+            --time-bg: linear-gradient(135deg, #dc143c, #ffd700);
+            --pattern-opacity: 0.08;
+            --primary-color: #dc143c;
+            --secondary-color: #ffd700;
+            --display-bg: #fdf7f0;
+            --btn-bg: #fff0db;
+            --btn-operator-bg: #dc143c;
+            --btn-equals-bg: #ffd700;
+            --btn-clear-bg: #b22222;
         }
         
         .dark-mode {
-            /* 暗色主题变量 */
-            --bg-color: #1a1a1a;
-            --text-color: #e6e6e6;
-            --card-bg: #2d2d2d;
-            --header-bg: linear-gradient(to right, #600000, #7a1f1f);
-            --nav-bg: #600000;
-            --accent-color: #cc0000;
-            --gold-color: #c19b30;
-            --border-color: #5c4c1a;
-            --shadow-color: rgba(0, 0, 0, 0.3);
-            --code-bg: #3d3d3d;
-            --time-bg: linear-gradient(135deg, #600000, #9b7a1f);
-            --pattern-opacity: 0.1;
-            --primary-color: #cc0000;
-            --secondary-color: #c19b30;
-            --display-bg: #2d2d2d;
-            --btn-bg: #3d3d3d;
-            --btn-operator-bg: #600000;
-            --btn-equals-bg: #9b7a1f;
-            --btn-clear-bg: #7a1f1f;
+            /* 暗色主题变量 - 更加鲜艳 */
+            --bg-color: #121212;
+            --text-color: #ffffff;
+            --card-bg: #1e1e1e;
+            --header-bg: linear-gradient(to right, #8b0000, #ff0000);
+            --nav-bg: #8b0000;
+            --accent-color: #ff3333;
+            --gold-color: #ffd700;
+            --border-color: #ffcc00;
+            --shadow-color: rgba(0, 0, 0, 0.4);
+            --code-bg: #2d2d2d;
+            --time-bg: linear-gradient(135deg, #8b0000, #ffd700);
+            --pattern-opacity: 0.15;
+            --primary-color: #ff3333;
+            --secondary-color: #ffd700;
+            --display-bg: #1e1e1e;
+            --btn-bg: #2d2d2d;
+            --btn-operator-bg: #8b0000;
+            --btn-equals-bg: #ffd700;
+            --btn-clear-bg: #b22222;
         }
         
         body {
@@ -90,10 +90,20 @@
         }
         
         header h1 {
-            font-size: 2.5rem;
-            text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
-            letter-spacing: 5px;
-            margin-bottom: 10px;
+            font-size: 2.8rem;
+            text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.4);
+            letter-spacing: 6px;
+            margin-bottom: 12px;
+            animation: titleGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes titleGlow {
+            from {
+                text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.4);
+            }
+            to {
+                text-shadow: 3px 3px 15px rgba(255, 215, 0, 0.6), 3px 3px 5px rgba(0, 0, 0, 0.4);
+            }
         }
         
         header p {
@@ -227,13 +237,19 @@
         /* 卡片样式 */
         .card {
             background: var(--card-bg);
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 25px;
             margin-bottom: 25px;
-            box-shadow: 0 5px 15px var(--shadow-color);
-            border-left: 5px solid var(--accent-color);
+            box-shadow: 0 8px 20px var(--shadow-color);
+            border-left: 6px solid var(--accent-color);
             position: relative;
             overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px var(--shadow-color);
         }
         
         .card::before {
@@ -251,7 +267,8 @@
             margin-bottom: 15px;
             padding-bottom: 10px;
             border-bottom: 2px dashed var(--border-color);
-            font-size: 1.5rem;
+            font-size: 1.6rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
         }
         
         /* 图片容器 */
@@ -387,12 +404,13 @@
         /* 游戏卡片样式 */
         .game-card {
             background: linear-gradient(135deg, var(--bg-color) 0%, var(--border-color) 100%);
-            border: 2px solid var(--accent-color);
-            border-radius: 10px;
-            padding: 20px;
+            border: 3px solid var(--accent-color);
+            border-radius: 12px;
+            padding: 22px;
             text-align: center;
             margin-top: 20px;
             transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
         }
         
         .game-card:hover {
@@ -415,15 +433,20 @@
             display: inline-block;
             background: var(--accent-color);
             color: #f8f3e6;
-            padding: 10px 20px;
-            border-radius: 5px;
+            padding: 12px 24px;
+            border-radius: 6px;
             text-decoration: none;
             font-weight: bold;
-            transition: background 0.3s;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         
         .game-btn:hover {
             background: var(--nav-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
         }
         
         /* 时间报时器样式 */
@@ -882,15 +905,130 @@ padding-bottom: 10px;
             background: rgba(255, 255, 255, 0.2);
             color: #f8f3e6;
             border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 5px 12px;
-            border-radius: 5px;
+            padding: 6px 14px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 0.9rem;
-            transition: background 0.3s;
+            font-size: 0.95rem;
+            transition: all 0.3s;
             text-decoration: none;
+            font-weight: bold;
+            letter-spacing: 0.5px;
         }
         .auth-btn:hover {
             background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* 已登录状态样式 */
+        .logged-in-status {
+            background: linear-gradient(135deg, var(--gold-color), #ffed4e);
+            color: #333;
+            border: 2px solid var(--gold-color);
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 25px rgba(255, 215, 0, 0.8);
+            }
+            100% {
+                box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+            }
+        }
+        
+        /* 新增图片样式 */
+        .history-image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .history-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border: 3px solid var(--gold-color);
+            border-radius: 8px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        
+        .history-image:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        
+        .sidebar-image {
+            width: 100%;
+            border: 2px solid var(--gold-color);
+            border-radius: 6px;
+            margin: 15px 0;
+            transition: transform 0.3s;
+        }
+        
+        .sidebar-image:hover {
+            transform: scale(1.03);
+        }
+        
+        .header-image {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-bottom: 5px solid var(--gold-color);
+            margin-top: 10px;
+        }
+        
+        .image-caption {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--accent-color);
+            margin-top: 5px;
+            font-style: italic;
+        }
+        
+        .image-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            border: 5px solid var(--gold-color);
+            border-radius: 10px;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .close-modal:hover {
+            color: var(--gold-color);
         }
     </style>
     
@@ -952,6 +1090,10 @@ padding-bottom: 10px;
             <h1 class="ming-decoration" data-lang="en" style="display: none;">MingDynasty's Personal Homepage</h1>
             <p data-lang="zh">传承明朝风韵，展现编程之美</p>
             <p data-lang="en" style="display: none;">Inheriting the Charm of the Ming Dynasty, Showcasing the Beauty of Programming</p>
+            
+            <!-- 新增：页眉图片 -->
+            <img src="https://p11-doubao-search-sign.byteimg.com/pgc-image/9ffe97649c6c44d7bcb072ef5ab1c95b~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1785584288&x-signature=C%2Fk5uF8TDheAXxISp%2BnGFI6UgeI%3D" alt="明朝故宫" class="header-image">
+            
             <!-- 访问量统计 -->
             <div class="visitor-counter">
                 <span data-lang="zh">主页访问量：</span>
@@ -1106,12 +1248,15 @@ padding-bottom: 10px;
                 </button>
             </div>
 
-            <!-- ========== 新增：登录注册按钮 ========== -->
-            <div class="auth-buttons">
-                <a href="https://mingdynasty1.github.io/sign/in.html" class="auth-btn" data-lang="zh">登录</a>
-                <a href="https://mingdynasty1.github.io/sign/in.html" class="auth-btn" data-lang="en" style="display: none;">Login</a>
-                <a href="https://mingdynasty1.github.io/sign/up.html" class="auth-btn" data-lang="zh">注册</a>
-                <a href="https://mingdynasty1.github.io/sign/up.html" class="auth-btn" data-lang="en" style="display: none;">Register</a>
+            <!-- ========== 登录注册按钮/状态显示 ========== -->
+            <div class="auth-buttons" id="auth-buttons-container">
+                <!-- 登录状态将通过JavaScript动态显示 -->
+                <a href="https://mingdynasty1.github.io/sign/in.html" class="auth-btn" id="login-btn" data-lang="zh">登录</a>
+                <a href="https://mingdynasty1.github.io/sign/in.html" class="auth-btn" id="login-btn-en" data-lang="en" style="display: none;">Login</a>
+                <a href="https://mingdynasty1.github.io/sign/up.html" class="auth-btn" id="register-btn" data-lang="zh">注册</a>
+                <a href="https://mingdynasty1.github.io/sign/up.html" class="auth-btn" id="register-btn-en" data-lang="en" style="display: none;">Register</a>
+                <div class="logged-in-status" id="logged-in-status" style="display: none;" data-lang="zh">已经登录！</div>
+                <div class="logged-in-status" id="logged-in-status-en" style="display: none;" data-lang="en">Logged In!</div>
             </div>
         </div>
     </nav>
@@ -1158,6 +1303,14 @@ padding-bottom: 10px;
             <h3><i class="fas fa-landmark"></i> <span data-lang="zh">探索大明历史</span><span data-lang="en" style="display: none;">Explore Ming Dynasty History</span></h3>
             <p data-lang="zh">大明王朝（1368年－1644年）是中国历史上一个辉煌的朝代，由明太祖朱元璋建立。明朝在政治、经济、文化、科技等方面都取得了巨大成就，留下了丰富的历史遗产。</p>
             <p data-lang="en" style="display: none;">The Ming Dynasty (1368-1644) was a glorious period in Chinese history, founded by Emperor Hongwu (Zhu Yuanzhang). The Ming Dynasty achieved great accomplishments in politics, economy, culture, and technology, leaving behind a rich historical legacy.</p>
+            
+            <!-- 新增历史图片展示 -->
+            <div class="history-image-gallery">
+                <img src="https://p26-doubao-search-sign.byteimg.com/tos-cn-i-qvj2lq49k0/b7709a7a0b2343f98fb57c5ff280d666~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1785584288&x-signature=Tf104GqNhFu%2FH%2FigVS8FVyYpVMk%3D" alt="明朝疆域图" class="history-image" onclick="openImageModal(this.src)">
+                <img src="https://p11-doubao-search-sign.byteimg.com/tos-cn-i-xv4ileqgde/b8ccf3340c45416f9d39f09fa4785611~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1785584288&x-signature=1WWd5mKJWylf3haRzldsr4fHcII%3D" alt="郑和下西洋路线图" class="history-image" onclick="openImageModal(this.src)">
+                <img src="https://p11-doubao-search-sign.byteimg.com/pgc-image/9ffe97649c6c44d7bcb072ef5ab1c95b~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1785584288&x-signature=C%2Fk5uF8TDheAXxISp%2BnGFI6UgeI%3D" alt="明朝故宫" class="history-image" onclick="openImageModal(this.src)">
+                <img src="https://p3-doubao-search-sign.byteimg.com/labis/c2066e150532bae7b0d6ca02c8dcb4aa~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1785584288&x-signature=yGrJReO%2BydYmytubFMYf9vnClc0%3D" alt="明朝建筑" class="history-image" onclick="openImageModal(this.src)">
+            </div>
             
             <div class="history-features">
                 <div class="history-feature">
@@ -1460,6 +1613,11 @@ padding-bottom: 10px;
                     <li><a href="https://MingDynasty1.github.io/games/" data-lang="zh">游戏主页</a><a href="https://MingDynasty1.github.io/games/" data-lang="en" style="display: none;">Games Homepage</a></li>
                 </ul>
                 
+                <!-- 新增：侧边栏图片展示 -->
+                <img src="https://p11-doubao-search-sign.byteimg.com/pgc-image/8475d83282404aaeb2fc07ad97d36fdb~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1785584288&x-signature=yQSsrQndUKGqG6pX6AHfZ2yYuLE%3D" alt="南京阅江楼" class="sidebar-image" onclick="openImageModal(this.src)">
+                <div class="image-caption" data-lang="zh">南京阅江楼 - 明代皇家建筑</div>
+                <div class="image-caption" data-lang="en" style="display: none;">Nanjing Yuejiang Tower - Ming Royal Architecture</div>
+                
                 <h3 data-lang="zh">个人简介</h3>
                 <h3 data-lang="en" style="display: none;">Personal Profile</h3>
                 <p data-lang="zh">7年级蒟蒻,欢迎吊打</p>
@@ -1469,9 +1627,19 @@ padding-bottom: 10px;
                 <p data-lang="zh">最高排名: 304</p>
                 <p data-lang="en" style="display: none;">Highest Ranking: 304</p>
                 
+                <!-- 新增：文物图片展示 -->
+                <img src="https://p11-doubao-search-sign.byteimg.com/tos-cn-i-xv4ileqgde/e89b926e996f4a6b99d018e365ca16a2~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1785584288&x-signature=r0U4aA5tX%2BrTMrG6L96qqEBBZ3g%3D" alt="明崇祯青花文王访贤图筒瓶" class="sidebar-image" onclick="openImageModal(this.src)">
+                <div class="image-caption" data-lang="zh">明崇祯青花文王访贤图筒瓶</div>
+                <div class="image-caption" data-lang="en" style="display: none;">Ming Chongzhen Blue and White Vase</div>
+                
                 <h3 data-lang="zh">座右铭</h3>
                 <h3 data-lang="en" style="display: none;">Motto</h3>
                 <p class="ming-decoration">Even if the finish line is far away, we must walk to the end.</p>
+                
+                <!-- 新增：明朝服饰图片 -->
+                <img src="https://p3-doubao-search-sign.byteimg.com/ecom-shop-material/jpeg_m_d67d869b305b05dda32517c7e3f0d1a7_sx_491271_www1500-1500~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1785584288&x-signature=CdRsl0KepQh0zBSOxfqWcifdGhE%3D" alt="明朝官服" class="sidebar-image" onclick="openImageModal(this.src)">
+                <div class="image-caption" data-lang="zh">明朝文官官服</div>
+                <div class="image-caption" data-lang="en" style="display: none;">Ming Dynasty Official Robe</div>
                 
                 <div class="game-card">
                     <h3 data-lang="zh">大明寿司派对（华容道）</h3>
@@ -1622,11 +1790,51 @@ padding-bottom: 10px;
         </div>
     </footer>
 
+    <!-- 图片模态框 -->
+    <div id="image-modal" class="image-modal">
+        <span class="close-modal" onclick="closeImageModal()">&times;</span>
+        <img class="modal-content" id="modal-img">
+    </div>
+
     <!-- Font Awesome 图标 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 
     <!-- 外部JavaScript文件 -->
     <script src="server_mingdynasty1.js"></script>
+    
+    <!-- 图片模态框JavaScript -->
+    <script>
+        // 打开图片模态框
+        function openImageModal(imgSrc) {
+            const modal = document.getElementById("image-modal");
+            const modalImg = document.getElementById("modal-img");
+            modal.style.display = "flex";
+            modalImg.src = imgSrc;
+            document.body.style.overflow = "hidden"; // 防止背景滚动
+        }
+        
+        // 关闭图片模态框
+        function closeImageModal() {
+            const modal = document.getElementById("image-modal");
+            modal.style.display = "none";
+            document.body.style.overflow = "auto"; // 恢复背景滚动
+        }
+        
+        // 点击模态框外部关闭
+        window.onclick = function(event) {
+            const modal = document.getElementById("image-modal");
+            if (event.target == modal) {
+                closeImageModal();
+            }
+        }
+        
+        // 按ESC键关闭模态框
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeImageModal();
+            }
+        });
+    </script>
     
     <!-- 一言功能JavaScript -->
     <script>
@@ -1649,7 +1857,7 @@ padding-bottom: 10px;
                     } else if (data.from) {
                         sourceText = `—— ${data.from}`;
                     } else {
-                        sourceText = '—— 未知来源';
+                        sourceText = '—— 一言';
                     }
                     hitokotoSource.textContent = sourceText;
                 })
@@ -1782,6 +1990,57 @@ padding-bottom: 10px;
         // 页面加载执行天气初始化
         window.addEventListener('load', initWeather);
     </script>
+    
+    <!-- 登录状态检查JavaScript -->
+    <script>
+        // 检查登录状态
+        function checkLoginStatus() {
+            // 获取Cookie函数
+            function getCookie(name) {
+                const value = `; ${document.cookie}`;
+                const parts = value.split(`; ${name}=`);
+                if (parts.length === 2) return parts.pop().split(';').shift();
+                return null;
+            }
+            
+            // 获取login Cookie
+            const loginCookie = getCookie('login');
+            
+            // 根据Cookie值显示不同状态
+            if (loginCookie === '1') {
+                // 已登录状态
+                document.getElementById('login-btn').style.display = 'none';
+                document.getElementById('login-btn-en').style.display = 'none';
+                document.getElementById('register-btn').style.display = 'none';
+                document.getElementById('register-btn-en').style.display = 'none';
+                
+                // 显示已登录状态
+                const currentLang = document.getElementById('language-toggle').querySelector('[data-lang="zh"]').style.display === 'none' ? 'en' : 'zh';
+                if (currentLang === 'zh') {
+                    document.getElementById('logged-in-status').style.display = 'block';
+                    document.getElementById('logged-in-status-en').style.display = 'none';
+                } else {
+                    document.getElementById('logged-in-status').style.display = 'none';
+                    document.getElementById('logged-in-status-en').style.display = 'block';
+                }
+            } else {
+                // 未登录状态，显示登录注册按钮
+                document.getElementById('login-btn').style.display = 'inline-block';
+                document.getElementById('register-btn').style.display = 'inline-block';
+                document.getElementById('logged-in-status').style.display = 'none';
+                document.getElementById('logged-in-status-en').style.display = 'none';
+            }
+        }
+        
+        // 语言切换时更新登录状态显示
+        document.getElementById('language-toggle').addEventListener('click', function() {
+            setTimeout(checkLoginStatus, 100); // 延迟执行，确保语言切换完成
+        });
+        
+        // 页面加载时检查登录状态
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLoginStatus();
+        });
+    </script>
 </body>
 </html>
-
