@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>大明登录 | MingDynasty</title>
-      <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
@@ -271,13 +271,6 @@
                         </button>
                     </div>
                 </form>
-                
-                <!-- 无账户提示 -->
-                <div id="noAccountTip" class="mt-4 text-center hidden">
-                    <p class="text-ming-red text-sm">
-                        <i class="fa fa-exclamation-circle mr-1"></i> 该用户未注册，请先完成注册
-                    </p>
-                </div>
             </div>
         </div>
         
@@ -349,6 +342,7 @@
             clearAuthCookies: function() {
                 this.deleteCookie('username');
                 this.deleteCookie('token');
+                this.deleteCookie('login');
             }
         };
 
@@ -384,135 +378,45 @@
             });
         }
 
-        // 从 Register_user Cookie 验证登录
-        function validateLoginFromCookie(username, password) {
-            // 获取注册用户信息
-            const registerUserStr = CookieUtils.getCookie('Register_user');
-            
-            // 检查是否有注册信息
-            if (!registerUserStr) {
-                return {
-                    success: false,
-                    message: '未找到注册信息，请先注册'
-                };
-            }
-            
-            try {
-                // 解析用户信息
-                const userData = JSON.parse(registerUserStr);
-                
-                // 验证用户名和密码
-                if (userData.username !== username) {
-                    return {
-                        success: false,
-                        message: '用户名不正确'
-                    };
-                }
-                
-                if (userData.password !== password) {
-                    return {
-                        success: false,
-                        message: '密码不正确'
-                    };
-                }
-                
-                // 验证通过
-                return {
-                    success: true,
-                    message: '登录成功',
-                    userData: userData
-                };
-            } catch (e) {
-                return {
-                    success: false,
-                    message: '用户信息解析失败'
-                };
-            }
-        }
-
-        // 表单验证和登录处理
+        // 表单提交处理（核心修改部分）
         function initLoginForm() {
             const form = document.getElementById('loginForm');
             const loginStatus = document.getElementById('loginStatus');
             const statusMessage = document.getElementById('statusMessage');
-            const noAccountTip = document.getElementById('noAccountTip');
-            
-            // 检查是否已有注册用户信息
-            const registerUserStr = CookieUtils.getCookie('Register_user');
-            if (registerUserStr) {
-                try {
-                    const userData = JSON.parse(registerUserStr);
-                    // 自动填充用户名
-                    document.getElementById('username').value = userData.username;
-                    showStatus('检测到已注册用户信息', 'info');
-                } catch (e) {
-                    console.error('解析用户信息失败:', e);
-                }
-            }
+            // 读取「记住我」状态，用于设置Cookie过期时间
+            const rememberMe = document.getElementById('rememberMe');
             
             // 表单提交处理
             form.addEventListener('submit', function(event) {
                 event.preventDefault();
-                
-                // 清除之前的错误信息和提示
-                clearErrors();
+                // 清除之前的状态提示
                 loginStatus.classList.add('hidden');
-                noAccountTip.classList.add('hidden');
-                
-                // 获取表单数据
-                const username = document.getElementById('username').value.trim();
-                const password = document.getElementById('password').value;
-                const rememberMe = document.getElementById('rememberMe').checked;
-                
-                // 简单验证
-                let isValid = true;
-                if (username.length < 3) {
-                    showError('usernameError', '用户名至少需要3个字符');
-                    isValid = false;
-                }
-                
-                if (password.length < 6) {
-                    showError('passwordError', '密码至少需要6个字符');
-                    isValid = false;
-                }
-                
-                // 验证通过后，从Cookie验证登录
-                if (isValid) {
-                    const result = validateLoginFromCookie(username, password);
-                    
-                    if (result.success) {
-                        // 登录成功，设置登录状态Cookie
-                        const expireDays = rememberMe ? 7 : 1;
-                        CookieUtils.setCookie('username', result.userData.username, expireDays);
-                        // 生成简单的token
-                        const token = generateRandomToken();
-                        CookieUtils.setCookie('token', token, expireDays);
-                        
-                        // 显示成功信息
-                        showStatus(`欢迎回来，${result.userData.username}！${result.message}`, 'success');
-                        
-                        // 模拟跳转到首页
-                        setTimeout(() => {
-                            alert(`登录成功！欢迎您，${result.userData.username}`);
-                            // window.location.href = '/dashboard.html'; // 替换为实际的首页地址
-                        }, 1500);
-                    } else {
-                        // 登录失败
-                        if (result.message.includes('未找到注册信息')) {
-                            noAccountTip.classList.remove('hidden');
-                        } else if (result.message.includes('用户名不正确')) {
-                            showError('usernameError', result.message);
-                        } else if (result.message.includes('密码不正确')) {
-                            showError('passwordError', result.message);
-                        } else {
-                            showStatus(result.message, 'error');
-                        }
-                    }
+                // 根据「记住我」选择Cookie有效期：7天/1天
+                const cookieExpireDays = rememberMe.checked ? 7 : 1;
+
+                // 核心判断：检查Cookie中是否有注册信息 Register_user
+                const registerUserStr = CookieUtils.getCookie('Register_user');
+                if (registerUserStr) {
+                    // 登录成功：设置login=1，有效期和「记住我」保持一致
+                    CookieUtils.setCookie('login', 1, cookieExpireDays);
+                    // 提示+跳转主站
+                    showStatus('登录成功！', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'https://mingdynasty1.github.io';
+                    }, 1000);
+                } else {
+                    // 未注册：设置login=0，有效期1天（临时状态）
+                    CookieUtils.setCookie('login', 0, 1);
+                    // 提示+跳转注册页
+                    showStatus('还未注册账户！', 'error');
+                    setTimeout(() => {
+                        window.location.href = 'https://mingdynasty1.github.io/sign/up.html';
+                    }, 1000);
                 }
             });
         }
 
-        // 生成随机 Token
+        // 生成随机 Token（保留原有函数，不影响功能）
         function generateRandomToken() {
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
             let token = '';
@@ -539,14 +443,6 @@
                         <span>${message}</span>
                     </div>
                 `;
-            } else if (type === 'info') {
-                loginStatus.className = 'mt-8 text-center';
-                loginStatus.innerHTML = `
-                    <div class="inline-flex items-center px-4 py-2 rounded-lg bg-ming-blue text-ming-ivory">
-                        <i class="fa fa-info-circle mr-2"></i>
-                        <span>${message}</span>
-                    </div>
-                `;
             } else {
                 loginStatus.className = 'mt-8 text-center';
                 loginStatus.innerHTML = `
@@ -558,20 +454,16 @@
             }
         }
 
-        // 显示错误信息
+        // 保留原有工具函数，保证代码完整性
         function showError(elementId, message) {
             const errorElement = document.getElementById(elementId);
             errorElement.textContent = message;
             errorElement.classList.remove('hidden');
         }
-        
-        // 隐藏错误信息
         function hideError(elementId) {
             const errorElement = document.getElementById(elementId);
             errorElement.classList.add('hidden');
         }
-        
-        // 清除所有错误信息
         function clearErrors() {
             const errorElements = document.querySelectorAll('[id$="Error"]');
             errorElements.forEach(function(element) {
