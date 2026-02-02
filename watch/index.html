@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大明监控 | MingDynasty</title>
+      <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <!-- 统一的 Tailwind 配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#8B0000',      // 明朝宫廷红
+                        secondary: '#DAA520',    // 金黄色
+                        neutral: '#F5F5DC',      // 象牙白
+                        dark: '#2F4F4F',         // 墨黑
+                        accent: '#20B2AA',       // 青瓷色
+                    },
+                    fontFamily: {
+                        sans: ['SimHei', 'sans-serif'],
+                        serif: ['FangSong', 'STFangsong', 'serif'],
+                        mono: ['SimSun', 'serif'],
+                    },
+                    backgroundImage: {
+                        'paper-texture': "url('https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/c0925fe29d0448d0a445ad1a0e982570~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026020220005422B5B1D348BB0B3E9C39&rrcfp=f06b921b&x-expires=1772625688&x-signature=t24tV47m%2FPw4h57755%2FDS0zp7wI%3D')",
+                        'border-pattern': "url('https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/7caade83e8b44bbb84342ff6aa96f988~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026020220005422B5B1D348BB0B3E9C39&rrcfp=f06b921b&x-expires=1772625688&x-signature=%2F4cEtZ6%2FCjOUNc518vYrxW4gH5Q%3D')",
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            }
+            .border-pattern {
+                border-image: url('https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/7caade83e8b44bbb84342ff6aa96f988~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026020220005422B5B1D348BB0B3E9C39&rrcfp=f06b921b&x-expires=1772625688&x-signature=%2F4cEtZ6%2FCjOUNc518vYrxW4gH5Q%3D') 30 round;
+                border-width: 15px;
+            }
+            .scrollbar-ancient::-webkit-scrollbar {
+                width: 12px;
+            }
+            .scrollbar-ancient::-webkit-scrollbar-track {
+                background: #F5F5DC;
+            }
+            .scrollbar-ancient::-webkit-scrollbar-thumb {
+                background-color: #8B0000;
+                border-radius: 6px;
+                border: 3px solid #F5F5DC;
+            }
+            .ancient-shadow {
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 
+                            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            }
+            .paper-texture {
+                background-color: #F5F5DC;
+                background-image: 
+                    linear-gradient(rgba(255, 255, 255, 0.3) 2px, transparent 2px),
+                    linear-gradient(90deg, rgba(255, 255, 255, 0.3) 2px, transparent 2px),
+                    linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+                background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+            }
+            .lantern {
+                position: relative;
+                width: 60px;
+                height: 80px;
+                background: linear-gradient(to bottom, #DAA520 0%, #FFD700 50%, #DAA520 100%);
+                border-radius: 30px 30px 10px 10px;
+                box-shadow: 0 0 20px rgba(218, 165, 32, 0.8);
+                animation: sway 3s ease-in-out infinite;
+            }
+            .lantern:before {
+                content: '';
+                position: absolute;
+                top: -10px;
+                left: 20px;
+                width: 20px;
+                height: 15px;
+                background: #8B0000;
+                border-radius: 5px;
+            }
+            .lantern:after {
+                content: '';
+                position: absolute;
+                bottom: -5px;
+                left: 25px;
+                width: 10px;
+                height: 10px;
+                background: #8B0000;
+            }
+            .lantern-content {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                color: #8B0000;
+                font-size: 24px;
+            }
+            @keyframes sway {
+                0%, 100% { transform: rotate(-3deg); }
+                50% { transform: rotate(3deg); }
+            }
+            .hourglass {
+                position: relative;
+                width: 60px;
+                height: 80px;
+                background: transparent;
+                border: 3px solid #8B0000;
+                border-radius: 5px;
+                animation: rotate 10s linear infinite;
+            }
+            .hourglass:before {
+                content: '';
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                width: 34px;
+                height: 34px;
+                background: #DAA520;
+                border-radius: 50% 50% 0 0;
+                clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%);
+            }
+            .hourglass:after {
+                content: '';
+                position: absolute;
+                bottom: 10px;
+                left: 10px;
+                width: 34px;
+                height: 34px;
+                background: #DAA520;
+                border-radius: 0 0 50% 50%;
+                clip-path: polygon(0 50%, 100% 50%, 100% 100%, 0 100%);
+            }
+            @keyframes rotate {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+            .status-online {
+                background: linear-gradient(135deg, #4CAF50, #8BC34A);
+                animation: pulse 2s infinite;
+            }
+            .status-offline {
+                background: linear-gradient(135deg, #F44336, #E57373);
+            }
+            @keyframes pulse {
+                0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
+                70% { box-shadow: 0 0 0 10px rgba(76, 175, 80, 0); }
+                100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+            }
+        }
+    </style>
+</head>
+<body class="bg-neutral min-h-screen paper-texture font-serif">
+    <!-- 顶部装饰 -->
+    <div class="w-full h-4 bg-primary"></div>
+    
+    <!-- 标题区域 -->
+    <header class="relative py-8 px-4 bg-primary text-neutral text-center shadow-lg">
+        <div class="absolute left-4 top-1/2 transform -translate-y-1/2 hidden md:block">
+            <div class="lantern">
+                <div class="lantern-content">明</div>
+            </div>
+        </div>
+        <div class="absolute right-4 top-1/2 transform -translate-y-1/2 hidden md:block">
+            <div class="lantern">
+                <div class="lantern-content">监</div>
+            </div>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-bold text-shadow mb-2">大明网站监控司</h1>
+        <p class="text-xl md:text-2xl text-secondary">Website Monitoring Division of Ming Dynasty</p>
+    </header>
+
+    <!-- 主要内容区域 -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- 监控状态卡片 -->
+        <div class="mb-8 border-pattern bg-neutral p-6 ancient-shadow">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                <h2 class="text-3xl font-bold text-primary mb-4 md:mb-0">
+                    <i class="fa fa-server mr-2"></i>网站运行状态
+                </h2>
+                <div class="flex items-center">
+                    <span class="mr-3 text-dark">最后更新:</span>
+                    <span id="last-update" class="text-dark font-mono">2026-02-02 20:00:00</span>
+                    <button id="refresh-btn" class="ml-4 p-2 bg-primary text-neutral rounded-lg hover:bg-opacity-80 transition-all duration-300 flex items-center">
+                        <div class="hourglass mr-2"></div>
+                        <span>刷新数据</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- 状态卡片 -->
+                <div class="bg-neutral p-4 rounded-lg ancient-shadow border-2 border-secondary">
+                    <h3 class="text-xl font-bold text-dark mb-2">站点状态</h3>
+                    <div class="flex items-center">
+                        <div id="status-indicator" class="w-12 h-12 rounded-full status-online flex items-center justify-center mr-4">
+                            <i class="fa fa-check text-white text-2xl"></i>
+                        </div>
+                        <div>
+                            <p id="status-text" class="text-2xl font-bold text-dark">在线</p>
+                            <p class="text-sm text-gray-600">服务器响应正常</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 响应时间卡片 -->
+                <div class="bg-neutral p-4 rounded-lg ancient-shadow border-2 border-secondary">
+                    <h3 class="text-xl font-bold text-dark mb-2">响应时间</h3>
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 rounded-full bg-accent flex items-center justify-center mr-4">
+                            <i class="fa fa-clock-o text-white text-2xl"></i>
+                        </div>
+                        <div>
+                            <p id="response-time" class="text-2xl font-bold text-dark">128ms</p>
+                            <p class="text-sm text-gray-600">平均响应时间</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 状态码卡片 -->
+                <div class="bg-neutral p-4 rounded-lg ancient-shadow border-2 border-secondary">
+                    <h3 class="text-xl font-bold text-dark mb-2">状态码</h3>
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center mr-4">
+                            <i class="fa fa-code text-white text-2xl"></i>
+                        </div>
+                        <div>
+                            <p id="status-code" class="text-2xl font-bold text-dark">200</p>
+                            <p class="text-sm text-gray-600">请求成功</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 可用性卡片 -->
+                <div class="bg-neutral p-4 rounded-lg ancient-shadow border-2 border-secondary">
+                    <h3 class="text-xl font-bold text-dark mb-2">今日可用性</h3>
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center mr-4">
+                            <i class="fa fa-percent text-white text-2xl"></i>
+                        </div>
+                        <div>
+                            <p id="uptime" class="text-2xl font-bold text-dark">99.9%</p>
+                            <p class="text-sm text-gray-600">过去24小时</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 图表区域 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- 响应时间图表 -->
+            <div class="border-pattern bg-neutral p-6 ancient-shadow">
+                <h2 class="text-2xl font-bold text-primary mb-4">
+                    <i class="fa fa-line-chart mr-2"></i>响应时间趋势
+                </h2>
+                <div class="h-64 md:h-80">
+                    <canvas id="response-time-chart"></canvas>
+                </div>
+            </div>
+
+            <!-- 状态码分布图表 -->
+            <div class="border-pattern bg-neutral p-6 ancient-shadow">
+                <h2 class="text-2xl font-bold text-primary mb-4">
+                    <i class="fa fa-pie-chart mr-2"></i>状态码分布
+                </h2>
+                <div class="h-64 md:h-80">
+                    <canvas id="status-code-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- 历史数据表格 -->
+        <div class="border-pattern bg-neutral p-6 ancient-shadow">
+            <h2 class="text-2xl font-bold text-primary mb-4">
+                <i class="fa fa-history mr-2"></i>历史监控记录
+            </h2>
+            <div class="overflow-x-auto scrollbar-ancient">
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr class="bg-primary text-neutral">
+                            <th class="border border-secondary p-3 text-left">时间</th>
+                            <th class="border border-secondary p-3 text-left">状态</th>
+                            <th class="border border-secondary p-3 text-left">响应时间</th>
+                            <th class="border border-secondary p-3 text-left">状态码</th>
+                            <th class="border border-secondary p-3 text-left">详情</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-table">
+                        <!-- 历史数据将通过JavaScript动态填充 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-primary text-neutral py-6 mt-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="mb-2">© 2013-2026 MingDynasty,Inc. 大明监控（mingdynasty1.github.io） | MingDynasty</p>
+            <p class="text-sm">Monitoring Website: <a href="https://mingdynasty1.github.io" class="underline hover:text-secondary transition-colors duration-300" target="_blank">mingdynasty1.github.io</a></p>
+        </div>
+    </footer>
+
+    <!-- 详情模态框 -->
+    <div id="detail-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-neutral p-6 rounded-lg max-w-lg w-full mx-4 border-pattern">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold text-primary">监控详情</h3>
+                <button id="close-modal" class="text-dark hover:text-primary text-2xl">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <div id="modal-content" class="space-y-4">
+                <!-- 详情内容将通过JavaScript动态填充 -->
+            </div>
+            <div class="mt-6 text-center">
+                <button id="modal-close-btn" class="bg-primary text-neutral px-6 py-2 rounded-lg hover:bg-opacity-80 transition-all duration-300">
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 模拟数据
+        const responseTimeData = {
+            labels: ['00:00', '02:00', '04:00', '06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00'],
+            datasets: [{
+                label: '响应时间 (ms)',
+                data: [120, 132, 125, 148, 139, 142, 135, 149, 152, 145, 128],
+                borderColor: '#8B0000',
+                backgroundColor: 'rgba(139, 0, 0, 0.1)',
+                borderWidth: 2,
+                tension: 0.4,
+                fill: true
+            }]
+        };
+
+        const statusCodeData = {
+            labels: ['200 OK', '404 Not Found', '500 Server Error', '301 Moved Permanently'],
+            datasets: [{
+                data: [95, 3, 1, 1],
+                backgroundColor: [
+                    '#4CAF50',
+                    '#FFC107',
+                    '#F44336',
+                    '#2196F3'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        // 历史记录数据
+        const historyData = [
+            { time: '2026-02-02 19:45:00', status: '在线', responseTime: '128ms', statusCode: '200', details: '服务器响应正常' },
+            { time: '2026-02-02 19:30:00', status: '在线', responseTime: '132ms', statusCode: '200', details: '服务器响应正常' },
+            { time: '2026-02-02 19:15:00', status: '在线', responseTime: '125ms', statusCode: '200', details: '服务器响应正常' },
+            { time: '2026-02-02 19:00:00', status: '在线', responseTime: '148ms', statusCode: '200', details: '服务器响应正常' },
+            { time: '2026-02-02 18:45:00', status: '在线', responseTime: '139ms', statusCode: '200', details: '服务器响应正常' },
+            { time: '2026-02-02 18:30:00', status: '在线', responseTime: '142ms', statusCode: '200', details: '服务器响应正常' },
+            { time: '2026-02-02 18:15:00', status: '在线', responseTime: '135ms', statusCode: '200', details: '服务器响应正常' },
+            { time: '2026-02-02 18:00:00', status: '在线', responseTime: '149ms', statusCode: '200', details: '服务器响应正常' },
+            { time: '2026-02-02 17:45:00', status: '在线', responseTime: '152ms', statusCode: '200', details: '服务器响应正常' },
+            { time: '2026-02-02 17:30:00', status: '在线', responseTime: '145ms', statusCode: '200', details: '服务器响应正常' }
+        ];
+
+        // 初始化图表
+        document.addEventListener('DOMContentLoaded', function() {
+            // 更新最后更新时间
+            updateLastUpdate();
+            
+            // 填充历史记录表格
+            populateHistoryTable();
+            
+            // 初始化响应时间图表
+            const responseTimeCtx = document.getElementById('response-time-chart').getContext('2d');
+            const responseTimeChart = new Chart(responseTimeCtx, {
+                type: 'line',
+                data: responseTimeData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    family: 'FangSong, STFangsong, serif'
+                                }
+                            }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            ticks: {
+                                font: {
+                                    family: 'FangSong, STFangsong, serif'
+                                }
+                            }
+                        },
+                        y: {
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            ticks: {
+                                font: {
+                                    family: 'FangSong, STFangsong, serif'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 初始化状态码分布图表
+            const statusCodeCtx = document.getElementById('status-code-chart').getContext('2d');
+            const statusCodeChart = new Chart(statusCodeCtx, {
+                type: 'doughnut',
+                data: statusCodeData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                font: {
+                                    family: 'FangSong, STFangsong, serif'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 刷新按钮点击事件
+            document.getElementById('refresh-btn').addEventListener('click', function() {
+                refreshData();
+            });
+
+            // 模态框关闭按钮事件
+            document.getElementById('close-modal').addEventListener('click', function() {
+                document.getElementById('detail-modal').classList.add('hidden');
+            });
+
+            document.getElementById('modal-close-btn').addEventListener('click', function() {
+                document.getElementById('detail-modal').classList.add('hidden');
+            });
+
+            // 点击模态框外部关闭
+            document.getElementById('detail-modal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.add('hidden');
+                }
+            });
+
+            // 设置定时刷新
+            setInterval(refreshData, 60000); // 每分钟刷新一次
+        });
+
+        // 更新最后更新时间
+        function updateLastUpdate() {
+            const now = new Date();
+            const formattedDate = now.toLocaleString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('last-update').textContent = formattedDate;
+        }
+
+        // 填充历史记录表格
+        function populateHistoryTable() {
+            const tableBody = document.getElementById('history-table');
+            tableBody.innerHTML = '';
+            
+            historyData.forEach(record => {
+                const row = document.createElement('tr');
+                row.className = 'border-b border-gray-300 hover:bg-gray-100 transition-colors duration-200';
+                
+                // 设置状态单元格的样式
+                const statusClass = record.status === '在线' ? 'text-green-600 font-bold' : 'text-red-600 font-bold';
+                
+                row.innerHTML = `
+                    <td class="border border-gray-300 p-3 font-mono">${record.time}</td>
+                    <td class="border border-gray-300 p-3 ${statusClass}">${record.status}</td>
+                    <td class="border border-gray-300 p-3">${record.responseTime}</td>
+                    <td class="border border-gray-300 p-3">${record.statusCode}</td>
+                    <td class="border border-gray-300 p-3">
+                        <button class="view-details bg-primary text-neutral px-3 py-1 rounded hover:bg-opacity-80 transition-all duration-300" 
+                                data-time="${record.time}" 
+                                data-status="${record.status}" 
+                                data-response-time="${record.responseTime}" 
+                                data-status-code="${record.statusCode}" 
+                                data-details="${record.details}">
+                            查看详情
+                        </button>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+            
+            // 添加详情按钮点击事件
+            document.querySelectorAll('.view-details').forEach(button => {
+                button.addEventListener('click', function() {
+                    showDetails(this.dataset);
+                });
+            });
+        }
+
+        // 显示详情模态框
+        function showDetails(data) {
+            const modalContent = document.getElementById('modal-content');
+            modalContent.innerHTML = `
+                <div class="space-y-4">
+                    <div>
+                        <h4 class="text-lg font-bold text-dark">时间</h4>
+                        <p class="font-mono">${data.time}</p>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-bold text-dark">状态</h4>
+                        <p class="${data.status === '在线' ? 'text-green-600 font-bold' : 'text-red-600 font-bold'}">${data.status}</p>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-bold text-dark">响应时间</h4>
+                        <p>${data.responseTime}</p>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-bold text-dark">状态码</h4>
+                        <p>${data.statusCode}</p>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-bold text-dark">详情</h4>
+                        <p>${data.details}</p>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('detail-modal').classList.remove('hidden');
+        }
+
+        // 刷新数据
+        function refreshData() {
+            // 模拟加载状态
+            const refreshBtn = document.getElementById('refresh-btn');
+            const originalContent = refreshBtn.innerHTML;
+            refreshBtn.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i>刷新中...';
+            refreshBtn.disabled = true;
+            
+            // 模拟API请求延迟
+            setTimeout(() => {
+                // 更新响应时间（随机波动）
+                const currentResponseTime = parseInt(document.getElementById('response-time').textContent);
+                const newResponseTime = Math.max(50, Math.min(200, currentResponseTime + Math.floor(Math.random() * 21) - 10));
+                document.getElementById('response-time').textContent = `${newResponseTime}ms`;
+                
+                // 更新图表数据
+                const responseTimeChart = Chart.getChart('response-time-chart');
+                if (responseTimeChart) {
+                    // 添加新数据点
+                    const now = new Date();
+                    const timeLabel = now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+                    
+                    // 移除第一个数据点，添加新数据点
+                    responseTimeChart.data.labels.shift();
+                    responseTimeChart.data.labels.push(timeLabel);
+                    responseTimeChart.data.datasets[0].data.shift();
+                    responseTimeChart.data.datasets[0].data.push(newResponseTime);
+                    responseTimeChart.update();
+                }
+                
+                // 随机生成状态码（大部分时间是200）
+                const statusCodes = [200, 200, 200, 200, 200, 200, 200, 200, 200, 404, 500, 301];
+                const randomStatusCode = statusCodes[Math.floor(Math.random() * statusCodes.length)];
+                document.getElementById('status-code').textContent = randomStatusCode;
+                
+                // 更新状态指示器
+                const statusIndicator = document.getElementById('status-indicator');
+                const statusText = document.getElementById('status-text');
+                
+                if (randomStatusCode >= 200 && randomStatusCode < 300) {
+                    statusIndicator.className = 'w-12 h-12 rounded-full status-online flex items-center justify-center mr-4';
+                    statusIndicator.innerHTML = '<i class="fa fa-check text-white text-2xl"></i>';
+                    statusText.textContent = '在线';
+                    statusText.className = 'text-2xl font-bold text-dark';
+                } else {
+                    statusIndicator.className = 'w-12 h-12 rounded-full status-offline flex items-center justify-center mr-4';
+                    statusIndicator.innerHTML = '<i class="fa fa-times text-white text-2xl"></i>';
+                    statusText.textContent = '异常';
+                    statusText.className = 'text-2xl font-bold text-red-600';
+                }
+                
+                // 更新最后更新时间
+                updateLastUpdate();
+                
+                // 添加新的历史记录
+                const now = new Date();
+                const formattedDate = now.toLocaleString('zh-CN', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+                
+                const newRecord = {
+                    time: formattedDate,
+                    status: (randomStatusCode >= 200 && randomStatusCode < 300) ? '在线' : '异常',
+                    responseTime: `${newResponseTime}ms`,
+                    statusCode: randomStatusCode,
+                    details: getStatusCodeDetails(randomStatusCode)
+                };
+                
+                historyData.unshift(newRecord);
+                if (historyData.length > 10) {
+                    historyData.pop();
+                }
+                
+                // 重新填充历史记录表格
+                populateHistoryTable();
+                
+                // 恢复刷新按钮
+                refreshBtn.innerHTML = originalContent;
+                refreshBtn.disabled = false;
+            }, 1500);
+        }
+
+        // 获取状态码详情
+        function getStatusCodeDetails(code) {
+            switch(code) {
+                case 200: return '服务器响应正常';
+                case 301: return '资源已永久移动到新位置';
+                case 404: return '请求的资源未找到';
+                case 500: return '服务器内部错误';
+                default: return '服务器响应';
+            }
+        }
+    </script>
+</body>
+</html>
