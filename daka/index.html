@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大明打卡 | MingDynasty</title>
+      <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <!-- Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- 自定义字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <!-- 自定义 Tailwind 配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'ming-red': '#A62424',
+                        'ming-gold': '#D4AF37',
+                        'ming-paper': '#F5E9D9',
+                        'ming-ink': '#2D2D2D',
+                        'ming-cyan': '#4B8F8C'
+                    },
+                    fontFamily: {
+                        'song': ['Noto Serif SC', 'serif'],
+                        'cursive': ['Ma Shan Zheng', 'cursive']
+                    },
+                    backgroundImage: {
+                        'paper-texture': "url('https://p11-doubao-search-sign.byteimg.com/labis/4978194839b42fc74563a989be922eeb~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1785580305&x-signature=K9xNAfsUGqyKmILEJvPspkVR7gk%3D')",
+                        'ink-splash': "url('https://p3-doubao-search-sign.byteimg.com/labis/5cccdd8b7654ea43f9cd7016f44cd790~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1785580305&x-signature=NlXbM55d1WHfpqzHFx2wLY5DIOA%3D')"
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .scroll-shadow {
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            }
+            .seal-press {
+                transition: transform 0.2s ease;
+            }
+            .seal-press:active {
+                transform: scale(0.95);
+            }
+            .ink-splash {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 0;
+                height: 0;
+                border-radius: 50%;
+                background-color: rgba(166, 36, 36, 0.2);
+                transition: width 0.5s, height 0.5s;
+            }
+            .ink-splash.active {
+                width: 300px;
+                height: 300px;
+            }
+            .calendar-day {
+                position: relative;
+            }
+            .calendar-day.checked::after {
+                content: '';
+                position: absolute;
+                bottom: 2px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background-color: #A62424;
+            }
+            .badge-glow {
+                filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.7));
+            }
+            .badge-locked {
+                filter: grayscale(100%) opacity(0.5);
+            }
+            .scroll-container {
+                position: relative;
+                overflow: hidden;
+            }
+            .scroll-container::before,
+            .scroll-container::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                right: 0;
+                height: 20px;
+                z-index: 10;
+            }
+            .scroll-container::before {
+                top: 0;
+                background: linear-gradient(to bottom, rgba(245, 233, 217, 1), rgba(245, 233, 217, 0));
+            }
+            .scroll-container::after {
+                bottom: 0;
+                background: linear-gradient(to top, rgba(245, 233, 217, 1), rgba(245, 233, 217, 0));
+            }
+        }
+    </style>
+</head>
+<body class="bg-ming-paper bg-paper-texture min-h-screen font-song text-ming-ink">
+    <!-- 页面容器 -->
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <!-- 顶部印章标题 -->
+        <header class="relative text-center mb-8">
+            <div class="absolute top-0 left-0 w-16 h-16 border-t-4 border-l-4 border-ming-red opacity-70"></div>
+            <div class="absolute top-0 right-0 w-16 h-16 border-t-4 border-r-4 border-ming-red opacity-70"></div>
+            <div class="absolute bottom-0 left-0 w-16 h-16 border-b-4 border-l-4 border-ming-red opacity-70"></div>
+            <div class="absolute bottom-0 right-0 w-16 h-16 border-b-4 border-r-4 border-ming-red opacity-70"></div>
+            
+            <h1 class="text-4xl md:text-5xl font-bold text-ming-red py-4 tracking-wider">
+                每日打卡
+            </h1>
+            <p class="text-lg text-ming-ink/80 mt-2">
+                坚持不懈 · 日积跬步
+            </p>
+        </header>
+
+        <!-- 主要内容区域 -->
+        <main class="relative">
+            <!-- 打卡区域 -->
+            <section class="bg-white/80 rounded-lg p-6 mb-8 shadow-md border border-ming-gold/30">
+                <div class="flex flex-col md:flex-row items-center justify-between">
+                    <div class="mb-6 md:mb-0 text-center md:text-left">
+                        <h2 class="text-2xl font-bold text-ming-red mb-2">今日打卡</h2>
+                        <p class="text-lg" id="current-date">2023年6月15日</p>
+                        <p class="text-ming-ink/70 mt-2">
+                            <span id="streak-days">0</span> 天连续打卡
+                        </p>
+                    </div>
+                    
+                    <div class="relative">
+                        <div class="ink-splash" id="ink-splash"></div>
+                        <button id="checkin-btn" class="seal-press relative z-10">
+                            <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/b74e1be81dea4c16936178612b7dee00~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=202602021831342E7C30B1939664384127&rrcfp=f06b921b&x-expires=1772620324&x-signature=upo5toaW4HKkxqy%2F57A0Q9HLkys%3D" 
+                                 alt="打卡印章" 
+                                 class="w-32 h-32 object-contain transition-transform hover:scale-105">
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="checkin-message" class="hidden mt-6 text-center text-lg font-bold text-ming-red">
+                    恭喜！今日打卡成功
+                </div>
+            </section>
+
+            <!-- 打卡项目设置 -->
+            <section class="bg-white/80 rounded-lg p-6 mb-8 shadow-md border border-ming-gold/30">
+                <h2 class="text-2xl font-bold text-ming-red mb-4 flex items-center">
+                    <i class="fa fa-list-ul mr-2"></i> 打卡项目
+                </h2>
+                
+                <div id="projects-container" class="space-y-3">
+                    <!-- 项目将通过JS动态添加 -->
+                </div>
+                
+                <div class="mt-4 flex items-center">
+                    <input type="text" id="new-project-input" placeholder="添加新的打卡项目..." 
+                           class="flex-1 px-4 py-2 border border-ming-gold/50 rounded-l-md focus:outline-none focus:ring-2 focus:ring-ming-gold/50">
+                    <button id="add-project-btn" class="bg-ming-red text-white px-4 py-2 rounded-r-md hover:bg-ming-red/90 transition-colors">
+                        添加
+                    </button>
+                </div>
+            </section>
+
+            <!-- 成就徽章系统 -->
+            <section class="bg-white/80 rounded-lg p-6 mb-8 shadow-md border border-ming-gold/30">
+                <h2 class="text-2xl font-bold text-ming-red mb-4 flex items-center">
+                    <i class="fa fa-trophy mr-2"></i> 成就徽章
+                </h2>
+                
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+                    <div class="badge-item text-center" data-requirement="7">
+                        <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/56cd76638e55415194a3f995ee8a793f~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=202602021831342E7C30B1939664384127&rrcfp=f06b921b&x-expires=1772620324&x-signature=uB0I7fGesxl76ltoXonXu0VHyzY%3D" 
+                             alt="坚持不懈" 
+                             class="w-24 h-24 mx-auto object-contain badge-locked" 
+                             id="badge-7">
+                        <p class="mt-2 font-bold">坚持不懈</p>
+                        <p class="text-sm text-ming-ink/70">连续打卡7天</p>
+                    </div>
+                    
+                    <div class="badge-item text-center" data-requirement="30">
+                        <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/a88fe6abe64141ee860eede63a4e1dba~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=202602021831342E7C30B1939664384127&rrcfp=f06b921b&x-expires=1772620324&x-signature=Tdy4pAZD7quHwrNa%2FixuxGFhky4%3D" 
+                             alt="百日精进" 
+                             class="w-24 h-24 mx-auto object-contain badge-locked" 
+                             id="badge-30">
+                        <p class="mt-2 font-bold">百日精进</p>
+                        <p class="text-sm text-ming-ink/70">连续打卡30天</p>
+                    </div>
+                    
+                    <div class="badge-item text-center" data-requirement="100">
+                        <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/a88fe6abe64141ee860eede63a4e1dba~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=202602021831342E7C30B1939664384127&rrcfp=f06b921b&x-expires=1772620324&x-signature=Tdy4pAZD7quHwrNa%2FixuxGFhky4%3D" 
+                             alt="百折不挠" 
+                             class="w-24 h-24 mx-auto object-contain badge-locked" 
+                             id="badge-100">
+                        <p class="mt-2 font-bold">百折不挠</p>
+                        <p class="text-sm text-ming-ink/70">连续打卡100天</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 历史记录日历 -->
+            <section class="bg-white/80 rounded-lg p-6 shadow-md border border-ming-gold/30">
+                <h2 class="text-2xl font-bold text-ming-red mb-4 flex items-center">
+                    <i class="fa fa-calendar mr-2"></i> 打卡日历
+                </h2>
+                
+                <div class="scroll-container overflow-x-auto pb-4">
+                    <div class="min-w-max">
+                        <div class="grid grid-cols-7 gap-2 text-center font-bold mb-2">
+                            <div>日</div>
+                            <div>一</div>
+                            <div>二</div>
+                            <div>三</div>
+                            <div>四</div>
+                            <div>五</div>
+                            <div>六</div>
+                        </div>
+                        
+                        <div id="calendar-grid" class="grid grid-cols-7 gap-2 text-center">
+                            <!-- 日历将通过JS动态生成 -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="mt-12 text-center text-ming-ink/70 text-sm">
+            <p>© 2013-2026 MingDynasty,Inc. 大明打卡 | MingEmperor</p>
+        </footer>
+    </div>
+
+    <!-- 成就解锁弹窗 -->
+    <div id="achievement-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+        <div class="bg-ming-paper p-6 rounded-lg max-w-md w-full text-center relative">
+            <button id="close-modal" class="absolute top-2 right-2 text-ming-ink/70 hover:text-ming-ink">
+                <i class="fa fa-times text-xl"></i>
+            </button>
+            
+            <h3 class="text-2xl font-bold text-ming-red mb-4">恭喜解锁新成就！</h3>
+            <div class="mb-4">
+                <img id="achievement-badge" src="" alt="成就徽章" class="w-32 h-32 mx-auto object-contain badge-glow">
+            </div>
+            <h4 id="achievement-title" class="text-xl font-bold mb-2">坚持不懈</h4>
+            <p id="achievement-desc" class="mb-6">连续打卡7天，获得此徽章</p>
+            <button id="confirm-achievement" class="bg-ming-red text-white px-6 py-2 rounded-md hover:bg-ming-red/90 transition-colors">
+                领取成就
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 数据存储
+        const storage = {
+            // 获取打卡记录
+            getCheckins: () => JSON.parse(localStorage.getItem('mingCheckins') || '{}'),
+            
+            // 保存打卡记录
+            saveCheckins: (checkins) => localStorage.setItem('mingCheckins', JSON.stringify(checkins)),
+            
+            // 获取打卡项目
+            getProjects: () => JSON.parse(localStorage.getItem('mingProjects') || '[]'),
+            
+            // 保存打卡项目
+            saveProjects: (projects) => localStorage.setItem('mingProjects', JSON.stringify(projects)),
+            
+            // 获取成就解锁状态
+            getAchievements: () => JSON.parse(localStorage.getItem('mingAchievements') || '{}'),
+            
+            // 保存成就解锁状态
+            saveAchievements: (achievements) => localStorage.setItem('mingAchievements', JSON.stringify(achievements))
+        };
+
+        // 日期工具
+        const dateUtil = {
+            // 获取今天的日期字符串 YYYY-MM-DD
+            today: () => {
+                const now = new Date();
+                return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+            },
+            
+            // 格式化日期显示
+            format: (dateStr) => {
+                const date = new Date(dateStr);
+                return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
+            },
+            
+            // 获取某月的天数
+            getDaysInMonth: (year, month) => new Date(year, month + 1, 0).getDate(),
+            
+            // 获取某月第一天是星期几
+            getFirstDayOfMonth: (year, month) => new Date(year, month, 1).getDay(),
+            
+            // 生成月份日期数组
+            generateMonthDates: (year, month) => {
+                const daysInMonth = dateUtil.getDaysInMonth(year, month);
+                const firstDay = dateUtil.getFirstDayOfMonth(year, month);
+                const dates = [];
+                
+                // 添加上个月的填充日期
+                for (let i = 0; i < firstDay; i++) {
+                    dates.push(null);
+                }
+                
+                // 添加当月日期
+                for (let day = 1; day <= daysInMonth; day++) {
+                    dates.push(`${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`);
+                }
+                
+                return dates;
+            }
+        };
+
+        // 打卡功能
+        const checkin = {
+            // 初始化打卡功能
+            init: () => {
+                const checkinBtn = document.getElementById('checkin-btn');
+                const today = dateUtil.today();
+                const checkins = storage.getCheckins();
+                
+                // 设置当前日期显示
+                document.getElementById('current-date').textContent = dateUtil.format(today);
+                
+                // 检查今日是否已打卡
+                if (checkins[today]) {
+                    checkinBtn.disabled = true;
+                    checkinBtn.classList.add('opacity-50');
+                    document.getElementById('checkin-message').classList.remove('hidden');
+                }
+                
+                // 绑定打卡按钮事件
+                checkinBtn.addEventListener('click', checkin.performCheckin);
+                
+                // 计算并显示连续打卡天数
+                checkin.updateStreakDays();
+            },
+            
+            // 执行打卡
+            performCheckin: () => {
+                const today = dateUtil.today();
+                const checkins = storage.getCheckins();
+                
+                // 记录今日打卡
+                checkins[today] = true;
+                storage.saveCheckins(checkins);
+                
+                // 显示水墨扩散动画
+                const inkSplash = document.getElementById('ink-splash');
+                inkSplash.classList.add('active');
+                
+                // 禁用打卡按钮
+                const checkinBtn = document.getElementById('checkin-btn');
+                checkinBtn.disabled = true;
+                checkinBtn.classList.add('opacity-50');
+                
+                // 显示打卡成功消息
+                setTimeout(() => {
+                    document.getElementById('checkin-message').classList.remove('hidden');
+                    inkSplash.classList.remove('active');
+                    
+                    // 更新连续打卡天数
+                    checkin.updateStreakDays();
+                    
+                    // 更新日历显示
+                    calendar.render();
+                    
+                    // 检查是否解锁新成就
+                    achievements.checkNewAchievements();
+                }, 500);
+            },
+            
+            // 计算并更新连续打卡天数
+            updateStreakDays: () => {
+                const checkins = storage.getCheckins();
+                const today = dateUtil.today();
+                let streakDays = 0;
+                let currentDate = new Date(today);
+                
+                // 从今天开始往前检查连续打卡天数
+                while (true) {
+                    const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`;
+                    
+                    if (checkins[dateStr]) {
+                        streakDays++;
+                        currentDate.setDate(currentDate.getDate() - 1);
+                    } else {
+                        // 如果是今天，不减少连续天数
+                        if (dateStr === today) {
+                            break;
+                        }
+                        // 检查是否是昨天，如果是昨天没打卡，连续天数归零
+                        const yesterday = new Date(today);
+                        yesterday.setDate(yesterday.getDate() - 1);
+                        const yesterdayStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
+                        
+                        if (dateStr === yesterdayStr) {
+                            streakDays = 0;
+                        }
+                        break;
+                    }
+                }
+                
+                // 更新显示
+                document.getElementById('streak-days').textContent = streakDays;
+                
+                return streakDays;
+            }
+        };
+
+        // 打卡项目管理
+        const projects = {
+            // 初始化项目管理
+            init: () => {
+                const addBtn = document.getElementById('add-project-btn');
+                const input = document.getElementById('new-project-input');
+                
+                // 绑定添加项目按钮事件
+                addBtn.addEventListener('click', () => projects.addProject(input.value));
+                
+                // 绑定输入框回车事件
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        projects.addProject(input.value);
+                    }
+                });
+                
+                // 渲染项目列表
+                projects.render();
+            },
+            
+            // 添加新项目
+            addProject: (name) => {
+                if (!name.trim()) return;
+                
+                const projectList = storage.getProjects();
+                const newProject = {
+                    id: Date.now(),
+                    name: name.trim(),
+                    checkins: {}
+                };
+                
+                projectList.push(newProject);
+                storage.saveProjects(projectList);
+                
+                // 清空输入框
+                document.getElementById('new-project-input').value = '';
+                
+                // 重新渲染项目列表
+                projects.render();
+            },
+            
+            // 删除项目
+            deleteProject: (id) => {
+                const projectList = storage.getProjects();
+                const updatedList = projectList.filter(project => project.id !== id);
+                
+                storage.saveProjects(updatedList);
+                projects.render();
+            },
+            
+            // 切换项目打卡状态
+            toggleProjectCheckin: (projectId) => {
+                const today = dateUtil.today();
+                const projectList = storage.getProjects();
+                const project = projectList.find(p => p.id === projectId);
+                
+                if (project) {
+                    if (project.checkins[today]) {
+                        delete project.checkins[today];
+                    } else {
+                        project.checkins[today] = true;
+                    }
+                    
+                    storage.saveProjects(projectList);
+                    projects.render();
+                }
+            },
+            
+            // 渲染项目列表
+            render: () => {
+                const container = document.getElementById('projects-container');
+                const projectList = storage.getProjects();
+                const today = dateUtil.today();
+                
+                if (projectList.length === 0) {
+                    container.innerHTML = '<p class="text-ming-ink/50 italic">暂无打卡项目，添加一个开始打卡吧！</p>';
+                    return;
+                }
+                
+                container.innerHTML = projectList.map(project => {
+                    const isCheckedToday = project.checkins[today];
+                    
+                    return `
+                        <div class="flex items-center justify-between p-3 bg-ming-paper/50 rounded-md">
+                            <div class="flex items-center">
+                                <button class="w-6 h-6 rounded-full border-2 border-ming-red flex items-center justify-center mr-3 transition-colors ${isCheckedToday ? 'bg-ming-red' : ''}"
+                                        onclick="projects.toggleProjectCheckin(${project.id})">
+                                    ${isCheckedToday ? '<i class="fa fa-check text-white text-xs"></i>' : ''}
+                                </button>
+                                <span class="${isCheckedToday ? 'line-through text-ming-ink/50' : ''}">${project.name}</span>
+                            </div>
+                            <button class="text-ming-ink/40 hover:text-ming-red transition-colors"
+                                    onclick="projects.deleteProject(${project.id})">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                }).join('');
+            }
+        };
+
+        // 成就系统
+        const achievements = {
+            // 成就列表
+            list: [
+                { id: 7, title: '坚持不懈', desc: '连续打卡7天，获得此徽章', image: 'https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/56cd76638e55415194a3f995ee8a793f~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=202602021831342E7C30B1939664384127&rrcfp=f06b921b&x-expires=1772620324&x-signature=uB0I7fGesxl76ltoXonXu0VHyzY%3D' },
+                { id: 30, title: '百日精进', desc: '连续打卡30天，获得此徽章', image: 'https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/a88fe6abe64141ee860eede63a4e1dba~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=202602021831342E7C30B1939664384127&rrcfp=f06b921b&x-expires=1772620324&x-signature=Tdy4pAZD7quHwrNa%2FixuxGFhky4%3D' },
+                { id: 100, title: '百折不挠', desc: '连续打卡100天，获得此徽章', image: 'https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/a88fe6abe64141ee860eede63a4e1dba~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=202602021831342E7C30B1939664384127&rrcfp=f06b921b&x-expires=1772620324&x-signature=Tdy4pAZD7quHwrNa%2FixuxGFhky4%3D' }
+            ],
+            
+            // 初始化成就系统
+            init: () => {
+                // 绑定弹窗关闭事件
+                document.getElementById('close-modal').addEventListener('click', achievements.closeModal);
+                document.getElementById('confirm-achievement').addEventListener('click', achievements.closeModal);
+                
+                // 更新成就显示
+                achievements.updateDisplay();
+            },
+            
+            // 检查是否解锁新成就
+            checkNewAchievements: () => {
+                const streakDays = checkin.updateStreakDays();
+                const unlocked = storage.getAchievements();
+                let hasNewAchievement = false;
+                let newAchievement = null;
+                
+                // 检查每个成就的解锁条件
+                achievements.list.forEach(achievement => {
+                    if (streakDays >= achievement.id && !unlocked[achievement.id]) {
+                        unlocked[achievement.id] = true;
+                        hasNewAchievement = true;
+                        newAchievement = achievement;
+                    }
+                });
+                
+                // 如果有新成就解锁，保存并显示弹窗
+                if (hasNewAchievement) {
+                    storage.saveAchievements(unlocked);
+                    achievements.showAchievementModal(newAchievement);
+                }
+                
+                // 更新成就显示
+                achievements.updateDisplay();
+            },
+            
+            // 显示成就解锁弹窗
+            showAchievementModal: (achievement) => {
+                const modal = document.getElementById('achievement-modal');
+                const badgeImg = document.getElementById('achievement-badge');
+                const title = document.getElementById('achievement-title');
+                const desc = document.getElementById('achievement-desc');
+                
+                badgeImg.src = achievement.image;
+                title.textContent = achievement.title;
+                desc.textContent = achievement.desc;
+                
+                modal.classList.remove('hidden');
+            },
+            
+            // 关闭成就弹窗
+            closeModal: () => {
+                document.getElementById('achievement-modal').classList.add('hidden');
+            },
+            
+            // 更新成就显示
+            updateDisplay: () => {
+                const unlocked = storage.getAchievements();
+                
+                achievements.list.forEach(achievement => {
+                    const badge = document.getElementById(`badge-${achievement.id}`);
+                    if (badge) {
+                        if (unlocked[achievement.id]) {
+                            badge.classList.remove('badge-locked');
+                            badge.classList.add('badge-glow');
+                        } else {
+                            badge.classList.add('badge-locked');
+                            badge.classList.remove('badge-glow');
+                        }
+                    }
+                });
+            }
+        };
+
+        // 日历功能
+        const calendar = {
+            // 当前显示的年份和月份
+            currentYear: new Date().getFullYear(),
+            currentMonth: new Date().getMonth(),
+            
+            // 初始化日历
+            init: () => {
+                calendar.render();
+            },
+            
+            // 渲染日历
+            render: () => {
+                const grid = document.getElementById('calendar-grid');
+                const dates = dateUtil.generateMonthDates(calendar.currentYear, calendar.currentMonth);
+                const checkins = storage.getCheckins();
+                
+                grid.innerHTML = dates.map(date => {
+                    if (!date) {
+                        // 空白单元格
+                        return '<div class="h-10 flex items-center justify-center"></div>';
+                    }
+                    
+                    const day = new Date(date).getDate();
+                    const isChecked = checkins[date];
+                    const isToday = date === dateUtil.today();
+                    
+                    return `
+                        <div class="h-10 flex items-center justify-center rounded-full cursor-pointer
+                                ${isToday ? 'bg-ming-red/10 font-bold' : ''}
+                                ${isChecked ? 'calendar-day checked' : ''}"
+                             title="${dateUtil.format(date)}${isChecked ? ' - 已打卡' : ''}">
+                            ${day}
+                        </div>
+                    `;
+                }).join('');
+            }
+        };
+
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', () => {
+            checkin.init();
+            projects.init();
+            achievements.init();
+            calendar.init();
+        });
+    </script>
+</body>
+</html>
