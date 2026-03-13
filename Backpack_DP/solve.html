@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大明 · 背包DP详解</title>
+      <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <!-- 引入MathJax支持Latex公式渲染 -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        /* 基础样式 & 明色模式（默认） */
+        :root {
+            --bg-color: #f5f0e8; /* 宣纸色 */
+            --text-color: #2c1e00; /* 墨色 */
+            --primary-color: #c82506; /* 宫墙红 */
+            --secondary-color: #2a6b55; /* 青绿色（明瓷） */
+            --border-color: #d4b886; /* 木框色 */
+            --card-bg: #fff8e8; /* 卡片底色 */
+            --hover-color: #e8d0a8; /* 悬停色 */
+            --footer-bg: #2c1e00; /* 页脚底色 */
+            --footer-text: #f0e6d2; /* 页脚文字色 */
+        }
+
+        /* 暗色模式 */
+        .dark-mode {
+            --bg-color: #1a140d; /* 深木色 */
+            --text-color: #f0e6d2; /* 米白色 */
+            --primary-color: #e04020; /* 亮红 */
+            --secondary-color: #4a9d7c; /* 亮绿 */
+            --border-color: #8b6b3c; /* 金棕色 */
+            --card-bg: #2a2418; /* 卡片底色 */
+            --hover-color: #3a3428; /* 悬停色 */
+            --footer-bg: #120d06; /* 页脚底色 */
+            --footer-text: #d4b886; /* 页脚文字色 */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "仿宋", "FangSong", serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d4b886' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 顶部导航（明式牌匾风格） */
+        .header {
+            background-color: var(--primary-color);
+            border-bottom: 4px solid var(--border-color);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .header::after {
+            content: "";
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+        }
+
+        .title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 2px 2px 0 #801800;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #fff;
+            transition: transform 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* 主容器 */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: grid;
+            gap: 2rem;
+            flex: 1;
+        }
+
+        /* 明式卡片样式 */
+        .card {
+            background-color: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            right: 8px;
+            bottom: 8px;
+            border: 1px dashed var(--border-color);
+            border-radius: 4px;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+            background-color: var(--hover-color);
+        }
+
+        .card-title {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary-color);
+            display: inline-block;
+        }
+
+        /* 代码块样式（明式卷轴风格） */
+        .code-block {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: "Consolas", "Monaco", monospace;
+            font-size: 0.9rem;
+        }
+
+        /* 按钮样式（明式按钮） */
+        .btn {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: "仿宋", "FangSong", serif;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn:hover {
+            background-color: #1a5d45;
+        }
+
+        /* 感谢内容卡片 */
+        .thanks-card {
+            background-color: var(--card-bg);
+            border: 2px solid var(--secondary-color);
+        }
+
+        .thanks-card .card-title {
+            color: var(--secondary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        /* 页脚样式（明式底栏） */
+        .footer {
+            background-color: var(--footer-bg);
+            color: var(--footer-text);
+            padding: 1.5rem 2rem;
+            border-top: 3px solid var(--border-color);
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .footer-text {
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .footer-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .footer-link:hover {
+            color: #ff6b4f;
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 1.5rem;
+            }
+            .card-title {
+                font-size: 1.2rem;
+            }
+            .footer-text {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航（明式牌匾） -->
+    <header class="header">
+        <h1 class="title">大明算学 · 背包动态规划详解</h1>
+        <button class="theme-toggle" id="themeToggle">🌙</button>
+    </header>
+
+    <!-- 主内容容器 -->
+    <div class="container">
+        <!-- 01背包模块 -->
+        <div class="card">
+            <h2 class="card-title">壹 · 01背包</h2>
+            <p>选或不选的经典模型，每个物品仅能选择一次。</p>
+            <h3>状态定义</h3>
+            <p>$$dp[i][j]$$：考虑前 $i$ 个物品，容量为 $j$ 时的最大价值。</p>
+            <h3>转移方程</h3>
+            <p>$$dp[i][j] = \max\left(dp[i-1][j], \; dp[i-1][j-w[i]] + c[i]\right)$$</p>
+            <h3>空间优化后</h3>
+            <p>$$dp[j] = \max\left(dp[j],\;dp[j-w[i]]+c[i]\right)$$（倒序枚举容量）</p>
+            <div class="code-block">
+<pre>
+#include&lt;bits/stdc++.h&gt;
+using namespace std;
+int dp[202][202],w[10101],c[10101];
+int main(){
+    int n,m;
+    cin&gt;&gt;n&gt;&gt;m;
+    swap(n,m);
+    for(int i=1;i&lt;=n;i++) cin&gt;&gt;w[i]&gt;&gt;c[i];
+    for(int i=1;i&lt;=n;i++){
+        for(int j=0;j&lt;=m;j++){
+            dp[i][j]=dp[i-1][j];
+            if(j&gt;=w[i]) dp[i][j]=max(dp[i][j],dp[i-1][j-w[i]]+c[i]);
+        }
+    }
+    cout&lt;&lt;dp[n][m];
+    return 0;
+}
+</pre>
+            </div>
+        </div>
+
+        <!-- 完全背包模块 -->
+        <div class="card">
+            <h2 class="card-title">贰 · 完全背包</h2>
+            <p>每个物品可选择无限次，核心是正序枚举容量。</p>
+            <h3>转移方程</h3>
+            <p>$$dp[j] = \max(dp[j], dp[j-w[i]] + v[i])$$</p>
+            <div class="code-block">
+<pre>
+#include&lt;iostream&gt;
+int d[10121],d2[12912],dp[8322];
+using namespace std;
+int main(){
+    int n,m;
+    cin&gt;&gt;m&gt;&gt;n;
+    for(int i=1;i&lt;=n;i++) cin&gt;&gt;d[i]&gt;&gt;d2[i];
+    for(int i=1;i&lt;=n;i++){
+        for(int j=d[i];j&lt;=m;j++){
+            dp[j]=max(dp[j],dp[j-d[i]]+d2[i]);
+        }
+    }
+    cout&lt;&lt;"max="&lt;&lt;dp[m];
+    return 0;
+}
+</pre>
+            </div>
+        </div>
+
+        <!-- 多重背包模块 -->
+        <div class="card">
+            <h2 class="card-title">叁 · 多重背包（二进制优化）</h2>
+            <p>物品数量有限，将数量拆分为2的幂次组合，转化为01背包。</p>
+            <div class="code-block">
+<pre>
+for(int i=1;i&lt;=n;i++) cin&gt;&gt;d[i]&gt;&gt;d2[i]&gt;&gt;d3[i];
+for(int i=1;i&lt;=n;i++){
+    int l=d3[i];
+    for(int k=1;k&lt;=l;l-=k,k*=2){
+        for(int j=m;j&gt;=k*d[i];j--) 
+            dp[j]=max(dp[j],dp[j-k*d[i]]+d2[i]*k);
+    }
+    for(int j=m;j&gt;=l*d[i];j--) 
+        dp[j]=max(dp[j],dp[j-l*d[i]]+d2[i]*l);
+}
+</pre>
+            </div>
+        </div>
+
+        <!-- 可行性背包模块 -->
+        <div class="card">
+            <h2 class="card-title">肆 · 可行性背包</h2>
+            <p>判断是否能恰好装满指定容量的背包，状态为布尔值。</p>
+            <div class="code-block">
+<pre>
+#include&lt;bits/stdc++.h&gt;
+using namespace std;
+int n,m,a[323232];
+bool dp[323232];
+int main(){
+    cin.tie(0)-&gt;sync_with_stdio(0);
+    int n,m;
+    cin&gt;&gt;n&gt;&gt;m;
+    for(int i=1;i&lt;=n;i++) cin&gt;&gt;a[i];
+    dp[0]=1;//0容量必然装满
+    for(int i=1;i&lt;=n;i++){
+        for(int j=m;j&gt;=a[i];j--){
+            if(dp[j-a[i]]){
+                dp[j]=1;
+            }
+        }
+    }
+    if(dp[m]) cout&lt;&lt;"Yes";
+    else cout&lt;&lt;"No";
+    return 0;
+}
+</pre>
+            </div>
+        </div>
+
+        <!-- 习题模块 -->
+        <div class="card">
+            <h2 class="card-title">伍 · 习题演练</h2>
+            <p>点击下方按钮跳转至大明OJ习题集：</p>
+            <button class="btn" onclick="window.open('https://mingdynasty1.github.io/code', '_blank')">
+                进入习题集
+            </button>
+        </div>
+
+        <!-- 感谢内容模块 -->
+        <div class="card thanks-card">
+            <h2 class="card-title">柒 · 致谢</h2>
+            <p>感谢 XYOJ 提供评测场地支持，大明OJ开发团队为本教程提供技术支撑。</p>
+            <p>特别说明："宠物小精灵之收服"此题数据较水，暴力可过。GitHub Actions施工完成后，比赛将迁移至大明OJ，成绩保持不变（当前仍在施工中）。</p>
+            <p>大明OJ致力于为算法学习者提供优质的学习资源与评测环境，感谢各位用户的支持与反馈。</p>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <p class="footer-text">© 2013-2026 MingDynasty,Inc. 背包DP | <a href="https://mingdynasty1.github.io/code" class="footer-link">大明 OJ</a></p>
+    </footer>
+
+    <script>
+        // 明暗模式切换逻辑
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        // 初始化：读取本地存储的主题
+        if (localStorage.getItem('theme') === 'dark') {
+            body.classList.add('dark-mode');
+            themeToggle.textContent = '☀️';
+        }
+
+        // 切换主题
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            if (body.classList.contains('dark-mode')) {
+                themeToggle.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeToggle.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // 确保MathJax加载完成后渲染公式
+        window.addEventListener('load', () => {
+            if (window.MathJax) {
+                MathJax.typesetPromise().catch(err => console.error('MathJax渲染失败:', err));
+            }
+        });
+    </script>
+</body>
+</html>
