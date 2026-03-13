@@ -7,8 +7,84 @@
     <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* 全局样式 */
+        /* 加载屏幕样式 */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #fdf7f0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
         
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .loading-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid #dc143c;
+            box-shadow: 0 0 20px rgba(220, 20, 60, 0.3);
+            margin-bottom: 20px;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 20px rgba(220, 20, 60, 0.3);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 30px rgba(220, 20, 60, 0.5);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 20px rgba(220, 20, 60, 0.3);
+            }
+        }
+        
+        .loading-text {
+            font-family: 'SimSun', '宋体', serif;
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            line-height: 1.6;
+        }
+        
+        .loading-progress-container {
+            width: 300px;
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .loading-progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, #dc143c, #ffd700);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .loading-progress-text {
+            font-family: 'SimSun', '宋体', serif;
+            font-size: 1rem;
+            color: #333;
+        }
+        
+        /* 全局样式 */
         * {
             margin: 0;
             padding: 0;
@@ -386,6 +462,14 @@
             
             .theme-switch, .language-switch, .auth-buttons {
                 margin: 10px 0;
+            }
+            
+            .loading-progress-container {
+                width: 250px;
+            }
+            
+            .loading-text {
+                font-size: 1.2rem;
             }
         }
         
@@ -1032,6 +1116,38 @@ padding-bottom: 10px;
         }
     </style>
     
+    <!-- 加载屏幕JavaScript -->
+    <script>
+        // 模拟页面加载进度
+        document.addEventListener('DOMContentLoaded', function() {
+            const loadingScreen = document.querySelector('.loading-screen');
+            const progressBar = document.querySelector('.loading-progress-bar');
+            const progressText = document.querySelector('.loading-progress-text');
+            let progress = 0;
+            
+            // 模拟加载进度
+            const interval = setInterval(() => {
+                progress += Math.random() * 10;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    
+                    // 加载完成后隐藏加载屏幕
+                    setTimeout(() => {
+                        loadingScreen.classList.add('hidden');
+                        setTimeout(() => {
+                            loadingScreen.style.display = 'none';
+                        }, 500);
+                    }, 500);
+                }
+                
+                // 更新进度条和文本
+                progressBar.style.width = `${progress}%`;
+                progressText.textContent = `${Math.round(progress)}%`;
+            }, 150);
+        });
+    </script>
+    
     <!-- 人机验证检查脚本 -->
     <script>
         // 检查是否已经通过人机验证
@@ -1075,7 +1191,7 @@ padding-bottom: 10px;
         }
 
         // 页面加载时检查验证
-        document.addEventListener('DOMContentLoaded', function() {
+        window.addEventListener('load', function() {
             // 延迟检查，确保页面完全加载
             setTimeout(() => {
                 checkHumanVerification();
@@ -1084,6 +1200,16 @@ padding-bottom: 10px;
     </script>
 </head>
 <body class="light-mode">
+    <!-- 加载屏幕 -->
+    <div class="loading-screen">
+        <img src="https://MingDynasty1.github.io/000000000000000000.png" alt="MingDynasty" class="loading-avatar">
+        <div class="loading-text">Please wait while MingDynasty's Website is loading...<br>n%</div>
+        <div class="loading-progress-container">
+            <div class="loading-progress-bar"></div>
+        </div>
+        <div class="loading-progress-text">0%</div>
+    </div>
+    
     <header>
         <div class="container">
             <h1 class="ming-decoration" data-lang="zh">MingDynasty 的个人主页</h1>
@@ -2049,4 +2175,3 @@ padding-bottom: 10px;
     </script>
 </body>
 </html>
-
