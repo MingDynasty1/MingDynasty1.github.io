@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大明百科 | MingDynasty</title>
+      <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <!-- Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- 统一的 Tailwind 配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // 明色模式
+                        'ming-paper': '#F5F2E9',
+                        'ming-red': '#B92929',
+                        'ming-gold': '#E6B422',
+                        'ming-ink': '#2D2D2D',
+                        'ming-secondary': '#8C6239',
+                        'ming-light': '#E8E2D9',
+                        // 暗色模式
+                        'ming-dark-bg': '#1A1A1A',
+                        'ming-dark-text': '#E0E0E0',
+                        'ming-dark-gold': '#D4AF37',
+                        'ming-dark-red': '#CC3333',
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans SC', 'sans-serif'],
+                        serif: ['Noto Serif SC', 'serif'],
+                        display: ['Ma Shan Zheng', 'cursive'],
+                    },
+                    backgroundImage: {
+                        'ming-pattern': "url('https://p11-doubao-search-sign.byteimg.com/tos-cn-i-qvj2lq49k0/f4aaa629a26546349756d1f225f00c9e~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1789039257&x-signature=eV7BuY9u%2B4xnaTa40NDPHwYPtUo%3D')",
+                        'ming-border': "url('https://p3-doubao-search-sign.byteimg.com/tos-cn-i-qvj2lq49k0/09b9548d838c42a898ac9d16572a3b30~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1789039257&x-signature=1Z1I1wbM8bkr6SPC%2BJY0D1QAJbc%3D')",
+                    },
+                    boxShadow: {
+                        'scroll': '0 4px 8px rgba(0, 0, 0, 0.1)',
+                        'seal': '0 0 0 4px rgba(185, 41, 41, 0.2)',
+                    }
+                }
+            },
+            darkMode: 'class',
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .seal {
+                position: relative;
+                border-radius: 50%;
+                overflow: hidden;
+                transform: rotate(-15deg);
+                box-shadow: 0 0 0 4px rgba(185, 41, 41, 0.2);
+            }
+            .seal::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 50%);
+                pointer-events: none;
+            }
+            .scroll-bg {
+                background: linear-gradient(to bottom, rgba(245, 242, 233, 0) 0%, rgba(245, 242, 233, 0.8) 10%, rgba(245, 242, 233, 0.8) 90%, rgba(245, 242, 233, 0) 100%);
+            }
+            .dark .scroll-bg {
+                background: linear-gradient(to bottom, rgba(26, 26, 26, 0) 0%, rgba(26, 26, 26, 0.8) 10%, rgba(26, 26, 26, 0.8) 90%, rgba(26, 26, 26, 0) 100%);
+            }
+            .book-spine {
+                transform-style: preserve-3d;
+                transform: rotateY(-30deg);
+                box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
+            }
+            .book-spine::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: -15px;
+                width: 30px;
+                height: 100%;
+                background: linear-gradient(90deg, rgba(140, 98, 57, 0.8), rgba(140, 98, 57, 0.4));
+                transform: rotateY(90deg);
+                transform-origin: left;
+            }
+            .dark .book-spine::before {
+                background: linear-gradient(90deg, rgba(212, 175, 55, 0.6), rgba(212, 175, 55, 0.3));
+            }
+            .cloud-pattern {
+                background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 50C50 30 30 10 10 10C30 10 30 30 30 50C30 70 50 90 70 90C50 90 50 70 50 50Z' fill='%23B92929' fill-opacity='0.05'/%3E%3C/svg%3E");
+            }
+            .dark .cloud-pattern {
+                background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 50C50 30 30 10 10 10C30 10 30 30 30 50C30 70 50 90 70 90C50 90 50 70 50 50Z' fill='%23D4AF37' fill-opacity='0.1'/%3E%3C/svg%3E");
+            }
+            .ink-splash {
+                position: relative;
+            }
+            .ink-splash::after {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 200%;
+                height: 200%;
+                background: radial-gradient(circle, rgba(185, 41, 41, 0.05) 0%, rgba(185, 41, 41, 0) 70%);
+                transform: translate(-50%, -50%);
+                pointer-events: none;
+            }
+            .dark .ink-splash::after {
+                background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0) 70%);
+            }
+            .paper-texture {
+                background-color: #F5F2E9;
+                background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%238C6239' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+            }
+            .dark .paper-texture {
+                background-color: #1A1A1A;
+                background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23D4AF37' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+            }
+            .brush-border {
+                position: relative;
+            }
+            .brush-border::before {
+                content: '';
+                position: absolute;
+                top: -2px;
+                left: -2px;
+                right: -2px;
+                bottom: -2px;
+                border: 2px solid transparent;
+                border-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M10,10 Q30,5 50,10 T90,10 Q95,30 90,50 T90,90 Q70,95 50,90 T10,90 Q5,70 10,50 T10,10' fill='none' stroke='%23B92929' stroke-width='2'/%3E%3C/svg%3E") 30;
+                opacity: 0.7;
+            }
+            .dark .brush-border::before {
+                border-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M10,10 Q30,5 50,10 T90,10 Q95,30 90,50 T90,90 Q70,95 50,90 T10,90 Q5,70 10,50 T10,10' fill='none' stroke='%23D4AF37' stroke-width='2'/%3E%3C/svg%3E") 30;
+            }
+            .character-stroke {
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+            }
+            .dark .character-stroke {
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            }
+        }
+    </style>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="paper-texture min-h-screen transition-colors duration-300 ease-in-out">
+    <!-- 背景装饰 -->
+    <div class="fixed inset-0 cloud-pattern opacity-30 pointer-events-none z-0"></div>
+    
+    <!-- 页面容器 -->
+    <div class="relative z-10 container mx-auto px-4 py-8 max-w-7xl">
+        <!-- 头部 -->
+        <header class="mb-8 relative">
+            <div class="flex justify-between items-center">
+                <!-- 左侧印章装饰 -->
+                <div class="hidden md:block">
+                    <div class="seal w-24 h-24 bg-ming-red flex items-center justify-center overflow-hidden">
+                        <img src="https://p11-doubao-search-sign.byteimg.com/labis/d60e8675659a6193e16a9819d9d32481~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1789039257&x-signature=jZF5jA4kL07%2F4bZ2T4VgDHEmqHw%3D" alt="印章" class="w-full h-full object-cover opacity-90">
+                    </div>
+                </div>
+                
+                <!-- 标题 -->
+                <div class="text-center flex-1">
+                    <h1 class="font-display text-5xl md:text-6xl text-ming-red dark:text-ming-dark-gold mb-2 character-stroke tracking-wider">大明百科</h1>
+                    <p class="font-serif text-lg md:text-xl text-ming-secondary dark:text-ming-dark-text/80 italic">明韵传承，文化瑰宝</p>
+                </div>
+                
+                <!-- 右侧主题切换 -->
+                <button id="theme-toggle" class="p-3 rounded-full bg-ming-light/50 dark:bg-ming-dark-bg/50 hover:bg-ming-light dark:hover:bg-ming-dark-bg/80 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-ming-red/50 dark:focus:ring-ming-dark-gold/50 ink-splash">
+                    <i class="fa fa-sun-o text-ming-red dark:text-ming-dark-gold text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- 导航栏 -->
+            <nav class="mt-8 brush-border bg-ming-light/70 dark:bg-ming-dark-bg/70 backdrop-blur-sm rounded-lg p-4 shadow-md">
+                <ul class="flex flex-wrap justify-center gap-2 md:gap-6">
+                    <li><a href="#" class="block py-2 px-4 text-ming-ink dark:text-ming-dark-text hover:text-ming-red dark:hover:text-ming-dark-gold transition-colors duration-200 font-medium border-b-2 border-transparent hover:border-ming-red dark:hover:border-ming-dark-gold">首页</a></li>
+                    <li><a href="#encyclopedia" class="block py-2 px-4 text-ming-ink dark:text-ming-dark-text hover:text-ming-red dark:hover:text-ming-dark-gold transition-colors duration-200 font-medium border-b-2 border-transparent hover:border-ming-red dark:hover:border-ming-dark-gold">百科查询</a></li>
+                    <li><a href="#四库全书" class="block py-2 px-4 text-ming-ink dark:text-ming-dark-text hover:text-ming-red dark:hover:text-ming-dark-gold transition-colors duration-200 font-medium border-b-2 border-transparent hover:border-ming-red dark:hover:border-ming-dark-gold">四库全书</a></li>
+                    <li><a href="#永乐大典" class="block py-2 px-4 text-ming-ink dark:text-ming-dark-text hover:text-ming-red dark:hover:text-ming-dark-gold transition-colors duration-200 font-medium border-b-2 border-transparent hover:border-ming-red dark:hover:border-ming-dark-gold">永乐大典</a></li>
+                    <li><a href="#about" class="block py-2 px-4 text-ming-ink dark:text-ming-dark-text hover:text-ming-red dark:hover:text-ming-dark-gold transition-colors duration-200 font-medium border-b-2 border-transparent hover:border-ming-red dark:hover:border-ming-dark-gold">关于我们</a></li>
+                </ul>
+            </nav>
+        </header>
+        
+        <!-- 主要内容 -->
+        <main class="relative">
+            <!-- 特色内容轮播 -->
+            <section class="mb-12 relative overflow-hidden rounded-xl shadow-lg">
+                <div class="featured-carousel h-64 md:h-80 relative">
+                    <div class="carousel-inner flex transition-transform duration-500 ease-out h-full">
+                        <!-- 轮播项 1 -->
+                        <div class="carousel-item w-full flex-shrink-0 relative">
+                            <div class="absolute inset-0 bg-gradient-to-r from-ming-paper/90 to-ming-paper/70 dark:from-ming-dark-bg/90 dark:to-ming-dark-bg/70 z-10"></div>
+                            <img src="https://p26-doubao-search-sign.byteimg.com/pgc-image/0623480acd2e4024ab9ce9d9a3bb4ac4~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1789039257&x-signature=mgOfW55BK2GhOo0PXmgwiQwBkxY%3D" alt="古籍展示" class="absolute inset-0 w-full h-full object-cover">
+                            <div class="relative z-20 p-6 md:p-10 flex flex-col justify-center h-full">
+                                <h2 class="font-display text-3xl md:text-4xl text-ming-red dark:text-ming-dark-gold mb-4 character-stroke">古籍风采</h2>
+                                <p class="text-ming-ink dark:text-ming-dark-text max-w-lg text-lg">探索中国古代典籍的魅力，感受中华文化的深厚底蕴。《四库全书》与《永乐大典》作为中华文明的瑰宝，承载着千年智慧。</p>
+                                <button class="mt-6 px-6 py-2 bg-ming-red/80 hover:bg-ming-red text-white dark:bg-ming-dark-gold/80 dark:hover:bg-ming-dark-gold rounded-md transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-ming-red/50 dark:focus:ring-ming-dark-gold/50 w-fit">了解更多</button>
+                            </div>
+                        </div>
+                        
+                        <!-- 轮播项 2 -->
+                        <div class="carousel-item w-full flex-shrink-0 relative">
+                            <div class="absolute inset-0 bg-gradient-to-r from-ming-paper/90 to-ming-paper/70 dark:from-ming-dark-bg/90 dark:to-ming-dark-bg/70 z-10"></div>
+                            <img src="https://p11-doubao-search-sign.byteimg.com/tos-cn-i-qvj2lq49k0/f4aaa629a26546349756d1f225f00c9e~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1789039257&x-signature=eV7BuY9u%2B4xnaTa40NDPHwYPtUo%3D" alt="明朝纹样" class="absolute inset-0 w-full h-full object-cover">
+                            <div class="relative z-20 p-6 md:p-10 flex flex-col justify-center h-full">
+                                <h2 class="font-display text-3xl md:text-4xl text-ming-red dark:text-ming-dark-gold mb-4 character-stroke">明韵设计</h2>
+                                <p class="text-ming-ink dark:text-ming-dark-text max-w-lg text-lg">领略明朝时期的艺术美学，从服饰纹样到建筑装饰，感受那个时代的繁华与优雅。</p>
+                                <button class="mt-6 px-6 py-2 bg-ming-red/80 hover:bg-ming-red text-white dark:bg-ming-dark-gold/80 dark:hover:bg-ming-dark-gold rounded-md transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-ming-red/50 dark:focus:ring-ming-dark-gold/50 w-fit">探索美学</button>
+                            </div>
+                        </div>
+                        
+                        <!-- 轮播项 3 -->
+                        <div class="carousel-item w-full flex-shrink-0 relative">
+                            <div class="absolute inset-0 bg-gradient-to-r from-ming-paper/90 to-ming-paper/70 dark:from-ming-dark-bg/90 dark:to-ming-dark-bg/70 z-10"></div>
+                            <img src="https://p26-doubao-search-sign.byteimg.com/pgc-image/5c0e4a65abd64d2989ad529771a54940~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1789039257&x-signature=P%2BsMG0heS8phsLg9ksqKMJAxsGY%3D" alt="古代文字" class="absolute inset-0 w-full h-full object-cover">
+                            <div class="relative z-20 p-6 md:p-10 flex flex-col justify-center h-full">
+                                <h2 class="font-display text-3xl md:text-4xl text-ming-red dark:text-ming-dark-gold mb-4 character-stroke">文字传承</h2>
+                                <p class="text-ming-ink dark:text-ming-dark-text max-w-lg text-lg">从甲骨文到楷书，中国文字的演变历程见证了中华文明的发展。探索文字背后的故事与智慧。</p>
+                                <button class="mt-6 px-6 py-2 bg-ming-red/80 hover:bg-ming-red text-white dark:bg-ming-dark-gold/80 dark:hover:bg-ming-dark-gold rounded-md transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-ming-red/50 dark:focus:ring-ming-dark-gold/50 w-fit">文字之旅</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 轮播控制 -->
+                    <button class="carousel-control-prev absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/30 dark:bg-black/30 backdrop-blur-sm flex items-center justify-center text-ming-ink dark:text-ming-dark-text hover:bg-white/50 dark:hover:bg-black/50 transition-all duration-300 z-30 focus:outline-none focus:ring-2 focus:ring-ming-red/50 dark:focus:ring-ming-dark-gold/50">
+                        <i class="fa fa-chevron-left"></i>
+                    </button>
+                    <button class="carousel-control-next absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/30 dark:bg-black/30 backdrop-blur-sm flex items-center justify-center text-ming-ink dark:text-ming-dark-text hover:bg-white/50 dark:hover:bg-black/50 transition-all duration-300 z-30 focus:outline-none focus:ring-2 focus:ring-ming-red/50 dark:focus:ring-ming-dark-gold/50">
+                        <i class="fa fa-chevron-right"></i>
+                    </button>
+                    
+                    <!-- 轮播指示器 -->
+                    <div class="carousel-indicators absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2 z-30">
+                        <button class="w-3 h-3 rounded-full bg-ming-red/70 dark:bg-ming-dark-gold/70 transition-all duration-300 carousel-indicator active" data-index="0"></button>
+                        <button class="w-3 h-3 rounded-full bg-white/50 dark:bg-black/50 transition-all duration-300 carousel-indicator" data-index="1"></button>
+                        <button class="w-3 h-3 rounded-full bg-white/50 dark:bg-black/50 transition-all duration-300 carousel-indicator" data-index="2"></button>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 百科查询区域 -->
+            <section id="encyclopedia" class="mb-12">
+                <div class="bg-ming-light/70 dark:bg-ming-dark-bg/70 backdrop-blur-sm rounded-xl p-6 md:p-8 shadow-md brush-border">
+                    <h2 class="font-display text-3xl text-ming-red dark:text-ming-dark-gold mb-6 text-center character-stroke">百科查询</h2>
+                    
+                    <!-- 搜索表单 -->
+                    <form id="search-form" class="mb-8">
+                        <div class="flex flex-col md:flex-row gap-4">
+                            <div class="flex-1">
+                                <label for="search-input" class="block text-sm font-medium text-ming-ink dark:text-ming-dark-text mb-2">查询内容</label>
+                                <input type="text" id="search-input" class="w-full px-4 py-3 rounded-md border border-ming-secondary/30 dark:border-ming-dark-gold/30 bg-white/80 dark:bg-ming-dark-bg/80 text-ming-ink dark:text-ming-dark-text focus:outline-none focus:ring-2 focus:ring-ming-red/50 dark:focus:ring-ming-dark-gold/50 transition-all duration-300" placeholder="输入关键词进行查询...">
+                            </div>
+                            
+                            <div class="flex-shrink-0 md:w-48">
+                                <label for="source-select" class="block text-sm font-medium text-ming-ink dark:text-ming-dark-text mb-2">数据源</label>
+                                <select id="source-select" class="w-full px-4 py-3 rounded-md border border-ming-secondary/30 dark:border-ming-dark-gold/30 bg-white/80 dark:bg-ming-dark-bg/80 text-ming-ink dark:text-ming-dark-text focus:outline-none focus:ring-2 focus:ring-ming-red/50 dark:focus:ring-ming-dark-gold/50 transition-all duration-300">
+                                    <option value="all">全部数据源</option>
+                                    <option value="internet">网上信息</option>
+                                    <option value="siku">四库全书</option>
+                                    <option value="yongle">永乐大典</option>
+                                </select>
+                            </div>
+                            
+                            <div class="flex-shrink-0 md:self-end">
+                                <button type="submit" class="w-full md:w-32 px-6 py-3 bg-ming-red hover:bg-ming-red/90 text-white dark:bg-ming-dark-gold dark:hover:bg-ming-dark-gold/90 rounded-md transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-ming-red/50 dark:focus:ring-ming-dark-gold/50 ink-splash">
+                                    <i class="fa fa-search mr-2"></i>查询
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    
+                    <!-- 搜索结果 -->
+                    <div id="search-results" class="hidden">
+                        <div class="border-t border-ming-secondary/20 dark:border-ming-dark-gold/20 pt-6">
+                            <h3 class="font-serif text-xl text-ming-ink dark:text-ming-dark-text mb-4">查询结果</h3>
+                            
+                            <div id="results-container" class="space-y-6">
+                                <!-- 结果将通过JavaScript动态插入 -->
+                            </div>
+                            
+                            <!-- 分页 -->
+                            <div id="pagination" class="mt-8 flex justify-center">
+                                <nav class="inline-flex rounded-md shadow">
+                                    <a href="#" class="px-3 py-2 rounded-l-md border border-ming-secondary/30 dark:border-ming-dark-gold/30 bg-white/80 dark:bg-ming-dark-bg/80 text-ming-ink dark:text-ming-dark-text hover:bg-ming-light dark:hover:bg-ming-dark-bg/90 transition-colors duration-200">上一页</a>
+                                    <a href="#" class="px-3 py-2 border-t border-b border-ming-secondary/30 dark:border-ming-dark-gold/30 bg-ming-light/50 dark:bg-ming-dark-gold/20 text-ming-red dark:text-ming-dark-gold font-medium">1</a>
+                                    <a href="#" class="px-3 py-2 border-t border-b border-ming-secondary/30 dark:border-ming-dark-gold/30 bg-white/80 dark:bg-ming-dark-bg/80 text-ming-ink dark:text-ming-dark-text hover:bg-ming-light dark:hover:bg-ming-dark-bg/90 transition-colors duration-200">2</a>
+                                    <a href="#" class="px-3 py-2 border-t border-b border-ming-secondary/30 dark:border-ming-dark-gold/30 bg-white/80 dark:bg-ming-dark-bg/80 text-ming-ink dark:text-ming-dark-text hover:bg-ming-light dark:hover:bg-ming-dark-bg/90 transition-colors duration-200">3</a>
+                                    <a href="#" class="px-3 py-2 rounded-r-md border border-ming-secondary/30 dark:border-ming-dark-gold/30 bg-white/80 dark:bg-ming-dark-bg/80 text-ming-ink dark:text-ming-dark-text hover:bg-ming-light dark:hover:bg-ming-dark-bg/90 transition-colors duration-200">下一页</a>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 初始状态提示 -->
+                    <div id="search-placeholder" class="text-center py-12">
+                        <img src="https://p26-doubao-search-sign.byteimg.com/tos-cn-i-be4g95zd3a/890739744393134123~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1789039257&x-signature=t8MFAIVN798QVO9VFYc8lSgcjDw%3D" alt="古籍" class="w-32 h-32 object-contain mx-auto mb-6 opacity-70">
+                        <p class="text-ming-ink/70 dark:text-ming-dark-text/70 text-lg">输入关键词，选择数据源，开始您的知识探索之旅</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 数据源介绍 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                <!-- 四库全书 -->
+                <section id="四库全书" class="bg-ming-light/70 dark:bg-ming-dark-bg/70 backdrop-blur-sm rounded-xl p-6 md:p-8 shadow-md brush-border">
+                    <div class="flex items-start gap-4">
+                        <div class="book-spine w-16 h-24 bg-ming-secondary/80 dark:bg-ming-dark-gold/40 rounded flex items-center justify-center transform -rotate-3 shadow-md flex-shrink-0">
+                            <span class="text-white dark:text-ming-dark-text font-serif writing-vertical text-lg">四库全书</span>
+                        </div>
+                        <div>
+                            <h2 class="font-display text-2xl text-ming-red dark:text-ming-dark-gold mb-4 character-stroke">四库全书</h2>
+                            <p class="text-ming-ink dark:text-ming-dark-text mb-4">《四库全书》是清高宗乾隆年间编纂的大型丛书，由纪昀等360多位高官、学者编撰，3800多人抄写，耗时十三年编成。分经、史、子、集四部，故名"四库"。</p>
+                            <p class="text-ming-ink dark:text-ming-dark-text mb-4">全书共收录3462种图书，共计79338卷，约八亿字，是中国古代最大的丛书，保存了中国历代大量文献。</p>
+                            <button class="px-4 py-2 bg-ming-red/80 hover:bg-ming-red text-white dark:bg-ming-dark-gold/80 dark:hover:bg-ming-dark-gold rounded-md transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-ming-red/50 dark:focus:ring-ming-dark-gold/50 text-sm ink-splash">
+                                探索四库全书
+                            </button>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- 永乐大典 -->
+                <section id="永乐大典" class="bg-ming-light/70 dark:bg-ming-dark-bg/70 backdrop-blur-sm rounded-xl p-6 md:p-8 shadow-md brush-border">
+                    <div class="flex items-start gap-4">
+                        <div class="book-spine w-16 h-24 bg-ming-secondary/80 dark:bg-ming-dark-gold/40 rounded flex items-center justify-center transform rotate-3 shadow-md flex-shrink-0">
+                            <span class="text-white dark:text-ming-dark-text font-serif writing-vertical text-lg">永乐大典</span>
+                        </div>
+                        <div>
+                            <h2 class="font-display text-2xl text-ming-red dark:text-ming-dark-gold mb-4 character-stroke">永乐大典</h2>
+                            <p class="text-ming-ink dark:text-ming-dark-text mb-4">《永乐大典》是明成祖朱棣永乐年间编纂的一部大型百科全书，保存了大量的我国十四世纪以前的文学、艺术、史地、哲学、宗教和应用科学等方面的丰富资料。</p>
+                            <p class="text-ming-ink dark:text-ming-dark-text mb-4">全书二万二千八百七十七卷，目录六十卷，分装成一万一千零九十五册，约三亿七千万字，比法国狄德罗、达兰贝主编的百科全书和著名的《大英百科全书》都要早三百余年。</p>
+                            <button class="px-4 py-2 bg-ming-red/80 hover:bg-ming-red text-white dark:bg-ming-dark-gold/80 dark:hover:bg-ming-dark-gold rounded-md transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-ming-red/50 dark:focus:ring-ming-dark-gold/50 text-sm ink-splash">
+                                探索永乐大典
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- 特色内容 -->
+            <section class="mb-12">
+                <h2 class="font-display text-3xl text-ming-red dark:text-ming-dark-gold mb-6 text-center character-stroke">明韵精选</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- 特色内容 1 -->
+                    <div class="bg-ming-light/70 dark:bg-ming-dark-bg/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                        <img src="https://p11-doubao-search-sign.byteimg.com/tos-cn-i-qvj2lq49k0/3831aeac732e41b9853e0b44a2d36247~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1789039257&x-signature=LWZx0ycj3grRUe9GCgWW%2BvrGQok%3D" alt="明朝纹样" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="font-serif text-xl text-ming-ink dark:text-ming-dark-text mb-3">明朝服饰纹样</h3>
+                            <p class="text-ming-ink/80 dark:text-ming-dark-text/80 mb-4">明朝服饰纹样丰富多样，文官绣禽、武官绣兽的补子制度是明朝独有的创造，一直影响到清朝。</p>
+                            <a href="#" class="text-ming-red dark:text-ming-dark-gold hover:underline inline-flex items-center">
+                                了解更多 <i class="fa fa-arrow-right ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- 特色内容 2 -->
+                    <div class="bg-ming-light/70 dark:bg-ming-dark-bg/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                        <img src="https://p11-doubao-search-sign.byteimg.com/pgc-image/e50c23efe5ab49e9adaa310854ead6b8~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1789039257&x-signature=Ahr5v59KWbUiATABR9sJxiOVIjc%3D" alt="古籍样式" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="font-serif text-xl text-ming-ink dark:text-ming-dark-text mb-3">古籍装订艺术</h3>
+                            <p class="text-ming-ink/80 dark:text-ming-dark-text/80 mb-4">线装书是中国传统书籍装订形式，始于明代万历年以后，是传世古籍最常用的装订方式，具有独特的艺术魅力。</p>
+                            <a href="#" class="text-ming-red dark:text-ming-dark-gold hover:underline inline-flex items-center">
+                                了解更多 <i class="fa fa-arrow-right ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- 特色内容 3 -->
+                    <div class="bg-ming-light/70 dark:bg-ming-dark-bg/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                        <img src="https://p26-doubao-search-sign.byteimg.com/pgc-image/ec799151cb4c413bbd13fa86254ce454~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1789039257&x-signature=RYtpb7mAH9tj74EqSeYoBwPLdJU%3D" alt="明朝印章" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="font-serif text-xl text-ming-ink dark:text-ming-dark-text mb-3">印章文化</h3>
+                            <p class="text-ming-ink/80 dark:text-ming-dark-text/80 mb-4">明代印章艺术发展到了一个新的高度，不仅用于实用，更成为文人雅士的收藏和鉴赏对象，体现了独特的审美情趣。</p>
+                            <a href="#" class="text-ming-red dark:text-ming-dark-gold hover:underline inline-flex items-center">
+                                了解更多 <i class="fa fa-arrow-right ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 关于我们 -->
+            <section id="about" class="mb-12">
+                <div class="bg-ming-light/70 dark:bg-ming-dark-bg/70 backdrop-blur-sm rounded-xl p-6 md:p-8 shadow-md brush-border">
+                    <h2 class="font-display text-3xl text-ming-red dark:text-ming-dark-gold mb-6 text-center character-stroke">关于我们</h2>
+                    
+                    <div class="max-w-3xl mx-auto">
+                        <p class="text-ming-ink dark:text-ming-dark-text mb-4">大明百科致力于传承和弘扬中华优秀传统文化，特别是明朝时期的文化遗产。我们通过现代技术手段，将《四库全书》、《永乐大典》等珍贵古籍数字化，让更多人能够便捷地获取和了解这些文化瑰宝。</p>
+                        
+                        <p class="text-ming-ink dark:text-ming-dark-text mb-4">我们的团队由历史学者、古籍整理专家和技术人员组成，致力于为用户提供准确、全面的历史文化信息。我们希望通过大明百科这个平台，让更多人感受到中华文化的博大精深，增强文化自信。</p>
+                        
+                        <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="bg-white/50 dark:bg-ming-dark-bg/50 rounded-lg p-4">
+                                <h3 class="font-serif text-xl text-ming-ink dark:text-ming-dark-text mb-3">联系我们</h3>
+                                <p class="text-ming-ink/80 dark:text-ming-dark-text/80"><i class="fa fa-envelope mr-2"></i> contact@mingencyclopedia.com</p>
+                                <p class="text-ming-ink/80 dark:text-ming-dark-text/80"><i class="fa fa-phone mr-2"></i> +86 123 4567 8910</p>
+                            </div>
+                            
+                            <div class="bg-white/50 dark:bg-ming-dark-bg/50 rounded-lg p-4">
+                                <h3 class="font-serif text-xl text-ming-ink dark:text-ming-dark-text mb-3">关注我们</h3>
+                                <div class="flex space-x-4">
+                                    <a href="#" class="w-10 h-10 rounded-full bg-ming-red/80 dark:bg-ming-dark-gold/80 flex items-center justify-center text-white hover:bg-ming-red dark:hover:bg-ming-dark-gold transition-colors duration-300">
+                                        <i class="fa fa-weixin"></i>
+                                    </a>
+                                    <a href="#" class="w-10 h-10 rounded-full bg-ming-red/80 dark:bg-ming-dark-gold/80 flex items-center justify-center text-white hover:bg-ming-red dark:hover:bg-ming-dark-gold transition-colors duration-300">
+                                        <i class="fa fa-weibo"></i>
+                                    </a>
+                                    <a href="#" class="w-10 h-10 rounded-full bg-ming-red/80 dark:bg-ming-dark-gold/80 flex items-center justify-center text-white hover:bg-ming-red dark:hover:bg-ming-dark-gold transition-colors duration-300">
+                                        <i class="fa fa-youtube-play"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <!-- 页脚 -->
+        <footer class="mt-16 border-t border-ming-secondary/20 dark:border-ming-dark-gold/20 pt-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <h3 class="font-display text-2xl text-ming-red dark:text-ming-dark-gold character-stroke">大明百科</h3>
+                    <p class="text-ming-ink/70 dark:text-ming-dark-text/70 text-sm mt-1">明韵传承，文化瑰宝</p>
+                </div>
+                
+                <div class="text-center md:text-right">
+                    <p class="text-ming-ink/70 dark:text-ming-dark-text/70 text-sm">&copy; 2026 大明百科. 保留所有权利.</p>
+                    <div class="flex justify-center md:justify-end space-x-4 mt-2">
+                        <a href="#" class="text-ming-ink/70 dark:text-ming-dark-text/70 hover:text-ming-red dark:hover:text-ming-dark-gold text-sm">隐私政策</a>
+                        <a href="#" class="text-ming-ink/70 dark:text-ming-dark-text/70 hover:text-ming-red dark:hover:text-ming-dark-gold text-sm">使用条款</a>
+                        <a href="#" class="text-ming-ink/70 dark:text-ming-dark-text/70 hover:text-ming-red dark:hover:text-ming-dark-gold text-sm">网站地图</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- JavaScript -->
+    <script>
+        // 主题切换功能
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = themeToggle.querySelector('i');
+        
+        // 检查本地存储中的主题偏好
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            themeIcon.classList.remove('fa-sun-o');
+            themeIcon.classList.add('fa-moon-o');
+        } else {
+            document.documentElement.classList.remove('dark');
+            themeIcon.classList.remove('fa-moon-o');
+            themeIcon.classList.add('fa-sun-o');
+        }
+        
+        // 主题切换事件
+        themeToggle.addEventListener('click', () => {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                themeIcon.classList.remove('fa-moon-o');
+                themeIcon.classList.add('fa-sun-o');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                themeIcon.classList.remove('fa-sun-o');
+                themeIcon.classList.add('fa-moon-o');
+            }
+        });
+        
+        // 轮播功能
+        const carouselInner = document.querySelector('.carousel-inner');
+        const carouselItems = document.querySelectorAll('.carousel-item');
+        const prevBtn = document.querySelector('.carousel-control-prev');
+        const nextBtn = document.querySelector('.carousel-control-next');
+        const indicators = document.querySelectorAll('.carousel-indicator');
+        
+        let currentIndex = 0;
+        const itemCount = carouselItems.length;
+        
+        // 设置轮播项宽度
+        function setItemWidth() {
+            const containerWidth = document.querySelector('.featured-carousel').offsetWidth;
+            carouselItems.forEach(item => {
+                item.style.width = `${containerWidth}px`;
+            });
+            updateCarousel();
+        }
+        
+        // 更新轮播位置
+        function updateCarousel() {
+            carouselInner.style.transform = `translateX(-${currentIndex * 100}%)`;
+            
+            // 更新指示器
+            indicators.forEach((indicator, index) => {
+                if (index === currentIndex) {
+                    indicator.classList.add('bg-ming-red/70', 'dark:bg-ming-dark-gold/70');
+                    indicator.classList.remove('bg-white/50', 'dark:bg-black/50');
+                } else {
+                    indicator.classList.remove('bg-ming-red/70', 'dark:bg-ming-dark-gold/70');
+                    indicator.classList.add('bg-white/50', 'dark:bg-black/50');
+                }
+            });
+        }
+        
+        // 下一张
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % itemCount;
+            updateCarousel();
+        }
+        
+        // 上一张
+        function prevSlide() {
+            currentIndex = (currentIndex - 1 + itemCount) % itemCount;
+            updateCarousel();
+        }
+        
+        // 点击指示器
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => {
+                currentIndex = index;
+                updateCarousel();
+            });
+        });
+        
+        // 绑定事件
+        nextBtn.addEventListener('click', nextSlide);
+        prevBtn.addEventListener('click', prevSlide);
+        
+        // 自动轮播
+        let autoplayInterval = setInterval(nextSlide, 5000);
+        
+        // 鼠标悬停时暂停自动轮播
+        document.querySelector('.featured-carousel').addEventListener('mouseenter', () => {
+            clearInterval(autoplayInterval);
+        });
+        
+        // 鼠标离开时恢复自动轮播
+        document.querySelector('.featured-carousel').addEventListener('mouseleave', () => {
+            autoplayInterval = setInterval(nextSlide, 5000);
+        });
+        
+        // 窗口大小改变时重新设置轮播项宽度
+        window.addEventListener('resize', setItemWidth);
+        
+        // 初始化轮播
+        setItemWidth();
+        
+        // 搜索功能
+        const searchForm = document.getElementById('search-form');
+        const searchInput = document.getElementById('search-input');
+        const sourceSelect = document.getElementById('source-select');
+        const searchResults = document.getElementById('search-results');
+        const searchPlaceholder = document.getElementById('search-placeholder');
+        const resultsContainer = document.getElementById('results-container');
+        
+        // 模拟数据
+        const mockData = {
+            '四库全书': [
+                {
+                    title: '四库全书总目',
+                    content: '《四库全书总目》，简称《四库总目》，是中国古代最大的目录学著作，由纪昀等人编纂，收录了《四库全书》所收书籍的提要和目录。全书共二百卷，分经、史、子、集四部，部下分类，类下分属，每书有提要，介绍作者生平、书籍内容、版本流传等信息。',
+                    source: '四库全书',
+                    relevance: 100
+                },
+                {
+                    title: '经部总叙',
+                    content: '经禀圣裁，垂型万世，删定之旨，如日中天，无所容其赞述。所论次者，诂经之说而已。自汉京以后垂二千年，儒者沿波，学凡六变。其初专门授受，递禀师承，非惟诂训相传，莫敢同异，即篇章字句，亦恪守所闻，其学笃实谨严，及其弊也拘。',
+                    source: '四库全书',
+                    relevance: 90
+                }
+            ],
+            '永乐大典': [
+                {
+                    title: '永乐大典序',
+                    content: '昔者圣王之治天下也，尽开物成务之道，极裁成辅相之宜，修礼乐而明教化，阐礼乐而宣人文。朕嗣承鸿基，缵膺景命，兢兢业业，夙夜匪懈，思述先志，罔敢怠遑。',
+                    source: '永乐大典',
+                    relevance: 100
+                },
+                {
+                    title: '永乐大典凡例',
+                    content: '《永乐大典》，冠以《洪武正韵》，每韵下列单字，每字下列各韵书、字书解释，次列天文、地理、人事、名物，以至奇文异见、诗文词曲，随字收载。',
+                    source: '永乐大典',
+                    relevance: 95
+                }
+            ],
+            '明朝': [
+                {
+                    title: '明朝历史概述',
+                    content: '明朝（1368年-1644年）是中国历史上最后一个由汉族建立的大一统王朝，历经十六帝，享国二百七十六年。明朝初期国力强盛，经济繁荣，文化昌盛，是中国封建社会的鼎盛时期之一。',
+                    source: '网上信息',
+                    relevance: 100
+                },
+                {
+                    title: '明朝服饰制度',
+                    content: '明朝服饰制度严格，上自皇帝冕服，下至百姓布衣，各有等差。官员服饰有补子制度，文官绣禽，武官绣兽，品级高低，一目了然。民间服饰则较为朴素，但也有一定的规范。',
+                    source: '网上信息',
+                    relevance: 95
+                },
+                {
+                    title: '明朝文化艺术',
+                    content: '明朝文化艺术成就辉煌，文学、绘画、书法、建筑等方面都有杰出的代表作品。明代小说发展达到高峰，《三国演义》、《水浒传》、《西游记》、《金瓶梅》等作品影响深远。',
+                    source: '网上信息',
+                    relevance: 90
+                }
+            ],
+            '汉服': [
+                {
+                    title: '汉服概述',
+                    content: '汉服，全称是"汉民族传统服饰"，又称汉衣冠、汉装、华服，是从黄帝即位到公元17世纪中叶（明末清初），在汉族的主要居住区，以"华夏-汉"文化为背景和主导思想，以华夏礼仪文化为中心，通过自然演化而形成的具有独特汉民族风貌性格，明显区别于其他民族的传统服装和配饰体系。',
+                    source: '网上信息',
+                    relevance: 100
+                },
+                {
+                    title: '明制汉服特点',
+                    content: '明制汉服是中国汉服发展的集大成者，继承了周汉的礼制精神与核心形制，借鉴了唐代的官服骨架，融入了宋代的日常款式与素雅审美。明制汉服形成了一套严谨、精细的形制体系，其核心标识是交领右衽、宽袍大袖，坚守着汉族服饰的正统基因。',
+                    source: '网上信息',
+                    relevance: 98
+                }
+            ]
+        };
+        
+        // 搜索处理函数
+        function handleSearch(event) {
+            event.preventDefault();
+            
+            const query = searchInput.value.trim().toLowerCase();
+            const source = sourceSelect.value;
+            
+            if (!query) {
+                alert('请输入查询内容');
+                return;
+            }
+            
+            // 模拟搜索延迟
+            searchPlaceholder.innerHTML = '<div class="flex justify-center items-center py-12"><i class="fa fa-spinner fa-spin text-3xl text-ming-red dark:text-ming-dark-gold"></i></div>';
+            
+            setTimeout(() => {
+                // 搜索逻辑
+                let results = [];
+                
+                // 从模拟数据中查找匹配项
+                for (const key in mockData) {
+                    if (key.toLowerCase().includes(query)) {
+                        results = results.concat(mockData[key]);
+                    } else {
+                        mockData[key].forEach(item => {
+                            if (item.title.toLowerCase().includes(query) || item.content.toLowerCase().includes(query)) {
+                                results.push(item);
+                            }
+                        });
+                    }
+                }
+                
+                // 根据数据源筛选
+                if (source !== 'all') {
+                    results = results.filter(item => {
+                        if (source === 'internet') return item.source === '网上信息';
+                        if (source === 'siku') return item.source === '四库全书';
+                        if (source === 'yongle') return item.source === '永乐大典';
+                        return true;
+                    });
+                }
+                
+                // 按相关性排序
+                results.sort((a, b) => b.relevance - a.relevance);
+                
+                // 显示结果
+                displayResults(results);
+            }, 1000);
+        }
+        
+        // 显示搜索结果
+        function displayResults(results) {
+            searchPlaceholder.style.display = 'none';
+            searchResults.classList.remove('hidden');
+            
+            if (results.length === 0) {
+                resultsContainer.innerHTML = `
+                    <div class="text-center py-12">
+                        <i class="fa fa-search text-4xl text-ming-red/50 dark:text-ming-dark-gold/50 mb-4"></i>
+                        <p class="text-ming-ink/70 dark:text-ming-dark-text/70">未找到相关结果，请尝试其他关键词</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let resultsHTML = '';
+            
+            results.forEach(result => {
+                // 截取内容预览
+                let preview = result.content;
+                if (preview.length > 200) {
+                    preview = preview.substring(0, 200) + '...';
+                }
+                
+                // 来源标签样式
+                let sourceClass = '';
+                if (result.source === '四库全书') {
+                    sourceClass = 'bg-ming-secondary/20 text-ming-secondary dark:bg-ming-dark-gold/20 dark:text-ming-dark-gold';
+                } else if (result.source === '永乐大典') {
+                    sourceClass = 'bg-ming-red/20 text-ming-red dark:bg-ming-dark-gold/30 dark:text-ming-dark-gold';
+                } else {
+                    sourceClass = 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300';
+                }
+                
+                resultsHTML += `
+                    <div class="bg-white/50 dark:bg-ming-dark-bg/50 rounded-lg p-6 shadow-sm hover:shadow-md transition-all duration-300">
+                        <div class="flex justify-between items-start mb-3">
+                            <h4 class="font-serif text-xl text-ming-ink dark:text-ming-dark-text">${result.title}</h4>
+                            <span class="px-2 py-1 text-xs rounded-full ${sourceClass}">${result.source}</span>
+                        </div>
+                        <p class="text-ming-ink/80 dark:text-ming-dark-text/80 mb-4">${preview}</p>
+                        <button class="text-ming-red dark:text-ming-dark-gold hover:underline text-sm flex items-center" onclick="viewDetail('${result.title}')">
+                            查看详情 <i class="fa fa-angle-right ml-1"></i>
+                        </button>
+                    </div>
+                `;
+            });
+            
+            resultsContainer.innerHTML = resultsHTML;
+        }
+        
+        // 查看详情函数（模拟）
+        function viewDetail(title) {
+            alert(`查看 "${title}" 的详细内容`);
+        }
+        
+        // 绑定搜索表单提交事件
+        searchForm.addEventListener('submit', handleSearch);
+        
+        // 垂直文字样式
+        document.querySelectorAll('.writing-vertical').forEach(el => {
+            el.style writingMode = 'vertical-rl';
+            el.style textOrientation = 'mixed';
+        });
+    </script>
+</body>
+</html>
