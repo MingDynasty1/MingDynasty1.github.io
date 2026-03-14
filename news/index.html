@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>明闻阁 - 明朝风格新闻 | MingDynasty</title>
-      <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
     <style>
         /* 基础样式 */
         * {
@@ -18,6 +18,13 @@
             background-color: #f8f3e6;
             color: #333;
             line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* 暗色模式样式 */
+        body.dark-mode {
+            background-color: #2c2c2c;
+            color: #f0e6d2;
         }
         
         /* 公告栏样式 */
@@ -34,6 +41,9 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
         .announcement a {
@@ -51,6 +61,22 @@
             background-color: #d4af37;
             color: #7a0000;
         }
+
+        /* 模式切换按钮 */
+        .mode-toggle {
+            background-color: #d4af37;
+            color: #7a0000;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .mode-toggle:hover {
+            background-color: #f8f3e6;
+        }
         
         /* 头部样式 */
         header {
@@ -59,6 +85,11 @@
             padding: 20px 0;
             border-bottom: 5px solid #d4af37;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            transition: background 0.3s;
+        }
+
+        body.dark-mode header {
+            background: linear-gradient(to bottom, #5a0000, #4a0000);
         }
         
         .header-container {
@@ -136,6 +167,12 @@
             margin-bottom: 25px;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
             overflow: hidden;
+            transition: background-color 0.3s;
+        }
+
+        body.dark-mode .news-card {
+            background-color: #3c3c3c;
+            border-color: #b89020;
         }
         
         .news-card-header {
@@ -143,6 +180,11 @@
             color: #f8f3e6;
             padding: 15px 20px;
             position: relative;
+            transition: background-color 0.3s;
+        }
+
+        body.dark-mode .news-card-header {
+            background-color: #5a0000;
         }
         
         .news-card-header h2 {
@@ -165,6 +207,10 @@
             margin-bottom: 15px;
             border: 1px solid #ddd;
         }
+
+        body.dark-mode .news-card-content img {
+            border-color: #555;
+        }
         
         .news-card-content p {
             margin-bottom: 15px;
@@ -180,9 +226,17 @@
             border-radius: 3px;
             transition: background-color 0.3s;
         }
+
+        body.dark-mode .read-more {
+            background-color: #5a0000;
+        }
         
         .read-more:hover {
             background-color: #9a0000;
+        }
+
+        body.dark-mode .read-more:hover {
+            background-color: #6a0000;
         }
         
         /* 侧边栏样式 */
@@ -192,6 +246,12 @@
             border-radius: 5px;
             padding: 20px;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        body.dark-mode .sidebar {
+            background-color: #3c3c3c;
+            border-color: #b89020;
         }
         
         .sidebar h3 {
@@ -200,12 +260,23 @@
             padding-bottom: 10px;
             margin-bottom: 15px;
             font-size: 1.3rem;
+            transition: color 0.3s, border-color 0.3s;
+        }
+
+        body.dark-mode .sidebar h3 {
+            color: #e0c060;
+            border-bottom-color: #b89020;
         }
         
         .sidebar-news {
             margin-bottom: 20px;
             padding-bottom: 15px;
             border-bottom: 1px dashed #ddd;
+            transition: border-color 0.3s;
+        }
+
+        body.dark-mode .sidebar-news {
+            border-bottom-color: #555;
         }
         
         .sidebar-news:last-child {
@@ -216,11 +287,21 @@
             color: #333;
             margin-bottom: 8px;
             font-size: 1.1rem;
+            transition: color 0.3s;
+        }
+
+        body.dark-mode .sidebar-news h4 {
+            color: #e0d6c0;
         }
         
         .sidebar-news p {
             font-size: 0.9rem;
             color: #666;
+            transition: color 0.3s;
+        }
+
+        body.dark-mode .sidebar-news p {
+            color: #b0a690;
         }
         
         /* 页脚样式 */
@@ -229,6 +310,11 @@
             color: #f8f3e6;
             padding: 30px 0;
             margin-top: 40px;
+            transition: background-color 0.3s;
+        }
+
+        body.dark-mode footer {
+            background-color: #1c1c1c;
         }
         
         .footer-container {
@@ -244,12 +330,23 @@
             color: #d4af37;
             margin-bottom: 15px;
             font-size: 1.2rem;
+            transition: color 0.3s;
+        }
+
+        body.dark-mode .footer-section h3 {
+            color: #e0c060;
         }
         
         .footer-section p, .footer-section a {
             color: #ccc;
             font-size: 0.9rem;
             line-height: 1.8;
+            transition: color 0.3s;
+        }
+
+        body.dark-mode .footer-section p, 
+        body.dark-mode .footer-section a {
+            color: #b0a690;
         }
         
         .footer-section a {
@@ -261,6 +358,10 @@
         .footer-section a:hover {
             color: #d4af37;
         }
+
+        body.dark-mode .footer-section a:hover {
+            color: #e0c060;
+        }
         
         .copyright {
             text-align: center;
@@ -269,6 +370,12 @@
             border-top: 1px solid #555;
             color: #999;
             font-size: 0.8rem;
+            transition: border-color 0.3s, color 0.3s;
+        }
+
+        body.dark-mode .copyright {
+            border-top-color: #333;
+            color: #777;
         }
         
         /* 响应式设计 */
@@ -296,6 +403,11 @@
                 grid-template-columns: 1fr;
                 gap: 20px;
             }
+
+            .announcement-content {
+                flex-direction: column;
+                gap: 10px;
+            }
         }
     </style>
 </head>
@@ -303,8 +415,11 @@
     <!-- 公告栏 -->
     <div class="announcement">
         <div class="announcement-content">
-            <strong>公告：</strong> MingDynasty1.github.io MingDynasty1的个人主页v1.1.3发布
-            <a href="https://MingDynasty1.github.io" target="_blank">立即访问</a>
+            <div>
+                <strong>公告：</strong> MingDynasty1.github.io MingDynasty1的个人主页v1.1.3发布
+                <a href="https://MingDynasty1.github.io" target="_blank">立即访问</a>
+            </div>
+            <button class="mode-toggle" id="modeToggle">切换暗色模式</button>
         </div>
     </div>
 
@@ -333,14 +448,14 @@
             <!-- 头条新闻 -->
             <article class="news-card">
                 <div class="news-card-header">
-                    <h2>内阁大学士李东阳上书建言新政，获圣上嘉许</h2>
+                    <h2>伊朗与美国外交关系紧张，特朗普政府重启制裁措施</h2>
                     <div class="news-card-date">万历四十五年 三月初七</div>
                 </div>
                 <div class="news-card-content">
-                    <img src="https://mingdynasty1.github.io/mgdy.png" alt="内阁大学士李东阳">
-                    <p>近日，内阁大学士李东阳呈递《新政十疏》，针对当前朝政提出十条改革建议，涉及吏治、赋税、军备等多个方面。圣上阅览后大为赞赏，称其"深谋远虑，切中时弊"。</p>
-                    <p>李东阳在奏疏中指出，当前吏治腐败，官员贪墨成风，应加强监察力度，严惩贪官污吏。在赋税方面，他建议减轻百姓负担，改革税制，使税赋更加公平合理。</p>
-                    <p>此外，李东阳还就边防问题提出建议，认为应加强北方边防，增派精兵强将，以防外敌侵扰。同时，他还主张发展海上贸易，增加国库收入。</p>
+                    <img src="https://mingdynasty1.github.io/mgdy.png" alt="美伊外交局势">
+                    <p>近日，据西洋传来消息，米利坚（美国）总统特朗普宣布重启对波斯（伊朗）的全面制裁措施，此举引发两国外交关系急剧恶化，中东地区局势再度紧张。</p>
+                    <p>特朗普政府表示，制裁旨在迫使伊朗放弃核计划及地区扩张行为，包括限制伊朗石油出口、冻结海外资产、禁止国际企业与伊朗进行贸易往来等多项措施。</p>
+                    <p>伊朗方面则强硬回应，称将继续推进核计划，并考虑退出核不扩散条约。波斯国王表示，米利坚的制裁是"经济恐怖主义"，伊朗不会屈服于外部压力。</p>
                     <a href="#" class="read-more">阅读全文</a>
                 </div>
             </article>
@@ -352,7 +467,7 @@
                     <div class="news-card-date">万历四十五年 三月初五</div>
                 </div>
                 <div class="news-card-content">
-                    <img src="https://via.placeholder.com/800x400" alt="江南丝绸">
+                    <img src="mgdy.jpg" alt="江南丝绸">
                     <p>据苏州织造局最新统计，今年春季丝绸产量较去年同期增长三成，创历史新高。江南各地丝织作坊生意兴隆，产品远销海外。</p>
                     <p>苏州织造局官员表示，近年来朝廷对丝绸业的支持政策成效显著，加上海外需求增加，促使丝绸产量大幅提升。目前，江南丝绸已成为对外贸易的重要商品，为国家带来丰厚税收。</p>
                     <p>同时，丝绸业的繁荣也带动了相关产业发展，如蚕桑养殖、染料制作、纺织机械等，为当地百姓提供了大量就业机会。</p>
@@ -419,5 +534,32 @@
             &copy; 2013-2026 MingDynasty,Inc. 大明新闻 | 明朝美学
         </div>
     </footer>
+
+    <script>
+        // 明暗模式切换功能
+        const modeToggle = document.getElementById('modeToggle');
+        const body = document.body;
+
+        // 检查本地存储的模式偏好
+        if (localStorage.getItem('darkMode') === 'true') {
+            body.classList.add('dark-mode');
+            modeToggle.textContent = '切换亮色模式';
+        }
+
+        // 切换模式按钮点击事件
+        modeToggle.addEventListener('click', function() {
+            // 切换暗色模式类
+            body.classList.toggle('dark-mode');
+            
+            // 更新按钮文本
+            if (body.classList.contains('dark-mode')) {
+                modeToggle.textContent = '切换亮色模式';
+                localStorage.setItem('darkMode', 'true');
+            } else {
+                modeToggle.textContent = '切换暗色模式';
+                localStorage.setItem('darkMode', 'false');
+            }
+        });
+    </script>
 </body>
 </html>
