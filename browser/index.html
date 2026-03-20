@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大明浏览器 | MingDynasty</title>
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <style>
+        /* 基础样式 & 明模式（仿明黄/朱红主调） */
+        :root {
+            --bg-color: #f8f3e6; /* 宣纸色 */
+            --text-color: #2c1808; /* 墨色 */
+            --primary-color: #c8102e; /* 朱红（明宫墙色） */
+            --secondary-color: #f0c808; /* 明黄（皇家色） */
+            --border-color: #8c6b48; /* 红木色 */
+            --card-bg: #fffbf0; /* 浅宣纸色 */
+            --btn-hover: #a00b24; /* 深红 */
+            --toggle-bg: #e6d7b8; /* 切换按钮背景 */
+            --toggle-btn: #f0c808; /* 切换按钮 */
+        }
+
+        /* 暗模式（仿明式暗木/墨色） */
+        .dark-mode {
+            --bg-color: #1a140d; /* 深木色 */
+            --text-color: #e8e0d0; /* 浅墨色 */
+            --primary-color: #d44032; /* 暗朱红 */
+            --secondary-color: #d8b848; /* 暗明黄 */
+            --border-color: #5c4830; /* 暗红木色 */
+            --card-bg: #281f16; /* 深卡色 */
+            --btn-hover: #b03022; /* 更深红 */
+            --toggle-bg: #3a3020; /* 暗切换背景 */
+            --toggle-btn: #d8b848; /* 暗切换按钮 */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "SimSun", "宋体", serif; /* 仿明印刷字体 */
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* 页面头部（仿明式牌匾） */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            border-bottom: 3px solid var(--primary-color);
+            position: relative;
+        }
+
+        .header::before, .header::after {
+            content: "";
+            position: absolute;
+            top: 20px;
+            width: 30px;
+            height: 30px;
+            border-top: 3px solid var(--primary-color);
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .header::before {
+            left: 20px;
+        }
+
+        .header::after {
+            right: 20px;
+            transform: rotate(90deg);
+            border-top: 3px solid var(--primary-color);
+            border-right: 3px solid var(--primary-color);
+            border-left: none;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            text-shadow: 2px 2px 3px rgba(0,0,0,0.1);
+            letter-spacing: 5px; /* 仿明刻本字间距 */
+        }
+
+        .header p {
+            margin-top: 10px;
+            font-size: 1.1rem;
+            color: var(--text-color);
+        }
+
+        /* 模式切换按钮（仿明式玉佩样式） */
+        .mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 30px;
+            background-color: var(--toggle-bg);
+            border-radius: 15px;
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 0 5px;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-btn {
+            width: 20px;
+            height: 20px;
+            background-color: var(--toggle-btn);
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .dark-mode .toggle-btn {
+            transform: translateX(25px);
+        }
+
+        /* 版本更新卡片（仿明式木匣） */
+        .update-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .version-title {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
+
+        .version-list {
+            list-style: none;
+        }
+
+        .version-item {
+            margin-bottom: 25px;
+            padding: 15px;
+            border-left: 4px solid var(--secondary-color);
+            background-color: rgba(240, 200, 8, 0.05);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .version-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .version-number {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+
+        .download-link {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 15px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .download-link:hover {
+            background-color: var(--btn-hover);
+        }
+
+        /* 底部落款（仿明式印章） */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            .update-container {
+                padding: 20px;
+            }
+            .version-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 明/暗模式切换按钮 -->
+    <div class="mode-toggle" id="modeToggle">
+        <div class="toggle-btn"></div>
+    </div>
+
+    <!-- 页面头部 -->
+    <div class="header">
+        <h1>大明浏览器</h1>
+        <p>版本更新 · 永乐重编</p>
+    </div>
+
+    <!-- 版本更新内容 -->
+    <div class="update-container">
+        <h2 class="version-title">版本更新记录</h2>
+        <ul class="version-list">
+            <li class="version-item">
+                <div class="version-number">版本 1.0.0</div>
+                <div class="version-desc">初版问世，奠定大明浏览之基，适配洪武年间基础网页制式。</div>
+            </li>
+            <li class="version-item">
+                <div class="version-number">版本 2.0.0</div>
+                <div class="version-desc">永乐革新，优化页面渲染效率，新增多标签页（多阁并行）功能。</div>
+            </li>
+            <li class="version-item">
+                <div class="version-number">版本 18.2.9</div>
+                <div class="version-desc">万历增修，修复多处兼容BUG，强化网页加载速度（驿传提速）。</div>
+            </li>
+            <li class="version-item">
+                <div class="version-number">版本 13.7.6</div>
+                <div class="version-desc">崇祯修订，全面优化内核，提升安全防护（城防加固），适配最新网页规范。</div>
+                <a href="https://cn-bj-api.xxbyq.com.cn:59993/api/v3/slave/download/0/TTovTUNTTi80NTU0LzIwMjYvMDItMjcvMTc3MjE3NzIzMF8wMDAwMDAwMDAwMF9PS19PS19PS19DbG9jay5yYXI/00000000000_OK_OK_OK_Clock.rar?sign=1BCMbMIRw6R39fPlISaOcFBdqlpfPR1fY1mYuApkLyg%3D%3A1774007139" 
+                   class="download-link" 
+                   target="_blank">
+                    下载 13.7.6 版本
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- 页面底部 -->
+    <div class="footer">
+        Copyright 2013-2026 MingDynasty,Inc. 大明浏览器
+    </div>
+
+    <script>
+        // 明/暗模式切换逻辑
+        const modeToggle = document.getElementById('modeToggle');
+        const body = document.body;
+
+        // 检查本地存储的模式偏好
+        if (localStorage.getItem('darkMode') === 'true') {
+            body.classList.add('dark-mode');
+        }
+
+        // 切换模式
+        modeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            // 保存偏好到本地存储
+            localStorage.setItem('darkMode', body.classList.contains('dark-mode'));
+        });
+    </script>
+</body>
+</html>
