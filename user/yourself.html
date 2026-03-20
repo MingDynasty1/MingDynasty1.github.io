@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人中心 </title>
+      <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <style>
+        /* 基础样式 */
+        :root {
+            /* 明模式（仿明黄/朱红主调） */
+            --bg-color: #f8f2e4;
+            --text-color: #5a2e10;
+            --primary-color: #c8102e;
+            --border-color: #d4a017;
+            --card-bg: #fff8e8;
+            --shadow: 0 4px 8px rgba(90, 46, 16, 0.1);
+        }
+
+        .dark-mode {
+            /* 暗模式（仿墨黑/鎏金） */
+            --bg-color: #1a140f;
+            --text-color: #e8d8b8;
+            --primary-color: #d4a017;
+            --border-color: #8a6d3b;
+            --card-bg: #2d2319;
+            --shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "SimSun", "Microsoft YaHei", serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            min-height: 100vh;
+            padding: 20px;
+            background-image: 
+                linear-gradient(rgba(248, 242, 228, 0.95), rgba(248, 242, 228, 0.95)),
+                url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d4a017' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+
+        /* 明朝风格容器 */
+        .ming-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+            position: relative;
+        }
+
+        /* 顶部装饰 */
+        .ming-container::before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 20px;
+            background-color: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        /* 标题样式 */
+        .title {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+            font-weight: bold;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .title::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: var(--border-color);
+        }
+
+        /* 模式切换按钮 */
+        .mode-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--primary-color);
+            transition: transform 0.2s ease;
+        }
+
+        .mode-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* 个人信息卡片 */
+        .user-card {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        /* 头像区域 */
+        .avatar-section {
+            margin-right: 30px;
+            text-align: center;
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid var(--border-color);
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+
+        .avatar-options {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .avatar-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            object-fit: cover;
+        }
+
+        .avatar-option:hover {
+            border-color: var(--primary-color);
+            transform: scale(1.05);
+        }
+
+        .avatar-option.active {
+            border-color: var(--primary-color);
+        }
+
+        /* 信息区域 */
+        .info-section {
+            flex: 1;
+        }
+
+        .info-item {
+            margin-bottom: 15px;
+        }
+
+        .info-label {
+            font-size: 14px;
+            color: var(--border-color);
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .info-value {
+            font-size: 16px;
+            padding: 8px 12px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            width: 100%;
+            max-width: 400px;
+            color: var(--text-color);
+        }
+
+        /* 密码修改区域 */
+        .password-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .password-group .info-value {
+            flex: 1;
+            min-width: 180px;
+        }
+
+        /* 个人介绍文本域 */
+        #introInput {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* 按钮样式 */
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s ease;
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+
+        .btn:hover {
+            background-color: #a00b24;
+        }
+
+        .dark-mode .btn:hover {
+            background-color: #b88d12;
+        }
+
+        /* 提示样式 */
+        .tip-text {
+            font-size: 12px;
+            color: var(--border-color);
+            margin-top: 5px;
+            display: block;
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 600px) {
+            .user-card {
+                flex-direction: column;
+            }
+            .avatar-section {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+            .info-value {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ming-container">
+        <!-- 模式切换按钮 -->
+        <button class="mode-toggle" id="modeToggle">☀️</button>
+        
+        <!-- 标题 -->
+        <h1 class="title">大明·个人中心</h1>
+        
+        <!-- 个人信息卡片 -->
+        <div class="user-card">
+            <!-- 头像区域 -->
+            <div class="avatar-section">
+                <img id="userAvatar" class="avatar" src="" alt="用户头像">
+                <p>更换头像</p>
+                <div class="avatar-options">
+                    <img class="avatar-option" data-value="1.png" src="1.png" alt="头像1">
+                    <img class="avatar-option" data-value="2.png" src="2.png" alt="头像2">
+                    <img class="avatar-option" data-value="3.png" src="3.png" alt="头像3">
+                    <img class="avatar-option" data-value="4.png" src="4.png" alt="头像4">
+                </div>
+            </div>
+            
+            <!-- 信息区域 -->
+            <div class="info-section">
+                <div class="info-item">
+                    <label class="info-label">用户名</label>
+                    <div id="username" class="info-value" readonly></div>
+                </div>
+                
+                <div class="info-item">
+                    <label class="info-label">修改密码</label>
+                    <div class="password-group">
+                        <input type="password" id="newPwdInput" class="info-value" placeholder="请输入新密码">
+                        <input type="password" id="confirmPwdInput" class="info-value" placeholder="请确认新密码">
+                    </div>
+                    <button class="btn" id="updatePwdBtn">修改密码</button>
+                    <span class="tip-text">注：两次密码输入需一致</span>
+                </div>
+                
+                <div class="info-item">
+                    <label class="info-label">邮箱</label>
+                    <input type="email" id="emailInput" class="info-value" placeholder="请输入新邮箱">
+                    <button class="btn" id="updateEmailBtn">修改邮箱</button>
+                </div>
+                
+                <div class="info-item">
+                    <label class="info-label">个人介绍</label>
+                    <textarea id="introInput" class="info-value" id="introInput" placeholder="请输入个人介绍（例如：大明子民，志在四方）"></textarea>
+                    <button class="btn" id="saveIntroBtn">保存介绍</button>
+                </div>
+                
+                <div class="info-item">
+                    <label class="info-label">注册时间</label>
+                    <div id="registerTime" class="info-value" readonly></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Cookie操作工具函数
+        const CookieUtils = {
+            // 获取Cookie值
+            get: function(name) {
+                const value = `; ${document.cookie}`;
+                const parts = value.split(`; ${name}=`);
+                if (parts.length === 2) return parts.pop().split(';').shift();
+                return null;
+            },
+            
+            // 设置Cookie值
+            set: function(name, value, days = 365) {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                const expires = `expires=${date.toUTCString()}`;
+                document.cookie = `${name}=${value}; ${expires}; path=/`;
+            },
+            
+            // 解码Register_user Cookie
+            decodeRegisterUser: function() {
+                const cookieValue = this.get('Register_user');
+                if (!cookieValue) return null;
+                try {
+                    // 解码URL编码的JSON字符串
+                    const decoded = decodeURIComponent(cookieValue);
+                    return JSON.parse(decoded);
+                } catch (e) {
+                    console.error('解析Register_user Cookie失败:', e);
+                    return null;
+                }
+            },
+            
+            // 编码Register_user Cookie
+            encodeRegisterUser: function(userData) {
+                try {
+                    // 编码为URL安全的字符串
+                    const jsonStr = JSON.stringify(userData);
+                    return encodeURIComponent(jsonStr);
+                } catch (e) {
+                    console.error('编码Register_user Cookie失败:', e);
+                    return null;
+                }
+            }
+        };
+
+        // 页面初始化
+        function initPage() {
+            // 1. 初始化明暗模式
+            initModeToggle();
+            
+            // 2. 读取并显示用户信息
+            loadUserInfo();
+            
+            // 3. 绑定头像切换事件
+            bindAvatarEvents();
+            
+            // 4. 绑定邮箱修改事件
+            bindEmailUpdateEvent();
+            
+            // 5. 绑定密码修改事件
+            bindPwdUpdateEvent();
+            
+            // 6. 绑定个人介绍事件
+            bindIntroEvent();
+        }
+
+        // 初始化明暗模式切换
+        function initModeToggle() {
+            const toggleBtn = document.getElementById('modeToggle');
+            const body = document.body;
+            
+            // 检查本地存储的模式偏好
+            const isDark = localStorage.getItem('mingMode') === 'dark';
+            if (isDark) {
+                body.classList.add('dark-mode');
+                toggleBtn.textContent = '🌙';
+            } else {
+                toggleBtn.textContent = '☀️';
+            }
+            
+            // 绑定切换事件
+            toggleBtn.addEventListener('click', function() {
+                body.classList.toggle('dark-mode');
+                const isDarkNow = body.classList.contains('dark-mode');
+                toggleBtn.textContent = isDarkNow ? '🌙' : '☀️';
+                localStorage.setItem('mingMode', isDarkNow ? 'dark' : 'light');
+            });
+        }
+
+        // 加载用户信息
+        function loadUserInfo() {
+            // 读取Register_user Cookie
+            const userData = CookieUtils.decodeRegisterUser();
+            
+            if (userData) {
+                // 显示用户信息
+                document.getElementById('username').textContent = userData.username || '未知用户';
+                document.getElementById('password')?.textContent = userData.password || '****';
+                document.getElementById('emailInput').value = userData.email || '';
+                document.getElementById('registerTime').textContent = userData.registerTime || '未知时间';
+                
+                // 设置头像
+                const avatarImg = document.getElementById('userAvatar');
+                if (userData.username === 'MingDynasty') {
+                    // 特殊用户显示指定头像
+                    avatarImg.src = 'https://mingdynasty1.github.io/000000000000000000.png';
+                } else {
+                    // 读取Photo_User Cookie设置头像
+                    const photoCookie = CookieUtils.get('Photo_User');
+                    avatarImg.src = photoCookie ? photoCookie : '1.png'; // 默认头像1.png
+                }
+                
+                // 标记当前选中的头像选项
+                const activeAvatar = CookieUtils.get('Photo_User') || '1.png';
+                document.querySelectorAll('.avatar-option').forEach(option => {
+                    if (option.dataset.value === activeAvatar) {
+                        option.classList.add('active');
+                    } else {
+                        option.classList.remove('active');
+                    }
+                });
+            } else {
+                // 如果没有Cookie，显示默认信息
+                document.getElementById('username').textContent = '未登录';
+                document.getElementById('emailInput').value = '';
+                document.getElementById('registerTime').textContent = '未注册';
+                document.getElementById('userAvatar').src = '1.png';
+            }
+            
+            // 加载个人介绍Cookie
+            const introContent = CookieUtils.get('Personal_Information') || '';
+            document.getElementById('introInput').value = introContent;
+        }
+
+        // 绑定头像切换事件
+        function bindAvatarEvents() {
+            const avatarOptions = document.querySelectorAll('.avatar-option');
+            const avatarImg = document.getElementById('userAvatar');
+            
+            avatarOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // 1. 更新选中状态
+                    avatarOptions.forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // 2. 获取选中的头像路径
+                    const selectedAvatar = this.dataset.value;
+                    
+                    // 3. 更新头像显示
+                    avatarImg.src = selectedAvatar;
+                    
+                    // 4. 设置Photo_User Cookie
+                    CookieUtils.set('Photo_User', selectedAvatar);
+                });
+            });
+        }
+
+        // 绑定邮箱修改事件
+        function bindEmailUpdateEvent() {
+            const updateBtn = document.getElementById('updateEmailBtn');
+            const emailInput = document.getElementById('emailInput');
+            
+            updateBtn.addEventListener('click', function() {
+                const newEmail = emailInput.value.trim();
+                if (!newEmail || !newEmail.includes('@')) {
+                    alert('请输入有效的邮箱地址！');
+                    return;
+                }
+                
+                // 1. 读取现有用户信息
+                const userData = CookieUtils.decodeRegisterUser() || {};
+                
+                // 2. 更新邮箱
+                userData.email = newEmail;
+                
+                // 3. 重新编码并设置Cookie
+                const encodedData = CookieUtils.encodeRegisterUser(userData);
+                if (encodedData) {
+                    CookieUtils.set('Register_user', encodedData);
+                    alert('邮箱修改成功！');
+                } else {
+                    alert('邮箱修改失败，请重试！');
+                }
+            });
+        }
+
+        // 绑定密码修改事件（需二次确认）
+        function bindPwdUpdateEvent() {
+            const updateBtn = document.getElementById('updatePwdBtn');
+            const newPwdInput = document.getElementById('newPwdInput');
+            const confirmPwdInput = document.getElementById('confirmPwdInput');
+            
+            updateBtn.addEventListener('click', function() {
+                const newPwd = newPwdInput.value.trim();
+                const confirmPwd = confirmPwdInput.value.trim();
+                
+                // 验证输入
+                if (!newPwd) {
+                    alert('请输入新密码！');
+                    newPwdInput.focus();
+                    return;
+                }
+                if (newPwd !== confirmPwd) {
+                    alert('两次输入的密码不一致，请重新输入！');
+                    confirmPwdInput.focus();
+                    return;
+                }
+                if (newPwd.length < 6) {
+                    alert('密码长度不能少于6位！');
+                    newPwdInput.focus();
+                    return;
+                }
+                
+                // 1. 读取现有用户信息
+                const userData = CookieUtils.decodeRegisterUser() || {};
+                
+                // 2. 更新密码
+                userData.password = newPwd;
+                
+                // 3. 重新编码并设置Cookie
+                const encodedData = CookieUtils.encodeRegisterUser(userData);
+                if (encodedData) {
+                    CookieUtils.set('Register_user', encodedData);
+                    alert('密码修改成功！');
+                    // 清空输入框
+                    newPwdInput.value = '';
+                    confirmPwdInput.value = '';
+                } else {
+                    alert('密码修改失败，请重试！');
+                }
+            });
+        }
+
+        // 绑定个人介绍事件
+        function bindIntroEvent() {
+            const saveBtn = document.getElementById('saveIntroBtn');
+            const introInput = document.getElementById('introInput');
+            
+            // 保存个人介绍到Cookie
+            saveBtn.addEventListener('click', function() {
+                const introContent = introInput.value.trim();
+                // 设置Personal_Information Cookie
+                CookieUtils.set('Personal_Information', introContent);
+                alert('个人介绍保存成功！');
+            });
+            
+            // 可选：支持回车保存（按住Ctrl+Enter）
+            introInput.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.key === 'Enter') {
+                    saveBtn.click();
+                }
+            });
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', initPage);
+    </script>
+</body>
+</html>
