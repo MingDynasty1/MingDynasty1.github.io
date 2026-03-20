@@ -1,6 +1,6 @@
-# 大明网站 <img src="https://p26-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/f11110ca4bb84621b4d53bce69551658~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=202603202103326FDB31835EDD3826AE57&rrcfp=f06b921b&x-expires=1776603852&x-signature=KdZNgbz6WMzD2lEOviMGsf5fQ5c%3D" alt="明朝标志" width="100" align="right">
+# 大明网站 <img src="0.jfif" alt="明朝标志" width="100" align="right">
 
-![明朝风格装饰](https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/77b65fb2b8344e28a18f15277407adf1~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=202603202103326FDB31835EDD3826AE57&rrcfp=f06b921b&x-expires=1776603832&x-signature=tpl2SNLOE2viFL7JhLnI0arKCfE%3D)
+![明朝风格装饰](https://mingdynasty1.github.io/1.jfif)
 
 ## 🌏 网站简介
 
@@ -77,6 +77,6 @@
 > 
 > 大明史料文库，愿为世人提供一面回望历史之明镜。
 
-![明朝风格装饰](https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/77b65fb2b8344e28a18f15277407adf1~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=202603202103326FDB31835EDD3826AE57&rrcfp=f06b921b&x-expires=1776603832&x-signature=tpl2SNLOE2viFL7JhLnI0arKCfE%3D)
+![明朝风格装饰](https://mingdynasty1.github.io/1.jfif)
 
 *© 2013-2026 MingDynasty,Inc.网站介绍*
