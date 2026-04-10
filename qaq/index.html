@@ -2,207 +2,245 @@
 <html lang="zh-CN">
 
 <head>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-121901447-4"></script>
+	<meta name="monetization" content="$ilp.uphold.com/eJ3JRYkeJGGw">
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+		gtag('config', 'UA-121901447-4');
+	</script>
+	<!-- InMobi Choice. Consent Manager Tag v3.0 (for TCF 2.2) -->
+	<script type="text/javascript" async=true>
+		(function() {
+		var host = window.location.hostname;
+		var element = document.createElement('script');
+		var firstScript = document.getElementsByTagName('script')[0];
+		var url = 'https://cmp.inmobi.com'
+			.concat('/choice/', 'JjeZ9fbzCUTdt', '/', host, '/choice.js?tag_version=V3');
+		var uspTries = 0;
+		var uspTriesLimit = 3;
+		element.async = true;
+		element.type = 'text/javascript';
+		element.src = url;
+		
+		firstScript.parentNode.insertBefore(element, firstScript);
+		
+		function makeStub() {
+			var TCF_LOCATOR_NAME = '__tcfapiLocator';
+			var queue = [];
+			var win = window;
+			var cmpFrame;
+		
+			function addFrame() {
+			var doc = win.document;
+			var otherCMP = !!(win.frames[TCF_LOCATOR_NAME]);
+		
+			if (!otherCMP) {
+				if (doc.body) {
+				var iframe = doc.createElement('iframe');
+				iframe.style.cssText = 'display:none';
+				iframe.name = TCF_LOCATOR_NAME;
+				doc.body.appendChild(iframe);
+				} else {
+				setTimeout(addFrame, 5);
+				}
+			}
+			return !otherCMP;
+			}
+		
+			function tcfAPIHandler() {
+			var gdprApplies;
+			var args = arguments;
+		
+			if (!args.length) {
+				return queue;
+			} else if (args[0] === 'setGdprApplies') {
+				if (
+				args.length > 3 &&
+				args[2] === 2 &&
+				typeof args[3] === 'boolean'
+				) {
+				gdprApplies = args[3];
+				if (typeof args[2] === 'function') {
+					args[2](sslocal://flow/file_open?url=%27set%27%2C+true&flow_extra=eyJsaW5rX3R5cGUiOiJjb2RlX2ludGVycHJldGVyIn0=);
+				}
+				}
+			} else if (args[0] === 'ping') {
+				var retr = {
+				gdprApplies: gdprApplies,
+				cmpLoaded: false,
+				cmpStatus: 'stub'
+				};
+		
+				if (typeof args[2] === 'function') {
+				args[2](sslocal://flow/file_open?url=retr&flow_extra=eyJsaW5rX3R5cGUiOiJjb2RlX2ludGVycHJldGVyIn0=);
+				}
+			} else {
+				if(args[0] === 'init' && typeof args[3] === 'object') {
+				args[3] = Object.assign(args[3], { tag_version: 'V3' });
+				}
+				queue.push(args);
+			}
+			}
+		
+			function postMessageEventHandler(event) {
+			var msgIsString = typeof event.data === 'string';
+			var json = {};
+		
+			try {
+				if (msgIsString) {
+				json = JSON.parse(event.data);
+				} else {
+				json = event.data;
+				}
+			} catch (ignore) {}
+		
+			var payload = json.__tcfapiCall;
+		
+			if (payload) {
+				window.__tcfapi(
+				payload.command,
+				payload.version,
+				function(retValue, success) {
+					var returnMsg = {
+					__tcfapiReturn: {
+						returnValue: retValue,
+						success: success,
+						callId: payload.callId
+					}
+					};
+					if (msgIsString) {
+					returnMsg = JSON.stringify(returnMsg);
+					}
+					if (event && event.source && event.source.postMessage) {
+					event.source.postMessage(returnMsg, '*');
+					}
+				},
+				payload.parameter
+				);
+			}
+			}
+		
+			while (win) {
+			try {
+				if (win.frames[TCF_LOCATOR_NAME]) {
+				cmpFrame = win;
+				break;
+				}
+			} catch (ignore) {}
+		
+			if (win === window.top) {
+				break;
+			}
+			win = win.parent;
+			}
+			if (!cmpFrame) {
+			addFrame();
+			win.__tcfapi = tcfAPIHandler;
+			win.addEventListener('message', postMessageEventHandler, false);
+			}
+		};
+		
+		makeStub();
+		
+		var uspStubFunction = function() {
+			var arg = arguments;
+			if (typeof window.__uspapi !== uspStubFunction) {
+			setTimeout(function() {
+				if (typeof window.__uspapi !== 'undefined') {
+				window.__uspapi.apply(window.__uspapi, arg);
+				}
+			}, 500);
+			}
+		};
+		
+		var checkIfUspIsReady = function() {
+			uspTries++;
+			if (window.__uspapi === uspStubFunction && uspTries < uspTriesLimit) {
+			console.warn('USP is not accessible');
+			} else {
+			clearInterval(uspInterval);
+			}
+		};
+		
+		if (typeof window.__uspapi === 'undefined') {
+			window.__uspapi = uspStubFunction;
+			var uspInterval = setInterval(checkIfUspIsReady, 6000);
+		}
+		})();
+	</script>
+	<!-- End InMobi Choice. Consent Manager Tag v3.0 (for TCF 2.2) -->
 	<meta http-equiv="content-type" content="text/html; charset=UTF8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="apple-mobile-web-status-bar-style" content="#D4AF37">
+	<meta name="apple-mobile-web-app-status-bar-style" content="#382C2A">
 	<meta name="viewport"
 		content="height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui" />
-
-	<!-- 明朝风格图标 -->
-	<link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODAgMTgwIj48cmVjdCB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgZmlsbD0iI0Q0QUYzNyIvPjxwYXRoIGQ9Ik05MCAzMCBDMTIwIDcwIDEyMCAxMzAgOTAgMTUwIEM2MCAxMzAgNjAgNzAgOTAgMzBaIiBmaWxsPSIjRUNBRMDAiLz48cGF0aCBkPSJNODAgODAgTDkwIDYwIEwxMDAgODAgTDkwIDEwMFoiIGZpbGw9IiM5RDI5MkEiLz48L3N2Zz4=">
-	<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiBmaWxsPSIjRDQBRjM3Ii8+PHBhdGggZD0iTTE2IDQgQDI0IDEyIDI0IDI0IDE2IDMwIEM4IDI0IDggMTIgMTYgNFoiIGZpbGw9IiNFQ0EwMDAiLz48L3N2Zz4=">
-    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+	<script src="//game-cdn.poki.com/scripts/v2/poki-sdk.js"></script>
+<link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
 	<title>大明寿司宴 | MingDynasty</title>
-	<meta name="description" content="大明寿司宴，明朝宫廷风格贪吃蛇游戏，体验皇家寿司盛宴！">
+	<link rel="manifest" href="https://sushiparty.io/site.webmanifest">
+	<link rel="mask-icon" href="https://sushiparty.io/safari-pinned-tab.svg" color="#5bbad5">
+	<meta name="msapplication-TileColor" content="#da532c">
+	<meta name="theme-color" content="#2c1810">
 
-	<!-- 明朝宫廷核心样式 -->
+	<link rel="preload" href="https://sushiparty.io/static/assets/su.png" as="image">
+
+	<title>大明寿司宴 · SushiParty.io</title>
+	<meta name="description" content="Sushi Party 明朝国风版，经典贪吃蛇玩法，中式宫廷风格"/>
+	<link href="https://sushiparty.io/s.css" media="screen" rel="stylesheet" type="text/css">
+
+	<!-- 明朝风格全局样式 -->
 	<style>
-		/* 全局：明朝宫廷风格 */
-		* {
-			margin: 0;
-			padding: 0;
-			box-sizing: border-box;
-			font-family: "Microsoft YaHei", "SimSun", sans-serif;
-		}
-
-		body {
-			background: linear-gradient(135deg, #FFF6E5 0%, #FFE8BA 50%, #FAD9A1 100%);
-			background-attachment: fixed;
-			overflow: hidden;
-			position: relative;
-		}
-
-		/* 明代祥云背景底纹 */
-		body::before {
-			content: "";
-			position: fixed;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M30 50 Q40 30 60 40 Q80 50 70 70 Q50 90 30 70 Q10 50 30 50Z' fill='none' stroke='%23D4AF37' stroke-width='1.5' opacity='0.15'/%3E%3C/svg%3E");
-			background-repeat: repeat;
-			pointer-events: none;
-			z-index: -1;
-		}
-
-		/* 游戏容器 */
-		#mm {
-			position: relative;
-			width: 100vw;
-			height: 100vh;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-		}
-
-		/* 明代皇家边框 */
-		#pc {
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			border: 12px double #9D292A;
-			box-shadow: 0 0 0 6px #D4AF37, 0 0 25px rgba(0,0,0,0.3);
-			box-sizing: border-box;
-			pointer-events: none;
-			z-index: 10;
-		}
-
-		/* 标题Logo */
-		#lg {
-			position: absolute;
-			top: 20px;
-			z-index: 5;
-		}
-
-		#lg img {
-			filter: drop-shadow(0 4px 3px rgba(157,41,42,0.5));
-			height: 80px;
-		}
-
-		/* 输入框：明式风格 */
-		#name {
-			position: absolute;
-			top: 120px;
-			width: 240px;
-			height: 46px;
-			padding: 0 15px;
-			font-size: 18px;
-			text-align: center;
-			border: 3px solid #D4AF37;
-			border-radius: 8px;
-			background: #FFF9F0;
-			color: #9D292A;
-			outline: none;
-			box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-			font-weight: bold;
-		}
-
-		#name:focus {
-			border-color: #9D292A;
-			box-shadow: 0 0 10px #D4AF37;
-		}
-
-		/* 按钮：明宫风格 */
-		#bl {
-			position: absolute;
-			top: 180px;
-			display: flex;
-			gap: 25px;
-		}
-
-		#ht, #ac, .bk {
-			cursor: pointer;
-			transition: all 0.2s ease;
-		}
-
-		#ht svg circle, #ac svg circle, .bk svg circle {
-			stroke: #9D292A !important;
-			stroke-width: 3 !important;
-			fill: #FFE8BA !important;
-		}
-
-		#ht:hover, #ac:hover, .bk:hover {
-			transform: scale(1.15);
-			filter: drop-shadow(0 0 8px #D4AF37);
-		}
-
-		/* 底部信息栏 */
-		#st {
-			position: fixed;
-			bottom: 15px;
-			left: 50%;
-			transform: translateX(-50%);
-			display: flex;
-			align-items: center;
-			gap: 20px;
-			padding: 8px 16px;
-			background: rgba(255, 245, 225, 0.9);
-			border: 2px solid #D4AF37;
-			border-radius: 30px;
-			font-size: 14px;
-			color: #9D292A;
-			z-index: 999;
-		}
-
-		#st a {
-			color: #9D292A;
-			text-decoration: none;
-			font-weight: bold;
-		}
-
-		#st a:hover {
-			color: #D4AF37;
-		}
-
-		/* 加载动画：明黄朱红 */
-		#sp {
-			filter: drop-shadow(0 0 6px #D4AF37);
-		}
-
-		#sp use:first-child {
-			stroke: #9D292A !important;
-		}
-
-		#sp use:last-child {
-			stroke: #D4AF37 !important;
-		}
-
-		/* 版本日志 */
-		.vv {
-			position: absolute;
-			bottom: 70px;
-			left: 10px;
-			padding: 10px;
-			background: rgba(255,245,225,0.9);
-			border: 2px solid #D4AF37;
-			border-radius: 8px;
-			color: #9D292A;
-			font-size: 12px;
-			max-width: 220px;
-		}
-
-		.vv li {
-			margin-left: 15px;
-		}
-
-		/* 通用布局 */
-		.ab {
-			position: absolute;
-		}
-
-		.cl {
-			clear: both;
-		}
-
-		.bu {
-			bottom: 20px;
-			right: 20px;
-			height: 50px;
-		}
+	@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700&display=swap');
+	* {
+		font-family: 'Noto Serif SC', serif !important;
+	}
+	body {
+		background: #2c1810 !important;
+		background-image:
+			url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23b9885b' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+		color: #f2e6d9 !important;
+	}
+	#mm, #sc, #lg, #st, .vv, .tgl-label {
+		color: #f2e6d9 !important;
+		text-shadow: 1px 1px 2px #000;
+	}
+	#name {
+		background: #4a2c18 !important;
+		border: 2px solid #b9885b !important;
+		color: #f2e6d9 !important;
+		border-radius: 6px !important;
+		padding: 6px 10px !important;
+	}
+	#st {
+		background: rgba(40,20,10,0.8) !important;
+		border-top: 2px solid #b9885b !important;
+		padding: 10px !important;
+	}
+	#st a {
+		color: #eac18c !important;
+	}
+	.tgl-sw {
+		background: #b9885b !important;
+	}
+	.vv {
+		background: rgba(30,15,5,0.7) !important;
+		border: 1px solid #8c6239 !important;
+		border-radius: 8px !important;
+		padding: 10px !important;
+	}
+	circle {
+		fill: #6d3c11 !important;
+		stroke: #eac18c !important;
+	}
+	#sp use[stroke="#382C2A"] {
+		stroke: #3a1e0f !important;
+	}
+	#sp use[stroke="#FFF0E5"] {
+		stroke: #d4b58c !important;
+	}
 	</style>
 
 	<svg style="position:absolute; height:0" xmlns="http://www.w3.org/2000/svg" width="0" height="0">
@@ -237,64 +275,68 @@
 
 <body>
 	<script>
-		// 游戏核心功能
 		window.navigateToPoki = function () {
-			window.open('https://poki.com/en/g/sushi-party-io', '_blank');
+			if(!window.location.href.includes('poki')){
+				window.location.href = 'https://poki.com/en/g/sushi-party-io';
+			}
 		};
 	</script>
-
 	<div id="mm">
 		<div id="pc"></div>
 		<div id="lg" class="ab">
-			<img src="https://sushiparty.io/assets/l.png" alt="大明寿司宴">
+			<img src="https://sushiparty.io/assets/l.png"></img>
 		</div>
 		<div id="sc">
-			<input tabindex="1" type="text" id="name" name="name" value="大明皇朝" autocomplete="off">
+			<div style="position:absolute;top:10px;right:10px;display:grid;cursor:pointer" onclick="window.navigateToPoki()">
+				<span style="color: #eac18c;">伙伴:</span>
+				<img style="pointer-events: all; position:unset; margin-left:6px; width:40px" src="https://sushiparty.io/assets/poki.png"></img>
+			</div>
+			<input tabindex="1" type="text" id="name" name="name" value="大明食客" autocomplete="off">
 			<div id="bl">
-				<div id="ht">
-					<svg style="height: 42px; width: 42px;">
+				<div id="ht"><svg style="height: 42px; width: 42px;">
 						<circle cx="21" cy="21" r="20" stroke="#382C2A" stroke-width="2" fill="#FFF0E5"></circle>
-					</svg>
-				</div>
-				<div id="ac">
-					<svg style="height: 42px; width: 42px;">
+					</svg></div>
+				<div id="ac"><svg style="height: 42px; width: 42px;">
 						<circle cx="21" cy="21" r="20" stroke="#382C2A" stroke-width="2" fill="#FFF0E5"></circle>
-					</svg>
-				</div>
+					</svg></div>
 			</div>
 		</div>
-		<div id="ec"></div>
+		<div id="ec">
+		</div>
 		<div id="lb"></div>
 		<div class="vv">
-			<div class="if">大明寿司宴 v1.5.0</div>
+			<div class="if">v1.5.0 ℹ️</div>
 			<ul>
-				<li>新增复活功能！</li>
-				<li>全新明朝皇家主题</li>
+				<li>新增复活按钮！</li>
+			</ul>
+			<div>v1.4.0</div>
+			<ul>
+				<li>双人模式 + 8款全新宫廷帽饰</li>
+			</ul>
+			<div>v1.3.0</div>
+			<ul>
+				<li>感谢游玩！支持Coil无广告体验，每5分钟免费抽奖</li>
 			</ul>
 		</div>
 	</div>
-
+	</div>
 	<div id="sh">
 		<div id="gr"></div>
-		<div class="bk">
-			<svg style="height: 42px; width: 42px;">
+		<div class="bk"><svg style="height: 42px; width: 42px;">
 				<circle cx="21" cy="21" r="20" stroke="#382C2A" stroke-width="2" fill="#FFF0E5"></circle>
-			</svg>
-		</div>
+			</svg></div>
 	</div>
 	<div id="as">
-		<div class="bk">
-			<svg style="height: 42px; width: 42px;">
+		<div class="bk"><svg style="height: 42px; width: 42px;">
 				<circle cx="21" cy="21" r="20" stroke="#382C2A" stroke-width="2" fill="#FFF0E5"></circle>
-			</svg>
-		</div>
+			</svg></div>
 	</div>
-
-	<!-- 加载动画 -->
 	<svg id="sp" width="104px" height="104px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"
 		preserveAspectRatio="xMidYMid" class="ab lds-infinity" style="background: none;">
 		<defs>
-			<path id="p" class="cc" fill="none"
+			<path id="p" class="cc" fill="none" ng-attr-stroke="{{config.stroke}}"
+				ng-attr-stroke-width="{{config.width}}" ng-attr-stroke-dasharray="{{config.dasharray}}"
+				ng-attr-stroke-linecap="{{config.linecap}}"
 				d="M24.3,30C11.4,30,5,43.3,5,50s6.4,20,19.3,20c19.3,0,32.1-40,51.4-40 C88.6,30,95,43.3,95,50s-6.4,20-19.3,20C56.4,70,43.6,30,24.3,30z"
 				stroke-dasharray="133.42624267578125 123.162685546875" stroke-linecap="round">
 				<animate attributeName="stroke-dashoffset" calcMode="linear" values="0;256.58892822265625"
@@ -304,36 +346,43 @@
 		<use stroke="#382C2A" stroke-width="10" xlink:href="#p" />
 		<use stroke="#FFF0E5" stroke-width="7" xlink:href="#p" />
 	</svg>
-
-	<img id="stb" src="https://sushiparty.io/assets/st.svg" class="ab bu">
-
-	<!-- 底部控制栏 -->
-	<div id="st" class="cl">
-		<a href="javascript:navigateToPoki()">游戏官网</a>
-		<a href="#">大明风格</a>
-		<a href="#">隐私政策</a>
-	</div>
-
-	<!-- 游戏主脚本（修复跨站运行） -->
-	<script src="https://sushiparty.io/scripts/l.js"></script>
+	<img id="stb" src="https://sushiparty.io/assets/st.svg" class="ab bu"></img>
 	<script>
-		// 存档兼容逻辑
-		try {
-			var iframe = document.createElement('iframe');
-			iframe.src = 'https://74b97156-f40b-11e9-859c-c6053849a814.poki-gdn.com/4c3c6162-2783-48cf-b663-eeac075d9b51/restoresave.html';
-			document.body.appendChild(iframe);
-			iframe.style.cssText = 'position:absolute;top:-9999px;opacity:0';
-			
-			window.addEventListener("message", event => {
-				if (event.data?.type === 'SUSHI_SAVE_RESTORE') {
-					localStorage.setItem('sushisnakeio-211020', event.data.data);
-					window.location.reload();
-				}
-			}, false);
-
-			setTimeout(() => iframe.remove(), 3000);
-		} catch (e) {}
+		openCMP = () => {
+			window.__tcfapi('displayConsentUi', 2, () => {});
+		};
 	</script>
+	<div id="st" class = 'cl'>
+		<label class="tgl">
+			<input class="tgl-cb" type="checkbox" checked>
+			<div class="tgl-sw"></div>
+			<span class="tgl-label">音效</span>
+		</label>
+		<a href='https://sushiparty.io/policy'>隐私政策</a>
+		<a href='https://sushiparty.io/about'>关于</a>
+		<a style="text-decoration: underline;cursor:pointer"onclick="openCMP()">授权管理</a>
+	</div>
+	<script type="text/javascript" src="https://sushiparty.io/scripts/l.js"></script>
+	<script>
+		var iframe = document.createElement('iframe');
+		iframe.src = 'https://74b97156-f40b-11e9-859c-c6053849a814.poki-gdn.com/4c3c6162-2783-48cf-b663-eeac075d9b51/restoresave.html';
+		document.body.appendChild(iframe);
+		iframe.style.position = 'absolute';
+		iframe.style.top = '5000px';
+		window.addEventListener("message", event => {
+			if (event.data && event.data.type === 'SUSHI_SAVE_RESTORE'){
+				var savekey = 'sushisnakeio-211020';
+				localStorage.setItem(savekey, event.data.data);
+				window.location.reload();
+			}
+		}, false);
+		setTimeout(function(){
+			iframe.parentNode.removeChild(iframe)
+		}, 3000)
+		PokiSDK.enableEventTracking(2);
+	</script>
+	<link href="https://fonts.googleapis.com/css?family=Mali&text=ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" rel="stylesheet">
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"1f4bea1a53324867a3438e7057f5dc0b","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 
 </html>
