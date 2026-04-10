@@ -67,6 +67,9 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
             position: relative;
             border-bottom: 5px solid var(--ming-gold);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         
         .header-content {
@@ -108,137 +111,158 @@
             font-size: 1.2rem;
             padding: 0.5rem 1rem;
             border-radius: 4px;
-            transition: background 0.3s;
+            transition: all 0.3s;
         }
         
         nav a:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--ming-gold);
         }
         
         /* 主题切换按钮 */
-        .theme-toggle {
-            background: transparent;
+        #themeToggle {
+            background: none;
             border: 2px solid var(--ming-gold);
-            color: var(--ming-gold);
-            padding: 0.5rem;
-            border-radius: 50%;
-            cursor: pointer;
-            width: 45px;
-            height: 45px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-            margin-left: 1rem;
-        }
-        
-        .theme-toggle:hover {
-            background: rgba(212, 175, 55, 0.1);
-        }
-        
-        /* 主横幅 */
-        .banner {
-            height: 500px;
-            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
-                        url('https://images.unsplash.com/photo-1601132359864-ae4ed8b2c340?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') center/cover no-repeat;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
             color: var(--ming-white);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .banner::before, .banner::after {
-            content: "";
-            position: absolute;
-            height: 30px;
-            width: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10'%3E%3Cpath d='M0,5 Q25,0 50,5 T100,5' stroke='%23d4af37' fill='none' stroke-width='2'/%3E%3C/svg%3E");
-            background-repeat: repeat-x;
-        }
-        
-        .banner::before {
-            top: 0;
-        }
-        
-        .banner::after {
-            bottom: 0;
-            transform: rotate(180deg);
-        }
-        
-        .banner-content {
-            max-width: 800px;
-            padding: 0 2rem;
-            z-index: 1;
-        }
-        
-        .banner h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
-            letter-spacing: 8px;
-        }
-        
-        .banner p {
-            font-size: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        
-        .btn {
-            display: inline-block;
-            background: var(--ming-gold);
-            color: var(--ming-dark);
-            padding: 0.8rem 2rem;
-            text-decoration: none;
-            border-radius: 4px;
-            font-weight: bold;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
             transition: all 0.3s;
-            border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
         
-        .btn:hover {
-            background: transparent;
-            border-color: var(--ming-gold);
-            color: var(--ming-gold);
+        #themeToggle:hover {
+            background-color: var(--ming-gold);
+            color: var(--ming-dark);
         }
         
         /* 主要内容区域 */
-        .container {
+        main {
             max-width: 1200px;
-            margin: 3rem auto;
+            margin: 2rem auto;
             padding: 0 2rem;
         }
         
-        .section-title {
+        /* 英雄区域 */
+        .hero {
             text-align: center;
+            padding: 4rem 0;
             margin-bottom: 3rem;
-            position: relative;
-            padding-bottom: 1rem;
+            background: linear-gradient(rgba(0,0,0,0.05), rgba(0,0,0,0.05));
+            border-radius: 10px;
         }
         
-        .section-title::after {
-            content: "";
-            position: absolute;
-            bottom: 0;
+        .hero h1 {
+            font-size: 3.5rem;
+            color: var(--ming-red);
+            margin-bottom: 1rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            max-width: 800px;
+            margin: 0 auto;
+            color: var(--ming-dark);
+        }
+
+        /* 新增：疆域版图样式 */
+        .territory {
+            text-align: center;
+            margin: 2rem 0;
+        }
+        .territory-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        /* 通用板块样式 */
+        .section {
+            margin-bottom: 4rem;
+        }
+        
+        .section-title {
+            font-size: 2.2rem;
+            color: var(--ming-red);
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid var(--ming-gold);
+            display: inline-block;
+            position: relative;
             left: 50%;
             transform: translateX(-50%);
-            width: 100px;
-            height: 3px;
-            background: var(--ming-red);
+        }
+
+        /* 新增：内容卡片样式 */
+        .content-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .content-card h3 {
+            color: var(--ming-red);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        .content-card p {
+            line-height: 1.8;
+            margin-bottom: 0.8rem;
         }
         
-        .section-title h2 {
-            font-size: 2.5rem;
+        /* 工艺品展示板块 */
+        .crafts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .craft-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .craft-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .craft-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+        
+        .craft-info {
+            padding: 1.5rem;
+        }
+        
+        .craft-title {
+            font-size: 1.4rem;
             color: var(--ming-red);
             margin-bottom: 0.5rem;
+        }
+        
+        .craft-desc {
+            font-size: 1rem;
+            color: var(--text-color);
+            line-height: 1.5;
         }
         
         /* 时间线 */
         .timeline {
             position: relative;
-            max-width: 1000px;
+            max-width: 800px;
             margin: 0 auto;
         }
         
@@ -251,36 +275,13 @@
             bottom: 0;
             left: 50%;
             margin-left: -3px;
+            border-radius: 3px;
         }
         
         .timeline-item {
-            padding: 10px 40px;
+            padding: 1rem 2rem;
             position: relative;
             width: 50%;
-            box-sizing: border-box;
-        }
-        
-        .timeline-item:nth-child(odd) {
-            left: 0;
-        }
-        
-        .timeline-item:nth-child(even) {
-            left: 50%;
-        }
-        
-        .timeline-content {
-            padding: 20px 30px;
-            background-color: var(--card-bg);
-            position: relative;
-            border-radius: 6px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-left: 5px solid var(--ming-blue);
-            transition: background-color 0.3s;
-        }
-        
-        .timeline-item:nth-child(even) .timeline-content {
-            border-left: none;
-            border-right: 5px solid var(--ming-gold);
         }
         
         .timeline-item::after {
@@ -288,206 +289,130 @@
             position: absolute;
             width: 25px;
             height: 25px;
-            right: -13px;
-            background-color: var(--bg-color);
+            background-color: var(--ming-gold);
             border: 4px solid var(--timeline-bg);
-            top: 15px;
             border-radius: 50%;
+            top: 15px;
             z-index: 1;
-            transition: background-color 0.3s;
         }
         
-        .timeline-item:nth-child(even)::after {
-            left: -13px;
+        .timeline-left {
+            left: 0;
         }
         
-        /* 特色板块 */
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
+        .timeline-right {
+            left: 50%;
         }
         
-        .feature-card {
+        .timeline-left::after {
+            right: -17px;
+        }
+        
+        .timeline-right::after {
+            left: -17px;
+        }
+        
+        .timeline-content {
             background: var(--card-bg);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s, background-color 0.3s;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-10px);
-        }
-        
-        .feature-img {
-            height: 200px;
-            background-size: cover;
-            background-position: center;
-        }
-        
-        .feature-content {
             padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
-        .feature-content h3 {
-            color: var(--ming-red);
-            margin-bottom: 1rem;
-            border-bottom: 2px solid var(--ming-gold);
-            padding-bottom: 0.5rem;
-        }
-        
-        /* 明朝大事件部分 */
-        .events {
+        /* 皇帝卡片 */
+        .emperors-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 2rem;
-            margin-top: 3rem;
-        }
-        
-        .event-card {
-            background: var(--card-bg);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            transition: background-color 0.3s;
-        }
-        
-        .event-img {
-            height: 200px;
-            background-size: cover;
-            background-position: center;
-        }
-        
-        .event-content {
-            padding: 1.5rem;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .event-content h3 {
-            color: var(--ming-blue);
-            margin-bottom: 0.5rem;
-        }
-        
-        .event-date {
-            color: var(--ming-red);
-            font-weight: bold;
-            margin-bottom: 1rem;
-        }
-        
-        /* 历代皇帝板块样式 */
-        .emperors {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-top: 3rem;
         }
         
         .emperor-card {
             background: var(--card-bg);
             border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s, background-color 0.3s, opacity 0.5s;
-            display: flex;
-            flex-direction: column;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
         }
         
         .emperor-card:hover {
             transform: translateY(-5px);
         }
         
-        .emperor-number {
-            background: var(--ming-red);
-            color: var(--ming-white);
-            padding: 0.8rem;
-            text-align: center;
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
-        
-        .emperor-content {
-            padding: 1.2rem;
-            flex-grow: 1;
-        }
-        
         .emperor-name {
-            color: var(--ming-blue);
             font-size: 1.3rem;
-            font-weight: bold;
+            color: var(--ming-red);
             margin-bottom: 0.5rem;
-            border-bottom: 1px solid var(--ming-gold);
-            padding-bottom: 0.3rem;
         }
         
         .emperor-reign {
-            color: var(--ming-red);
+            color: var(--ming-blue);
             font-weight: bold;
-            margin-bottom: 0.8rem;
-            font-size: 0.95rem;
-        }
-        
-        .emperor-bio {
-            font-size: 0.95rem;
-            line-height: 1.5;
+            margin-bottom: 1rem;
         }
         
         /* 页脚 */
         footer {
-            background: var(--footer-bg);
+            background-color: var(--footer-bg);
             color: var(--ming-white);
-            padding: 3rem 0 1rem;
+            padding: 3rem 0;
             margin-top: 3rem;
-            transition: background-color 0.3s;
         }
         
         .footer-content {
             max-width: 1200px;
             margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
             padding: 0 2rem;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            flex-wrap: wrap;
             gap: 2rem;
         }
         
         .footer-section h3 {
             color: var(--ming-gold);
             margin-bottom: 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+        
+        .footer-section p, .footer-section li {
+            color: #ccc;
+            line-height: 1.8;
+        }
+        
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-section a:hover {
+            color: var(--ming-gold);
         }
         
         .footer-bottom {
             text-align: center;
-            padding-top: 2rem;
             margin-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 1rem;
+            border-top: 1px solid #444;
+            color: #999;
         }
         
-        /* 响应式设计 */
+        /* 响应式 */
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
-                text-align: center;
+                gap: 1rem;
             }
             
             nav ul {
-                margin-top: 1rem;
                 flex-wrap: wrap;
                 justify-content: center;
+                gap: 1rem;
             }
             
             nav li {
-                margin: 0.5rem;
-            }
-            
-            .banner h1 {
-                font-size: 2.5rem;
+                margin-left: 0;
             }
             
             .timeline::after {
@@ -500,20 +425,16 @@
                 padding-right: 25px;
             }
             
-            .timeline-item:nth-child(even) {
+            .timeline-right {
                 left: 0;
             }
             
-            .timeline-item::after {
-                left: 18px;
+            .timeline-left::after, .timeline-right::after {
+                left: 15px;
             }
             
-            .timeline-item:nth-child(even)::after {
-                left: 18px;
-            }
-            
-            .emperors {
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            .crafts-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -522,372 +443,243 @@
     <!-- 顶部导航 -->
     <header>
         <div class="header-content">
-            <div class="logo"><i class="fas fa-landmark"></i>大明风华</div>
+            <div class="logo">
+                <i class="fas fa-dragon"></i>
+                大明历史
+            </div>
             <nav>
                 <ul>
-                    <li><a href="#overview">明朝概述</a></li>
-                    <li><a href="#timeline">历史时间线</a></li>
-                    <li><a href="#events">重大事件</a></li>
-                    <li><a href="#culture">文化与科技</a></li>
-                    <li><a href="#emperors">历代皇帝</a></li>
-                    <li>
-                        <button class="theme-toggle" id="themeToggle" aria-label="切换主题">
-                            <i class="fas fa-moon"></i>
-                        </button>
-                    </li>
+                    <li><a href="#overview">王朝概述</a></li>
+                    <li><a href="#timeline">历史纪年</a></li>
+                    <li><a href="#emperors">历代帝王</a></li>
+                    <li><a href="#crafts">明代工艺</a></li>
+                    <li><a href="#culture">文化艺术</a></li>
+                    <li><a href="#economy">经济科技</a></li>
                 </ul>
             </nav>
+            <button id="themeToggle">
+                <i class="fas fa-moon"></i>
+                切换主题
+            </button>
         </div>
     </header>
 
-    <!-- 主横幅 -->
-    <section class="banner">
-        <div class="banner-content">
-            <h1>大明王朝</h1>
-            <p>1368年 - 1644年 | 中国历史上最后一个由汉族建立的封建王朝</p>
-            <a href="#overview" class="btn">探索明朝历史</a>
-        </div>
-    </section>
-
     <!-- 主要内容 -->
-    <main class="container">
-        <!-- 概述部分 -->
-        <section id="overview" class="section">
-            <div class="section-title">
-                <h2>明朝概述</h2>
-                <p>从洪武到崇祯，大明王朝的兴衰历程</p>
-            </div>
-            <div style="text-align: center; max-width: 800px; margin: 0 auto;">
-                <p>明朝（1368年―1644年）是中国历史上一个重要的朝代，由明太祖朱元璋建立，共传十六帝，享国276年。明代初期历经洪武之治、永乐盛世、仁宣之治等治世，国力强盛。中期经土木之变由盛转衰，后经弘治中兴、嘉靖中兴、万历中兴国势复振。晚明因政治腐败、东林党争和天灾外患导致国力衰退，最终被李自成领导的农民起义推翻。</p>
-                <p>明代疆域囊括汉地，东北抵日本海、外兴安岭，后缩至辽河流域；北达戈壁沙漠一带，后撤至明长城；西北至新疆哈密，后退守嘉峪关；西南临孟加拉湾，后折回约今云南境；并在青藏地区设有羁縻卫所，还曾收复安南。</p>
+    <main>
+        <!-- 英雄区域 -->
+        <section class="hero" id="overview">
+            <h1>大明王朝 · 盛世风华</h1>
+            <p>明朝（1368年－1644年）是中国历史上最后一个由汉族建立的大一统中原王朝，历经十六帝，享国二百七十六年。其国力强盛、文化繁荣、工艺精湛，对后世影响深远。</p>
+            <br>
+            <p>明朝秉持"天子守国门，君王死社稷"的气节，无汉之外戚、唐之藩镇、宋之岁币，是中国古代史上极具风骨的王朝。</p>
+            
+            <!-- 新增：明朝疆域版图 -->
+            <div class="territory section">
+                <h2 class="section-title">明朝疆域版图</h2>
+                <img src="https://tse3-mm.cn.bing.net/th/id/OIP-C.L2ogZ5Nf8VHUhua-XAhqUAHaFL?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3" alt="明朝疆域图" class="territory-img">
+                <p style="margin-top:1rem;">明代疆域囊括汉地，东北抵日本海、外兴安岭，北达戈壁沙漠，西北至新疆哈密，西南临孟加拉湾，极盛时期国土面积约达1000万平方公里。</p>
             </div>
         </section>
 
-        <!-- 时间线部分 -->
-        <section id="timeline" class="section" style="margin-top: 5rem;">
-            <div class="section-title">
-                <h2>明朝历史时间线</h2>
-                <p>重要历史事件与转折点</p>
+        <!-- 明代政治制度 -->
+        <section class="section" id="policy">
+            <h2 class="section-title">政治制度</h2>
+            <div class="content-card">
+                <h3>中央官制</h3>
+                <p>明朝初期废除丞相制度，将相权分散至六部，皇权高度集中。设立内阁辅佐皇帝处理政务，成为明代核心行政机构。</p>
+                <p>地方实行三司分权：承宣布政使司（民政）、提刑按察使司（司法）、都指挥使司（军事），相互制衡，加强中央集权。</p>
             </div>
+            <div class="content-card">
+                <h3>科举制度</h3>
+                <p>明朝科举制度达到鼎盛，以八股取士为核心，考试内容限定于四书五经。分为院试、乡试、会试、殿试四级，选拔人才为朝廷所用。</p>
+                <p>科举制度促进了教育普及，也奠定了明朝文官治国的基础。</p>
+            </div>
+            <div class="content-card">
+                <h3>军事体系</h3>
+                <p>明代实行卫所制，军队世袭驻守，战时出征、平时屯田，实现兵农合一。设立五军都督府统辖军队，兵部掌管调兵权，相互制衡。</p>
+                <p>明朝火器发达，创建神机营，是世界上最早的火器部队，军事科技领先世界。</p>
+            </div>
+        </section>
+
+        <!-- 明代工艺品板块 -->
+        <section class="section" id="crafts">
+            <h2 class="section-title">明代工艺品精粹</h2>
+            <div class="crafts-grid">
+                <!-- 瓷器 -->
+                <div class="craft-card">
+                    <img src="https://ts1.tc.mm.bing.net/th/id/OIP-C.PF2ycSndmryhld0bVDdE8wHaKc?w=193&h=272&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2" alt="明永乐青花云龙纹扁瓶" class="craft-img">
+                    <div class="craft-info">
+                        <h3 class="craft-title">明永乐青花云龙纹扁瓶</h3>
+                        <p class="craft-desc">明代青花瓷器巅峰之作，釉色浓艳，龙纹矫健，尽显永乐盛世气象。</p>
+                    </div>
+                </div>
+                <!-- 金器 -->
+                <div class="craft-card">
+                    <img src="https://tse4-mm.cn.bing.net/th/id/OIP-C.0ArnGC0OM6o5XQtAm6DjtQHaIX?w=160&h=180&c=7&r=0&o=7&pid=1.7&rm=3" alt="明金镶宝石龙穿牡丹帽顶" class="craft-img">
+                    <div class="craft-info">
+                        <h3 class="craft-title">金镶宝石龙穿牡丹帽顶</h3>
+                        <p class="craft-desc">梁庄王墓出土，金玉镶嵌，工艺繁复，代表明代顶级金银器水平。</p>
+                    </div>
+                </div>
+                <!-- 玉器 -->
+                <div class="craft-card">
+                    <img src=https://ts1.tc.mm.bing.net/th/id/OIP-C.XinzPM_4uU1akr0P7tlgjAHaGd?w=149&h=128&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2" alt="明青玉镂空荷叶鸳鸯佩" class="craft-img">
+                    <div class="craft-info">
+                        <h3 class="craft-title">青玉镂空荷叶鸳鸯佩</h3>
+                        <p class="craft-desc">明代玉器代表作，镂空技法精湛，纹饰生动，寓意吉祥美满。</p>
+                    </div>
+                </div>
+                <!-- 珐琅 -->
+                <div class="craft-card">
+                    <img src="data:image/webp;base64,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" alt="明掐丝珐琅花卉执壶" class="craft-img">
+                    <div class="craft-info">
+                        <h3 class="craft-title">掐丝珐琅花卉执壶</h3>
+                        <p class="craft-desc">明代景泰蓝精品，色彩富丽，纹饰典雅，为宫廷御用重器。</p>
+                    </div>
+                </div>
+                <!-- 服饰 -->
+                <div class="craft-card">
+                    <img src="https://tse4-mm.cn.bing.net/th/id/OIP-C.s0hKoPD75INFtb1xkq4nOAHaFS?w=212&h=180&c=7&r=0&o=7&pid=1.7&rm=3" alt="明香色芝麻纱绣过肩蟒女长衫" class="craft-img">
+                    <div class="craft-info">
+                        <h3 class="craft-title">绣过肩蟒女长衫</h3>
+                        <p class="craft-desc">明代丝织刺绣珍品，针法细密，蟒纹栩栩如生，尽显贵族服饰华美。</p>
+                    </div>
+                </div>
+                <!-- 铜镜 -->
+                <div class="craft-card">
+                    <img src="https://tse4-mm.cn.bing.net/th/id/OIP-C.gPs6joGzO4q62zUH3wT6wgHaE8?w=288&h=192&c=7&r=0&o=7&pid=1.7&rm=3" alt="明五子登科铜镜" class="craft-img">
+                    <div class="craft-info">
+                        <h3 class="craft-title">五子登科铜镜</h3>
+                        <p class="craft-desc">明代民俗铜镜经典，纹饰清晰，寓意子孙科举及第、家族兴旺。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 历史时间线 -->
+        <section class="section" id="timeline">
+            <h2 class="section-title">大明历史纪年</h2>
             <div class="timeline">
-                <div class="timeline-item">
+                <div class="timeline-item timeline-left">
                     <div class="timeline-content">
-                        <h3>1368年 - 明朝建立</h3>
-                        <p>朱元璋在应天府（今南京）称帝，国号大明，年号洪武，开启了明朝的历史。</p>
+                        <h3>1368年</h3>
+                        <p>朱元璋称帝，国号大明，定都南京，元朝灭亡。</p>
                     </div>
                 </div>
-                <div class="timeline-item">
+                <div class="timeline-item timeline-right">
                     <div class="timeline-content">
-                        <h3>1380年 - 废除丞相制</h3>
-                        <p>朱元璋废除中书省和丞相制，加强了皇权，使六部直接对皇帝负责。</p>
+                        <h3>1380年</h3>
+                        <p>胡惟庸案爆发，废除丞相制度，皇权高度集中。</p>
                     </div>
                 </div>
-                <div class="timeline-item">
+                <div class="timeline-item timeline-left">
                     <div class="timeline-content">
-                        <h3>1402年 - 靖难之役</h3>
-                        <p>燕王朱棣发动靖难之役，攻占南京，夺取皇位，成为明成祖。</p>
+                        <h3>1405年</h3>
+                        <p>郑和首次下西洋，开启海上丝绸之路盛世。</p>
                     </div>
                 </div>
-                <div class="timeline-item">
+                <div class="timeline-item timeline-right">
                     <div class="timeline-content">
-                        <h3>1405年 - 郑和下西洋</h3>
-                        <p>明成祖朱棣派郑和率领庞大船队首次下西洋，开启了中国古代规模最大、船只和海员最多、时间最久的海上航行。</p>
+                        <h3>1420年</h3>
+                        <p>紫禁城建成，明成祖迁都北京。</p>
                     </div>
                 </div>
-                <div class="timeline-item">
+                <div class="timeline-item timeline-left">
                     <div class="timeline-content">
-                        <h3>1421年 - 迁都北京</h3>
-                        <p>明成祖朱棣正式迁都北京，以南京为留都，奠定了北京作为中国政治中心的基础。</p>
+                        <h3>1449年</h3>
+                        <p>土木堡之变，明朝由盛转衰。</p>
                     </div>
                 </div>
-                <div class="timeline-item">
+                <div class="timeline-item timeline-right">
                     <div class="timeline-content">
-                        <h3>1449年 - 土木堡之变</h3>
-                        <p>明英宗朱祁镇亲征蒙古瓦剌部，在土木堡被俘，明朝由盛转衰。</p>
+                        <h3>1567年</h3>
+                        <p>隆庆开关，解除海禁，海外贸易繁荣。</p>
                     </div>
                 </div>
-                <div class="timeline-item">
+                <div class="timeline-item timeline-left">
                     <div class="timeline-content">
-                        <h3>1560年代 - 戚继光抗倭</h3>
-                        <p>戚继光在东南沿海抗击倭寇，组建戚家军，取得多次胜利。</p>
+                        <h3>1573年</h3>
+                        <p>张居正改革，推行一条鞭法，国力复苏。</p>
                     </div>
                 </div>
-                <div class="timeline-item">
+                <div class="timeline-item timeline-right">
                     <div class="timeline-content">
-                        <h3>1583年 - 张居正改革</h3>
-                        <p>张居正推行一条鞭法等改革措施，试图挽救明朝财政危机。</p>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-content">
-                        <h3>1619年 - 萨尔浒之战</h3>
-                        <p>明朝与后金在萨尔浒进行决战，明军大败，后金势力迅速壮大。</p>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-content">
-                        <h3>1644年 - 明朝灭亡</h3>
-                        <p>李自成攻破北京，崇祯帝自缢于煤山，明朝灭亡。随后清军入关，建立清朝。</p>
+                        <h3>1644年</h3>
+                        <p>李自成攻入北京，崇祯帝自缢，明朝灭亡。</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 重大事件部分 -->
-        <section id="events" class="section" style="margin-top: 5rem;">
-            <div class="section-title">
-                <h2>明朝重大历史事件</h2>
-                <p>影响明朝命运的关键时刻</p>
-            </div>
-            <div class="events">
-                <div class="event-card">
-                    <div class="event-img" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/%E6%9C%B1%E5%85%83%E7%92%8B%E5%BD%A2%E8%B1%A1%E5%9B%BE.jpg/800px-%E6%9C%B1%E5%85%83%E7%92%8B%E5%BD%A2%E8%B1%A1%E5%9B%BE.jpg');"></div>
-                    <div class="event-content">
-                        <h3>明朝建立</h3>
-                        <div class="event-date">1368年</div>
-                        <p>朱元璋在应天府（今南京）称帝，建立明朝，年号洪武。他出身贫寒，曾为和尚和乞丐，最终统一中国，开创了大明王朝。</p>
-                    </div>
+        <!-- 历代帝王 -->
+        <section class="section" id="emperors">
+            <h2 class="section-title">历代帝王</h2>
+            <div class="emperors-grid">
+                <div class="emperor-card">
+                    <h3 class="emperor-name">明太祖</h3>
+                    <p class="emperor-reign">朱元璋 · 洪武（1368-1398）</p>
+                    <p>开国皇帝，推翻元朝，建立明朝，休养生息。</p>
                 </div>
-                <div class="event-card">
-                    <div class="event-img" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/%E9%9D%96%E9%9A%BE%E4%B9%8B%E5%BD%B9.jpg/800px-%E9%9D%96%E9%9A%BE%E4%B9%8B%E5%BD%B9.jpg');"></div>
-                    <div class="event-content">
-                        <h3>靖难之役</h3>
-                        <div class="event-date">1399-1402年</div>
-                        <p>燕王朱棣发动叛乱，推翻其侄建文帝的统治，自立为帝，即明成祖。这场内战改变了明朝的政治格局。</p>
-                    </div>
+                <div class="emperor-card">
+                    <h3 class="emperor-name">明成祖</h3>
+                    <p class="emperor-reign">朱棣 · 永乐（1402-1424）</p>
+                    <p>迁都北京，郑和下西洋，编修《永乐大典》。</p>
                 </div>
-                <div class="event-card">
-                    <div class="event-img" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Zheng_He.jpg/800px-Zheng_He.jpg');"></div>
-                    <div class="event-content">
-                        <h3>郑和下西洋</h3>
-                        <div class="event-date">1405-1433年</div>
-                        <p>明成祖派遣郑和七次下西洋，船队规模庞大，最远到达非洲东海岸，促进了中外文化交流和贸易往来。</p>
-                    </div>
+                <div class="emperor-card">
+                    <h3 class="emperor-name">明仁宗</h3>
+                    <p class="emperor-reign">朱高炽 · 洪熙（1424-1425）</p>
+                    <p>为政开明，与民休息，为仁宣之治奠基。</p>
                 </div>
-                <div class="event-card">
-                    <div class="event-img" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/%E5%9C%9F%E6%9C%A8%E5%A0%A1%E4%B9%8B%E5%8F%98.jpg/800px-%E5%9C%9F%E6%9C%A8%E5%A0%A1%E4%B9%8B%E5%8F%98.jpg');"></div>
-                    <div class="event-content">
-                        <h3>土木堡之变</h3>
-                        <div class="event-date">1449年</div>
-                        <p>明英宗亲征蒙古瓦剌部，在土木堡被俘，明军惨败。这一事件标志着明朝由盛转衰。</p>
-                    </div>
+                <div class="emperor-card">
+                    <h3 class="emperor-name">明宣宗</h3>
+                    <p class="emperor-reign">朱瞻基 · 宣德（1425-1435）</p>
+                    <p>励精图治，史称“仁宣之治”，国力鼎盛。</p>
                 </div>
-                <div class="event-card">
-                    <div class="event-img" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/%E5%BC%84%E5%8D%8E%E5%BA%AD%E5%9B%BE.jpg/800px-%E5%BC%84%E5%8D%8E%E5%BA%AD%E5%9B%BE.jpg');"></div>
-                    <div class="event-content">
-                        <h3>张居正改革</h3>
-                        <div class="event-date">1573-1582年</div>
-                        <p>张居正担任首辅期间推行一系列改革，包括一条鞭法等，试图挽救明朝的财政危机。</p>
-                    </div>
+                <div class="emperor-card">
+                    <h3 class="emperor-name">明神宗</h3>
+                    <p class="emperor-reign">朱翊钧 · 万历（1572-1620）</p>
+                    <p>前期张居正改革，后期怠政，明朝走向衰落。</p>
                 </div>
-                <div class="event-card">
-                    <div class="event-img" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/%E6%B2%88%E9%98%B3%E5%86%85%E5%9F%8E.jpg/800px-%E6%B2%88%E9%98%B3%E5%86%85%E5%9F%8E.jpg');"></div>
-                    <div class="event-content">
-                        <h3>明朝灭亡</h3>
-                        <div class="event-date">1644年</div>
-                        <p>李自成攻破北京，崇祯帝自缢于煤山，明朝灭亡。随后清军入关，建立清朝，中国历史进入新的时期。</p>
-                    </div>
+                <div class="emperor-card">
+                    <h3 class="emperor-name">明思宗</h3>
+                    <p class="emperor-reign">朱由检 · 崇祯（1627-1644）</p>
+                    <p>励精图治却无力回天，自缢殉国，明朝灭亡。</p>
                 </div>
             </div>
         </section>
 
-        <!-- 文化与科技部分 -->
-        <section id="culture" class="section" style="margin-top: 5rem;">
-            <div class="section-title">
-                <h2>明朝文化与科技</h2>
-                <p>辉煌的文化成就与科技创新</p>
+        <!-- 文化艺术 -->
+        <section class="section" id="culture">
+            <h2 class="section-title">文化艺术</h2>
+            <div class="content-card">
+                <h3>文学成就</h3>
+                <p>明代小说达到中国古典文学巅峰，四大名著中有三部诞生于明朝：《三国演义》《水浒传》《西游记》。</p>
+                <p>此外《金瓶梅》《三言二拍》等作品，反映了明代市民文化的繁荣。</p>
             </div>
-            <div class="features">
-                <div class="feature-card">
-                    <div class="feature-img" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Ming_dynasty_blue_and_white_porcelain.jpg/800px-Ming_dynasty_blue_and_white_porcelain.jpg');"></div>
-                    <div class="feature-content">
-                        <h3>青花瓷艺术</h3>
-                        <p>明代青花瓷达到工艺顶峰，以其优雅的造型和精美的纹饰闻名于世，成为中外贸易的重要商品。景德镇成为全国制瓷中心，青花瓷远销海外。</p>
-                    </div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-img" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Yongle_Encyclopedia.jpg/800px-Yongle_Encyclopedia.jpg');"></div>
-                    <div class="feature-content">
-                        <h3>《永乐大典》</h3>
-                        <p>明成祖时期编纂的类书，是中国古代最大的百科全书，收录了先秦至明初的各类典籍。全书共22,937卷，约3.7亿字，是中华文化的瑰宝。</p>
-                    </div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-img" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Ming_cannon.jpg/800px-Ming_cannon.jpg');"></div>
-                    <div class="feature-content">
-                        <h3>火器技术</h3>
-                        <p>明代火器制造技术达到很高水平，神机营是世界上最早的独立火器部队，在军事上具有重要地位。明朝还引进了西方火器技术并进行改良。</p>
-                    </div>
-                </div>
+            <div class="content-card">
+                <h3>思想哲学</h3>
+                <p>王阳明创立心学，提出"知行合一"，打破程朱理学僵化格局，成为明代最具影响力的哲学思想。</p>
+                <p>李贽等思想家倡导个性解放，批判传统礼教，推动思想进步。</p>
+            </div>
+            <div class="content-card">
+                <h3>书画艺术</h3>
+                <p>明代书画名家辈出，沈周、文征明、唐寅、仇英并称"明四家"，开创吴门画派。</p>
+                <p>董其昌的书法与绘画理论，影响后世数百年书画发展。</p>
             </div>
         </section>
 
-        <!-- 历代皇帝部分 -->
-        <section id="emperors" class="section" style="margin-top: 5rem;">
-            <div class="section-title">
-                <h2>明朝十六帝</h2>
-                <p>大明王朝的历代君主</p>
+        <!-- 经济科技 -->
+        <section class="section" id="economy">
+            <h2 class="section-title">经济与科技</h2>
+            <div class="content-card">
+                <h3>经济发展</h3>
+                <p>明朝中后期，商品经济高度繁荣，出现资本主义萌芽。手工业、纺织业、制瓷业规模庞大。</p>
+                <p>白银成为主要流通货币，隆庆开关后，大量海外白银流入中国，成为世界经济中心之一。</p>
             </div>
-            <div class="emperors">
-                <!-- 1. 明太祖 朱元璋 -->
-                <div class="emperor-card">
-                    <div class="emperor-number">第1位</div>
-                    <div class="emperor-content">
-                        <div class="emperor-name">明太祖 朱元璋 (洪武帝)</div>
-                        <div class="emperor-reign">在位：1368-1398年</div>
-                        <div class="emperor-bio">明朝开国皇帝，字国瑞，出身贫寒，推翻元朝统治，统一全国。在位期间加强中央集权，休养生息，史称"洪武之治"。</div>
-                    </div>
-                </div>
-
-                <!-- 2. 明惠帝 朱允炆 -->
-                <div class="emperor-card">
-                    <div class="emperor-number">第2位</div>
-                    <div class="emperor-content">
-                        <div class="emperor-name">明惠帝 朱允炆 (建文帝)</div>
-                        <div class="emperor-reign">在位：1398-1402年</div>
-                        <div class="emperor-bio">朱元璋之孙，继位后推行削藩政策，引发靖难之役，最终被朱棣推翻，下落不明。史称建文新政。</div>
-                    </div>
-                </div>
-
-                <!-- 3. 明成祖 朱棣 -->
-                <div class="emperor-card">
-                    <div class="emperor-number">第3位</div>
-                    <div class="emperor-content">
-                        <div class="emperor-name">明成祖 朱棣 (永乐帝)</div>
-                        <div class="emperor-reign">在位：1402-1424年</div>
-                        <div class="emperor-bio">朱元璋第四子，发动靖难之役夺取皇位。迁都北京，派郑和下西洋，编纂《永乐大典》，开创永乐盛世。</div>
-                    </div>
-                </div>
-
-                <!-- 4. 明仁宗 朱高炽 -->
-                <div class="emperor-card">
-                    <div class="emperor-number">第4位</div>
-                    <div class="emperor-content">
-                        <div class="emperor-name">明仁宗 朱高炽 (洪熙帝)</div>
-                        <div class="emperor-reign">在位：1424-1425年</div>
-                        <div class="emperor-bio">朱棣长子，在位仅十个月，为政开明，赦免建文旧臣，与民休息，为仁宣之治奠定基础。</div>
-                    </div>
-                </div>
-
-                <!-- 5. 明宣宗 朱瞻基 -->
-                <div class="emperor-card">
-                    <div class="emperor-number">第5位</div>
-                    <div class="emperor-content">
-                        <div class="emperor-name">明宣宗 朱瞻基 (宣德帝)</div>
-                        <div class="emperor-reign">在位：1425-1435年</div>
-                        <div class="emperor-bio">朱高炽长子，与其父并称"仁宣之治"。擅长书画，政治清明，经济发展，但也开启了明朝宦官干政的先河。</div>
-                    </div>
-                </div>
-
-                <!-- 6. 明英宗 朱祁镇 -->
-                <div class="emperor-card">
-                    <div class="emperor-number">第6位</div>
-                    <div class="emperor-content">
-                        <div class="emperor-name">明英宗 朱祁镇 (正统/天顺帝)</div>
-                        <div class="emperor-reign">在位：1435-1449, 1457-1464年</div>
-                        <div class="emperor-bio">两次在位，土木堡之变中被俘，后通过夺门之变复位。前期宠信王振，后期废除殉葬制度，功过参半。</div>
-                    </div>
-                </div>
-
-                <!-- 7. 明代宗 朱祁钰 -->
-                <div class="emperor-card">
-                    <div class="emperor-number">第7位</div>
-                    <div class="emperor-content">
-                        <div class="emperor-name">明代宗 朱祁钰 (景泰帝)</div>
-                        <div class="emperor-reign">在位：1449-1457年</div>
-                        <div class="emperor-bio">朱祁镇之弟，土木堡之变后即位，任用于谦取得北京保卫战胜利，改革内政，后被英宗复辟废黜。</div>
-                    </div>
-                </div>
-
-                <!-- 8. 明宪宗 朱见深 -->
-                <div class="emperor-card">
-                    <div class="emperor-number">第8位</div>
-                    <div class="emperor-content">
-                        <div class="emperor-name">明宪宗 朱见深 (成化帝)</div>
-                        <div class="emperor-reign">在位：1464-1487年</div>
-                        <div class="emperor-bio">英宗长子，在位初期平反于谦冤案，后期宠信万贵妃，重用宦官汪直，设立西厂，朝政渐趋腐败。</div>
-                    </div>
-                </div>
-
-                <!-- 9. 明孝宗 朱祐樘 -->
-                <div class="emperor-card">
-                    <div class="emperor-number">第9位</div>
-                    <div class="emperor-content">
-                        <div class="emperor-name">明孝宗 朱祐樘 (弘治帝)</div>
-                        <div class="emperor-reign">在位：1487-1505年</div>
-                        <div class="emperor-bio">历史上唯一实行一夫一妻制的皇帝，勤于政事，励精图治，扭转朝政腐败状况，史称"弘治中兴"。</div>
-                    </div>
-                </div>
-
-                <!-- 10. 明武宗 朱厚照 -->
-                <div class="emperor-card">
-                    <div class="emperor-number">第10位</div>
-                    <div class="emperor-content">
-                        <div class="emperor-name">明武宗 朱厚照 (正德帝)</div>
-                        <div class="emperor-reign">在位：1505-1521年</div>
-                        <div class="emperor-bio">孝宗独子，贪玩好武，宠信刘瑾等八虎，自封"总督军务威武大将军"，南巡时意外落水去世，无子嗣。</div>
-                    </div>
-                </div>
-
-                <!-- 11. 明世宗 朱厚熜 -->
-                <div class="emperor-card">
-                    <div class="emperor-number">第11位</div>
-                    <div class="emperor-content">
-                        <div class="emperor-name">明世宗 朱厚熜 (嘉靖帝)</div>
-                        <div class="emperor-reign">在位：1521-1567年</div>
-                        <div class="emperor-bio">武宗堂弟，大礼议之争获胜，前期整顿朝纲，后期沉迷修道，二十余年不上朝，严嵩专权，倭寇之乱严重。</div>
-                    </div>
-                </div>
-
-                <!-- 12. 明穆宗 朱载坖 -->
-                <div class="emperor-card">
-                    <div class="emperor-number">第12位</div>
-                    <div class="emperor-content">
-                        <div class="emperor-name">明穆宗 朱载坖 (隆庆帝)</div>
-                        <div class="emperor-reign">在位：1567-1572年</div>
-                        <div class="emperor-bio">嘉靖第三子，重用高拱、张居正等贤臣，与蒙古俺答汗议和，开放海禁，史称"隆庆开关"，明朝经济复苏。</div>
-                    </div>
-                </div>
-
-                <!-- 13. 明神宗 朱翊钧 -->
-                <div class="emperor-card">
-                    <div class="emperor-number">第13位</div>
-                    <div class="emperor-content">
-                        <div class="emperor-name">明神宗 朱翊钧 (万历帝)</div>
-                        <div class="emperor-reign">在位：1572-1620年</div>
-                        <div class="emperor-bio">十岁即位，张居正辅政推行改革，亲政后三十年不上朝，东林党争加剧，萨尔浒之战惨败，明朝走向衰落。</div>
-                    </div>
-                </div>
-
-                <!-- 14. 明光宗 朱常洛 -->
-                <div class="emperor-card">
-                    <div class="emperor-number">第14位</div>
-                    <div class="emperor-content">
-                        <div class="emperor-name">明光宗 朱常洛 (泰昌帝)</div>
-                        <div class="emperor-reign">在位：1620年（仅29天）</div>
-                        <div class="emperor-bio">万历长子，经历国本之争，即位后废除矿税，却因红丸案暴毙，是明朝在位时间最短的皇帝。</div>
-                    </div>
-                </div>
-
-                <!-- 15. 明熹宗 朱由校 -->
-                <div class="emperor-card">
-                    <div class="emperor-number">第15位</div>
-                    <div class="emperor-content">
-                        <div class="emperor-name">明熹宗 朱由校 (天启帝)</div>
-                        <div class="emperor-reign">在位：1620-1627年</div>
-                        <div class="emperor-bio">擅长木工，不理朝政，宠信魏忠贤，东林党人遭迫害，后金势力日益强大，明朝内忧外患加剧。</div>
-                    </div>
-                </div>
-
-                <!-- 16. 明思宗 朱由检 -->
-                <div class="emperor-card">
-                    <div class="emperor-number">第16位</div>
-                    <div class="emperor-content">
-                        <div class="emperor-name">明思宗 朱由检 (崇祯帝)</div>
-                        <div class="emperor-reign">在位：1627-1644年</div>
-                        <div class="emperor-bio">明朝末代皇帝，铲除魏忠贤，力图中兴，但刚愎自用，频繁更换大臣，内有农民起义，外有后金威胁，最终自缢殉国。</div>
-                    </div>
-                </div>
+            <div class="content-card">
+                <h3>科技成就</h3>
+                <p>李时珍《本草纲目》、宋应星《天工开物》、徐光启《农政全书》，被誉为明代三大科技巨著。</p>
+                <p>郑和宝船代表了当时世界最顶尖的造船技术，明代火器、天文历法均处于世界领先水平。</p>
             </div>
         </section>
     </main>
@@ -896,8 +688,8 @@
     <footer>
         <div class="footer-content">
             <div class="footer-section">
-                <h3>关于本站</h3>
-                <p>本网站致力于介绍明朝历史、文化与艺术，展示大明王朝的辉煌成就与深远影响。</p>
+                <h3>关于大明历史</h3>
+                <p>本网站致力于全面展示明朝的历史、政治、经济、文化与艺术，展示大明王朝的辉煌成就与深远影响。</p>
             </div>
             <div class="footer-section">
                 <h3>相关资源</h3>
@@ -1003,10 +795,54 @@
             });
         }
         
+        // 工艺品卡片动画
+        function animateCrafts() {
+            const craftCards = document.querySelectorAll('.craft-card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if(entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            craftCards.forEach((card, index) => {
+                card.style.opacity = 0;
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = `opacity 0.5s ${index * 0.15}s, transform 0.5s ${index * 0.15}s`;
+                observer.observe(card);
+            });
+        }
+
+        // 内容卡片动画
+        function animateContent() {
+            const cards = document.querySelectorAll('.content-card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if(entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            cards.forEach((card, index) => {
+                card.style.opacity = 0;
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = `opacity 0.5s ${index * 0.1}s, transform 0.5s ${index * 0.1}s`;
+                observer.observe(card);
+            });
+        }
+        
         // 页面加载完成后执行
         window.addEventListener('DOMContentLoaded', () => {
             animateTimeline();
             animateEmperors();
+            animateCrafts();
+            animateContent();
         });
     </script>
 </body>
