@@ -29,6 +29,10 @@
             --card-bg: white;
             --header-bg: linear-gradient(to bottom, #c03a2b, #a52a1f);
             --footer-bg: #3a2615;
+            --tag-found: #8B4513;
+            --tag-prosper: #228B22;
+            --tag-recover: #4169E1;
+            --tag-fall: #DC143C;
         }
         [data-theme="dark"] {
             --ming-red: #d46a5e;
@@ -41,6 +45,10 @@
             --card-bg: #1e1e1e;
             --header-bg: linear-gradient(to bottom, #8b1a0f, #5a110a);
             --footer-bg: #0a0a0a;
+            --tag-found: #CD853F;
+            --tag-prosper: #90EE90;
+            --tag-recover: #87CEFA;
+            --tag-fall: #FF6347;
         }
         body {
             background-color: var(--bg-color);
@@ -99,7 +107,7 @@
             font-size: 2.2rem;
             color: var(--ming-red);
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 1rem;
             padding-bottom: 1rem;
             border-bottom: 3px solid var(--ming-gold);
             display: inline-block;
@@ -107,31 +115,112 @@
             left: 50%;
             transform: translateX(-50%);
         }
+        .ming-info {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+        }
+        .timeline {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 3rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .timeline h3 {
+            color: var(--ming-red);
+            margin-bottom: 1rem;
+        }
+        .timeline-line {
+            height: 6px;
+            background: var(--ming-gold);
+            border-radius: 3px;
+            position: relative;
+            margin: 2rem 0;
+        }
+        .timeline-points {
+            display: flex;
+            justify-content: space-between;
+            margin-top: -13px;
+        }
+        .point {
+            width: 20px;
+            height: 20px;
+            background: var(--ming-red);
+            border-radius: 50%;
+            position: relative;
+        }
+        .point-text {
+            position: absolute;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            font-weight: bold;
+        }
         .emperors-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
         }
         .emperor-card {
             background: var(--card-bg);
-            border-radius: 8px;
-            padding: 2rem;
+            border-radius: 12px;
+            padding: 1.5rem;
             text-align: center;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
             transition: transform 0.3s, opacity 0.5s;
+            border: 2px solid transparent;
         }
         .emperor-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px);
+            border-color: var(--ming-gold);
         }
+
+        /* 纯 CSS 头像，不再用任何图片 */
+        .emperor-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            border: 3px solid var(--ming-gold);
+            background: var(--ming-red);
+            color: #fff;
+            font-size: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .emperor-name {
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             color: var(--ming-red);
             margin-bottom: 0.5rem;
         }
         .emperor-reign {
             color: var(--ming-blue);
             font-weight: bold;
+            margin-bottom: 0.8rem;
+            font-size: 1rem;
+        }
+        .emperor-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
             margin-bottom: 1rem;
+            color: white;
+            font-weight: bold;
+        }
+        .tag-found { background: var(--tag-found); }
+        .tag-prosper { background: var(--tag-prosper); }
+        .tag-recover { background: var(--tag-recover); }
+        .tag-fall { background: var(--tag-fall); }
+        .emperor-desc {
+            text-align: left;
+            line-height: 1.8;
+            font-size: 0.95rem;
         }
         footer {
             background: var(--footer-bg);
@@ -139,11 +228,15 @@
             text-align: center;
             padding: 2rem;
             margin-top: 3rem;
+            border-top: 5px solid var(--ming-gold);
         }
         @media (max-width:768px) {
             .header-content {
                 flex-direction: column;
                 gap: 1rem;
+            }
+            .timeline-points {
+                display: none;
             }
         }
     </style>
@@ -167,92 +260,191 @@
 
 <main>
     <h2 class="section-title">明朝十六帝</h2>
+    <div class="ming-info">
+        <p>明朝（1368年－1644年）是中国历史上最后一个由汉族建立的大一统王朝，历经十六帝，享国276年。</p>
+    </div>
+
+    <div class="timeline">
+        <h3>明朝发展时间轴</h3>
+        <div class="timeline-line">
+            <div class="timeline-points">
+                <div class="point"><span class="point-text">1368 开国</span></div>
+                <div class="point"><span class="point-text">1402 永乐</span></div>
+                <div class="point"><span class="point-text">1425 仁宣</span></div>
+                <div class="point"><span class="point-text">1487 弘治</span></div>
+                <div class="point"><span class="point-text">1572 万历</span></div>
+                <div class="point"><span class="point-text">1644 亡国</span></div>
+            </div>
+        </div>
+        <p>开国奠基 → 永乐盛世 → 仁宣之治 → 弘治中兴 → 万历怠政 → 崇祯殉国</p>
+    </div>
+
     <div class="emperors-grid">
         <div class="emperor-card">
+            <div class="emperor-avatar">洪</div>
             <h3 class="emperor-name">明太祖</h3>
             <p class="emperor-reign">朱元璋 · 洪武（1368-1398）</p>
-            <p>开国皇帝，推翻元朝，建立明朝，休养生息。</p>
+            <span class="emperor-tag tag-found">开国皇帝</span>
+            <div class="emperor-desc">
+                出身布衣，参加红巾军起义，推翻元朝统治，统一全国。建立明朝后，休养生息，严惩贪官，加强中央集权，奠定明朝两百余年基业。
+            </div>
         </div>
+
         <div class="emperor-card">
+            <div class="emperor-avatar">建</div>
             <h3 class="emperor-name">明惠帝</h3>
             <p class="emperor-reign">朱允炆 · 建文（1398-1402）</p>
-            <p>推行仁政，削藩引发靖难之役，下落不明。</p>
+            <span class="emperor-tag tag-recover">仁柔少年</span>
+            <div class="emperor-desc">
+                朱元璋之孙，继位后推行宽仁政治，重用文臣，锐意削藩。最终引发靖难之役，南京城破后下落不明，成为明朝第一悬案。
+            </div>
         </div>
+
         <div class="emperor-card">
+            <div class="emperor-avatar">永</div>
             <h3 class="emperor-name">明成祖</h3>
             <p class="emperor-reign">朱棣 · 永乐（1402-1424）</p>
-            <p>迁都北京，郑和下西洋，修《永乐大典》。</p>
+            <span class="emperor-tag tag-prosper">永乐盛世</span>
+            <div class="emperor-desc">
+                朱元璋第四子，发动靖难之役夺取皇位。迁都北京，修建紫禁城；派郑和七下西洋；编纂《永乐大典》，明朝国力达到顶峰。
+            </div>
         </div>
+
         <div class="emperor-card">
+            <div class="emperor-avatar">洪</div>
             <h3 class="emperor-name">明仁宗</h3>
             <p class="emperor-reign">朱高炽 · 洪熙（1424-1425）</p>
-            <p>为政宽厚，与民休息，开启仁宣之治。</p>
+            <span class="emperor-tag tag-prosper">仁厚守成</span>
+            <div class="emperor-desc">
+                朱棣长子，在位仅十月，为人宽厚，停止大规模用兵，平反冤狱，与民休息，为仁宣之治打下坚实基础。
+            </div>
         </div>
+
         <div class="emperor-card">
+            <div class="emperor-avatar">宣</div>
             <h3 class="emperor-name">明宣宗</h3>
             <p class="emperor-reign">朱瞻基 · 宣德（1425-1435）</p>
-            <p>励精图治，国力鼎盛，史称仁宣之治。</p>
+            <span class="emperor-tag tag-prosper">仁宣之治</span>
+            <div class="emperor-desc">
+                天资英武，励精图治，重用贤臣，整顿吏治，轻徭薄赋。明朝政治清明，百姓安居乐业，国力鼎盛，史称“仁宣之治”。
+            </div>
         </div>
+
         <div class="emperor-card">
+            <div class="emperor-avatar">正</div>
             <h3 class="emperor-name">明英宗</h3>
             <p class="emperor-reign">朱祁镇 · 正统/天顺（1435-1449、1457-1464）</p>
-            <p>土木堡被俘，复辟后废除殉葬制度。</p>
+            <span class="emperor-tag tag-recover">两度登基</span>
+            <div class="emperor-desc">
+                幼年继位，宠信宦官王振，导致土木堡之变被俘。后被放回，发动夺门之变复辟。晚年废除殉葬制度，功过参半。
+            </div>
         </div>
+
         <div class="emperor-card">
+            <div class="emperor-avatar">景</div>
             <h3 class="emperor-name">明代宗</h3>
             <p class="emperor-reign">朱祁钰 · 景泰（1449-1457）</p>
-            <p>临危受命，保卫北京，挽救明朝。</p>
+            <span class="emperor-tag tag-recover">力挽狂澜</span>
+            <div class="emperor-desc">
+                朱祁镇之弟，土木堡之变后临危受命，登基称帝。任用于谦组织北京保卫战，击退瓦剌，挽救明朝于危亡之际。
+            </div>
         </div>
+
         <div class="emperor-card">
+            <div class="emperor-avatar">成</div>
             <h3 class="emperor-name">明宪宗</h3>
             <p class="emperor-reign">朱见深 · 成化（1464-1487）</p>
-            <p>宽减赋税，设立西厂，朝政复杂。</p>
+            <span class="emperor-tag tag-recover">宽和中庸</span>
+            <div class="emperor-desc">
+                为人温和，宽减赋税，平反于谦冤案。但设立西厂，宠信万贵妃，导致朝政复杂，宦官与外戚势力抬头。
+            </div>
         </div>
+
         <div class="emperor-card">
+            <div class="emperor-avatar">弘</div>
             <h3 class="emperor-name">明孝宗</h3>
             <p class="emperor-reign">朱祐樘 · 弘治（1487-1505）</p>
-            <p>勤政爱民，政治清明，史称弘治中兴。</p>
+            <span class="emperor-tag tag-prosper">弘治中兴</span>
+            <div class="emperor-desc">
+                明朝最贤明的君主之一，勤政爱民，不近女色，一生只娶一位皇后。驱逐奸佞，任用贤臣，明朝再度中兴，史称“弘治中兴”。
+            </div>
         </div>
+
         <div class="emperor-card">
+            <div class="emperor-avatar">正</div>
             <h3 class="emperor-name">明武宗</h3>
             <p class="emperor-reign">朱厚照 · 正德（1505-1521）</p>
-            <p>随性不羁，平定内乱，行为争议极大。</p>
+            <span class="emperor-tag tag-fall">随性不羁</span>
+            <div class="emperor-desc">
+                聪慧过人却不喜朝政，行为荒诞不羁，修建豹房，自封大将军。虽平定内乱，但宠信宦官，朝政败坏，争议极大。
+            </div>
         </div>
+
         <div class="emperor-card">
+            <div class="emperor-avatar">嘉</div>
             <h3 class="emperor-name">明世宗</h3>
             <p class="emperor-reign">朱厚熜 · 嘉靖（1521-1566）</p>
-            <p>前期中兴，后期崇道怠政，倭寇频发。</p>
+            <span class="emperor-tag tag-fall">崇道怠政</span>
+            <div class="emperor-desc">
+                朱厚照堂弟，继位后开创嘉靖中兴，后期沉迷修道炼丹，二十余年不上朝。倭寇频繁侵扰，严嵩专权，明朝开始走向衰落。
+            </div>
         </div>
+
         <div class="emperor-card">
+            <div class="emperor-avatar">隆</div>
             <h3 class="emperor-name">明穆宗</h3>
             <p class="emperor-reign">朱载坖 · 隆庆（1566-1572）</p>
-            <p>隆庆开关，与蒙古议和，社会恢复稳定。</p>
+            <span class="emperor-tag tag-recover">隆庆新政</span>
+            <div class="emperor-desc">
+                宽厚仁慈，推行隆庆开关，解除海禁；与蒙古俺答汗议和，史称隆庆和议。社会经济恢复稳定，为万历改革奠定基础。
+            </div>
         </div>
+
         <div class="emperor-card">
+            <div class="emperor-avatar">万</div>
             <h3 class="emperor-name">明神宗</h3>
             <p class="emperor-reign">朱翊钧 · 万历（1572-1620）</p>
-            <p>张居正改革，后期怠政，明朝由盛转衰。</p>
+            <span class="emperor-tag tag-fall">由盛转衰</span>
+            <div class="emperor-desc">
+                幼年继位，张居正改革使国力大增。亲政后发动三大征，后期三十年不上朝，怠政奢靡，党争不断，明朝彻底由盛转衰。
+            </div>
         </div>
+
         <div class="emperor-card">
+            <div class="emperor-avatar">泰</div>
             <h3 class="emperor-name">明光宗</h3>
             <p class="emperor-reign">朱常洛 · 泰昌（1620）</p>
-            <p>在位仅一月，因红丸案暴毙。</p>
+            <span class="emperor-tag tag-fall">一月天子</span>
+            <div class="emperor-desc">
+                苦熬三十九年才登基，继位后废除矿税，拨乱反正。但沉湎酒色，身体迅速垮掉，在位仅一个月便因红丸案暴毙。
+            </div>
         </div>
+
         <div class="emperor-card">
+            <div class="emperor-avatar">天</div>
             <h3 class="emperor-name">明熹宗</h3>
             <p class="emperor-reign">朱由校 · 天启（1620-1627）</p>
-            <p>喜好木工，魏忠贤乱政，朝政腐败。</p>
+            <span class="emperor-tag tag-fall">木匠皇帝</span>
+            <div class="emperor-desc">
+                酷爱木工技艺，技艺精湛，不理朝政。宠信乳母客氏与宦官魏忠贤，导致阉党乱政，东林党遭迫害，明朝政治极度腐败。
+            </div>
         </div>
+
         <div class="emperor-card">
+            <div class="emperor-avatar">崇</div>
             <h3 class="emperor-name">明思宗</h3>
             <p class="emperor-reign">朱由检 · 崇祯（1627-1644）</p>
-            <p>励精图治却无力回天，自缢殉国。</p>
+            <span class="emperor-tag tag-fall">亡国之君</span>
+            <div class="emperor-desc">
+                明朝最后一位皇帝，铲除阉党，勤政节俭，试图挽救明朝。但生性多疑，刚愎自用，内有流寇，外有后金，最终无力回天，自缢殉国。
+            </div>
         </div>
     </div>
 </main>
 
 <footer>
-    <p>&copy; 2013-2026 MingDynasty,Inc. 大明历史 - 大明皇帝</p>
+    <p>&copy; 2013-2026 MingDynasty,Inc. 大明历史 - 明朝十六帝全传</p>
+    <p>明朝：天子守国门，君王死社稷</p>
 </footer>
 
 <script>
@@ -274,7 +466,6 @@
         themeIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
     }
 
-    // 卡片动画
     const cards = document.querySelectorAll('.emperor-card');
     cards.forEach((c, i) => {
         c.style.opacity = 0;
