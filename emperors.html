@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大明皇帝 | MingDynasty</title>
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: "SimSun", "宋体", serif;
+            line-height: 1.6;
+            background-image: url('https://www.transparenttextures.com/patterns/paper.png');
+            transition: background-color 0.3s, color 0.3s;
+        }
+        :root {
+            --ming-red: #c03a2b;
+            --ming-gold: #d4af37;
+            --ming-blue: #2a5d84;
+            --ming-white: #f8f3e6;
+            --ming-dark: #3a2615;
+            --bg-color: #f8f3e6;
+            --text-color: #333;
+            --card-bg: white;
+            --header-bg: linear-gradient(to bottom, #c03a2b, #a52a1f);
+            --footer-bg: #3a2615;
+        }
+        [data-theme="dark"] {
+            --ming-red: #d46a5e;
+            --ming-gold: #e6c158;
+            --ming-blue: #4a8db9;
+            --ming-white: #1a1a1a;
+            --ming-dark: #e6d8c5;
+            --bg-color: #121212;
+            --text-color: #e6d8c5;
+            --card-bg: #1e1e1e;
+            --header-bg: linear-gradient(to bottom, #8b1a0f, #5a110a);
+            --footer-bg: #0a0a0a;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+        header {
+            background: var(--header-bg);
+            color: var(--ming-white);
+            padding: 1rem 0;
+            border-bottom: 5px solid var(--ming-gold);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        .logo i {
+            margin-right: 10px;
+            color: var(--ming-gold);
+        }
+        nav a {
+            color: var(--ming-white);
+            text-decoration: none;
+            font-size: 1.1rem;
+            margin-left: 1.5rem;
+        }
+        nav a:hover {
+            color: var(--ming-gold);
+        }
+        #themeToggle {
+            background: none;
+            border: 2px solid var(--ming-gold);
+            color: var(--ming-white);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+        }
+        main {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+        .section-title {
+            font-size: 2.2rem;
+            color: var(--ming-red);
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid var(--ming-gold);
+            display: inline-block;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .emperors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        .emperor-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s, opacity 0.5s;
+        }
+        .emperor-card:hover {
+            transform: translateY(-5px);
+        }
+        .emperor-name {
+            font-size: 1.4rem;
+            color: var(--ming-red);
+            margin-bottom: 0.5rem;
+        }
+        .emperor-reign {
+            color: var(--ming-blue);
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        footer {
+            background: var(--footer-bg);
+            color: #ccc;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+        @media (max-width:768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-content">
+        <div class="logo">
+            <i class="fas fa-dragon"></i>
+            历代帝王
+        </div>
+        <nav>
+            <a href="index.html">返回首页</a>
+            <button id="themeToggle">
+                <i class="fas fa-moon"></i> 切换主题
+            </button>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <h2 class="section-title">明朝十六帝</h2>
+    <div class="emperors-grid">
+        <div class="emperor-card">
+            <h3 class="emperor-name">明太祖</h3>
+            <p class="emperor-reign">朱元璋 · 洪武（1368-1398）</p>
+            <p>开国皇帝，推翻元朝，建立明朝，休养生息。</p>
+        </div>
+        <div class="emperor-card">
+            <h3 class="emperor-name">明惠帝</h3>
+            <p class="emperor-reign">朱允炆 · 建文（1398-1402）</p>
+            <p>推行仁政，削藩引发靖难之役，下落不明。</p>
+        </div>
+        <div class="emperor-card">
+            <h3 class="emperor-name">明成祖</h3>
+            <p class="emperor-reign">朱棣 · 永乐（1402-1424）</p>
+            <p>迁都北京，郑和下西洋，修《永乐大典》。</p>
+        </div>
+        <div class="emperor-card">
+            <h3 class="emperor-name">明仁宗</h3>
+            <p class="emperor-reign">朱高炽 · 洪熙（1424-1425）</p>
+            <p>为政宽厚，与民休息，开启仁宣之治。</p>
+        </div>
+        <div class="emperor-card">
+            <h3 class="emperor-name">明宣宗</h3>
+            <p class="emperor-reign">朱瞻基 · 宣德（1425-1435）</p>
+            <p>励精图治，国力鼎盛，史称仁宣之治。</p>
+        </div>
+        <div class="emperor-card">
+            <h3 class="emperor-name">明英宗</h3>
+            <p class="emperor-reign">朱祁镇 · 正统/天顺（1435-1449、1457-1464）</p>
+            <p>土木堡被俘，复辟后废除殉葬制度。</p>
+        </div>
+        <div class="emperor-card">
+            <h3 class="emperor-name">明代宗</h3>
+            <p class="emperor-reign">朱祁钰 · 景泰（1449-1457）</p>
+            <p>临危受命，保卫北京，挽救明朝。</p>
+        </div>
+        <div class="emperor-card">
+            <h3 class="emperor-name">明宪宗</h3>
+            <p class="emperor-reign">朱见深 · 成化（1464-1487）</p>
+            <p>宽减赋税，设立西厂，朝政复杂。</p>
+        </div>
+        <div class="emperor-card">
+            <h3 class="emperor-name">明孝宗</h3>
+            <p class="emperor-reign">朱祐樘 · 弘治（1487-1505）</p>
+            <p>勤政爱民，政治清明，史称弘治中兴。</p>
+        </div>
+        <div class="emperor-card">
+            <h3 class="emperor-name">明武宗</h3>
+            <p class="emperor-reign">朱厚照 · 正德（1505-1521）</p>
+            <p>随性不羁，平定内乱，行为争议极大。</p>
+        </div>
+        <div class="emperor-card">
+            <h3 class="emperor-name">明世宗</h3>
+            <p class="emperor-reign">朱厚熜 · 嘉靖（1521-1566）</p>
+            <p>前期中兴，后期崇道怠政，倭寇频发。</p>
+        </div>
+        <div class="emperor-card">
+            <h3 class="emperor-name">明穆宗</h3>
+            <p class="emperor-reign">朱载坖 · 隆庆（1566-1572）</p>
+            <p>隆庆开关，与蒙古议和，社会恢复稳定。</p>
+        </div>
+        <div class="emperor-card">
+            <h3 class="emperor-name">明神宗</h3>
+            <p class="emperor-reign">朱翊钧 · 万历（1572-1620）</p>
+            <p>张居正改革，后期怠政，明朝由盛转衰。</p>
+        </div>
+        <div class="emperor-card">
+            <h3 class="emperor-name">明光宗</h3>
+            <p class="emperor-reign">朱常洛 · 泰昌（1620）</p>
+            <p>在位仅一月，因红丸案暴毙。</p>
+        </div>
+        <div class="emperor-card">
+            <h3 class="emperor-name">明熹宗</h3>
+            <p class="emperor-reign">朱由校 · 天启（1620-1627）</p>
+            <p>喜好木工，魏忠贤乱政，朝政腐败。</p>
+        </div>
+        <div class="emperor-card">
+            <h3 class="emperor-name">明思宗</h3>
+            <p class="emperor-reign">朱由检 · 崇祯（1627-1644）</p>
+            <p>励精图治却无力回天，自缢殉国。</p>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2013-2026 MingDynasty,Inc. 大明历史 - 大明皇帝</p>
+</footer>
+
+<script>
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = themeToggle.querySelector('i');
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    updateIcon(currentTheme);
+
+    themeToggle.addEventListener('click', () => {
+        const now = document.documentElement.getAttribute('data-theme');
+        const next = now === 'light' ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        updateIcon(next);
+    });
+
+    function updateIcon(theme) {
+        themeIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+    }
+
+    // 卡片动画
+    const cards = document.querySelectorAll('.emperor-card');
+    cards.forEach((c, i) => {
+        c.style.opacity = 0;
+        c.style.transform = 'translateY(30px)';
+        setTimeout(() => {
+            c.style.opacity = 1;
+            c.style.transform = 'translateY(0)';
+        }, i * 100);
+    });
+</script>
+</body>
+</html>
