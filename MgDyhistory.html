@@ -169,7 +169,7 @@
             color: var(--ming-dark);
         }
 
-        /* 新增：疆域版图样式 */
+        /* 疆域版图样式 */
         .territory {
             text-align: center;
             margin: 2rem 0;
@@ -199,7 +199,7 @@
             transform: translateX(-50%);
         }
 
-        /* 新增：内容卡片样式 */
+        /* 内容卡片样式 */
         .content-card {
             background: var(--card-bg);
             border-radius: 8px;
@@ -319,38 +319,6 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
-        /* 皇帝卡片 */
-        .emperors-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-        
-        .emperor-card {
-            background: var(--card-bg);
-            border-radius: 8px;
-            padding: 1.5rem;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
-        }
-        
-        .emperor-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .emperor-name {
-            font-size: 1.3rem;
-            color: var(--ming-red);
-            margin-bottom: 0.5rem;
-        }
-        
-        .emperor-reign {
-            color: var(--ming-blue);
-            font-weight: bold;
-            margin-bottom: 1rem;
-        }
-        
         /* 页脚 */
         footer {
             background-color: var(--footer-bg);
@@ -451,7 +419,7 @@
                 <ul>
                     <li><a href="#overview">王朝概述</a></li>
                     <li><a href="#timeline">历史纪年</a></li>
-                    <li><a href="#emperors">历代帝王</a></li>
+                    <li><a href="emperors.html">历代帝王</a></li>
                     <li><a href="#crafts">明代工艺</a></li>
                     <li><a href="#culture">文化艺术</a></li>
                     <li><a href="#economy">经济科技</a></li>
@@ -473,7 +441,7 @@
             <br>
             <p>明朝秉持"天子守国门，君王死社稷"的气节，无汉之外戚、唐之藩镇、宋之岁币，是中国古代史上极具风骨的王朝。</p>
             
-            <!-- 新增：明朝疆域版图 -->
+            <!-- 明朝疆域版图 -->
             <div class="territory section">
                 <h2 class="section-title">明朝疆域版图</h2>
                 <img src="https://tse3-mm.cn.bing.net/th/id/OIP-C.L2ogZ5Nf8VHUhua-XAhqUAHaFL?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3" alt="明朝疆域图" class="territory-img">
@@ -500,6 +468,85 @@
                 <p>明朝火器发达，创建神机营，是世界上最早的火器部队，军事科技领先世界。</p>
             </div>
         </section>
+
+        <!-- 1449-1572 明朝中期大事记 新增 -->
+        <section class="section" id="events">
+            <h2 class="section-title">1449–1572 明朝中期大事记</h2>
+            <div class="timeline">
+                <div class="timeline-item timeline-left">
+                    <div class="timeline-content">
+                        <h3>1449年</h3>
+                        <p>土木堡之变，明英宗被俘，明军主力溃败，明朝由盛转衰。</p>
+                    </div>
+                </div>
+                <div class="timeline-item timeline-right">
+                    <div class="timeline-content">
+                        <h3>1449年</h3>
+                        <p>北京保卫战，于谦率军击退瓦剌，保住明朝都城。</p>
+                    </div>
+                </div>
+                <div class="timeline-item timeline-left">
+                    <div class="timeline-content">
+                        <h3>1457年</h3>
+                        <p>夺门之变，明英宗复辟，于谦被害。</p>
+                    </div>
+                </div>
+                <div class="timeline-item timeline-right">
+                    <div class="timeline-content">
+                        <h3>1465–1487年</h3>
+                        <p>成化年间，西厂设立，朝政复杂，流民问题严重。</p>
+                    </div>
+                </div>
+                <div class="timeline-item timeline-left">
+                    <div class="timeline-content">
+                        <h3>1488–1505年</h3>
+                        <p>弘治中兴，明朝政治清明，百姓安居乐业。</p>
+                    </div>
+                </div>
+                <div class="timeline-item timeline-right">
+                    <div class="timeline-content">
+                        <h3>1505–1521年</h3>
+                        <p>正德年间，刘瑾乱政，农民起义频发。</p>
+                    </div>
+                </div>
+                <div class="timeline-item timeline-left">
+                    <div class="timeline-content">
+                        <h3>1521年</h3>
+                        <p>嘉靖帝即位，大礼议之争爆发，皇权强化。</p>
+                    </div>
+                </div>
+                <div class="timeline-item timeline-right">
+                    <div class="timeline-content">
+                        <h3>1542年</h3>
+                        <p>壬寅宫变，宫女刺杀嘉靖帝失败，朝政更加混乱。</p>
+                    </div>
+                </div>
+                <div class="timeline-item timeline-left">
+                    <div class="timeline-content">
+                        <h3>1550年</h3>
+                        <p>庚戌之变，俺答兵临北京城下，明朝边防危机。</p>
+                    </div>
+                </div>
+                <div class="timeline-item timeline-right">
+                    <div class="timeline-content">
+                        <h3>1555–1565年</h3>
+                        <p>戚继光、俞大猷平定东南沿海倭寇之乱。</p>
+                    </div>
+                </div>
+                <div class="timeline-item timeline-left">
+                    <div class="timeline-content">
+                        <h3>1567年</h3>
+                        <p>隆庆开关，解除海禁，海外贸易迅速繁荣。</p>
+                    </div>
+                </div>
+                <div class="timeline-item timeline-right">
+                    <div class="timeline-content">
+                        <h3>1572年</h3>
+                        <p>隆庆帝驾崩，万历帝即位，张居正即将开始改革。</p>
+                    </div>
+                </div>
+            </div>
+       section>
 
         <!-- 明代工艺品板块 -->
         <section class="section" id="crafts">
@@ -531,7 +578,7 @@
                 </div>
                 <!-- 珐琅 -->
                 <div class="craft-card">
-                    <img src="data:image/webp;base64,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" alt="明掐丝珐琅花卉执壶" class="craft-img">
+                    <img src="data:image/webp;base64,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" alt="明掐丝珐琅花卉执壶" class="craft-img">
                     <div class="craft-info">
                         <h3 class="craft-title">掐丝珐琅花卉执壶</h3>
                         <p class="craft-desc">明代景泰蓝精品，色彩富丽，纹饰典雅，为宫廷御用重器。</p>
@@ -611,43 +658,6 @@
             </div>
         </section>
 
-        <!-- 历代帝王 -->
-        <section class="section" id="emperors">
-            <h2 class="section-title">历代帝王</h2>
-            <div class="emperors-grid">
-                <div class="emperor-card">
-                    <h3 class="emperor-name">明太祖</h3>
-                    <p class="emperor-reign">朱元璋 · 洪武（1368-1398）</p>
-                    <p>开国皇帝，推翻元朝，建立明朝，休养生息。</p>
-                </div>
-                <div class="emperor-card">
-                    <h3 class="emperor-name">明成祖</h3>
-                    <p class="emperor-reign">朱棣 · 永乐（1402-1424）</p>
-                    <p>迁都北京，郑和下西洋，编修《永乐大典》。</p>
-                </div>
-                <div class="emperor-card">
-                    <h3 class="emperor-name">明仁宗</h3>
-                    <p class="emperor-reign">朱高炽 · 洪熙（1424-1425）</p>
-                    <p>为政开明，与民休息，为仁宣之治奠基。</p>
-                </div>
-                <div class="emperor-card">
-                    <h3 class="emperor-name">明宣宗</h3>
-                    <p class="emperor-reign">朱瞻基 · 宣德（1425-1435）</p>
-                    <p>励精图治，史称“仁宣之治”，国力鼎盛。</p>
-                </div>
-                <div class="emperor-card">
-                    <h3 class="emperor-name">明神宗</h3>
-                    <p class="emperor-reign">朱翊钧 · 万历（1572-1620）</p>
-                    <p>前期张居正改革，后期怠政，明朝走向衰落。</p>
-                </div>
-                <div class="emperor-card">
-                    <h3 class="emperor-name">明思宗</h3>
-                    <p class="emperor-reign">朱由检 · 崇祯（1627-1644）</p>
-                    <p>励精图治却无力回天，自缢殉国，明朝灭亡。</p>
-                </div>
-            </div>
-        </section>
-
         <!-- 文化艺术 -->
         <section class="section" id="culture">
             <h2 class="section-title">文化艺术</h2>
@@ -668,7 +678,7 @@
             </div>
         </section>
 
-        <!-- 经济科技 -->
+        <!-- 经济与科技 -->
         <section class="section" id="economy">
             <h2 class="section-title">经济与科技</h2>
             <div class="content-card">
@@ -697,7 +707,7 @@
                     <li><a href="#" style="color: #ccc;">明朝历史文献</a></li>
                     <li><a href="#" style="color: #ccc;">明代艺术品鉴赏</a></li>
                     <li><a href="#" style="color: #ccc;">明朝历史地图</a></li>
-                    <li><a href="#" style="color: #ccc;">明朝皇帝世系表</a></li>
+                    <li><a href="emperors.html" style="color: #ccc;">明朝皇帝世系表</a></li>
                 </ul>
             </div>
         </div>
@@ -774,27 +784,6 @@
             });
         }
 
-        // 皇帝卡片动画效果
-        function animateEmperors() {
-            const emperorCards = document.querySelectorAll('.emperor-card');
-            
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if(entry.isIntersecting) {
-                        entry.target.style.opacity = 1;
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, { threshold: 0.1 });
-            
-            emperorCards.forEach((card, index) => {
-                card.style.opacity = 0;
-                card.style.transform = 'translateY(20px)';
-                card.style.transition = `opacity 0.5s ${index * 0.1}s, transform 0.5s ${index * 0.1}s`;
-                observer.observe(card);
-            });
-        }
-        
         // 工艺品卡片动画
         function animateCrafts() {
             const craftCards = document.querySelectorAll('.craft-card');
@@ -840,7 +829,6 @@
         // 页面加载完成后执行
         window.addEventListener('DOMContentLoaded', () => {
             animateTimeline();
-            animateEmperors();
             animateCrafts();
             animateContent();
         });
