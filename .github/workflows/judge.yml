@@ -1,0 +1,84 @@
+name: C++ 代码评测
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:  # 允许手动触发评测
+
+jobs:
+  judge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1  # 总超时保护
+    steps:
+      - name: 拉取代码
+        uses: actions/checkout@v4
+
+      - name: 安装 g++
+        run: sudo apt-get update && sudo apt-get install -y g++
+
+      - name: 编译 C++ 代码
+        run: |
+          g++ -O2 -std=c++17 main.cpp -o solution -Wall 2> compile_error.txt
+          if [ -s compile_error.txt ]; then
+            echo "COMPILE_ERROR" > status.txt
+            cat compile_error.txt > result.txt
+            exit 0
+          fi
+
+      - name: 运行 5 组测试用例（1000ms / 512MB 限制）
+        run: |
+          echo "评测开始" > result.txt
+          echo "" > status.txt
+          ac_count=0
+
+          for i in {1..5}; do
+            infile="testdata/in$i.in"
+            outfile="testdata/out$i.out"
+            user_out="user_out$i.txt"
+
+            echo -e "\n===== 测试点 $i =====" >> result.txt
+
+            # 超时 1000ms，内存 512MB 限制
+            ulimit -v 524288  # 512MB = 512*1024=524288 KB
+            timeout 1s ./solution < $infile > $user_out 2> error.txt
+
+            exit_code=$?
+
+            # 判断结果
+            if [ $exit_code -eq 137 ]; then
+              echo "结果：TLE（超时 1000ms）" >> result.txt
+              echo "TLE" > status.txt
+            elif [ $exit_code -ne 0 ]; then
+              echo "结果：RE（运行错误）" >> result.txt
+              cat error.txt >> result.txt
+              echo "RE" > status.txt
+            else
+              # 比对输出
+              if diff -w $user_out $outfile > /dev/null; then
+                echo "结果：AC" >> result.txt
+                ac_count=$((ac_count+1))
+              else
+                echo "结果：WA（答案错误）" >> result.txt
+                echo "你的输出：" >> result.txt
+                cat $user_out >> result.txt
+                echo "标准答案：" >> result.txt
+                cat $outfile >> result.txt
+                echo "WA" > status.txt
+              fi
+            fi
+          done
+
+          echo -e "\n===== 评测总结 =====" >> result.txt
+          echo "通过 $ac_count / 5 组用例" >> result.txt
+
+          if [ $ac_count -eq 5 ]; then
+            echo "AC" > status.txt
+          fi
+
+      - name: 上传评测结果
+        uses: actions/upload-artifact@v4
+        with:
+          name: judge-result
+          path: |
+            result.txt
+            status.txt
