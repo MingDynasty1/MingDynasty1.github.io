@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大明皇帝个人信息 | MingDynasty</title>
+   <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    
+    <style>
+        :root {
+            --bg-color: #f8f2e4;
+            --text-color: #3a2411;
+            --card-bg: #fff9eb;
+            --border-color: #b89668;
+            --ming-gold: #d4b886;
+            --ming-red: #9e2b25;
+            --shadow: rgba(184, 150, 104, 0.3);
+            --flip-bg: #c9a87c;
+            --flip-text: #fff;
+        }
+        [data-theme="dark"] {
+            --bg-color: #120f0b;
+            --text-color: #e6d2b8;
+            --card-bg: #201a14;
+            --border-color: #6b563e;
+            --ming-gold: #b89c6e;
+            --ming-red: #c74b45;
+            --shadow: rgba(0,0,0,0.6);
+            --flip-bg: #4a3b29;
+            --flip-text: #f0e3cd;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "SimSun", "宋体", "STSong", "KaiTi", serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: all 0.5s ease;
+            background-image:
+                url("data:image/svg+xml,%3Csvg width='180' height='180' viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M90 20C110 5 140 15 155 40C170 65 150 95 125 110C100 125 60 130 40 110C20 90 30 55 50 35C70 15 90 20 90 20z' fill='%23b89668' fill-opacity='0.07'/%3E%3C/svg%3E"),
+                url("data:image/svg+xml,%3Csvg width='220' height='220' viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M110 50C130 30 160 40 175 65C190 90 170 120 145 135C120 150 80 155 60 135C40 115 50 80 70 65C90 50 110 50 110 50z' fill='%239e2b25' fill-opacity='0.03'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            min-height: 100vh;
+            padding: 40px 20px 20px;
+            position: relative;
+        }
+
+        /* 明暗切换按钮 - 纯Emoji */
+        .theme-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            border: 2px solid var(--ming-gold);
+            background: var(--card-bg);
+            color: var(--text-color);
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            transition: 0.3s;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+        .theme-btn:hover {
+            background: var(--ming-gold);
+            color: #fff;
+        }
+
+        /* 大明卷轴式容器 */
+        .container {
+            max-width: 860px;
+            margin: 0 auto;
+            border: 4px double var(--ming-gold);
+            border-radius: 20px;
+            background: var(--card-bg);
+            box-shadow: 0 10px 32px var(--shadow);
+            padding: 50px 35px;
+            text-align: center;
+            position: relative;
+        }
+        .container::before {
+            content: "御";
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-color);
+            padding: 0 16px;
+            font-size: 22px;
+            color: var(--ming-red);
+            font-weight: bold;
+            letter-spacing: 4px;
+        }
+
+        /* 头像 皇家边框 */
+        .avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 5px solid var(--ming-gold);
+            box-shadow: 0 0 20px var(--shadow);
+            object-fit: cover;
+            margin-bottom: 22px;
+        }
+
+        /* 昵称 帝王字体 */
+        .nickname {
+            font-size: 34px;
+            font-weight: bold;
+            margin-bottom: 14px;
+            letter-spacing: 8px;
+            color: var(--ming-red);
+            text-shadow: 1px 1px 2px var(--shadow);
+        }
+
+        .sign {
+            font-size: 18px;
+            margin-bottom: 38px;
+            opacity: 0.95;
+            letter-spacing: 3px;
+        }
+
+        /* 社交按钮 明式风格 */
+        .social {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            flex-wrap: wrap;
+            margin-bottom: 50px;
+        }
+        .social a {
+            text-decoration: none;
+            color: var(--text-color);
+            border: 2px solid var(--border-color);
+            padding: 9px 18px;
+            border-radius: 10px;
+            transition: 0.3s;
+            font-size: 15px;
+            letter-spacing: 1px;
+        }
+        .social a:hover {
+            background: var(--ming-gold);
+            color: #fff;
+            border-color: var(--ming-gold);
+        }
+
+        /* 倒计时卡片 */
+        .countdown-wrap {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 35px;
+        }
+        .count-card {
+            border: 2px solid var(--border-color);
+            border-radius: 14px;
+            padding: 28px 20px;
+            background: var(--bg-color);
+            border-top: 5px solid var(--ming-gold);
+            transition: 0.3s;
+        }
+        .count-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px var(--shadow);
+        }
+        .count-title {
+            font-size: 20px;
+            margin-bottom: 18px;
+            letter-spacing: 2px;
+            color: var(--ming-red);
+            font-weight: bold;
+        }
+        .count-time {
+            font-size: 26px;
+            font-weight: bold;
+        }
+
+        /* 生日翻页倒计时 - 真正向上翻转动画 */
+        .flip-count-wrap {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 12px;
+        }
+        .flip-box {
+            perspective: 1000px;
+            width: 64px;
+        }
+        .flip-item {
+            width: 100%;
+            height: 74px;
+            background: var(--flip-bg);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: var(--flip-text);
+            font-weight: bold;
+            box-shadow: 0 4px 12px var(--shadow);
+            position: relative;
+            transform-origin: top center;
+        }
+        .flip-animate {
+            animation: flipUp 0.6s ease-in-out;
+        }
+        @keyframes flipUp {
+            0% { transform: rotateX(0deg); }
+            100% { transform: rotateX(-180deg); }
+        }
+        .flip-label {
+            font-size: 14px;
+            margin-top: 8px;
+            opacity: 0.9;
+            letter-spacing: 2px;
+        }
+
+        /* 诗词落款 */
+        .poetry-footer {
+            margin-top: 55px;
+            font-size: 17px;
+            letter-spacing: 4px;
+            opacity: 0.85;
+            line-height: 2.2;
+        }
+
+        /* 底部版权 */
+        .copyright {
+            max-width: 860px;
+            margin: 35px auto 0;
+            text-align: center;
+            font-size: 14px;
+            letter-spacing: 1px;
+            opacity: 0.8;
+            padding-top: 22px;
+            border-top: 1px dashed var(--border-color);
+        }
+
+        /* 手机适配 */
+        @media (max-width: 600px) {
+            .countdown-wrap { grid-template-columns: 1fr; }
+            .container { padding: 35px 20px; }
+            .nickname { font-size: 28px; }
+            .flip-item { height: 58px; font-size: 24px; }
+            .flip-box { width: 50px; }
+            .copyright { font-size: 12px; padding: 18px 10px 0; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 明暗切换：纯Emoji按钮 🌙 ☀️ -->
+<button class="theme-btn" id="themeBtn">🌙</button>
+
+<div class="container">
+    <img class="avatar" src="https://mingdynasty1.github.io/000000000000000000.png" alt="大明皇帝头像">
+    <div class="nickname">大明皇帝</div>
+    <div class="sign">君临天下 · 古风雅韵 · 山河无恙</div>
+
+    <div class="social">
+        <a href="https://github.com/MgDyqwq" target="_blank">GitHub: MgDyqwq</a>
+        <a href="https://github.com/MingDynasty1" target="_blank">GitHub: MingDynasty1</a>
+        <a href="#">QQ: MingDynasty</a>
+        <a href="#">微信: MingDynasty</a>
+    </div>
+
+    <div class="countdown-wrap">
+        <!-- 生日：翻页倒计时 -->
+        <div class="count-card" style="grid-column: 1/-1;">
+            <div class="count-title">🎂 六月十八 生辰吉时</div>
+            <div class="flip-count-wrap">
+                <div class="flip-box">
+                    <div class="flip-item" id="day">00</div>
+                    <div class="flip-label">天</div>
+                </div>
+                <div class="flip-box">
+                    <div class="flip-item" id="hour">00</div>
+                    <div class="flip-label">时</div>
+                </div>
+                <div class="flip-box">
+                    <div class="flip-item" id="min">00</div>
+                    <div class="flip-label">分</div>
+                </div>
+                <div class="flip-box">
+                    <div class="flip-item" id="sec">00</div>
+                    <div class="flip-label">秒</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 高考 -->
+        <div class="count-card">
+            <div class="count-title">📚 高考倒计时</div>
+            <div class="count-time" id="examCount"></div>
+        </div>
+
+        <!-- 中考 -->
+        <div class="count-card">
+            <div class="count-title">📖 中考倒计时</div>
+            <div class="count-time" id="zhongkaoCount"></div>
+        </div>
+    </div>
+
+    <!-- 诗词落款 -->
+    <div class="poetry-footer">
+        山河万里皆明土<br>
+        风华千古帝王心
+    </div>
+</div>
+
+<!-- 底部版权 -->
+<div class="copyright">
+    © 2013-2026 MingDynasty,Inc. MingDynasty 的个人主页 | 灵感源于明朝美学
+</div>
+
+<script>
+    // 明暗切换
+    const themeBtn = document.getElementById('themeBtn');
+    const html = document.documentElement;
+
+    function setTheme() {
+        if(localStorage.getItem('theme') === 'dark'){
+            html.setAttribute('data-theme','dark');
+            themeBtn.innerHTML = "☀️";
+        }else{
+            html.removeAttribute('data-theme');
+            themeBtn.innerHTML = "🌙";
+        }
+    }
+    setTheme();
+
+    themeBtn.addEventListener('click',()=>{
+        if(html.getAttribute('data-theme') === 'dark'){
+            localStorage.setItem('theme','light');
+        }else{
+            localStorage.setItem('theme','dark');
+        }
+        setTheme();
+    });
+
+    // 倒计时通用
+    function getDayDiff(m,d){
+        const now = new Date();
+        let tar = new Date(now.getFullYear(),m-1,d);
+        if(tar < now) tar = new Date(now.getFullYear()+1,m-1,d);
+        return Math.floor((tar-now)/(1000*60*60*24));
+    }
+
+    // 高考 中考
+    function updateExam(){ document.getElementById('examCount').innerText = `还有 ${getDayDiff(6,7)} 天`; }
+    function updateZhongKao(){ document.getElementById('zhongkaoCount').innerText = `还有 ${getDayDiff(6,15)} 天`; }
+
+    // 翻页倒计时
+    const pad = n=>n.toString().padStart(2,'0');
+    let last = {d:'',h:'',m:'',s:''};
+
+    function flip(id,val){
+        const el = document.getElementById(id);
+        if(el.innerText !== val){
+            el.classList.add('flip-animate');
+            setTimeout(()=>{ el.innerText = val; el.classList.remove('flip-animate'); },300);
+        }
+    }
+
+    function birthCount(){
+        const now = new Date();
+        let tar = new Date(now.getFullYear(),5,18);
+        if(tar < now) tar = new Date(now.getFullYear()+1,5,18);
+        const dif = tar - now;
+        if(dif<=0){ flip('day','00'); flip('hour','00'); flip('min','00'); flip('sec','00'); return; }
+        flip('day',pad(Math.floor(dif/86400000)));
+        flip('hour',pad(Math.floor((dif%86400000)/3600000)));
+        flip('min',pad(Math.floor((dif%3600000)/60000)));
+        flip('sec',pad(Math.floor((dif%60000)/1000)));
+    }
+
+    updateExam(); updateZhongKao(); birthCount();
+    setInterval(birthCount,1000);
+    setInterval(()=>{updateExam();updateZhongKao();},86400000);
+</script>
+</body>
+</html>
