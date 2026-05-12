@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实时天气 · 明风气象完整版 | MingDynasty</title>
+  <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 明朝风格变量 */
+        :root {
+            --bg: #f8f6f0;
+            --card: #ffffff;
+            --text: #2c2420;
+            --sub-text: #6b5745;
+            --border: #d3c4b0;
+            --shadow: rgba(120, 90, 60, 0.15);
+            --accent: #9a3820;
+        }
+
+        /* 暗黑模式（古风暗色） */
+        [data-theme="dark"] {
+            --bg: #1a1612;
+            --card: #26211b;
+            --text: #e8dfd0;
+            --sub-text: #b8a996;
+            --border: #55483b;
+            --shadow: rgba(0,0,0,0.4);
+            --accent: #c86a40;
+        }
+
+        body {
+            font-family: "KaiTi", "STKaiti", "Microsoft YaHei", serif;
+            background: var(--bg);
+            color: var(--text);
+            text-align: center;
+            padding: 40px 20px;
+            transition: all 0.4s ease;
+            position: relative;
+            min-height: 100vh;
+            /* 全屏古风壁纸质感 */
+            background-image: radial-gradient(circle at 50% 50%, rgba(211,196,176,0.2) 0%, transparent 70%);
+            background-attachment: fixed;
+        }
+
+        /* 祥云背景装饰 */
+        body::before {
+            content: "☁️";
+            position: fixed;
+            top: 20px;
+            left: 10%;
+            font-size: 36px;
+            opacity: 0.2;
+            z-index: -1;
+        }
+        body::after {
+            content: "☁️";
+            position: fixed;
+            bottom: 20px;
+            right: 12%;
+            font-size: 32px;
+            opacity: 0.15;
+            z-index: -1;
+        }
+
+        /* 明暗切换按钮 */
+        .theme-toggle {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            background: var(--card);
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 2px 10px var(--shadow);
+            transition: all 0.3s;
+            z-index: 99;
+        }
+        .theme-toggle:hover {
+            transform: scale(1.08);
+        }
+
+        /* 明朝卷轴风格盒子 */
+        .weather-box {
+            display: inline-block;
+            background: var(--card);
+            padding: 50px 60px;
+            border-radius: 12px;
+            border: 2px solid var(--border);
+            box-shadow: 0 6px 24px var(--shadow);
+            position: relative;
+            max-width: 460px;
+            width: 100%;
+            text-align: left;
+        }
+
+        /* 顶部标题装饰 */
+        .weather-box::before {
+            content: "";
+            width: 80%;
+            height: 3px;
+            background: var(--accent);
+            position: absolute;
+            top: 22px;
+            left: 10%;
+            border-radius: 3px;
+            opacity: 0.7;
+        }
+
+        h2 {
+            font-size: 26px;
+            color: var(--accent);
+            margin-bottom: 28px;
+            text-align: center;
+            letter-spacing: 2px;
+            font-weight: 500;
+        }
+
+        .weather-item {
+            font-size: 18px;
+            color: var(--sub-text);
+            line-height: 2.2;
+            padding-left: 10px;
+            border-left: 3px solid var(--border);
+            margin: 10px 0;
+            transition: color 0.3s;
+        }
+        .weather-item:hover {
+            color: var(--accent);
+        }
+
+        /* 时间农历节气区块 */
+        .time-box {
+            margin-bottom: 20px;
+            padding: 12px;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            text-align: center;
+            color: var(--sub-text);
+            line-height: 1.8;
+        }
+
+        /* 穿衣建议区块 */
+        .suggest-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(154, 56, 32, 0.08);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+        .suggest-title {
+            color: var(--accent);
+            font-size: 17px;
+            margin-bottom: 8px;
+        }
+        .suggest-text {
+            color: var(--sub-text);
+            font-size: 16px;
+            line-height: 1.7;
+        }
+
+        /* 加载文字 */
+        .loading {
+            color: var(--sub-text);
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 明暗切换按钮 -->
+    <button class="theme-toggle" id="toggle">🌙</button>
+
+    <div class="weather-box">
+        <h2>🌤️ 明风实时气象</h2>
+
+        <!-- 时间、农历、节气 -->
+        <div class="time-box" id="timeBox">
+            正在加载时辰、农历、节气…
+        </div>
+
+        <p class="weather-item" id="city">正在获取位置…</p>
+        <p class="weather-item" id="wea">天气状况：加载中…</p>
+        <p class="weather-item" id="tem">温度：加载中…</p>
+        <p class="weather-item" id="win">风向风力：加载中…</p>
+        <p class="weather-item" id="hum">湿度：加载中…</p>
+
+        <!-- 穿衣出行建议 -->
+        <div class="suggest-box">
+            <div class="suggest-title">📜 出行穿衣建议</div>
+            <div class="suggest-text" id="suggest">加载中…</div>
+        </div>
+    </div>
+
+<script>
+    // 明暗主题切换
+    const toggle = document.getElementById('toggle');
+    const html = document.documentElement;
+
+    // 读取本地存储
+    const saved = localStorage.getItem('theme');
+    if (saved === 'dark') {
+        html.dataset.theme = 'dark';
+        toggle.textContent = '☀️';
+    }
+
+    toggle.addEventListener('click', () => {
+        const current = html.dataset.theme;
+        if (current === 'dark') {
+            html.dataset.theme = 'light';
+            toggle.textContent = '🌙';
+            localStorage.setItem('theme', 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            toggle.textContent = '☀️';
+            localStorage.setItem('theme', 'dark');
+        }
+    });
+
+    // 1. 实时时间 + 简易农历节气（内置无需接口）
+    function updateTimeLunar() {
+        const now = new Date();
+        const weekArr = ["周日","周一","周二","周三","周四","周五","周六"];
+        const week = weekArr[now.getDay()];
+        const timeStr = now.toLocaleTimeString('zh-CN', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+        const dateStr = `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日 ${week}`;
+
+        // 简易节气匹配（精简常用）
+        let solarTerm = "寻常时日";
+        const m = now.getMonth()+1;
+        const d = now.getDate();
+        if(m===1&&d>=5) solarTerm="小寒";
+        if(m===1&&d>=20) solarTerm="大寒";
+        if(m===2&&d>=4) solarTerm="立春";
+        if(m===2&&d>=19) solarTerm="雨水";
+        if(m===3&&d>=5) solarTerm="惊蛰";
+        if(m===3&&d>=20) solarTerm="春分";
+        if(m===4&&d>=4) solarTerm="清明";
+        if(m===4&&d>=20) solarTerm="谷雨";
+        if(m===5&&d>=5) solarTerm="立夏";
+        if(m===5&&d>=21) solarTerm="小满";
+        if(m===6&&d>=5) solarTerm="芒种";
+        if(m===6&&d>=21) solarTerm="夏至";
+        if(m===7&&d>=7) solarTerm="小暑";
+        if(m===7&&d>=23) solarTerm="大暑";
+        if(m===8&&d>=7) solarTerm="立秋";
+        if(m===8&&d>=23) solarTerm="处暑";
+        if(m===9&&d>=7) solarTerm="白露";
+        if(m===9&&d>=23) solarTerm="秋分";
+        if(m===10&&d>=8) solarTerm="寒露";
+        if(m===10&&d>=23) solarTerm="霜降";
+        if(m===11&&d>=7) solarTerm="立冬";
+        if(m===11&&d>=22) solarTerm="小雪";
+        if(m===12&&d>=7) solarTerm="大雪";
+        if(m===12&&d>=22) solarTerm="冬至";
+
+        document.getElementById('timeBox').innerHTML = `
+            ${dateStr}<br>
+            时辰时刻：${timeStr}<br>
+            时令节气：${solarTerm}
+        `;
+    }
+    setInterval(updateTimeLunar, 1000);
+    updateTimeLunar();
+
+    // 2. 获取定位
+    let nowLat = 0, nowLon = 0;
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+            nowLat = position.coords.latitude;
+            nowLon = position.coords.longitude;
+            getWeather(nowLat, nowLon);
+            // 逆地址获取城市名称
+            getCityName(nowLat, nowLon);
+        }, err => {
+            document.getElementById("city").innerText = "城市：获取位置失败";
+        });
+    }
+
+    // 3. 逆地理编码获取精准城市名
+    function getCityName(lat, lon) {
+        fetch(`https://geocode.maps.co/reverse?lat=${lat}&lon=${lon}`)
+        .then(res=>res.json())
+        .then(data=>{
+            let city = data.address.city || data.address.town || data.address.county || "未知城池";
+            document.getElementById("city").innerText = `城池：${city}`;
+        })
+        .catch(()=>{
+            document.getElementById("city").innerText = "城池：已定位，未知地名";
+        });
+    }
+
+    // 4. 获取天气 + 穿衣建议
+    function getWeather(lat, lon) {
+        const api = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code&timezone=Asia/Shanghai`;
+
+        fetch(api)
+        .then(res => res.json())
+        .then(data => {
+            const cur = data.current;
+            const code = cur.weather_code;
+            const temp = cur.temperature_2m;
+
+            // 天气代码翻译
+            let wea = "晴天";
+            if (code === 0) wea = "晴天";
+            else if (code <= 3) wea = "多云";
+            else if (code <= 48) wea = "雾/霾";
+            else if (code <= 57) wea = "小雨";
+            else if (code <= 67) wea = "中雨/大雨";
+            else if (code <= 77) wea = "雪/雨夹雪";
+            else if (code <= 82) wea = "雷阵雨";
+            else wea = "恶劣天气";
+
+            // 渲染天气
+            document.getElementById("wea").innerText = "天气状况：" + wea;
+            document.getElementById("tem").innerText = "温度：" + temp + " ℃";
+            document.getElementById("win").innerText = "风速：" + cur.wind_speed_10m + " m/s";
+            document.getElementById("hum").innerText = "湿度：" + cur.relative_humidity_2m + "%";
+
+            // 智能穿衣建议
+            let suggest = "";
+            if(temp <= 5){
+                suggest = "天寒地冻，宜厚袄棉袍、围巾加身，避风寒少外出。";
+            }else if(temp <= 15){
+                suggest = "微凉侵体，宜长衫外搭薄披风，早晚添衣为佳。";
+            }else if(temp <= 25){
+                suggest = "气候温润，长衫单衣即可，适宜出游踏青。";
+            }else if(temp <= 32){
+                suggest = "天气燥热，宜轻薄素衣，避正午烈日。";
+            }else{
+                suggest = "酷暑难耐，宜纳凉静居，少行远路，着清凉衣衫。";
+            }
+            // 雨天额外提示
+            if(wea.includes("雨") || wea.includes("雪")){
+                suggest += " 雨雪出行，宜携雨具，慢行避滑。";
+            }
+            document.getElementById("suggest").innerText = suggest;
+        })
+        .catch(err => {
+            console.error(err);
+            document.getElementById("suggest").innerText = "天气数据异常，暂无出行建议";
+        });
+    }
+</script>
+
+</body>
+</html>
