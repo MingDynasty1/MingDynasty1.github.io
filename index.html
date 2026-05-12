@@ -3,7 +3,7 @@
 <head> 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MingDynasty的个人主页 | 明朝风韵</title> .
+    <title>MingDynasty的个人主页 | 明朝风韵</title>
      <meta name="description" content="以明朝风格设计的大明皇帝的网站">
     
     <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
@@ -559,7 +559,7 @@
             opacity: 0.9;
         }
 
-        /* ======== 完美适配大明主题的天气小组件样式 (保留不变) ======== */
+        /* 天气小组件样式 - 完美适配大明 */
         .weather-display {
             background: linear-gradient(135deg, var(--accent-color) 0%, var(--gold-color) 100%);
             color: #f8f3e6;
@@ -1120,21 +1120,18 @@ padding-bottom: 10px;
     
     <!-- 加载屏幕JavaScript -->
     <script>
-        // 模拟页面加载进度
         document.addEventListener('DOMContentLoaded', function() {
             const loadingScreen = document.querySelector('.loading-screen');
             const progressBar = document.querySelector('.loading-progress-bar');
             const progressText = document.querySelector('.loading-progress-text');
             let progress = 0;
             
-            // 模拟加载进度
             const interval = setInterval(() => {
                 progress += Math.random() * 7;
                 if (progress >= 100) {
                     progress = 100;
                     clearInterval(interval);
                     
-                    // 加载完成后隐藏加载屏幕
                     setTimeout(() => {
                         loadingScreen.classList.add('hidden');
                         setTimeout(() => {
@@ -1143,58 +1140,29 @@ padding-bottom: 10px;
                     }, 500);
                 }
                 
-                // 更新进度条和文本
                 progressBar.style.width = `${progress}%`;
                 progressText.textContent = `${Math.round(progress)}%`;
             }, 150);
         });
     </script>
     
-    <!-- 人机验证检查脚本 -->
+    <!-- 人机验证 -->
     <script>
-        // 检查是否已经通过人机验证
         function checkHumanVerification() {
-            // 从cookie中获取验证结果
             const getCookie = (name) => {
                 const value = `; ${document.cookie}`;
                 const parts = value.split(`; ${name}=`);
                 if (parts.length === 2) return parts.pop().split(';').shift();
                 return null;
             };
-            
             const verificationCookie = getCookie('JSESSIONID');
-            
-            // 如果没有验证cookie，跳转到验证页面
             if (!verificationCookie) {
                 window.location.href = 'https://mingdynasty1.github.io/Check-for-People-Robot.html';
                 return false;
             }
-            
-            // 验证cookie的有效性
-            try {
-                const verificationData = JSON.parse(atob(verificationCookie));
-                if (verificationData && verificationData.verified && verificationData.timestamp) {
-                    // 检查是否在有效期内（例如24小时）
-                    const now = new Date().getTime();
-                    const verificationTime = new Date(verificationData.timestamp).getTime();
-                    const hoursDiff = (now - verificationTime) / (1000 * 60 * 60);
-                    
-                    if (hoursDiff < 24) {
-                        return true; // 验证有效
-                    }
-                }
-            } catch (e) {
-                console.error('验证cookie解析失败:', e);
-            }
-            
-            // 验证失败，跳转到验证页面
-            window.location.href = 'https://mingdynasty1.github.io/Check-for-People-Robot.html';
-            return false;
+            return true;
         }
-
-        // 页面加载时检查验证
         window.addEventListener('load', function() {
-            // 延迟检查，确保页面完全加载
             setTimeout(() => {
                 checkHumanVerification();
             }, 100);
@@ -1219,10 +1187,8 @@ padding-bottom: 10px;
             <p data-lang="zh">传承明朝风韵，展现编程之美</p>
             <p data-lang="en" style="display: none;">Inheriting the Charm of the Ming Dynasty, Showcasing the Beauty of Programming</p>
             
-            <!-- 新增：页眉图片 -->
             <img src="ok.jpeg" alt="明朝故宫" class="header-image">
             
-            <!-- 访问量统计 -->
             <div class="visitor-counter">
                 <span data-lang="zh">主页访问量：</span>
                 <span data-lang="en" style="display: none;">Homepage Visits:</span>
@@ -1324,11 +1290,9 @@ padding-bottom: 10px;
             <a href="https://MingDynasty1.github.io/BigMingAI/" data-lang="en" style="display: none;">Ming AI</a>
             
             
-            <!-- 添加人生模拟器链接 -->
             <a href="https://MingDynasty1.github.io/People-Remake-Life.html" data-lang="zh">人生模拟器</a>
             <a href="https://MingDynasty1.github.io/People-Remake-Life.html" data-lang="en" style="display: none;">Life Simulator</a>
             
-            <!-- 添加贪吃蛇游戏链接 -->
             <a href="https://mingdynasty1.github.io/MapMgDy.html" data-lang="zh">大明导航</a>
             <a href="https://mingdynasty1.github.io/MapMgDy.html" data-lang="en" style="display: none;">Ming Navigation</a>
             
@@ -1353,13 +1317,11 @@ padding-bottom: 10px;
             <a href="https://MingDynasty1.github.io/chess/" data-lang="zh">大明象棋</a>
             <a href="https://MingDynasty1.github.io/chess/" data-lang="en" style="display: none;">Ming Chinese Chess</a>
             
-            <!-- 添加联系我们链接 -->
             <a href="https://MingDynasty1.github.io/contact-us-MgDy.html" data-lang="zh">联系我们</a>
             <a href="https://MingDynasty1.github.io/contact-us-MgDy.html" data-lang="en" style="display: none;">Contact Us</a>
             <a href="https://MingDynasty1.github.io/myself.html" data-lang="zh">个人信息</a>
             <a href="https://MingDynasty1.github.io/myself.html" data-lang="en" style="display: none;">Emperoor's Information</a>
             
-            <!-- 添加博客主页链接 -->
             <a href="https://MingDynasty1.github.io/blog/index.html" data-lang="zh">博客主页</a>
             <a href="https://MingDynasty1.github.io/blog/index.html" data-lang="en" style="display: none;" >Blog Homepage</a>
             
@@ -1369,7 +1331,6 @@ padding-bottom: 10px;
             <a href="https://mingdynasty1.github.io/Check-for-People-Robot.html" data-lang="zh">人机验证</a>
             <a href="https://mingdynasty1.github.io/Check-for-People-Robot.html" data-lang="en" style="display: none;">Check If You're A Robot</a>
             
-            <!-- 添加常见问题解答链接 -->
             <a href="https://MingDynasty1.github.io/FAQ.html" data-lang="zh">常见问题解答</a>
             <a href="https://MingDynasty1.github.io/FAQ.html" data-lang="en" style="display: none;">FAQ</a>
 
@@ -1391,9 +1352,7 @@ padding-bottom: 10px;
                 </button>
             </div>
 
-            <!-- ========== 登录注册按钮/状态显示 ========== -->
             <div class="auth-buttons" id="auth-buttons-container">
-                <!-- 登录状态将通过JavaScript动态显示 -->
                 <a href="https://mingdynasty1.github.io/sign/in.html" class="auth-btn" id="login-btn" data-lang="zh">登录</a>
                 <a href="https://mingdynasty1.github.io/sign/in.html" class="auth-btn" id="login-btn-en" data-lang="en" style="display: none;">Login</a>
                 <a href="https://mingdynasty1.github.io/sign/up.html" class="auth-btn" id="register-btn" data-lang="zh">注册</a>
@@ -1405,49 +1364,48 @@ padding-bottom: 10px;
     </nav>
     
     <div class="container">
-        <!-- 时间报时器 -->
+        <!-- 时间 -->
         <div class="time-display">
             <div id="current-time">00:00:00</div>
             <div id="current-date" data-lang="zh">0000年00月00日 星期X</div>
             <div id="current-date-en" data-lang="en" style="display: none;">Monday, January 1, 2000</div>
         </div>
 
-        <!-- ================ 核心保留：天气小组件HTML结构不变 ================ -->
+        <!-- 天气组件 -->
         <div class="weather-display" id="weather-box">
             <div class="weather-loading" id="weather-loading">
-                <i class="fas fa-spinner fa-spin"></i> 正在获取实时天气...
+                <i class="fas fa-spinner fa-spin"></i> 正在获取位置与天气...
             </div>
             <div class="weather-content" id="weather-content" style="display: none;">
-                <div class="weather-location" id="weather-location">中国 · 陕西省 · 西安市</div>
+                <div class="weather-location" id="weather-location">定位中...</div>
                 <div class="weather-main">
                     <div class="weather-icon" id="weather-icon"><i class="fas fa-sun"></i></div>
-                    <div class="weather-temp" id="weather-temp">25℃</div>
+                    <div class="weather-temp" id="weather-temp">--℃</div>
                 </div>
-                <div class="weather-desc" id="weather-desc">晴</div>
+                <div class="weather-desc" id="weather-desc">--</div>
                 <div class="weather-detail">
-                    <div><i class="fas fa-tint"></i> <span id="weather-humidity">湿度 45%</span></div>
-                    <div><i class="fas fa-wind"></i> <span id="weather-wind">微风 2级</span></div>
-                    <div><i class="fas fa-temperature-low"></i> <span id="weather-feels">体感 26℃</span></div>
+                    <div><i class="fas fa-tint"></i> <span id="weather-humidity">湿度 --</span></div>
+                    <div><i class="fas fa-wind"></i> <span id="weather-wind">风力 --</span></div>
+                    <div><i class="fas fa-temperature-low"></i> <span id="weather-feels">体感 --</span></div>
                 </div>
             </div>
             <div class="weather-error" id="weather-error" style="display: none;">
-                <i class="fas fa-exclamation-circle"></i> 获取天气失败，将展示默认数据
+                <i class="fas fa-exclamation-circle"></i> 获取失败，显示默认天气
             </div>
         </div>
         
-        <!-- 一言功能展示区 -->
+        <!-- 一言 -->
         <div class="hitokoto-container">
             <div class="hitokoto-content" id="hitokoto-text">加载中...</div>
             <div class="hitokoto-from" id="hitokoto-source">—— 一言</div>
         </div>
         
-        <!-- 新增大明历史卡片 -->
+        <!-- 历史卡片 -->
         <div class="history-card">
             <h3><i class="fas fa-landmark"></i> <span data-lang="zh">探索大明历史</span><span data-lang="en" style="display: none;">Explore Ming Dynasty History</span></h3>
             <p data-lang="zh">大明王朝（1368年－1644年）是中国历史上一个辉煌的朝代，由明太祖朱元璋建立。明朝在政治、经济、文化、科技等方面都取得了巨大成就，留下了丰富的历史遗产。</p>
             <p data-lang="en" style="display: none;">The Ming Dynasty (1368-1644) was a glorious period in Chinese history, founded by Emperor Hongwu (Zhu Yuanzhang). The Ming Dynasty achieved great accomplishments in politics, economy, culture, and technology, leaving behind a rich historical legacy.</p>
             
-            <!-- 新增历史图片展示 -->
             <div class="history-image-gallery">
                 <img src="https://p26-doubao-search-sign.byteimg.com/tos-cn-i-qvj2lq49k0/b7709a7a0b2343f98fb57c5ff280d666~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1785584288&x-signature=Tf104GqNhFu%2FH%2FigVS8FVyYpVMk%3D" alt="明朝疆域图" class="history-image" onclick="openImageModal(this.src)">
                 <img src="https://p11-doubao-search-sign.byteimg.com/tos-cn-i-xv4ileqgde/b8ccf3340c45416f9d39f09fa4785611~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1785584288&x-signature=1WWd5mKJWylf3haRzldsr4fHcII%3D" alt="郑和下西洋路线图" class="history-image" onclick="openImageModal(this.src)">
@@ -1494,7 +1452,7 @@ padding-bottom: 10px;
                     <p data-lang="en" style="display: none;">Announcement: <a href="https://www.luogu.com.cn/contest/247666">https://www.luogu.com.cn/contest/247666</a></p>
                 </div>
                 
-                <!-- 贪吃蛇游戏 -->
+                <!-- 贪吃蛇 -->
                 <div class="card">
                     <h2 data-lang="zh">大明贪吃蛇</h2>
                     <h2 data-lang="en" style="display: none;">Ming Snake Game</h2>
@@ -1624,7 +1582,6 @@ padding-bottom: 10px;
                         <a href="https://mingdynasty1.github.io/dmhpy.html" class="game-btn" data-lang="zh">开始游戏</a>
                         <a href="https://mingdynasty1.github.io/dmhpy.html" class="game-btn" data-lang="en" style="display: none;">Start Game</a>
                     </div>
-                    <!-- 新增人生模拟器卡片 -->
                     <div class="game-card">
                         <h3 data-lang="zh">人生模拟器</h3>
                         <h3 data-lang="en" style="display: none;">Life Simulator</h3>
@@ -1633,7 +1590,6 @@ padding-bottom: 10px;
                         <a href="https://MingDynasty1.github.io/People-Remake-Life.html" class="game-btn" data-lang="zh">开始体验</a>
                         <a href="https://MingDynasty1.github.io/People-Remake-Life.html" class="game-btn" data-lang="en" style="display: none;">Start Experience</a>
                     </div>
-                    <!-- 新增贪吃蛇游戏卡片 -->
                     <div class="game-card">
                         <h3 data-lang="zh">贪吃蛇游戏</h3>
                         <h3 data-lang="en" style="display: none;">Snake Game</h3>
@@ -1642,7 +1598,6 @@ padding-bottom: 10px;
                         <a href="https://MingDynasty1.github.io/snakegame.html" class="game-btn" data-lang="zh">开始游戏</a>
                         <a href="https://MingDynasty1.github.io/snakegame.html" class="game-btn" data-lang="en" style="display: none;">Start Game</a>
                     </div>
-                    <!-- 新增常见问题解答卡片 -->
                     <div class="game-card">
                         <h3 data-lang="zh">常见问题解答</h3>
                         <h3 data-lang="en" style="display: none;">FAQ</h3>
@@ -1745,25 +1700,20 @@ padding-bottom: 10px;
  <li><a href="https://mingdynasty1.github.io/QiangjiGame/" data-lang="zh">大明射击</a><a href="https://mingdynasty1.github.io/QiangjiGame/" data-lang="en" style="display: none;">Ming Shooting Game</a></li>
 
                     
-                    <!-- 添加人生模拟器链接 -->
                     <li><a href="https://mingdynasty1.github.io/code/index.html" data-lang="zh">大明 OJ</a><a href="https://mingdynasty1.github.io/code/index.html" data-lang="en" style="display: none;">Ming OnlineJudge</a></li>
                      <li><a href="https://mingdynasty1.github.io/banquan/" data-lang="zh">大明版权</a><a href="https://mingdynasty1.github.io/banquan/" data-lang="en" style="display: none;">Ming Copyright</a></li>
 
 
 <li><a href="https://mingdynasty1.github.io/cmpfile/" data-lang="zh">大明文件对比</a><a href="https://mingdynasty1.github.io/cmpfile/" data-lang="en" style="display: none;">Ming File Compare</a></li>
                     
-                    <!-- 添加贪吃蛇游戏链接 -->
                     <li><a href="https://mingdynasty1.github.io/Check-for-People-Robot.html" data-lang="zh">人机验证</a><a href="https://mingdynasty1.github.io/Check-for-People-Robot.html" data-lang="en" style="display: none;">Home Navigation</a></li>
                     <li><a href="https://MingDynasty1.github.io/snakegame.html" data-lang="zh">贪吃蛇游戏</a><a href="https://MingDynasty1.github.io/snakegame.html" data-lang="en" style="display: none;">Snake Game</a></li>
-                    <!-- 添加常见问题解答链接 -->
                     <li><a href="https://MingDynasty1.github.io/FAQ.html" data-lang="zh">常见问题解答</a><a href="https://MingDynasty1.github.io/FAQ.html" data-lang="en" style="display: none;">FAQ</a></li>
-                    <!-- 添加博客主页链接 -->
                     <li><a href="https://MingDynasty1.github.io/blog/" data-lang="zh">博客主页</a><a href="https://MingDynasty1.github.io/blog/" data-lang="en" style="display: none;">Blog Homepage</a></li>
                      <li><a href="https://MingDynasty1.github.io/ylwj/" data-lang="zh">HTML预览</a><a href="https://MingDynasty1.github.io/ylwj/" data-lang="en" style="display: none;">HTML Show</a></li>
                     <li><a href="https://MingDynasty1.github.io/games/" data-lang="zh">游戏主页</a><a href="https://MingDynasty1.github.io/games/" data-lang="en" style="display: none;">Games Homepage</a></li>
                 </ul>
                 
-                <!-- 新增：侧边栏图片展示 -->
                 <img src="https://p11-doubao-search-sign.byteimg.com/pgc-image/8475d83282404aaeb2fc07ad97d36fdb~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1785584288&x-signature=yQSsrQndUKGqG6pX6AHfZ2yYuLE%3D" alt="南京阅江楼" class="sidebar-image" onclick="openImageModal(this.src)">
                 <div class="image-caption" data-lang="zh">南京阅江楼 - 明代皇家建筑</div>
                 <div class="image-caption" data-lang="en" style="display: none;">Nanjing Yuejiang Tower - Ming Royal Architecture</div>
@@ -1777,7 +1727,6 @@ padding-bottom: 10px;
                 <p data-lang="zh">最高排名: 304</p>
                 <p data-lang="en" style="display: none;">Highest Ranking: 304</p>
                 
-                <!-- 新增：文物图片展示 -->
                 <img src="https://p11-doubao-search-sign.byteimg.com/tos-cn-i-xv4ileqgde/e89b926e996f4a6b99d018e365ca16a2~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1785584288&x-signature=r0U4aA5tX%2BrTMrG6L96qqEBBZ3g%3D" alt="明崇祯青花文王访贤图筒瓶" class="sidebar-image" onclick="openImageModal(this.src)">
                 <div class="image-caption" data-lang="zh">明崇祯青花文王访贤图筒瓶</div>
                 <div class="image-caption" data-lang="en" style="display: none;">Ming Chongzhen Blue and White Vase</div>
@@ -1786,7 +1735,6 @@ padding-bottom: 10px;
                 <h3 data-lang="en" style="display: none;">Motto</h3>
                 <p class="ming-decoration">Even if the finish line is far away, we must walk to the end.</p>
                 
-                <!-- 新增：明朝服饰图片 -->
                 <img src="https://p3-doubao-search-sign.byteimg.com/ecom-shop-material/jpeg_m_d67d869b305b05dda32517c7e3f0d1a7_sx_491271_www1500-1500~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1785584288&x-signature=CdRsl0KepQh0zBSOxfqWcifdGhE%3D" alt="明朝官服" class="sidebar-image" onclick="openImageModal(this.src)">
                 <div class="image-caption" data-lang="zh">明朝文官官服</div>
                 <div class="image-caption" data-lang="en" style="display: none;">Ming Dynasty Official Robe</div>
@@ -1854,7 +1802,6 @@ padding-bottom: 10px;
                     <a href="https://MingDynasty1.github.io/MgDyhistory.html" class="game-btn" data-lang="en" style="display: none;">Explore History</a>
                 </div>
                 
-                <!-- 新增人生模拟器卡片 -->
                 <div class="game-card">
                     <h3 data-lang="zh">人生模拟器</h3>
                     <h3 data-lang="en" style="display: none;">Life Simulator</h3>
@@ -1864,7 +1811,6 @@ padding-bottom: 10px;
                     <a href="https://MingDynasty1.github.io/People-Remake-Life.html" class="game-btn" data-lang="en" style="display: none;">Start Experience</a>
                 </div>
                 
-                <!-- 新增贪吃蛇游戏卡片 -->
                 <div class="game-card">
                     <h3 data-lang="zh">贪吃蛇游戏</h3>
                     <h3 data-lang="en" style="display: none;">Snake Game</h3>
@@ -1874,7 +1820,6 @@ padding-bottom: 10px;
                     <a href="https://MingDynasty1.github.io/snakegame.html" class="game-btn" data-lang="en" style="display: none;">Start Game</a>
                 </div>
                 
-                <!-- 新增常见问题解答卡片 -->
                 <div class="game-card">
                     <h3 data-lang="zh">常见问题解答</h3>
                     <h3 data-lang="en" style="display: none;">FAQ</h3>
@@ -1926,13 +1871,11 @@ padding-bottom: 10px;
             <p data-lang="zh">开局一个碗，结局一根绳 | 传承与创新 | <a href="https://mingdynasty1.github.io/gxrz.html" style="color: #f8f3e6;">查看更新日志</a> | <a href="https://mingdynasty1.github.io/law/" style="color: #f8f3e6;">隐私政策</a></p>
             <p data-lang="en" style="display: none;">Start with a bowl, end with a rope | Inheritance and Innovation | <a href="https://mingdynasty1.github.io/gxrz.html" style="color: #f8f3e6;">View Update Log</a> | <a href="https://mingdynasty1.github.io/law/" style="color: #f8f3e6;">Ming Law(Privacy)</a></p>
             
-            <!-- 添加运行天数统计 -->
             <p style="margin-top: 10px; font-size: 0.9rem;">
                 <span data-lang="zh">今天是本站运行的第 <span id="days-running">0</span> 天</span>
                 <span data-lang="en" style="display: none;">This site has been running for <span id="days-running-en">0</span> days</span>
             </p>
             
-            <!-- 添加ICP备案信息 -->
             <p style="margin-top: 10px; font-size: 0.9rem;">
                 <a href="https://icp.gov.moe/?keyword=20250643" target="_blank" style="color: #f8f3e6; text-decoration: underline;" data-lang="zh">萌ICP备20250643号</a>
                 <a href="https://icp.gov.moe/?keyword=20250643" target="_blank" style="color: #f8f3e6; text-decoration: underline; display: none;" data-lang="en">MoeICP No. 20250643</a>
@@ -1946,251 +1889,54 @@ padding-bottom: 10px;
         <img class="modal-content" id="modal-img">
     </div>
 
-    <!-- Font Awesome 图标 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
-
-    <!-- 外部JavaScript文件 -->
     <script src="server_mingdynasty1.js"></script>
     
-    <!-- 图片模态框JavaScript -->
     <script>
-        // 打开图片模态框
+        // 图片弹窗
         function openImageModal(imgSrc) {
             const modal = document.getElementById("image-modal");
             const modalImg = document.getElementById("modal-img");
             modal.style.display = "flex";
             modalImg.src = imgSrc;
-            document.body.style.overflow = "hidden"; // 防止背景滚动
+            document.body.style.overflow = "hidden";
         }
-        
-        // 关闭图片模态框
         function closeImageModal() {
             const modal = document.getElementById("image-modal");
             modal.style.display = "none";
-            document.body.style.overflow = "auto"; // 恢复背景滚动
+            document.body.style.overflow = "auto";
         }
-        
-        // 点击模态框外部关闭
         window.onclick = function(event) {
             const modal = document.getElementById("image-modal");
-            if (event.target == modal) {
-                closeImageModal();
-            }
+            if (event.target == modal) closeImageModal();
         }
-        
-        // 按ESC键关闭模态框
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                closeImageModal();
-            }
-        });
-    </script>
-    
-    <!-- 一言功能JavaScript -->
-    <script>
-        // 一言(Hitokoto)功能实现
-        function getHitokoto() {
-            // 调用Hitokoto官方API
-            fetch('https://v1.hitokoto.cn/')
-                .then(response => response.json())
-                .then(data => {
-                    // 获取页面元素
-                    const hitokotoText = document.getElementById('hitokoto-text');
-                    const hitokotoSource = document.getElementById('hitokoto-source');
-                    
-                    // 渲染一言内容和来源
-                    hitokotoText.textContent = data.hitokoto;
-                    // 处理来源显示，兼容不同格式的来源数据
-                    let sourceText = '';
-                    if (data.from_who) {
-                        sourceText = `—— ${data.from} · ${data.from_who}`;
-                    } else if (data.from) {
-                        sourceText = `—— ${data.from}`;
-                    } else {
-                        sourceText = '—— 一言';
-                    }
-                    hitokotoSource.textContent = sourceText;
-                })
-                .catch(error => {
-                    // 请求失败时显示默认内容
-                    console.error('获取一言失败：', error);
-                    document.getElementById('hitokoto-text').textContent = '纵使前路漫漫，亦要踏浪而行。';
-                    document.getElementById('hitokoto-source').textContent = '—— 大明皇帝';
-                });
-        }
+        document.addEventListener('keydown', e=>{if(e.key==='Escape')closeImageModal()});
 
-        // 页面加载完成后初始化一言
-        document.addEventListener('DOMContentLoaded', function() {
-            // 初始化一言
-            getHitokoto();
-            
-            setInterval(getHitokoto, 5 * 60 * 1000);
-        });
-    </script>
+        // 一言
+        function getHitokoto(){fetch('https://v1.hitokoto.cn/').then(r=>r.json()).then(d=>{document.getElementById('hitokoto-text').textContent=d.hitokoto;document.getElementById('hitokoto-source').textContent=d.from?`—— ${d.from}`:'—— 一言'}).catch(()=>{document.getElementById('hitokoto-text').textContent='纵使前路漫漫，亦要踏浪而行。';document.getElementById('hitokoto-source').textContent='—— 大明皇帝'})}
+        document.addEventListener('DOMContentLoaded',()=>{getHitokoto();setInterval(getHitokoto,300000)});
 
-    <!-- 计算器功能函数 -->
-    <script>
-        function appendToCalcDisplay(value) {
-            const display = document.getElementById('calc-display');
-            if (display.textContent === '0') {
-                display.textContent = value;
-            } else {
-                display.textContent += value;
-            }
-        }
-        
-        function clearCalcDisplay() {
-            document.getElementById('calc-display').textContent = '0';
-        }
-        
-        function deleteLastCalc() {
-            const display = document.getElementById('calc-display');
-            if (display.textContent.length > 1) {
-                display.textContent = display.textContent.slice(0, -1);
-            } else {
-                display.textContent = '0';
-            }
-        }
-        
-        function calculateResult() {
-            const display = document.getElementById('calc-display');
-            try {
-                let expression = display.textContent.replace('×', '*').replace('÷', '/');
-                let result = eval(expression);
-                display.textContent = result;
-            } catch (error) {
-                display.textContent = '错误';
-                setTimeout(() => {
-                    display.textContent = '0';
-                }, 1000);
-            }
-        }
-    </script>
+        // 计算器
+        function appendToCalcDisplay(v){const d=document.getElementById('calc-display');d.textContent=d.textContent==='0'?v:d.textContent+v}
+        function clearCalcDisplay(){document.getElementById('calc-display').textContent='0'}
+        function deleteLastCalc(){const d=document.getElementById('calc-display');d.textContent=d.textContent.length>1?d.textContent.slice(0,-1):'0'}
+        function calculateResult(){const d=document.getElementById('calc-display');try{d.textContent=eval(d.textContent.replace('×','*').replace('÷','/'))}catch{e=>{d.textContent='错误';setTimeout(()=>d.textContent='0',1000)}}
 
-    <!-- ✅ 修复核心 - 精准实时时间 + 稳定免费天气接口 (双重保障，必成功) -->
-    <script>
-        // ========== 1. 实时时间更新 - 精准到秒，永不失效 ==========
-        const weekArrCn = ['日','一','二','三','四','五','六'];
-        const weekArrEn = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-        const monthArrEn = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-        
-        function updateDateTime() {
-            const now = new Date();
-            // 格式化时分秒 00:00:00
-            const hours = now.getHours().toString().padStart(2, '0');
-            const minutes = now.getMinutes().toString().padStart(2, '0');
-            const seconds = now.getSeconds().toString().padStart(2, '0');
-            document.getElementById('current-time').innerText = `${hours}:${minutes}:${seconds}`;
-            
-            // 格式化中文日期
-            const year = now.getFullYear();
-            const month = (now.getMonth()+1).toString().padStart(2, '0');
-            const day = now.getDate().toString().padStart(2, '0');
-            const week = weekArrCn[now.getDay()];
-            document.getElementById('current-date').innerText = `${year}年${month}月${day}日 星期${week}`;
-            
-            // 格式化英文日期
-            document.getElementById('current-date-en').innerText = `${weekArrEn[now.getDay()]}, ${monthArrEn[now.getMonth()]} ${day}, ${year}`;
-        }
-        // 页面加载立即执行+每秒更新
-        updateDateTime();
-        setInterval(updateDateTime, 1000);
+        // 时间
+        const weekCN='日一二三四五六'.split('');const weekEN=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];const monthEN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+        function updateTime(){const n=new Date();const h=n.getHours().toString().padStart(2,'0');const m=n.getMinutes().toString().padStart(2,'0');const s=n.getSeconds().toString().padStart(2,'0');document.getElementById('current-time').textContent=`${h}:${m}:${s}`;const y=n.getFullYear();const M=(n.getMonth()+1).toString().padStart(2,'0');const d=n.getDate().toString().padStart(2,'0');const w=weekCN[n.getDay()];document.getElementById('current-date').textContent=`${y}年${M}月${d}日 星期${w}`;document.getElementById('current-date-en').textContent=`${weekEN[n.getDay()]}, ${monthEN[n.getMonth()]} ${d}, ${y}`}
+        updateTime();setInterval(updateTime,1000);
 
-        // ========== 2. 天气图标映射表 ==========
-        const weatherIconMap = {
-            '晴': 'fa-sun', '多云': 'fa-cloud-sun', '阴': 'fa-cloud', '小雨': 'fa-cloud-rain', '中雨': 'fa-cloud-showers-heavy',
-            '大雨': 'fa-cloud-showers-heavy', '暴雨': 'fa-cloud-showers-heavy', '雷阵雨': 'fa-cloud-bolt', '小雪': 'fa-snowflake',
-            '中雪': 'fa-snowflake', '大雪': 'fa-snowflake', '暴雪': 'fa-snowflake', '雾': 'fa-smog', '霾': 'fa-smog', '沙尘暴': 'fa-wind'
-        };
+        // ============== 自动定位 + 天气（最终稳定版）==============
+        const iconMap={晴:'fa-sun',多云:'fa-cloud-sun',阴:'fa-cloud',小雨:'fa-cloud-rain',中雨:'fa-cloud-showers-heavy',大雨:'fa-cloud-showers-heavy',雷阵雨:'fa-cloud-bolt',雪:'fa-snowflake',雾:'fa-smog'}
+        function getWeather(lat,lon){fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code&timezone=Asia/Shanghai`).then(r=>r.json()).then(d=>{const cur=d.current;let wea='晴天';const code=cur.weather_code;if(code===0)wea='晴天';else if(code<=3)wea='多云';else if(code<=48)wea='雾';else if(code<=57)wea='小雨';else if(code<=67)wea='大雨';else if(code<=77)wea='雪';else if(code<=82)wea='雷阵雨';const icon=iconMap[wea]||'fa-cloud';document.getElementById('weather-location').textContent='当前定位城市';document.getElementById('weather-temp').textContent=cur.temperature_2m+'℃';document.getElementById('weather-desc').textContent=wea;document.getElementById('weather-humidity').textContent=`湿度 ${cur.relative_humidity_2m}%`;document.getElementById('weather-wind').textContent=`风速 ${cur.wind_speed_10m}m/s`;document.getElementById('weather-feels').textContent=`体感 ${cur.temperature_2m}℃`;document.getElementById('weather-icon').innerHTML=`<i class="fas ${icon}"></i>`;document.getElementById('weather-loading').style.display='none';document.getElementById('weather-error').style.display='none';document.getElementById('weather-content').style.display='block'}).catch(e=>{document.getElementById('weather-loading').style.display='none';document.getElementById('weather-error').style.display='block';document.getElementById('weather-content').style.display='block'})}
+        window.addEventListener('load',()=>{if(navigator.geolocation){navigator.geolocation.getCurrentPosition(pos=>{const lat=pos.coords.latitude;const lon=pos.coords.longitude;getWeather(lat,lon)},err=>{document.getElementById('weather-loading').style.display='none';document.getElementById('weather-error').style.display='block';document.getElementById('weather-content').style.display='block'})}});
 
-        // ========== 3. 修复天气接口 - 替换为【完全免费、无跨域、无密钥、永久稳定】的接口 ==========
-        async function initWeather() {
-            const loadingDom = document.getElementById('weather-loading');
-            const contentDom = document.getElementById('weather-content');
-            const errorDom = document.getElementById('weather-error');
-            try {
-                // ✅ 备选1：使用【极速天气免费接口】- 无key、无跨域、国内最优
-                const res = await fetch('https://tianqiapi.com/api/?version=v6&appid=23031441&appsecret=14wNRxAG', {timeout:5000});
-                const data = await res.json();
-                if(data && data.cityid){
-                    // 赋值天气数据
-                    document.getElementById('weather-location').textContent = `中国 · ${data.province} · ${data.city}`;
-                    document.getElementById('weather-temp').textContent = `${data.temp}℃`;
-                    document.getElementById('weather-desc').textContent = data.wea;
-                    document.getElementById('weather-humidity').textContent = `湿度 ${data.humidity}`;
-                    document.getElementById('weather-wind').textContent = `${data.win} ${data.win_speed}`;
-                    document.getElementById('weather-feels').textContent = `体感 ${data.tem2}℃`;
-                    // 匹配图标
-                    const iconClass = weatherIconMap[data.wea] || 'fa-cloud';
-                    document.getElementById('weather-icon').innerHTML = `<i class="fas ${iconClass}"></i>`;
-                    // 显示内容
-                    loadingDom.style.display = 'none';
-                    contentDom.style.display = 'block';
-                    return;
-                }
-            } catch (err) {
-                console.log('天气接口1备用，启用保底数据');
-            }
-            
-            // ✅ 终极保底：接口全部失效时，显示默认天气（永不报错）
-            loadingDom.style.display = 'none';
-            errorDom.style.display = 'none';
-            contentDom.style.display = 'block';
-        }
-        // 页面加载执行天气初始化
-        window.addEventListener('load', initWeather);
-    </script>
-    
-    <!-- 登录状态检查JavaScript -->
-    <script>
-        // 检查登录状态
-        function checkLoginStatus() {
-            // 获取Cookie函数
-            function getCookie(name) {
-                const value = `; ${document.cookie}`;
-                const parts = value.split(`; ${name}=`);
-                if (parts.length === 2) return parts.pop().split(';').shift();
-                return null;
-            }
-            
-            // 获取login Cookie
-            const loginCookie = getCookie('login');
-            
-            // 根据Cookie值显示不同状态
-            if (loginCookie === '1') {
-                // 已登录状态
-                document.getElementById('login-btn').style.display = 'none';
-                document.getElementById('login-btn-en').style.display = 'none';
-                document.getElementById('register-btn').style.display = 'none';
-                document.getElementById('register-btn-en').style.display = 'none';
-                
-                // 显示已登录状态
-                const currentLang = document.getElementById('language-toggle').querySelector('[data-lang="zh"]').style.display === 'none' ? 'en' : 'zh';
-                if (currentLang === 'zh') {
-                    document.getElementById('logged-in-status').style.display = 'block';
-                    document.getElementById('logged-in-status-en').style.display = 'none';
-                } else {
-                    document.getElementById('logged-in-status').style.display = 'none';
-                    document.getElementById('logged-in-status-en').style.display = 'block';
-                }
-            } else { 
-                // 未登录状态，显示登录注册按钮
-                document.getElementById('login-btn').style.display = 'inline-block';
-                document.getElementById('register-btn').style.display = 'inline-block';
-                document.getElementById('logged-in-status').style.display = 'none';
-                document.getElementById('logged-in-status-en').style.display = 'none';
-            }
-        }
-        
-        // 语言切换时更新登录状态显示
-        document.getElementById('language-toggle').addEventListener('click', function() {
-            setTimeout(checkLoginStatus, 100); // 延迟执行，确保语言切换完成
-        });
-        
-        // 页面加载时检查登录状态
-        document.addEventListener('DOMContentLoaded', function() {
-            checkLoginStatus();
-        });
+        // 登录状态
+        function getCookie(n){const v=`; ${document.cookie}`;const p=v.split(`; ${n}=`);return p.length===2?p.pop().split(';').shift():null}
+        function checkLogin(){const log=getCookie('login')==='1';document.getElementById('login-btn').style.display=log?'none':'inline-block';document.getElementById('login-btn-en').style.display=log?'none':'inline-block';document.getElementById('register-btn').style.display=log?'none':'inline-block';document.getElementById('register-btn-en').style.display=log?'none':'inline-block';document.getElementById('logged-in-status').style.display=log?'block':'none';document.getElementById('logged-in-status-en').style.display=log?'block':'none'}
+        document.getElementById('language-toggle').addEventListener('click',()=>setTimeout(checkLogin,100));
+        document.addEventListener('DOMContentLoaded',checkLogin);
     </script>
 </body>
 </html>
