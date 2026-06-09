@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大明平台规则 - 大明律令 | MingDynasty</title>
+  <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <!-- 引入古风字体与图标 -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ========== 全局基础样式 ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", "SimSun", sans-serif;
+        }
+
+        /* 明制亮色模式（默认）*/
+        :root {
+            --bg-primary: #fdf6e3; /* 宣纸底色 */
+            --bg-secondary: #fff9e8;
+            --text-primary: #2c1810; /* 墨黑 */
+            --text-secondary: #5c3a21;
+            --accent-red: #c41e3a; /* 大明朱红 */
+            --accent-gold: #e6a23c; /* 明黄 */
+            --border-color: #b98b58; /* 古铜金边框 */
+            --shadow: 0 4px 12px rgba(185, 139, 88, 0.2);
+            --decoration-opacity: 0.15;
+        }
+
+        /* 暗色模式（玄黑制式）*/
+        [data-theme="dark"] {
+            --bg-primary: #121212; /* 玄黑 */
+            --bg-secondary: #1e1e1e;
+            --text-primary: #f5f0e1; /* 米白 */
+            --text-secondary: #d4b886;
+            --accent-red: #d92140;
+            --accent-gold: #f0b450;
+            --border-color: #8b6b38;
+            --shadow: 0 4px 12px rgba(230, 162, 60, 0.15);
+            --decoration-opacity: 0.1;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            line-height: 1.8;
+            background-image: 
+                radial-gradient(circle at 10% 10%, var(--accent-gold) var(--decoration-opacity), transparent 15%),
+                radial-gradient(circle at 90% 90%, var(--accent-red) var(--decoration-opacity), transparent 15%);
+            min-height: 100vh;
+        }
+
+        /* ========== 页面容器 ========== */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        /* ========== 头部样式 ========== */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .header-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--accent-red);
+            letter-spacing: 8px;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        /* 明暗切换按钮 */
+        .theme-toggle {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            color: var(--accent-gold);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(30deg);
+            background: var(--accent-gold);
+            color: #fff;
+        }
+
+        /* ========== 规则卡片样式 ========== */
+        .rule-card {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .rule-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, var(--accent-red), var(--accent-gold), var(--accent-red));
+        }
+
+        /* 章节标题 */
+        .chapter-title {
+            font-size: 1.6rem;
+            color: var(--accent-red);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px dashed var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .chapter-title i {
+            color: var(--accent-gold);
+        }
+
+        /* 规则列表 */
+        .rule-list {
+            list-style: none;
+        }
+
+        .rule-item {
+            margin-bottom: 1.2rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .rule-item::before {
+            content: "•";
+            color: var(--accent-gold);
+            font-size: 1.5rem;
+            position: absolute;
+            left: 0;
+            top: -5px;
+        }
+
+        .rule-item strong {
+            color: var(--accent-red);
+        }
+
+        /* 强调文本 */
+        .highlight {
+            color: var(--accent-gold);
+            font-weight: bold;
+        }
+
+        /* ========== 底部样式 ========== */
+        .footer {
+            text-align: center;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .footer-seal {
+            width: 60px;
+            margin: 1rem auto;
+            opacity: 0.8;
+        }
+
+        /* ========== 响应式适配 ========== */
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 1.8rem;
+                letter-spacing: 4px;
+            }
+            .rule-card {
+                padding: 1.5rem;
+            }
+            .chapter-title {
+                font-size: 1.3rem;
+            }
+            .theme-toggle {
+                width: 40px;
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 头部区域 -->
+        <div class="header">
+            <h1 class="header-title">大 明 平 台 规 则</h1>
+            <p class="header-subtitle">奉天承运 恪守律令 共筑大明</p>
+            <!-- 明暗切换按钮 -->
+            <div class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </div>
+        </div>
+
+        <!-- 规则内容 -->
+        <div class="rule-card">
+            <h2 class="chapter-title"><i class="fas fa-gavel"></i> 总纲律令</h2>
+            <ul class="rule-list">
+                <li class="rule-item">凡入大明平台者，皆需恪守本规则，遵大明法度，行君子之风。</li>
+                <li class="rule-item">平台以<span class="highlight">忠、信、礼、义</span>为核，弘扬大明文化，禁止一切违规悖理之行。</li>
+                <li class="rule-item">用户需对自身言行负责，维护平台清朗秩序，违者依规处置。</li>
+            </ul>
+        </div>
+
+        <div class="rule-card">
+            <h2 class="chapter-title"><i class="fas fa-user"></i> 用户准则</h2>
+            <ul class="rule-list">
+                <li class="rule-item"><strong>实名合规：</strong>注册信息需真实有效，严禁冒用他人身份、伪造信息。</li>
+                <li class="rule-item"><strong>言行文明：</strong>禁止辱骂、诽谤、造谣，不得发布低俗、暴力、涉政违规内容。</li>
+                <li class="rule-item"><strong>尊重版权：</strong>转载内容需注明出处，严禁盗用大明平台原创内容牟利。</li>
+                <li class="rule-item"><strong>禁止牟利：</strong>未经平台许可，不得以任何形式在平台内商业引流、诈骗敛财。</li>
+            </ul>
+        </div>
+
+        <div class="rule-card">
+            <h2 class="chapter-title"><i class="fas fa-shield-halved"></i> 内容规范</h2>
+            <ul class="rule-list">
+                <li class="rule-item"><strong>正向内容：</strong>鼓励发布明朝历史、文化、诗词、礼仪等正向内容。</li>
+                <li class="rule-item"><strong>违禁内容：</strong>严禁发布涉政、色情、暴力、封建迷信、虚假信息。</li>
+                <li class="rule-item"><strong>原创保护：</strong>优先扶持原创内容，恶意洗稿、抄袭者永久封禁。</li>
+                <li class="rule-item"><strong>交流秩序：</strong>讨论需理性平和，禁止引战、带节奏、扰乱社区氛围。</li>
+            </ul>
+        </div>
+
+        <div class="rule-card">
+            <h2 class="chapter-title"><i class="fas fa-balance-scale"></i> 奖惩律令</h2>
+            <ul class="rule-list">
+                <li class="rule-item"><strong>嘉奖之制：</strong>恪守规则、贡献优质内容者，授予荣誉标识、流量扶持、专属权限。</li>
+                <li class="rule-item"><strong>惩戒之制：</strong>轻度违规警告整改；中度违规禁言限制；重度违规永久封禁，追究责任。</li>
+                <li class="rule-item"><strong>申诉之制：</strong>用户对惩戒有异议，可向平台提交申诉，依规核查处置。</li>
+            </ul>
+        </div>
+
+        <div class="rule-card">
+            <h2 class="chapter-title"><i class="fas fa-sitemap"></i> 附则</h2>
+            <ul class="rule-list">
+                <li class="rule-item">本规则最终解释权归大明平台所有，平台有权根据实际情况修订。</li>
+                <li class="rule-item">规则修订后将公示生效，用户继续使用即视为接受新版规则。</li>
+                <li class="rule-item">凡有违规行为，平台将严格执行律令，不徇私情。</li>
+            </ul>
+        </div>
+
+        <!-- 底部 -->
+        <div class="footer">
+            <p>大明平台 · 奉天承运 律令昭昭</p>
+            <p>© 2013-2026 MingDynasty,Inc. 大明律令司承建</p>
+        </div>
+    </div>
+
+    <!-- 明暗切换脚本 -->
+    <script>
+        // 获取切换按钮与根元素
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        const icon = themeToggle.querySelector('i');
+
+        // 初始化主题
+        function initTheme() {
+            const savedTheme = localStorage.getItem('ming-theme');
+            if (savedTheme === 'dark') {
+                html.setAttribute('data-theme', 'dark');
+                icon.classList.replace('fa-moon', 'fa-sun');
+            }
+        }
+        initTheme();
+
+        // 切换主题事件
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = html.getAttribute('data-theme');
+            if (currentTheme === 'dark') {
+                html.removeAttribute('data-theme');
+                localStorage.setItem('ming-theme', 'light');
+                icon.classList.replace('fa-sun', 'fa-moon');
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                localStorage.setItem('ming-theme', 'dark');
+                icon.classList.replace('fa-moon', 'fa-sun');
+            }
+        });
+    </script>
+</body>
+</html>
