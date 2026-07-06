@@ -1,0 +1,858 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大明官道 | MingDynasty</title>
+   <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap');
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Noto Serif SC', serif;
+            background-color: #f3e5ab;
+            transition: background-color 2s ease, color 2s ease;
+            user-select: none;
+        }
+
+        body.night-mode {
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+
+        #gameCanvas {
+            display: block;
+            width: 100%;
+            height: 100vh;
+        }
+
+        .ui-panel {
+            position: absolute;
+            pointer-events: none;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .ming-border {
+            border: 3px double #8b0000;
+            background: rgba(255, 253, 231, 0.9);
+            padding: 12px;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2), inset 0 0 20px rgba(139, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        /* Corner decorations for Ming style */
+        .ming-border::before, .ming-border::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border: 2px solid #8b0000;
+            transition: all 0.3s;
+        }
+        .ming-border::before { top: -2px; left: -2px; border-right: none; border-bottom: none; }
+        .ming-border::after { bottom: -2px; right: -2px; border-left: none; border-top: none; }
+
+        .night-mode .ming-border {
+            background: rgba(15, 23, 42, 0.85);
+            border-color: #d4af37;
+            color: #fbbf24;
+        }
+        .night-mode .ming-border::before, .night-mode .ming-border::after {
+            border-color: #d4af37;
+        }
+
+        .speed-bar-container {
+            width: 200px;
+            height: 16px;
+            background: #4a4a4a;
+            border: 2px solid #8b0000;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 8px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .speed-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #166534, #ca8a04, #dc2626);
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        #startScreen, #gameOverScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 50;
+            color: white;
+            backdrop-filter: blur(4px);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .btn-ming {
+            background: linear-gradient(to bottom, #991b1b, #7f1d1d);
+            color: #fde047;
+            border: 2px solid #fde047;
+            padding: 12px 40px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            font-family: 'Noto Serif SC', serif;
+            transition: all 0.3s;
+            margin-top: 20px;
+            box-shadow: 0 4px 0 #450a0a;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .btn-ming:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #450a0a;
+            filter: brightness(1.1);
+        }
+        .btn-ming:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #450a0a;
+        }
+
+        .notification {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(139, 0, 0, 0.9);
+            color: #ffd700;
+            padding: 10px 20px;
+            border-radius: 4px;
+            border: 1px solid #ffd700;
+            font-size: 1.2rem;
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- UI Layer -->
+    <div id="uiLayer" class="ui-panel top-4 right-4 ming-border hidden">
+        <div class="flex flex-col gap-2">
+            <div class="flex items-center justify-between gap-4">
+                <div class="text-sm font-bold text-red-900 night-mode:text-yellow-500">车速 (里/时辰)</div>
+                <div class="text-xl font-bold text-red-800 night-mode:text-yellow-400">
+                    <i class="fas fa-road"></i> <span id="distanceDisplay">0</span> 丈
+                </div>
+            </div>
+            <div class="speed-bar-container">
+                <div id="speedBar" class="speed-bar-fill"></div>
+            </div>
+            <div id="statusText" class="text-xs text-red-700 night-mode:text-red-300 font-bold h-4"></div>
+        </div>
+        <div class="mt-3 text-xs opacity-75 border-t border-gray-400 pt-2 night-mode:border-gray-600">
+            <span class="font-bold">W/↑</span> 加速 | <span class="font-bold">S/↓</span> 减速/刹车
+        </div>
+    </div>
+
+    <div id="notification" class="notification">抵达驿站 +500丈</div>
+
+    <!-- Start Screen -->
+    <div id="startScreen">
+        <div class="text-center">
+            <h1 class="text-6xl font-bold mb-2 text-yellow-500" style="text-shadow: 0 0 15px #b91c1c;">大明官道</h1>
+            <p class="text-xl mb-8 text-gray-300 italic">“路漫漫其修远兮，吾将上下而求索”</p>
+            <div class="bg-black/30 p-6 rounded-lg border border-yellow-600/30 mb-8 max-w-md mx-auto">
+                <h3 class="text-yellow-400 font-bold mb-2"><i class="fas fa-scroll"></i> 行车须知</h3>
+                <ul class="text-left text-sm space-y-2 text-gray-300">
+                    <li><i class="fas fa-check text-green-500 mr-2"></i>上坡需要足够的动能，速度不足将倒退滑车。</li>
+                    <li><i class="fas fa-check text-green-500 mr-2"></i>下坡时重力加速，切勿超速翻车。</li>
+                    <li><i class="fas fa-check text-green-500 mr-2"></i>夜间视线不佳，请谨慎驾驶。</li>
+                </ul>
+            </div>
+            <button class="btn-ming" onclick="startGame()">起驾巡边</button>
+        </div>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div id="gameOverScreen" class="hidden">
+        <h1 class="text-5xl font-bold mb-4 text-red-500 drop-shadow-lg">马车倾覆</h1>
+        <p id="deathReason" class="text-xl mb-4 text-gray-300">大人，车速过快，惊了马匹！</p>
+        <div class="text-3xl mb-8 font-serif text-yellow-400">行程: <span id="finalScore">0</span> 丈</div>
+        <button class="btn-ming" onclick="resetGame()">重整旗鼓</button>
+    </div>
+
+    <canvas id="gameCanvas"></canvas>
+
+    <script>
+        // Game Configuration
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        let gameState = 'START'; 
+        let frameCount = 0;
+        let score = 0; // Distance
+        let gameSpeed = 0;
+        
+        // Physics Constants
+        const MAX_SPEED = 28;
+        const MIN_SPEED = 0;
+        const ACCELERATION = 0.15;
+        const BRAKE_POWER = 0.3;
+        const FRICTION = 0.02;
+        const GRAVITY = 0.15; // Gravity effect on slopes
+        const CRASH_SPEED_THRESHOLD = 24; 
+        
+        // Day/Night Cycle
+        let isNight = false;
+        let dayCycleTimer = 0;
+        const DAY_DURATION = 1200; 
+
+        // Input State
+        const keys = {
+            w: false,
+            s: false,
+            ArrowUp: false,
+            ArrowDown: false
+        };
+
+        // Entities
+        let player = {
+            x: 150, // Fixed screen X position
+            worldX: 0, // World coordinate
+            y: 0, 
+            width: 60,
+            height: 40,
+            angle: 0,
+            velocityY: 0
+        };
+
+        let trackPoints = [];
+        let decorations = []; 
+        let particles = []; 
+        let clouds = [];
+
+        // Initialization
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        window.addEventListener('keydown', (e) => {
+            if(keys.hasOwnProperty(e.key)) keys[e.key] = true;
+        });
+        window.addEventListener('keyup', (e) => {
+            if(keys.hasOwnProperty(e.key)) keys[e.key] = false;
+        });
+
+        // Track Generation Logic (Perlin-ish noise using sine waves)
+        let lastTrackX = 0;
+        let lastTrackY = 0;
+        
+        function initTrack() {
+            trackPoints = [];
+            decorations = [];
+            clouds = [];
+            lastTrackX = -200;
+            lastTrackY = canvas.height / 2 + 100;
+            
+            // Generate initial track
+            for(let i=0; i<canvas.width/10 + 50; i++) {
+                generateTrackSegment();
+            }
+            
+            // Init clouds
+            for(let i=0; i<5; i++) {
+                clouds.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * (canvas.height/2),
+                    speed: 0.2 + Math.random() * 0.3,
+                    size: 30 + Math.random() * 40
+                });
+            }
+        }
+
+        function generateTrackSegment() {
+            const segmentLength = 15;
+            // Combine multiple sine waves for natural looking hills
+            const frequency1 = 0.002;
+            const frequency2 = 0.005;
+            const amplitude1 = 150;
+            const amplitude2 = 50;
+            
+            // Calculate Y based on X using sine superposition
+            // This ensures smooth continuous terrain
+            const nextX = lastTrackX + segmentLength;
+            const baseHeight = canvas.height / 2 + 100;
+            
+            // The terrain formula
+            const yNoise = Math.sin(nextX * frequency1) * amplitude1 + Math.sin(nextX * frequency2) * amplitude2;
+            const nextY = baseHeight + yNoise;
+
+            trackPoints.push({x: nextX, y: nextY});
+            
+            // Add decorations based on probability
+            if(Math.random() < 0.03) {
+                const type = Math.random() > 0.85 ? 'station' : (Math.random() > 0.5 ? 'tree' : 'rock');
+                decorations.push({
+                    x: nextX,
+                    y: nextY,
+                    type: type,
+                    passed: false,
+                    scale: 0.8 + Math.random() * 0.4
+                });
+            }
+
+            lastTrackX = nextX;
+            lastTrackY = nextY;
+        }
+
+        function updateTrack() {
+            // Remove points far behind
+            while(trackPoints.length > 0 && trackPoints[0].x < player.worldX - 400) {
+                trackPoints.shift();
+            }
+            // Add new points ahead
+            while(lastTrackX < player.worldX + canvas.width + 400) {
+                generateTrackSegment();
+            }
+            
+            // Update clouds
+            clouds.forEach(c => {
+                c.x -= c.speed + (gameSpeed * 0.05); // Parallax
+                if(c.x < -100) c.x = canvas.width + 100;
+            });
+        }
+
+        function getTrackInfoAt(x) {
+            // Find segment containing x
+            for(let i=0; i<trackPoints.length-1; i++) {
+                if(x >= trackPoints[i].x && x < trackPoints[i+1].x) {
+                    const p1 = trackPoints[i];
+                    const p2 = trackPoints[i+1];
+                    const t = (x - p1.x) / (p2.x - p1.x);
+                    const y = p1.y + (p2.y - p1.y) * t;
+                    const angle = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+                    return { y, angle, slope: (p2.y - p1.y) / (p2.x - p1.x) };
+                }
+            }
+            return { y: canvas.height/2, angle: 0, slope: 0 };
+        }
+
+        // Drawing Functions
+        function drawBackground() {
+            // Sky Gradient
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            if(isNight) {
+                gradient.addColorStop(0, '#020617');
+                gradient.addColorStop(0.5, '#1e1b4b');
+                gradient.addColorStop(1, '#312e81');
+            } else {
+                gradient.addColorStop(0, '#38bdf8');
+                gradient.addColorStop(0.5, '#bae6fd');
+                gradient.addColorStop(1, '#f0f9ff');
+            }
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Celestial Body
+            ctx.save();
+            const sunX = canvas.width - 100;
+            const sunY = 100;
+            ctx.translate(sunX, sunY);
+            if(isNight) {
+                ctx.fillStyle = '#fefce8';
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = '#fef08a';
+                ctx.beginPath(); ctx.arc(0, 0, 35, 0, Math.PI*2); ctx.fill();
+                // Moon crater detail
+                ctx.fillStyle = '#e2e8f0';
+                ctx.beginPath(); ctx.arc(-10, -5, 8, 0, Math.PI*2); ctx.fill();
+            } else {
+                ctx.fillStyle = '#fbbf24';
+                ctx.shadowBlur = 40;
+                ctx.shadowColor = '#f59e0b';
+                ctx.beginPath(); ctx.arc(0, 0, 45, 0, Math.PI*2); ctx.fill();
+            }
+            ctx.restore();
+
+            // Clouds
+            ctx.fillStyle = isNight ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.6)';
+            clouds.forEach(c => {
+                ctx.beginPath();
+                ctx.arc(c.x, c.y, c.size, 0, Math.PI*2);
+                ctx.arc(c.x + c.size*0.8, c.y - c.size*0.2, c.size*0.9, 0, Math.PI*2);
+                ctx.arc(c.x - c.size*0.8, c.y - c.size*0.2, c.size*0.9, 0, Math.PI*2);
+                ctx.fill();
+            });
+
+            // Distant Mountains (Parallax Layer 1)
+            ctx.fillStyle = isNight ? '#1e1b4b' : '#94a3b8';
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height);
+            for(let i=0; i<=canvas.width; i+=20) {
+                // Move slower than player
+                const parallaxX = i + (player.worldX * 0.1); 
+                const h = Math.sin(parallaxX * 0.005) * 150 + Math.cos(parallaxX * 0.01) * 50 + 250;
+                ctx.lineTo(i, canvas.height - h);
+            }
+            ctx.lineTo(canvas.width, canvas.height);
+            ctx.fill();
+        }
+
+        function drawTrack() {
+            // Draw Sleepers first (behind rails)
+            ctx.strokeStyle = isNight ? '#3f2e26' : '#5D4037';
+            ctx.lineWidth = 4;
+            ctx.lineCap = 'round';
+            
+            for(let i=0; i<trackPoints.length; i+=3) {
+                 const p = trackPoints[i];
+                 if(p.x > player.worldX - 100 && p.x < player.worldX + canvas.width) {
+                     const info = getTrackInfoAt(p.x);
+                     const dx = Math.cos(info.angle + Math.PI/2) * 20;
+                     const dy = Math.sin(info.angle + Math.PI/2) * 20;
+                     
+                     // 3D effect: darker if further "back" or shadowed? 
+                     // Simple depth: just draw them
+                     ctx.beginPath();
+                     ctx.moveTo(p.x - player.worldX + player.x - dx, p.y - dy);
+                     ctx.lineTo(p.x - player.worldX + player.x + dx, p.y + dy);
+                     ctx.stroke();
+                 }
+            }
+
+            // Draw Rails with 3D thickness
+            const railOffset = 12;
+            
+            // Far Rail
+            ctx.strokeStyle = isNight ? '#500000' : '#7f1d1d';
+            ctx.lineWidth = 5;
+            ctx.beginPath();
+            let started = false;
+            for(let p of trackPoints) {
+                if(p.x > player.worldX - 100 && p.x < player.worldX + canvas.width) {
+                    const info = getTrackInfoAt(p.x);
+                    const dx = Math.cos(info.angle + Math.PI/2) * railOffset;
+                    const dy = Math.sin(info.angle + Math.PI/2) * railOffset;
+                    const screenX = p.x - player.worldX + player.x;
+                    if(!started) { ctx.moveTo(screenX - dx, p.y - dy); started=true; }
+                    else ctx.lineTo(screenX - dx, p.y - dy);
+                }
+            }
+            ctx.stroke();
+
+            // Near Rail
+            ctx.strokeStyle = isNight ? '#991b1b' : '#b91c1c';
+            ctx.lineWidth = 6;
+            ctx.beginPath();
+            started = false;
+            for(let p of trackPoints) {
+                if(p.x > player.worldX - 100 && p.x < player.worldX + canvas.width) {
+                    const info = getTrackInfoAt(p.x);
+                    const dx = Math.cos(info.angle + Math.PI/2) * railOffset;
+                    const dy = Math.sin(info.angle + Math.PI/2) * railOffset;
+                    const screenX = p.x - player.worldX + player.x;
+                    if(!started) { ctx.moveTo(screenX + dx, p.y + dy); started=true; }
+                    else ctx.lineTo(screenX + dx, p.y + dy);
+                }
+            }
+            ctx.stroke();
+            
+            // Highlight on top of rail (specular)
+            ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            started = false;
+            for(let p of trackPoints) {
+                if(p.x > player.worldX - 100 && p.x < player.worldX + canvas.width) {
+                    const info = getTrackInfoAt(p.x);
+                    const dx = Math.cos(info.angle + Math.PI/2) * railOffset;
+                    const dy = Math.sin(info.angle + Math.PI/2) * railOffset;
+                    // Slightly offset up/left for highlight
+                    const screenX = p.x - player.worldX + player.x;
+                    if(!started) { ctx.moveTo(screenX + dx - 1, p.y + dy - 2); started=true; }
+                    else ctx.lineTo(screenX + dx - 1, p.y + dy - 2);
+                }
+            }
+            ctx.stroke();
+        }
+
+        function drawDecorations() {
+            // Sort by Y to handle depth overlap roughly (painter's algorithm)
+            // Since track is 2.5D, simple drawing order usually works if we draw back-to-front
+            // But our track array is left-to-right. 
+            // For trees/rocks, we just draw them.
+            
+            for(let d of decorations) {
+                if(d.x < player.worldX - 100 || d.x > player.worldX + canvas.width) continue;
+                
+                const screenX = d.x - player.worldX + player.x;
+                const screenY = d.y;
+
+                ctx.save();
+                ctx.translate(screenX, screenY);
+                ctx.scale(d.scale, d.scale);
+
+                if(d.type === 'tree') {
+                    // Pine Tree
+                    // Shadow
+                    ctx.fillStyle = 'rgba(0,0,0,0.2)';
+                    ctx.beginPath(); ctx.ellipse(0, 0, 15, 5, 0, 0, Math.PI*2); ctx.fill();
+                    
+                    // Trunk
+                    ctx.fillStyle = '#3E2723';
+                    ctx.fillRect(-4, -40, 8, 40);
+                    
+                    // Leaves (Layers)
+                    ctx.fillStyle = isNight ? '#14532d' : '#166534';
+                    ctx.beginPath();
+                    ctx.moveTo(0, -90); ctx.lineTo(-20, -40); ctx.lineTo(20, -40); ctx.fill();
+                    ctx.beginPath();
+                    ctx.moveTo(0, -70); ctx.lineTo(-25, -20); ctx.lineTo(25, -20); ctx.fill();
+                    ctx.beginPath();
+                    ctx.moveTo(0, -50); ctx.lineTo(-30, 0); ctx.lineTo(30, 0); ctx.fill();
+                    
+                } else if (d.type === 'rock') {
+                    ctx.fillStyle = isNight ? '#334155' : '#64748b';
+                    ctx.beginPath();
+                    ctx.arc(0, -10, 15, 0, Math.PI*2);
+                    ctx.fill();
+                    ctx.fillStyle = isNight ? '#475569' : '#94a3b8';
+                    ctx.beginPath();
+                    ctx.arc(-5, -15, 5, 0, Math.PI*2);
+                    ctx.fill();
+                } else if (d.type === 'station') {
+                    // Station Platform
+                    ctx.fillStyle = '#5D4037';
+                    ctx.fillRect(-60, -15, 120, 15);
+                    
+                    // Pillars
+                    ctx.fillStyle = '#8B0000';
+                    ctx.fillRect(-50, -60, 10, 45);
+                    ctx.fillRect(40, -60, 10, 45);
+                    
+                    // Roof (Ming Style Curve)
+                    ctx.fillStyle = '#1e293b'; // Dark tile
+                    ctx.beginPath();
+                    ctx.moveTo(-70, -60);
+                    ctx.quadraticCurveTo(0, -90, 70, -60);
+                    ctx.lineTo(60, -50);
+                    ctx.quadraticCurveTo(0, -80, -60, -50);
+                    ctx.fill();
+                    
+                    // Sign
+                    ctx.fillStyle = '#fef3c7';
+                    ctx.fillRect(-20, -45, 40, 20);
+                    ctx.strokeStyle = '#8B0000';
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(-20, -45, 40, 20);
+                    ctx.fillStyle = '#000';
+                    ctx.font = 'bold 12px "Noto Serif SC"';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('驿站', 0, -30);
+
+                    if(!d.passed && player.worldX > d.x) {
+                        d.passed = true;
+                        score += 500;
+                        showNotification("抵达驿站 +500丈");
+                        createParticles(screenX, screenY - 50, 'gold');
+                    }
+                }
+                ctx.restore();
+            }
+        }
+
+        function drawPlayer() {
+            const x = player.x;
+            const y = player.y;
+            const angle = player.angle;
+
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(angle);
+
+            // Shadow under cart
+            ctx.fillStyle = 'rgba(0,0,0,0.3)';
+            ctx.beginPath();
+            ctx.ellipse(0, 25, 35, 10, 0, 0, Math.PI*2);
+            ctx.fill();
+
+            // Cart Body (3D Box effect)
+            // Side
+            ctx.fillStyle = '#7f1d1d';
+            ctx.fillRect(-30, -10, 60, 20);
+            // Top
+            ctx.fillStyle = '#991b1b';
+            ctx.beginPath();
+            ctx.moveTo(-30, -10); ctx.lineTo(-25, -20); ctx.lineTo(35, -20); ctx.lineTo(30, -10);
+            ctx.fill();
+            // Front/Back details
+            ctx.strokeStyle = '#fbbf24'; // Gold trim
+            ctx.lineWidth = 2;
+            ctx.strokeRect(-30, -10, 60, 20);
+
+            // Wheels (Animated)
+            const wheelRot = player.worldX * 0.05;
+            ctx.fillStyle = '#271c19';
+            [-20, 20].forEach(wx => {
+                ctx.save();
+                ctx.translate(wx, 15);
+                ctx.rotate(wheelRot);
+                // Tire
+                ctx.beginPath(); ctx.arc(0, 0, 12, 0, Math.PI*2); ctx.fill();
+                // Rim
+                ctx.strokeStyle = '#57534e';
+                ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.arc(0, 0, 8, 0, Math.PI*2); ctx.stroke();
+                // Spokes
+                ctx.beginPath(); ctx.moveTo(-8, 0); ctx.lineTo(8, 0); ctx.moveTo(0, -8); ctx.lineTo(0, 8); ctx.stroke();
+                ctx.restore();
+            });
+
+            // Official (Wen Guan)
+            // Robe Body
+            ctx.fillStyle = '#1e3a8a'; 
+            ctx.beginPath();
+            ctx.moveTo(-10, -10); ctx.lineTo(10, -10); ctx.lineTo(12, -45); ctx.lineTo(-12, -45);
+            ctx.fill();
+            
+            // Head
+            ctx.fillStyle = '#fca5a5'; // Skin
+            ctx.beginPath(); ctx.arc(0, -50, 9, 0, Math.PI*2); ctx.fill();
+            
+            // Hat (Wushamao) - Black with wings
+            ctx.fillStyle = '#000';
+            // Cap
+            ctx.fillRect(-10, -58, 20, 6);
+            // Wings
+            ctx.beginPath();
+            ctx.moveTo(-10, -55); ctx.lineTo(-25, -52); ctx.lineTo(-25, -58); ctx.lineTo(-10, -58);
+            ctx.moveTo(10, -55); ctx.lineTo(25, -52); ctx.lineTo(25, -58); ctx.lineTo(10, -58);
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        function createParticles(x, y, type) {
+            for(let i=0; i<12; i++) {
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: (Math.random() - 0.5) * 6,
+                    vy: (Math.random() - 1) * 6,
+                    life: 1.0,
+                    type: type,
+                    size: Math.random() * 4 + 2
+                });
+            }
+        }
+
+        function drawParticles() {
+            for(let i=particles.length-1; i>=0; i--) {
+                let p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.2; // Gravity
+                p.life -= 0.02;
+                
+                if(p.life <= 0) {
+                    particles.splice(i, 1);
+                    continue;
+                }
+
+                ctx.globalAlpha = p.life;
+                if(p.type === 'gold') {
+                    ctx.fillStyle = '#fbbf24';
+                    ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); ctx.fill();
+                } else if (p.type === 'dust') {
+                    ctx.fillStyle = '#d6d3d1';
+                    ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); ctx.fill();
+                } else if (p.type === 'spark') {
+                    ctx.fillStyle = '#ef4444';
+                    ctx.fillRect(p.x, p.y, p.size, p.size);
+                }
+                ctx.globalAlpha = 1.0;
+            }
+        }
+
+        function showNotification(text) {
+            const el = document.getElementById('notification');
+            el.innerText = text;
+            el.style.opacity = 1;
+            setTimeout(() => { el.style.opacity = 0; }, 2000);
+        }
+
+        function updateUI() {
+            const speedPercent = Math.min((gameSpeed / MAX_SPEED) * 100, 100);
+            document.getElementById('speedBar').style.width = `${speedPercent}%`;
+            document.getElementById('distanceDisplay').innerText = Math.floor(score);
+            
+            const statusEl = document.getElementById('statusText');
+            if(gameSpeed > CRASH_SPEED_THRESHOLD) {
+                statusEl.innerText = "警告：速度过快！";
+                statusEl.className = "text-xs text-red-600 font-bold h-4 animate-pulse";
+            } else if (gameSpeed < 2 && getTrackInfoAt(player.worldX).slope < -0.1) {
+                 statusEl.innerText = "动力不足，无法上坡！";
+                 statusEl.className = "text-xs text-orange-600 font-bold h-4";
+            } else {
+                statusEl.innerText = "";
+            }
+        }
+
+        function checkCrash() {
+            const angle = player.angle;
+            // Crash if too fast on steep slope or sharp turn (simulated by angle change)
+            if(gameSpeed > CRASH_SPEED_THRESHOLD && Math.abs(angle) > 0.4) {
+                return true;
+            }
+            // Absolute max speed
+            if(gameSpeed > MAX_SPEED + 2) {
+                return true;
+            }
+            return false;
+        }
+
+        function gameOver(reason) {
+            gameState = 'GAMEOVER';
+            document.getElementById('uiLayer').classList.add('hidden');
+            document.getElementById('gameOverScreen').classList.remove('hidden');
+            document.getElementById('finalScore').innerText = Math.floor(score);
+            document.getElementById('deathReason').innerText = reason;
+        }
+
+        function gameLoop() {
+            if(gameState !== 'PLAYING') return;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // --- Physics Update ---
+            
+            // 1. Get current terrain info
+            const trackInfo = getTrackInfoAt(player.worldX);
+            const slope = trackInfo.slope; // Positive = downhill, Negative = uphill
+            
+            // 2. Apply Forces
+            // Gravity: pulls down slope. 
+            // If slope > 0 (downhill), gravity adds speed.
+            // If slope < 0 (uphill), gravity reduces speed.
+            const gravityForce = Math.sin(trackInfo.angle) * GRAVITY * 20; 
+            
+            // Input
+            let engineForce = 0;
+            if(keys.w || keys.ArrowUp) {
+                engineForce = ACCELERATION;
+            } else if (keys.s || keys.ArrowDown) {
+                engineForce = -BRAKE_POWER;
+            } else {
+                // Rolling resistance/friction when no input
+                engineForce = -FRICTION * (gameSpeed > 0 ? 1 : -1);
+                if(Math.abs(gameSpeed) < 0.1) engineForce = 0;
+            }
+
+            // Apply forces to speed
+            gameSpeed += engineForce + gravityForce;
+
+            // Clamp Speed (Negative speed means rolling backwards)
+            // We allow slight backward roll but not huge speeds
+            if(gameSpeed < -5) gameSpeed = -5; 
+            
+            // 3. Check "Stall" condition (User requirement: cannot go up hill if speed insufficient)
+            // If moving uphill (slope < 0) and speed is very low, stop or slide back.
+            if(slope < -0.1 && gameSpeed > 0 && gameSpeed < 1.5) {
+                // Struggling up hill
+                gameSpeed -= 0.1; // Drag
+                if(gameSpeed <= 0) {
+                    gameSpeed = 0;
+                    // Slide back slowly if steep
+                    if(slope < -0.3) gameSpeed = -1; 
+                }
+            }
+
+            // 4. Update Position
+            player.worldX += gameSpeed;
+            score += gameSpeed * 0.1;
+            if(score < 0) score = 0;
+
+            // Update Player Y and Angle based on new X
+            const newInfo = getTrackInfoAt(player.worldX);
+            player.y = newInfo.y - 25; // Offset to sit on track
+            player.angle = newInfo.angle;
+
+            // 5. Day/Night
+            dayCycleTimer++;
+            if(dayCycleTimer > DAY_DURATION) {
+                isNight = !isNight;
+                dayCycleTimer = 0;
+                if(isNight) document.body.classList.add('night-mode');
+                else document.body.classList.remove('night-mode');
+            }
+
+            // 6. Crash Logic
+            if(checkCrash()) {
+                createParticles(player.x, player.y, 'spark');
+                gameOver("车速过快，在弯道处翻车！");
+                return;
+            }
+            
+            // Backwards crash (fell off start)
+            if(player.worldX < -100) {
+                 gameOver("马车溜坡，坠入悬崖！");
+                 return;
+            }
+
+            // 7. Particles (Dust when accelerating or fast)
+            if(Math.abs(gameSpeed) > 5 && Math.random() > 0.7) {
+                createParticles(player.x - 30 * Math.sign(gameSpeed), player.y + 20, 'dust');
+            }
+
+            // --- Rendering ---
+            drawBackground();
+            updateTrack(); // Manage memory and generation
+            drawDecorations();
+            drawTrack();
+            drawPlayer();
+            drawParticles();
+            updateUI();
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        function startGame() {
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('uiLayer').classList.remove('hidden');
+            initTrack();
+            player.worldX = 100;
+            player.y = canvas.height/2;
+            gameSpeed = 0;
+            score = 0;
+            isNight = false;
+            document.body.classList.remove('night-mode');
+            gameState = 'PLAYING';
+            gameLoop();
+        }
+
+        function resetGame() {
+            document.getElementById('gameOverScreen').classList.add('hidden');
+            startGame();
+        }
+
+    </script>
+</body>
+</html>
