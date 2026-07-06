@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大明过山车行 | MingDynasty</title>
+   <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: "SimSun", "STSong", serif;
+            background: #f6efe3 url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 50 Q25 40 50 50 T100 50' stroke='%23d4c8b8' fill='none' opacity='0.3'/%3E%3Cpath d='M50 0 Q40 25 50 50 T50 100' stroke='%23d4c8b8' fill='none' opacity='0.3'/%3E%3C/svg%3E");
+            color: #3a2818;
+            line-height: 1.8;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            border: 4px solid #8c5c2e;
+            background: #fffaf0;
+            box-shadow: 0 0 0 2px #b88650, 0 8px 30px rgba(90, 50, 20, 0.2);
+            border-radius: 6px;
+            padding: 40px;
+            position: relative;
+        }
+        /* 木刻祥云边角装饰 */
+        .container::before, .container::after {
+            content: "☁";
+            position: absolute;
+            font-size: 40px;
+            color: #b88650;
+            opacity: 0.6;
+        }
+        .container::before { top: 10px; left: 10px; }
+        .container::after { top: 10px; right: 10px; }
+        h1 {
+            text-align: center;
+            font-size: 42px;
+            color: #703810;
+            letter-spacing: 8px;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px #d4b896;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 18px;
+            color: #805028;
+            margin-bottom: 40px;
+            border-bottom: 1px solid #d4b896;
+            padding-bottom: 15px;
+        }
+        h2 {
+            font-size: 26px;
+            margin: 35px 0 18px;
+            color: #603010;
+            border-left: 6px solid #a06838;
+            padding-left: 12px;
+        }
+        p {
+            font-size: 17px;
+            margin-bottom: 16px;
+            text-indent: 2em;
+        }
+        .rule-box {
+            background: #fff6e6;
+            border: 1px dashed #b88650;
+            padding: 25px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .rule-box ul {
+            padding-left: 30px;
+        }
+        .rule-box li {
+            margin: 10px 0;
+            font-size: 17px;
+        }
+        /* 游戏入口按钮 */
+        .game-link-wrap {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 40px 0;
+        }
+        .game-btn {
+            display: block;
+            width: 360px;
+            padding: 20px;
+            text-align: center;
+            font-size: 22px;
+            text-decoration: none;
+            border: 3px solid #8c5c2e;
+            background: linear-gradient(#e6c8a0, #d4a870);
+            color: #402210;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            letter-spacing: 2px;
+        }
+        .game-btn:hover {
+            background: linear-gradient(#d4a870, #b88650);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(100, 50, 20, 0.3);
+            transform: translateY(-3px);
+        }
+        .version-desc {
+            font-size: 14px;
+            margin-top: 8px;
+            opacity: 0.8;
+        }
+        .poem {
+            text-align: center;
+            font-size: 20px;
+            margin: 30px 0;
+            color: #704020;
+            font-style: italic;
+            letter-spacing: 2px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid #d4b896;
+            font-size: 15px;
+            color: #886038;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>大明过山车行</h1>
+        <div class="subtitle">官道马车模拟休闲小游戏 · 仿古驾车体验</div>
+
+        <div class="poem">
+            路漫漫其修远兮，吾将上下而求索
+        </div>
+
+        <h2>一、游戏简介</h2>
+        <p>本游戏以明代官道车马出行作为核心题材，复刻古代驿道行车实景，玩家驾驭老式马车穿行山野坡道，亲身感受古时行路之难。山道起伏陡峭，上坡动力不足极易滑车倒退，下坡车速过快则马匹受惊、车马倾覆，需把控车速、谨慎驾驶，平安抵达各处驿站。</p>
+        <p>游戏分为两个独立版本，计量方式、数值设定略有区分，诸位可择其一游玩，体验不同的官道行车趣味。</p>
+
+        <h2>二、游戏入口（双版本）</h2>
+        <div class="game-link-wrap">
+            <a href="https://mgdyqwq.github.io/guoshanche/1.html" target="_blank" class="game-btn">
+                版本一 · 里制计量版
+                <div class="version-desc">单位：里/时，显示实时车速、累计里程</div>
+            </a>
+            <a href="https://mingdynasty1.github.io/guoshanche/1.html" target="_blank" class="game-btn">
+                版本二 · 丈制大明官道版
+                <div class="version-desc">单位：丈/时辰，抵达驿站可增加500丈行程</div>
+            </a>
+        </div>
+
+        <h2>三、官道行车须知</h2>
+        <div class="rule-box">
+            <ul>
+                <li>操控按键：W键向上加速，S键向下减速、刹车控速</li>
+                <li>上坡路况：坡道阻力巨大，速度不足则滑车倒退，务必提前提速攒足动能</li>
+                <li>下坡路况：重力自动加速，不可一味疾驰，超速易惊马、马车倾覆</li>
+                <li>夜间行车：视线昏暗，需放缓车速，谨防山道突发险情</li>
+                <li>行程目标：稳步控速，安全抵达沿途驿站，积累行车里程</li>
+            </ul>
+        </div>
+
+        <h2>四、两版区别说明</h2>
+        <p>版本一采用「里」作为路程单位，直观显示当前行驶时速与总里程，数值简洁易懂，适合新手入门。</p>
+        <p>版本二贴合明代古制，以「丈」为路程、「时辰」为时间单位，古风氛围更浓厚，每成功抵达一处驿站即可额外增加五百丈行程，更具闯关成就感。</p>
+
+        <div class="footer">
+            © 2013-2026 MingDynasty,Inc. 大明过山车行 · 仿古驿道车马模拟器 | 谨守行车古训，慢行方得平安
+        </div>
+    </div>
+</body>
+</html>
