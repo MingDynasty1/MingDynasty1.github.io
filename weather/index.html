@@ -1,10 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>实时天气 · 明风气象完整版 | MingDynasty</title>
-  <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <title>大明天气 | MingDynasty</title>
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
     <style>
         /* 基础样式 */
         * {
@@ -22,6 +23,7 @@
             --border: #d3c4b0;
             --shadow: rgba(120, 90, 60, 0.15);
             --accent: #9a3820;
+            --light-accent: rgba(154, 56, 32, 0.1);
         }
 
         /* 暗黑模式（古风暗色） */
@@ -33,6 +35,7 @@
             --border: #55483b;
             --shadow: rgba(0,0,0,0.4);
             --accent: #c86a40;
+            --light-accent: rgba(200, 106, 64, 0.12);
         }
 
         body {
@@ -40,11 +43,10 @@
             background: var(--bg);
             color: var(--text);
             text-align: center;
-            padding: 40px 20px;
+            padding: 40px 15px;
             transition: all 0.4s ease;
             position: relative;
             min-height: 100vh;
-            /* 全屏古风壁纸质感 */
             background-image: radial-gradient(circle at 50% 50%, rgba(211,196,176,0.2) 0%, transparent 70%);
             background-attachment: fixed;
         }
@@ -89,21 +91,20 @@
             transform: scale(1.08);
         }
 
-        /* 明朝卷轴风格盒子 */
+        /* 主卷轴容器 */
         .weather-box {
             display: inline-block;
             background: var(--card);
-            padding: 50px 60px;
+            padding: 40px 30px;
             border-radius: 12px;
             border: 2px solid var(--border);
             box-shadow: 0 6px 24px var(--shadow);
             position: relative;
-            max-width: 460px;
+            max-width: 700px;
             width: 100%;
             text-align: left;
         }
 
-        /* 顶部标题装饰 */
         .weather-box::before {
             content: "";
             width: 80%;
@@ -124,14 +125,21 @@
             letter-spacing: 2px;
             font-weight: 500;
         }
+        h3 {
+            font-size: 20px;
+            color: var(--accent);
+            margin: 24px 0 12px;
+            padding-bottom: 6px;
+            border-bottom: 1px dashed var(--border);
+        }
 
         .weather-item {
-            font-size: 18px;
+            font-size: 16px;
             color: var(--sub-text);
-            line-height: 2.2;
+            line-height: 2;
             padding-left: 10px;
             border-left: 3px solid var(--border);
-            margin: 10px 0;
+            margin: 8px 0;
             transition: color 0.3s;
         }
         .weather-item:hover {
@@ -149,11 +157,26 @@
             line-height: 1.8;
         }
 
+        /* 日出日落区块 */
+        .sun-box {
+            margin: 16px 0;
+            padding: 12px;
+            background: var(--light-accent);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+        }
+        .sun-item {
+            text-align: center;
+            color: var(--sub-text);
+        }
+
         /* 穿衣建议区块 */
         .suggest-box {
             margin-top: 20px;
             padding: 15px;
-            background: rgba(154, 56, 32, 0.08);
+            background: var(--light-accent);
             border-radius: 8px;
             border: 1px solid var(--border);
         }
@@ -168,10 +191,28 @@
             line-height: 1.7;
         }
 
+        /* 逐时/七日预报网格 */
+        .hour-grid, .day-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px,1fr));
+            gap: 10px;
+            margin: 12px 0;
+        }
+        .hour-card, .day-card {
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 10px 6px;
+            text-align: center;
+            font-size: 14px;
+            color: var(--sub-text);
+        }
+
         /* 加载文字 */
         .loading {
             color: var(--sub-text);
             font-style: italic;
+            text-align: center;
+            padding: 20px 0;
         }
     </style>
 </head>
@@ -181,7 +222,7 @@
     <button class="theme-toggle" id="toggle">🌙</button>
 
     <div class="weather-box">
-        <h2>🌤️ 明风实时气象</h2>
+        <h2>🌤️ 明风完整气象 · Open-Meteo全量数据</h2>
 
         <!-- 时间、农历、节气 -->
         <div class="time-box" id="timeBox">
@@ -189,14 +230,39 @@
         </div>
 
         <p class="weather-item" id="city">正在获取位置…</p>
-        <p class="weather-item" id="wea">天气状况：加载中…</p>
-        <p class="weather-item" id="tem">温度：加载中…</p>
-        <p class="weather-item" id="win">风向风力：加载中…</p>
-        <p class="weather-item" id="hum">湿度：加载中…</p>
 
-        <!-- 穿衣出行建议 -->
+        <h3>📊 实时实况气象</h3>
+        <p class="weather-item" id="wea">天气状况：加载中…</p>
+        <p class="weather-item" id="tem">气温：加载中…</p>
+        <p class="weather-item" id="feeltemp">体感温度：加载中…</p>
+        <p class="weather-item" id="press">气压：加载中…</p>
+        <p class="weather-item" id="hum">相对湿度：加载中…</p>
+        <p class="weather-item" id="dew">露点温度：加载中…</p>
+        <p class="weather-item" id="wind">风向风力：加载中…</p>
+        <p class="weather-item" id="gust">阵风风速：加载中…</p>
+        <p class="weather-item" id="rain">当前降水量：加载中…</p>
+        <p class="weather-item" id="vis">能见度：加载中…</p>
+        <p class="weather-item" id="uv">紫外线指数：加载中…</p>
+
+        <h3>🌅 日出日落</h3>
+        <div class="sun-box" id="sunBox">
+            <div class="sun-item">日出：加载中</div>
+            <div class="sun-item">日落：加载中</div>
+        </div>
+
+        <h3>⏰ 未来12小时预报</h3>
+        <div class="hour-grid" id="hourBox">
+            <div class="loading">逐时预报加载中</div>
+        </div>
+
+        <h3>📅 七日天气预报</h3>
+        <div class="day-grid" id="dayBox">
+            <div class="loading">七日预报加载中</div>
+        </div>
+
+        <!-- 穿衣出行综合建议 -->
         <div class="suggest-box">
-            <div class="suggest-title">📜 出行穿衣建议</div>
+            <div class="suggest-title">📜 出行穿衣综合建议</div>
             <div class="suggest-text" id="suggest">加载中…</div>
         </div>
     </div>
@@ -206,7 +272,6 @@
     const toggle = document.getElementById('toggle');
     const html = document.documentElement;
 
-    // 读取本地存储
     const saved = localStorage.getItem('theme');
     if (saved === 'dark') {
         html.dataset.theme = 'dark';
@@ -226,7 +291,7 @@
         }
     });
 
-    // 1. 实时时间 + 简易农历节气（内置无需接口）
+    // 1. 实时时间 + 节气简易计算
     function updateTimeLunar() {
         const now = new Date();
         const weekArr = ["周日","周一","周二","周三","周四","周五","周六"];
@@ -234,7 +299,6 @@
         const timeStr = now.toLocaleTimeString('zh-CN', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
         const dateStr = `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日 ${week}`;
 
-        // 简易节气匹配（精简常用）
         let solarTerm = "寻常时日";
         const m = now.getMonth()+1;
         const d = now.getDate();
@@ -272,62 +336,172 @@
     setInterval(updateTimeLunar, 1000);
     updateTimeLunar();
 
-    // 2. 获取定位
+    // 2. 全局定位变量
     let nowLat = 0, nowLon = 0;
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(position => {
             nowLat = position.coords.latitude;
             nowLon = position.coords.longitude;
-            getWeather(nowLat, nowLon);
-            // 逆地址获取城市名称
+            getWeatherFull(nowLat, nowLon);
             getCityName(nowLat, nowLon);
         }, err => {
-            document.getElementById("city").innerText = "城市：获取位置失败";
+            document.getElementById("city").innerText = "城池：获取位置失败，请允许定位权限";
         });
+    } else {
+        document.getElementById("city").innerText = "城池：浏览器不支持定位";
     }
 
-    // 3. 逆地理编码获取精准城市名
+    // ========== 修改后的BigDataCloud逆地理编码 ==========
     function getCityName(lat, lon) {
-        fetch(`https://geocode.maps.co/reverse?lat=${lat}&lon=${lon}`)
-        .then(res=>res.json())
-        .then(data=>{
-            let city = data.address.city || data.address.town || data.address.county || "未知城池";
-            document.getElementById("city").innerText = `城池：${city}`;
+        const url = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=zh`;
+        fetch(url)
+        .then(res => {
+            if (!res.ok) throw new Error('接口返回异常');
+            return res.json();
         })
-        .catch(()=>{
-            document.getElementById("city").innerText = "城池：已定位，未知地名";
+        .then(data => {
+            // 拼接省+市/区，古风显示
+            const province = data.principalSubdivision || '';
+            const city = data.city || data.locality || data.suburb || '';
+            let locationText = '';
+            if (province && city) {
+                locationText = `${province} ${city}`;
+            } else if (city) {
+                locationText = city;
+            } else if (province) {
+                locationText = province;
+            } else {
+                locationText = "未知城池";
+            }
+            document.getElementById("city").innerText = `城池：${locationText}`;
+        })
+        .catch(() => {
+            document.getElementById("city").innerText = "城池：已定位，地名解析失败（海外接口访问受限）";
         });
     }
 
-    // 4. 获取天气 + 穿衣建议
-    function getWeather(lat, lon) {
-        const api = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code&timezone=Asia/Shanghai`;
+    // 工具函数1：天气代码转中文描述
+    function getWeatherText(code) {
+        if (code === 0) return "晴空万里";
+        if (code >= 1 && code <= 3) return "多云";
+        if (code >= 45 && code <= 48) return "雾/霾天";
+        if (code >= 51 && code <= 57) return "毛毛小雨";
+        if (code >= 61 && code <= 67) return "中到大雨/冻雨";
+        if (code >= 71 && code <= 77) return "雪/雨夹雪";
+        if (code >= 80 && code <= 82) return "阵雨雷暴";
+        if (code >= 85 && code <= 86) return "阵雪";
+        return "极端恶劣天气";
+    }
 
-        fetch(api)
+    // 工具函数2：风向角度转文字
+    function getWindDir(deg) {
+        const dirs = ["北风","东北风","东风","东南风","南风","西南风","西风","西北风"];
+        const idx = Math.round(deg / 45) % 8;
+        return dirs[idx];
+    }
+
+    // 工具函数3：风速转风力等级（蒲福风力）
+    function windToLevel(speed) {
+        if (speed < 0.3) return "0级 无风";
+        if (speed < 1.6) return "1级 软风";
+        if (speed < 3.4) return "2级 轻风";
+        if (speed < 5.5) return "3级 微风";
+        if (speed < 8.0) return "4级 和风";
+        if (speed < 10.8) return "5级 清风";
+        if (speed < 13.9) return "6级 强风";
+        if (speed < 17.2) return "7级 疾风";
+        if (speed < 20.8) return "8级 大风";
+        if (speed < 24.5) return "9级 烈风";
+        if (speed < 28.5) return "10级 狂风";
+        if (speed < 32.7) return "11级 暴风";
+        return "12级及以上 飓风";
+    }
+
+    // 4. 完整Open-Meteo接口（current+hourly+daily全部参数）
+    function getWeatherFull(lat, lon) {
+        const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}
+&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m,wind_gusts_10m,surface_pressure,dew_point_2m,visibility,uv_index
+&hourly=temperature_2m,precipitation_probability,weather_code,wind_speed_10m
+&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_sum
+&timezone=Asia/Shanghai`.replace(/\n/g,'');
+
+        fetch(apiUrl)
         .then(res => res.json())
         .then(data => {
+            // ========== 实时实况 current ==========
             const cur = data.current;
-            const code = cur.weather_code;
-            const temp = cur.temperature_2m;
+            const curUnit = data.current_units;
+            const weatherTxt = getWeatherText(cur.weather_code);
+            const windDirTxt = getWindDir(cur.wind_direction_10m);
+            const windLevelTxt = windToLevel(cur.wind_speed_10m);
 
-            // 天气代码翻译
-            let wea = "晴天";
-            if (code === 0) wea = "晴天";
-            else if (code <= 3) wea = "多云";
-            else if (code <= 48) wea = "雾/霾";
-            else if (code <= 57) wea = "小雨";
-            else if (code <= 67) wea = "中雨/大雨";
-            else if (code <= 77) wea = "雪/雨夹雪";
-            else if (code <= 82) wea = "雷阵雨";
-            else wea = "恶劣天气";
+            document.getElementById("wea").innerText = `天气状况：${weatherTxt}`;
+            document.getElementById("tem").innerText = `气温：${cur.temperature_2m} ${curUnit.temperature_2m}`;
+            document.getElementById("feeltemp").innerText = `体感温度：${cur.apparent_temperature} ${curUnit.apparent_temperature}`;
+            document.getElementById("press").innerText = `地表气压：${cur.surface_pressure} ${curUnit.surface_pressure}`;
+            document.getElementById("hum").innerText = `相对湿度：${cur.relative_humidity_2m} ${curUnit.relative_humidity_2m}`;
+            document.getElementById("dew").innerText = `露点温度：${cur.dew_point_2m} ${curUnit.dew_point_2m}`;
+            document.getElementById("wind").innerText = `风向风力：${windDirTxt} ${cur.wind_speed_10m}${curUnit.wind_speed_10m} (${windLevelTxt})`;
+            document.getElementById("gust").innerText = `阵风风速：${cur.wind_gusts_10m} ${curUnit.wind_gusts_10m}`;
+            document.getElementById("rain").innerText = `当前降水量：${cur.precipitation} ${curUnit.precipitation}`;
+            document.getElementById("vis").innerText = `能见度：${cur.visibility} ${curUnit.visibility}`;
+            document.getElementById("uv").innerText = `紫外线指数：${cur.uv_index}`;
 
-            // 渲染天气
-            document.getElementById("wea").innerText = "天气状况：" + wea;
-            document.getElementById("tem").innerText = "温度：" + temp + " ℃";
-            document.getElementById("win").innerText = "风速：" + cur.wind_speed_10m + " m/s";
-            document.getElementById("hum").innerText = "湿度：" + cur.relative_humidity_2m + "%";
+            // ========== 日出日落 daily 今日 ==========
+            const daily = data.daily;
+            const sunrise = daily.sunrise[0].split('T')[1];
+            const sunset = daily.sunset[0].split('T')[1];
+            document.getElementById("sunBox").innerHTML = `
+                <div class="sun-item">🌅 日出<br>${sunrise}</div>
+                <div class="sun-item">🌇 日落<br>${sunset}</div>
+            `;
 
-            // 智能穿衣建议
+            // ========== 未来12小时逐时预报 ==========
+            const hourBox = document.getElementById("hourBox");
+            hourBox.innerHTML = "";
+            const hourly = data.hourly;
+            for(let i=0; i<12; i++){
+                const time = hourly.time[i].split('T')[1];
+                const temp = hourly.temperature_2m[i];
+                const rainProb = hourly.precipitation_probability[i];
+                const wCode = hourly.weather_code[i];
+                const hCard = document.createElement('div');
+                hCard.className = "hour-card";
+                hCard.innerHTML = `
+                    <div>${time}</div>
+                    <div>${temp}℃</div>
+                    <div>${getWeatherText(wCode)}</div>
+                    <div>降水${rainProb}%</div>
+                `;
+                hourBox.appendChild(hCard);
+            }
+
+            // ========== 七日全天预报 ==========
+            const dayBox = document.getElementById("dayBox");
+            dayBox.innerHTML = "";
+            for(let i=0; i<7; i++){
+                const fullDate = daily.time[i];
+                const d = fullDate.split('-');
+                const dateTxt = `${d[1]}-${d[2]}`;
+                const tMax = daily.temperature_2m_max[i];
+                const tMin = daily.temperature_2m_min[i];
+                const wCode = daily.weather_code[i];
+                const uvMax = daily.uv_index_max[i];
+                const rainSum = daily.precipitation_sum[i];
+                const dCard = document.createElement('div');
+                dCard.className = "day-card";
+                dCard.innerHTML = `
+                    <div>${dateTxt}</div>
+                    <div>${getWeatherText(wCode)}</div>
+                    <div>最高${tMax}℃ 最低${tMin}℃</div>
+                    <div>UV峰值${uvMax}</div>
+                    <div>总降水${rainSum}mm</div>
+                `;
+                dayBox.appendChild(dCard);
+            }
+
+            // ========== 综合出行穿衣建议 ==========
+            let temp = cur.temperature_2m;
             let suggest = "";
             if(temp <= 5){
                 suggest = "天寒地冻，宜厚袄棉袍、围巾加身，避风寒少外出。";
@@ -340,15 +514,25 @@
             }else{
                 suggest = "酷暑难耐，宜纳凉静居，少行远路，着清凉衣衫。";
             }
-            // 雨天额外提示
-            if(wea.includes("雨") || wea.includes("雪")){
-                suggest += " 雨雪出行，宜携雨具，慢行避滑。";
+            // 雨雪补充
+            if(weatherTxt.includes("雨") || weatherTxt.includes("雪")){
+                suggest += " 雨雪出行，宜携雨具，慢行避滑；能见度偏低，行路谨慎。";
+            }
+            // 紫外线补充
+            if(cur.uv_index >= 6){
+                suggest += " 紫外线较强，外出需戴帷帽、遮阳衫，减少暴晒。";
+            }
+            // 大风补充
+            if(cur.wind_speed_10m > 8){
+                suggest += " 风力偏大，出行注意防风，轻物易吹落。";
             }
             document.getElementById("suggest").innerText = suggest;
         })
         .catch(err => {
-            console.error(err);
-            document.getElementById("suggest").innerText = "天气数据异常，暂无出行建议";
+            console.error("气象接口请求失败：",err);
+            document.getElementById("suggest").innerText = "天气数据获取异常，暂无出行建议，请稍后刷新页面";
+            document.getElementById("hourBox").innerHTML = "<div class='loading'>逐时预报加载失败</div>";
+            document.getElementById("dayBox").innerHTML = "<div class='loading'>七日预报加载失败</div>";
         });
     }
 </script>
