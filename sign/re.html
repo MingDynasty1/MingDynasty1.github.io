@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>找回密码 | MingDynasty</title>
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://mingdynasty1.github.io/supabase-client.js"></script>
+    
+    <style>
+        /* ===== 基础样式 ===== */
+        * {
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
+        }
+
+        :root {
+            --bg-color: #fdf7f0;
+            --text-color: #2C2C2C;
+            --card-bg: #ffffff;
+            --border-color: #D4AF37;
+            --accent-color: #A62424;
+            --gold-color: #D4AF37;
+            --shadow-color: rgba(0, 0, 0, 0.12);
+            --input-bg: #FFFFF0;
+            --placeholder-color: #999;
+            --divider-color: #ddd;
+            --link-hover: #8B0000;
+        }
+
+        .dark-mode {
+            --bg-color: #121212;
+            --text-color: #ffffff;
+            --card-bg: #1e1e1e;
+            --border-color: #D4AF37;
+            --accent-color: #ff4444;
+            --gold-color: #D4AF37;
+            --shadow-color: rgba(0, 0, 0, 0.4);
+            --input-bg: #2a2a2a;
+            --placeholder-color: #888;
+            --divider-color: #444;
+            --link-hover: #ff6666;
+        }
+
+        body {
+            font-family: 'SimSun', '宋体', 'serif';
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container-custom {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* ===== 顶部标题栏 ===== */
+        .header-bar {
+            background: linear-gradient(to right, #A62424, #8B0000);
+            padding: 16px 0;
+            text-align: center;
+            border-bottom: 4px solid var(--gold-color);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+        .dark-mode .header-bar {
+            background: linear-gradient(to right, #6a1a1a, #4a0000);
+        }
+        .header-bar h1 {
+            color: var(--gold-color);
+            font-size: 1.8rem;
+            letter-spacing: 6px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin: 0;
+        }
+
+        /* ===== 卡片 ===== */
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px 28px;
+            box-shadow: 0 8px 30px var(--shadow-color);
+            border: 2px solid var(--border-color);
+            margin-top: 30px;
+        }
+
+        .card-title {
+            color: var(--accent-color);
+            font-size: 1.6rem;
+            text-align: center;
+            margin-bottom: 8px;
+            letter-spacing: 4px;
+            font-family: 'KaiTi', '楷体', serif;
+        }
+
+        .card-subtitle {
+            text-align: center;
+            font-size: 0.95rem;
+            color: var(--text-color);
+            opacity: 0.7;
+            margin-bottom: 24px;
+            line-height: 1.8;
+        }
+
+        /* ===== 表单 ===== */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--text-color);
+            margin-bottom: 5px;
+        }
+
+        .form-group label .required {
+            color: var(--accent-color);
+        }
+
+        .input-paper {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1.5px solid var(--border-color);
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-family: 'SimSun', '宋体', serif;
+            font-size: 1rem;
+            color: var(--text-color);
+            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.06);
+            transition: border-color 0.3s, box-shadow 0.3s;
+            box-sizing: border-box;
+        }
+        .input-paper:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: inset 0 2px 6px rgba(166, 36, 36, 0.15), 0 0 0 3px rgba(166, 36, 36, 0.08);
+        }
+        .input-paper::placeholder {
+            color: var(--placeholder-color);
+        }
+
+        /* ===== 按钮 ===== */
+        .seal-button {
+            width: 100%;
+            background: linear-gradient(to bottom, #A62424, #8B0000);
+            color: #FFFFF0;
+            border: 2px solid var(--gold-color);
+            border-radius: 6px;
+            padding: 12px 20px;
+            font-family: 'KaiTi', '楷体', serif;
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 0 #6a0000;
+            text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+        }
+        .seal-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #6a0000;
+        }
+        .seal-button:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #6a0000;
+        }
+        .seal-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .seal-button-secondary {
+            width: 100%;
+            background: transparent;
+            color: var(--text-color);
+            border: 1.5px solid var(--border-color);
+            border-radius: 6px;
+            padding: 10px 20px;
+            font-family: 'SimSun', '宋体', serif;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .seal-button-secondary:hover {
+            background: var(--border-color);
+            color: #fff;
+        }
+
+        /* ===== 消息提示 ===== */
+        .message {
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+            display: none;
+        }
+        .message.success {
+            display: block;
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .message.error {
+            display: block;
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .message.info {
+            display: block;
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .dark-mode .message.success {
+            background: #1e3a2a;
+            color: #8fdf9f;
+            border-color: #2d6a3f;
+        }
+        .dark-mode .message.error {
+            background: #3a1e1e;
+            color: #ff8a8a;
+            border-color: #6a2d2d;
+        }
+        .dark-mode .message.info {
+            background: #1a2a3a;
+            color: #8ac4ff;
+            border-color: #2a4a6a;
+        }
+
+        /* ===== 加载动画 ===== */
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.8s ease-in-out infinite;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== 明暗切换开关 ===== */
+        .theme-toggle-wrapper {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .theme-toggle-wrapper span {
+            font-size: 0.85rem;
+            color: var(--text-color);
+            opacity: 0.6;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .3s;
+            border-radius: 24px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: var(--gold-color);
+        }
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        /* ===== 底部 ===== */
+        .footer-bar {
+            text-align: center;
+            padding: 16px 0;
+            margin-top: 30px;
+            border-top: 2px solid var(--border-color);
+            font-size: 0.8rem;
+            color: var(--text-color);
+            opacity: 0.5;
+        }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 480px) {
+            .card {
+                padding: 20px 16px;
+            }
+            .header-bar h1 {
+                font-size: 1.3rem;
+                letter-spacing: 3px;
+            }
+            .card-title {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== 顶部标题栏 ===== -->
+    <div class="header-bar">
+        <h1>🏮 大明王朝 · 找回密码</h1>
+    </div>
+
+    <!-- ===== 主内容 ===== -->
+    <div class="container-custom">
+
+        <!-- ===== 明暗切换 ===== -->
+        <div class="theme-toggle-wrapper">
+            <span><i class="fa fa-moon"></i></span>
+            <label class="switch">
+                <input type="checkbox" id="themeToggle">
+                <span class="slider"></span>
+            </label>
+            <span><i class="fa fa-sun"></i></span>
+        </div>
+
+        <!-- ===== 卡片 ===== -->
+        <div class="card">
+
+            <h2 class="card-title">🔑 重置御用密码</h2>
+            <p class="card-subtitle">
+                输入你注册时的电子邮箱，<br>
+                朕将派人将重置链接发送至你的御用邮箱。
+            </p>
+
+            <!-- ===== 消息提示 ===== -->
+            <div id="messageBox" class="message"></div>
+
+            <!-- ===== 表单 ===== -->
+            <form id="resetForm">
+
+                <div class="form-group">
+                    <label for="resetEmail">
+                        📧 电子邮箱 <span class="required">*</span>
+                    </label>
+                    <input type="email" id="resetEmail" class="input-paper" 
+                           placeholder="请输入你的注册邮箱" required>
+                </div>
+
+                <button type="submit" id="resetBtn" class="seal-button">
+                    📜 发送重置诏书
+                </button>
+
+            </form>
+
+            <!-- ===== 返回登录 ===== -->
+            <div style="margin-top: 20px; text-align: center;">
+                <a href="https://mingdynasty1.github.io/sign/in.html" 
+                   style="color: var(--accent-color); text-decoration: none; font-size: 0.95rem;">
+                    <i class="fa fa-arrow-left"></i> 返回登录
+                </a>
+            </div>
+
+        </div>
+
+        <!-- ===== 底部 ===== -->
+        <div class="footer-bar">
+            © 2013-2026 MingDynasty,Inc. · 大明王朝 · 开局一个碗，结局一根绳
+        </div>
+
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- JavaScript -->
+    <!-- ============================================================ -->
+    <script>
+        // ============================================================
+        // 1. 明暗切换
+        // ============================================================
+        const themeToggle = document.getElementById('themeToggle');
+
+        // 恢复上次的主题偏好
+        if (localStorage.getItem('rePageDarkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+            themeToggle.checked = true;
+        }
+
+        themeToggle.addEventListener('change', function() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('rePageDarkMode', this.checked);
+        });
+
+        // ============================================================
+        // 2. 找回密码功能
+        // ============================================================
+        const resetForm = document.getElementById('resetForm');
+        const resetBtn = document.getElementById('resetBtn');
+        const messageBox = document.getElementById('messageBox');
+
+        function showMessage(message, type) {
+            messageBox.textContent = message;
+            messageBox.className = 'message ' + type;
+            // 5秒后自动隐藏
+            clearTimeout(messageBox._timer);
+            messageBox._timer = setTimeout(() => {
+                messageBox.className = 'message';
+            }, 5000);
+        }
+
+        resetForm.addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('resetEmail').value.trim();
+
+            if (!email) {
+                showMessage('请填写你的电子邮箱', 'error');
+                return;
+            }
+
+            // 简单邮箱格式验证
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showMessage('请输入有效的电子邮箱地址', 'error');
+                return;
+            }
+
+            // 按钮加载状态
+            resetBtn.disabled = true;
+            resetBtn.innerHTML = '<span class="spinner"></span> 诏书发送中...';
+
+            try {
+                const { data, error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+                    redirectTo: 'https://mingdynasty1.github.io/sign/reset-password.html'
+                });
+
+                if (error) throw error;
+
+                showMessage('✅ 重置诏书已发出！请检查你的邮箱（包括垃圾箱）', 'success');
+                document.getElementById('resetEmail').value = '';
+
+            } catch (error) {
+                let errorMsg = error.message;
+                // 友好提示
+                if (errorMsg.includes('not found') || errorMsg.includes('invalid')) {
+                    errorMsg = '该邮箱未注册，请检查后重新输入';
+                } else if (errorMsg.includes('rate limit')) {
+                    errorMsg = '发送过于频繁，请稍后再试（每小时限2封）';
+                }
+                showMessage('❌ ' + errorMsg, 'error');
+            }
+
+            // 恢复按钮
+            resetBtn.disabled = false;
+            resetBtn.innerHTML = '📜 发送重置诏书';
+        });
+
+        // ============================================================
+        // 3. 按回车键提交
+        // ============================================================
+        document.getElementById('resetEmail').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                resetForm.dispatchEvent(new Event('submit'));
+            }
+        });
+
+        console.log('🏮 大明王朝 · 找回密码页面加载完成');
+        console.log('📧 使用 Supabase 重置密码功能');
+    </script>
+
+</body>
+</html>
