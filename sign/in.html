@@ -8,7 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://MingDynasty1.github.io/supabase-client.js"></script>
+    <script src="https://mingdynasty1.github.io/supabase-client.js"></script>
+    
     <style>
         .seal-button {
             background-color: #A62424;
@@ -22,9 +23,54 @@
             box-shadow: 0 4px 0 #8B0000;
             text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
             cursor: pointer;
+            width: 100%;
         }
         .seal-button:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #8B0000; }
         .seal-button:active { transform: translateY(2px); box-shadow: 0 2px 0 #8B0000; }
+
+        .github-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #D4AF37;
+            border-radius: 8px;
+            background: #FFFFF0;
+            color: #2C2C2C;
+            font-family: 'serif', 'SimSun', 'FangSong';
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        .github-btn:hover {
+            background: #f0ebe0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+        .github-btn i {
+            font-size: 1.6rem;
+            color: #333;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: #999;
+            font-size: 0.9rem;
+            margin: 18px 0;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #D4AF37;
+        }
+        .divider::before { margin-right: 16px; }
+        .divider::after { margin-left: 16px; }
+
         .input-paper {
             background-color: #FFFFF0;
             border: 1px solid #D4AF37;
@@ -40,6 +86,20 @@
         .paper-texture {
             background-color: #FFFFF0;
             background-image: url('data:image/png;base64,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');
+        }
+
+        /* 加载动画 */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.8s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -69,6 +129,16 @@
             </div>
             
             <div class="p-6 md:p-8 paper-texture">
+                <!-- ===== Continue with GitHub ===== -->
+                <button onclick="socialLogin('github')" id="githubLoginBtn" class="github-btn">
+                    <i class="fa fa-github"></i> 
+                    <span id="githubBtnText">Continue with GitHub</span>
+                    <span id="githubLoading" class="spinner" style="display:none;"></span>
+                </button>
+
+                <div class="divider">或使用邮箱登录</div>
+
+                <!-- ===== 邮箱登录表单 ===== -->
                 <form id="loginForm" class="space-y-6">
                     <div class="space-y-2">
                         <label for="email" class="block text-[#2C2C2C] text-lg">
@@ -104,7 +174,7 @@
                     <div id="loginError" class="hidden text-[#A62424] text-sm text-center"></div>
                     
                     <div class="pt-4">
-                        <button type="submit" class="seal-button w-full py-3 px-6 text-lg font-bold">
+                        <button type="submit" id="emailLoginBtn" class="seal-button w-full py-3 px-6 text-lg font-bold">
                             登 录
                         </button>
                     </div>
@@ -130,6 +200,47 @@
     </footer>
     
     <script>
+        // ============================================================
+        // GitHub 第三方登录
+        // ============================================================
+        async function socialLogin(provider) {
+            const btn = document.getElementById('githubLoginBtn');
+            const btnText = document.getElementById('githubBtnText');
+            const loading = document.getElementById('githubLoading');
+            const errorEl = document.getElementById('loginError');
+            
+            // 显示加载状态
+            btn.style.opacity = '0.7';
+            btnText.textContent = '正在跳转到 GitHub...';
+            loading.style.display = 'inline-block';
+            errorEl.classList.add('hidden');
+            
+            try {
+                const { data, error } = await supabaseClient.auth.signInWithOAuth({
+                    provider: provider,
+                    options: {
+                        redirectTo: 'https://mingdynasty1.github.io/'
+                    }
+                });
+                
+                if (error) throw error;
+                // Supabase 会自动跳转到 GitHub 授权页面
+                // 这里不需要额外操作
+                
+            } catch (error) {
+                // 恢复按钮
+                btn.style.opacity = '1';
+                btnText.textContent = 'Continue with GitHub';
+                loading.style.display = 'none';
+                
+                errorEl.textContent = '登录失败：' + error.message;
+                errorEl.classList.remove('hidden');
+            }
+        }
+
+        // ============================================================
+        // 邮箱密码登录
+        // ============================================================
         document.addEventListener('DOMContentLoaded', function() {
             const togglePassword = document.getElementById('togglePassword');
             const password = document.getElementById('password');
@@ -142,6 +253,7 @@
 
             const form = document.getElementById('loginForm');
             const errorEl = document.getElementById('loginError');
+            const emailLoginBtn = document.getElementById('emailLoginBtn');
 
             form.addEventListener('submit', async function(event) {
                 event.preventDefault();
@@ -156,8 +268,13 @@
                 }
 
                 errorEl.classList.add('hidden');
+                emailLoginBtn.disabled = true;
+                emailLoginBtn.textContent = '登录中...';
 
                 const result = await loginUser(email, password);
+                
+                emailLoginBtn.disabled = false;
+                emailLoginBtn.textContent = '登 录';
                 
                 if (result.success) {
                     window.location.href = 'https://mingdynasty1.github.io/';
