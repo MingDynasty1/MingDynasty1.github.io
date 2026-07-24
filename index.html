@@ -1341,11 +1341,9 @@
                 }
             }
 
-            // 检查 CCKAsk Cookie
             const cckAsk = getCookie('CCKAsk');
 
             if (cckAsk === '1') {
-                // 已同意，直接加载到100%
                 interval = setInterval(() => {
                     progress += Math.random() * 7;
                     if (progress >= 100) {
@@ -1356,7 +1354,6 @@
                     progressText.textContent = Math.round(progress) + '%';
                 }, 150);
             } else {
-                // 未同意，加载到50%时暂停并弹窗
                 interval = setInterval(() => {
                     progress += Math.random() * 7;
                     if (progress >= 50) {
@@ -1365,7 +1362,6 @@
                         progressText.textContent = '50%';
                         clearInterval(interval);
                         interval = null;
-                        // 显示弹窗
                         modal.style.display = 'flex';
                         paused = true;
                         return;
@@ -1375,14 +1371,12 @@
                 }, 150);
             }
 
-            // 接受 Cookie
             window.acceptCookies = function() {
                 setCookie('CCKAsk', '1', 365);
                 modal.style.display = 'none';
                 continueLoading();
             };
 
-            // 拒绝 Cookie
             window.rejectCookies = function() {
                 window.location.href = 'https://mgdyqwq.github.io';
             };
@@ -1478,7 +1472,7 @@
     </header>
 
     <nav>
-        <div class="container">
+        <div class="container" style="display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:5px;">
             <a href="https://mingdynasty1.github.io/OImap.html" data-lang="zh">主页导航</a>
             <a href="https://mingdynasty1.github.io/OImap.html" data-lang="en" style="display: none;">Home Navigation</a>
 
@@ -1501,7 +1495,7 @@
 
             <a href="https://mingdynasty1.github.io/browser/" data-lang="zh">大明浏览器</a>
             <a href="https://mingdynasty1.github.io/browser/" data-lang="en" style="display: none;">Ming Browser</a>
-<a href="https://mgdyqwq.github.io/OI_game/" data-lang="zh">大明 OI 教练模拟器</a>
+            <a href="https://mgdyqwq.github.io/OI_game/" data-lang="zh">大明 OI 教练模拟器</a>
             <a href="https://mgdyqwq.github.io/OI_game/" data-lang="en" style="display: none;">Ming OI trainer VR</a>
 
             <a href="https://mingdynasty1.github.io/flyingbird/" data-lang="zh">飞翔的小鸟</a>
@@ -1982,26 +1976,10 @@
 
                     <li><a href="https://MgDyqwq.github.io/melon/" data-lang="zh">大明吃瓜</a><a href="https://MgDyqwq.github.io/melon/index.html" data-lang="en" style="display: none;">Ming Watermelon</a></li>
 
-
-                    
-                    
-                    
-                    
-                    
-                    
                     <li><a href="https://MgDyqwq.github.io/OI_game/" data-lang="zh">大明 OI 教练模拟器</a><a href="https://MgDyqwq.github.io/OI_game/" data-lang="en" style="display: none;">Ming OI trainer VR</a></li>
 
-                    
-                    
                     <li><a href="https://MgDyqwq.github.io/password/" data-lang="zh">密码强弱判断</a><a href="https://MgDyqwq.github.io/password/" data-lang="en" style="display: none;">Ming Password Judge</a></li>
 
-                    
-                    
-                    
-                    
-                    
-                    
-                    
                     <li><a href="https://MingDynasty1.github.io/weather/" data-lang="zh">大明天气</a><a href="https://MingDynasty1.github.io/weather/index.html" data-lang="en" style="display: none;">Ming Weather</a></li>
 
                     <li><a href="https://MingDynasty1.github.io/OnlineJudge/index.html" data-lang="zh">免费网盘</a><a href="https://MingDynasty1.github.io/OnlineJudge/index.html" data-lang="en" style="display: none;">Free Cloud Storage</a></li>
@@ -2193,7 +2171,6 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
-    <script src="server_mingdynasty1.js"></script>
 
     <script>
         // 图片弹窗
@@ -2326,7 +2303,7 @@
             }
         });
 
-        // 登录状态
+        // 登录状态（旧版 Cookie 检测，保留兼容）
         function getCookie(n) {
             const v = `; ${document.cookie}`;
             const p = v.split(`; ${n}=`);
@@ -2344,6 +2321,559 @@
         }
         document.getElementById('language-toggle').addEventListener('click', () => setTimeout(checkLogin, 100));
         document.addEventListener('DOMContentLoaded', checkLogin);
+
+        // ============================================================
+        // 贪吃蛇游戏
+        // ============================================================
+        const canvas = document.getElementById('snake-game-board');
+        const ctx = canvas.getContext('2d');
+        const scoreEl = document.getElementById('snake-score');
+        const highScoreEl = document.getElementById('snake-high-score');
+
+        const GRID_SIZE = 20;
+        const TILE_COUNT = 20;
+        let snake = [{x: 10, y: 10}];
+        let food = {x: 15, y: 10};
+        let direction = {x: 0, y: 0};
+        let nextDirection = {x: 0, y: 0};
+        let score = 0;
+        let highScore = parseInt(localStorage.getItem('snakeHighScore')) || 0;
+        let gameRunning = false;
+        let gamePaused = false;
+        let gameLoop = null;
+        let gameSpeed = 100;
+
+        highScoreEl.textContent = highScore;
+
+        function draw() {
+            ctx.fillStyle = document.body.classList.contains('dark-mode') ? '#1a1a2e' : '#f8f3e6';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = 0; i < TILE_COUNT; i++) {
+                for (let j = 0; j < TILE_COUNT; j++) {
+                    ctx.strokeStyle = document.body.classList.contains('dark-mode') ? '#2a2a4a' : '#e0d5c0';
+                    ctx.lineWidth = 0.5;
+                    ctx.strokeRect(i * GRID_SIZE, j * GRID_SIZE, GRID_SIZE, GRID_SIZE);
+                }
+            }
+
+            // 画蛇
+            snake.forEach((seg, idx) => {
+                const gradient = ctx.createRadialGradient(
+                    seg.x * GRID_SIZE + GRID_SIZE/2, seg.y * GRID_SIZE + GRID_SIZE/2, 2,
+                    seg.x * GRID_SIZE + GRID_SIZE/2, seg.y * GRID_SIZE + GRID_SIZE/2, GRID_SIZE/2
+                );
+                if (idx === 0) {
+                    gradient.addColorStop(0, '#ffd700');
+                    gradient.addColorStop(1, '#dc143c');
+                } else {
+                    gradient.addColorStop(0, '#dc143c');
+                    gradient.addColorStop(1, '#8b0000');
+                }
+                ctx.fillStyle = gradient;
+                ctx.shadowColor = idx === 0 ? '#ffd700' : 'transparent';
+                ctx.shadowBlur = idx === 0 ? 10 : 0;
+                ctx.fillRect(seg.x * GRID_SIZE + 1, seg.y * GRID_SIZE + 1, GRID_SIZE - 2, GRID_SIZE - 2);
+                ctx.shadowBlur = 0;
+            });
+
+            // 画食物
+            ctx.shadowColor = '#ffd700';
+            ctx.shadowBlur = 15;
+            ctx.fillStyle = '#ff0000';
+            ctx.beginPath();
+            ctx.arc(food.x * GRID_SIZE + GRID_SIZE/2, food.y * GRID_SIZE + GRID_SIZE/2, GRID_SIZE/2 - 2, 0, Math.PI*2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+        }
+
+        function generateFood() {
+            let newFood;
+            let attempts = 0;
+            do {
+                newFood = {
+                    x: Math.floor(Math.random() * TILE_COUNT),
+                    y: Math.floor(Math.random() * TILE_COUNT)
+                };
+                attempts++;
+            } while (snake.some(seg => seg.x === newFood.x && seg.y === newFood.y) && attempts < 100);
+            food = newFood;
+        }
+
+        function update() {
+            if (!gameRunning || gamePaused) return;
+
+            direction = {...nextDirection};
+
+            const head = {x: snake[0].x + direction.x, y: snake[0].y + direction.y};
+
+            if (head.x < 0 || head.x >= TILE_COUNT || head.y < 0 || head.y >= TILE_COUNT) {
+                gameOver();
+                return;
+            }
+
+            if (snake.some(seg => seg.x === head.x && seg.y === head.y)) {
+                gameOver();
+                return;
+            }
+
+            snake.unshift(head);
+
+            if (head.x === food.x && head.y === food.y) {
+                score += 10;
+                scoreEl.textContent = score;
+                generateFood();
+                if (score > highScore) {
+                    highScore = score;
+                    localStorage.setItem('snakeHighScore', highScore);
+                    highScoreEl.textContent = highScore;
+                }
+                // 加速
+                if (gameSpeed > 60) {
+                    gameSpeed -= 1;
+                    resetGameLoop();
+                }
+            } else {
+                snake.pop();
+            }
+
+            draw();
+        }
+
+        function gameOver() {
+            gameRunning = false;
+            if (gameLoop) {
+                clearInterval(gameLoop);
+                gameLoop = null;
+            }
+            draw();
+            // 显示游戏结束
+            ctx.fillStyle = 'rgba(0,0,0,0.6)';
+            ctx.fillRect(0, canvas.height/2 - 40, canvas.width, 80);
+            ctx.fillStyle = '#ffd700';
+            ctx.font = 'bold 32px "KaiTi", serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('游戏结束', canvas.width/2, canvas.height/2);
+            ctx.font = '18px "KaiTi", serif';
+            ctx.fillStyle = '#f8f3e6';
+            ctx.fillText('点击 "开始游戏" 重新开始', canvas.width/2, canvas.height/2 + 40);
+        }
+
+        function resetGameLoop() {
+            if (gameLoop) {
+                clearInterval(gameLoop);
+                gameLoop = null;
+            }
+            if (gameRunning && !gamePaused) {
+                gameLoop = setInterval(update, gameSpeed);
+            }
+        }
+
+        function startGame() {
+            if (gameLoop) {
+                clearInterval(gameLoop);
+                gameLoop = null;
+            }
+            snake = [{x: 10, y: 10}];
+            direction = {x: 0, y: 0};
+            nextDirection = {x: 0, y: 0};
+            score = 0;
+            gameSpeed = 100;
+            scoreEl.textContent = '0';
+            generateFood();
+            gameRunning = true;
+            gamePaused = false;
+            draw();
+            gameLoop = setInterval(update, gameSpeed);
+        }
+
+        function togglePause() {
+            if (!gameRunning) return;
+            gamePaused = !gamePaused;
+            if (gamePaused) {
+                if (gameLoop) {
+                    clearInterval(gameLoop);
+                    gameLoop = null;
+                }
+                ctx.fillStyle = 'rgba(0,0,0,0.5)';
+                ctx.fillRect(0, canvas.height/2 - 30, canvas.width, 60);
+                ctx.fillStyle = '#ffd700';
+                ctx.font = 'bold 36px "KaiTi", serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('⏸ 暂停中', canvas.width/2, canvas.height/2);
+            } else {
+                ctx.fillStyle = document.body.classList.contains('dark-mode') ? '#1a1a2e' : '#f8f3e6';
+                ctx.fillRect(0, canvas.height/2 - 40, canvas.width, 80);
+                gameLoop = setInterval(update, gameSpeed);
+            }
+        }
+
+        function resetGame() {
+            if (gameLoop) {
+                clearInterval(gameLoop);
+                gameLoop = null;
+            }
+            snake = [{x: 10, y: 10}];
+            direction = {x: 0, y: 0};
+            nextDirection = {x: 0, y: 0};
+            score = 0;
+            gameSpeed = 100;
+            scoreEl.textContent = '0';
+            gameRunning = false;
+            gamePaused = false;
+            generateFood();
+            draw();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (!gameRunning || gamePaused) return;
+            const key = e.key;
+            if (key === 'ArrowUp' || key === 'w') {
+                if (direction.y !== 1) nextDirection = {x: 0, y: -1};
+                e.preventDefault();
+            } else if (key === 'ArrowDown' || key === 's') {
+                if (direction.y !== -1) nextDirection = {x: 0, y: 1};
+                e.preventDefault();
+            } else if (key === 'ArrowLeft' || key === 'a') {
+                if (direction.x !== 1) nextDirection = {x: -1, y: 0};
+                e.preventDefault();
+            } else if (key === 'ArrowRight' || key === 'd') {
+                if (direction.x !== -1) nextDirection = {x: 1, y: 0};
+                e.preventDefault();
+            }
+        });
+
+        document.getElementById('snake-start-btn').addEventListener('click', startGame);
+        document.getElementById('snake-start-btn-en').addEventListener('click', startGame);
+        document.getElementById('snake-pause-btn').addEventListener('click', togglePause);
+        document.getElementById('snake-pause-btn-en').addEventListener('click', togglePause);
+        document.getElementById('snake-reset-btn').addEventListener('click', resetGame);
+        document.getElementById('snake-reset-btn-en').addEventListener('click', resetGame);
+
+        // 初始化贪吃蛇
+        generateFood();
+        draw();
+
+        // 主题切换时重绘
+        document.getElementById('theme-toggle').addEventListener('change', () => {
+            draw();
+        });
+
+        // ============================================================
+        // 语言切换
+        // ============================================================
+        let currentLang = 'zh';
+        document.getElementById('language-toggle').addEventListener('click', function() {
+            currentLang = currentLang === 'zh' ? 'en' : 'zh';
+            document.querySelectorAll('[data-lang]').forEach(el => {
+                el.style.display = el.dataset.lang === currentLang ? '' : 'none';
+            });
+            this.querySelector('[data-lang="zh"]').style.display = currentLang === 'zh' ? '' : 'none';
+            this.querySelector('[data-lang="en"]').style.display = currentLang === 'en' ? '' : 'none';
+            // 重新检查登录状态
+            setTimeout(checkLogin, 100);
+        });
     </script>
+
+    <!-- ============================================================ -->
+    <!-- Supabase 用户认证系统 -->
+    <!-- ============================================================ -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://mingdynasty1.github.io/supabase-client.js"></script>
+
+    <script>
+    // ===================== 用户状态管理 =====================
+    let currentUser = null;
+
+    async function updateAuthUI() {
+        const authContainer = document.getElementById('auth-buttons-container');
+        if (!authContainer) return;
+        
+        // 获取当前用户
+        currentUser = await getCurrentUser();
+        
+        // 获取各个按钮元素
+        const loginBtn = document.getElementById('login-btn');
+        const loginBtnEn = document.getElementById('login-btn-en');
+        const registerBtn = document.getElementById('register-btn');
+        const registerBtnEn = document.getElementById('register-btn-en');
+        const loggedInStatus = document.getElementById('logged-in-status');
+        const loggedInStatusEn = document.getElementById('logged-in-status-en');
+        
+        // 移除旧的动态按钮
+        const oldAccountBtn = document.getElementById('account-btn');
+        const oldLogoutBtn = document.getElementById('logout-btn');
+        if (oldAccountBtn) oldAccountBtn.remove();
+        if (oldLogoutBtn) oldLogoutBtn.remove();
+        
+        if (currentUser) {
+            // ===== 已登录 =====
+            if (loginBtn) loginBtn.style.display = 'none';
+            if (loginBtnEn) loginBtnEn.style.display = 'none';
+            if (registerBtn) registerBtn.style.display = 'none';
+            if (registerBtnEn) registerBtnEn.style.display = 'none';
+            if (loggedInStatus) loggedInStatus.style.display = 'none';
+            if (loggedInStatusEn) loggedInStatusEn.style.display = 'none';
+            
+            // 创建"你的账户"按钮
+            const accountBtn = document.createElement('a');
+            accountBtn.href = '#';
+            accountBtn.id = 'account-btn';
+            const username = currentUser.profile?.username || currentUser.user_metadata?.username || '用户';
+            accountBtn.innerHTML = `👑 ${username}`;
+            accountBtn.style.cssText = `
+                background: linear-gradient(135deg, #ffd700, #ffed4e);
+                color: #333;
+                border: 2px solid #ffd700;
+                padding: 6px 18px;
+                border-radius: 6px;
+                font-weight: bold;
+                cursor: pointer;
+                text-decoration: none;
+                font-size: 0.95rem;
+                box-shadow: 0 0 15px rgba(255,215,0,0.3);
+                transition: all 0.3s;
+                display: inline-block;
+            `;
+            accountBtn.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.05)';
+            });
+            accountBtn.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+            });
+            accountBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                toggleUserMenu();
+            });
+            authContainer.appendChild(accountBtn);
+            
+            // 创建"退出"按钮
+            const logoutBtn = document.createElement('a');
+            logoutBtn.href = '#';
+            logoutBtn.id = 'logout-btn';
+            logoutBtn.innerHTML = '🚪 退出';
+            logoutBtn.style.cssText = `
+                background: rgba(255,255,255,0.15);
+                color: #f8f3e6;
+                border: 1px solid rgba(255,255,255,0.3);
+                padding: 6px 14px;
+                border-radius: 6px;
+                font-weight: bold;
+                cursor: pointer;
+                text-decoration: none;
+                font-size: 0.95rem;
+                transition: all 0.3s;
+                display: inline-block;
+            `;
+            logoutBtn.addEventListener('mouseenter', function() {
+                this.style.background = 'rgba(255,0,0,0.4)';
+                this.style.borderColor = '#ff4444';
+            });
+            logoutBtn.addEventListener('mouseleave', function() {
+                this.style.background = 'rgba(255,255,255,0.15)';
+                this.style.borderColor = 'rgba(255,255,255,0.3)';
+            });
+            logoutBtn.addEventListener('click', async function(e) {
+                e.preventDefault();
+                if (confirm('确定要退出登录吗？')) {
+                    await logoutUser();
+                    window.location.reload();
+                }
+            });
+            authContainer.appendChild(logoutBtn);
+            
+        } else {
+            // ===== 未登录 =====
+            if (loginBtn) loginBtn.style.display = 'inline-block';
+            if (loginBtnEn) loginBtnEn.style.display = 'inline-block';
+            if (registerBtn) registerBtn.style.display = 'inline-block';
+            if (registerBtnEn) registerBtnEn.style.display = 'inline-block';
+            if (loggedInStatus) loggedInStatus.style.display = 'none';
+            if (loggedInStatusEn) loggedInStatusEn.style.display = 'none';
+        }
+    }
+
+    // ===================== 用户菜单弹窗 =====================
+    function toggleUserMenu() {
+        const existingMenu = document.getElementById('user-menu-modal');
+        if (existingMenu) {
+            existingMenu.remove();
+            return;
+        }
+        
+        if (!currentUser) return;
+        
+        const menu = document.createElement('div');
+        menu.id = 'user-menu-modal';
+        menu.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 99999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+            animation: fadeIn 0.3s ease;
+        `;
+        
+        const profile = currentUser.profile || {};
+        const createdAt = profile.created_at ? new Date(profile.created_at).toLocaleString('zh-CN') : '未知';
+        const userId = currentUser.id ? currentUser.id.slice(0, 8) : '未知';
+        const username = profile.username || currentUser.user_metadata?.username || '用户';
+        const email = currentUser.email || '未设置邮箱';
+        const bio = profile.bio || '暂无简介';
+        
+        // 获取当前主题
+        const isDark = document.body.classList.contains('dark-mode');
+        const cardBg = isDark ? '#1e1e1e' : '#ffffff';
+        const textColor = isDark ? '#ffffff' : '#333333';
+        const accentColor = isDark ? '#ff3333' : '#dc143c';
+        const goldColor = '#ffd700';
+        
+        menu.innerHTML = `
+            <div style="
+                background: ${cardBg};
+                border-radius: 16px;
+                padding: 35px 40px 30px;
+                max-width: 480px;
+                width: 92%;
+                max-height: 90vh;
+                overflow-y: auto;
+                border: 4px solid ${goldColor};
+                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+                position: relative;
+            ">
+                <button onclick="this.closest('#user-menu-modal').remove()" style="
+                    position: absolute;
+                    top: 12px;
+                    right: 18px;
+                    background: none;
+                    border: none;
+                    font-size: 28px;
+                    cursor: pointer;
+                    color: ${textColor};
+                    transition: transform 0.3s;
+                " onmouseover="this.style.transform='rotate(90deg)'" onmouseout="this.style.transform='none'">✕</button>
+                
+                <h2 style="
+                    color: ${accentColor};
+                    font-size: 1.8rem;
+                    margin-bottom: 20px;
+                    padding-bottom: 12px;
+                    border-bottom: 3px dashed ${goldColor};
+                    text-align: center;
+                    font-family: 'KaiTi', '楷体', serif;
+                ">👑 用户中心</h2>
+                
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div style="
+                        width: 80px;
+                        height: 80px;
+                        border-radius: 50%;
+                        background: linear-gradient(135deg, ${accentColor}, ${goldColor});
+                        margin: 0 auto 10px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 36px;
+                        color: #fff;
+                        font-weight: bold;
+                        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                    ">${username.charAt(0).toUpperCase()}</div>
+                    <div style="font-size: 1.3rem; font-weight: bold; color: ${textColor}; font-family: 'KaiTi', '楷体', serif;">
+                        ${username}
+                    </div>
+                    <div style="font-size: 0.85rem; color: ${isDark ? '#aaa' : '#666'};">${email}</div>
+                </div>
+                
+                <div style="margin: 20px 0; padding: 15px; background: ${isDark ? '#2a2a2a' : '#f5f0e8'}; border-radius: 8px; border-left: 4px solid ${goldColor};">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.95rem; color: ${textColor};">
+                        <div><strong>📝 个人简介</strong></div>
+                        <div>${bio}</div>
+                        <div><strong>📅 注册时间</strong></div>
+                        <div>${createdAt}</div>
+                        <div><strong>🆔 UID</strong></div>
+                        <div style="font-family: monospace;">${userId}</div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                    <button onclick="openSettings()" style="
+                        background: ${accentColor};
+                        color: #fff;
+                        border: none;
+                        padding: 12px;
+                        border-radius: 8px;
+                        font-size: 1rem;
+                        cursor: pointer;
+                        font-family: 'KaiTi', '楷体', serif;
+                        transition: all 0.3s;
+                        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+                    " onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                        ⚙️ 用户设置（修改密码/资料）
+                    </button>
+                    <button onclick="this.closest('#user-menu-modal').remove()" style="
+                        background: transparent;
+                        color: ${textColor};
+                        border: 1px solid ${isDark ? '#444' : '#ddd'};
+                        padding: 10px;
+                        border-radius: 8px;
+                        font-size: 0.95rem;
+                        cursor: pointer;
+                        font-family: 'KaiTi', '楷体', serif;
+                        transition: all 0.3s;
+                    " onmouseover="this.style.background='${isDark ? '#333' : '#f0f0f0'}'" onmouseout="this.style.background='transparent'">
+                        ✨ 关闭
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(menu);
+        
+        menu.addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.remove();
+            }
+        });
+    }
+
+    // ===================== 打开设置页面 =====================
+    function openSettings() {
+        const menu = document.getElementById('user-menu-modal');
+        if (menu) menu.remove();
+        window.location.href = 'https://mingdynasty1.github.io/settings.html';
+    }
+
+    // ===================== 页面加载时检查登录状态 =====================
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(updateAuthUI, 800);
+        
+        if (typeof supabaseClient !== 'undefined') {
+            supabaseClient.auth.onAuthStateChange((event, session) => {
+                if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
+                    updateAuthUI();
+                }
+            });
+        }
+    });
+
+    // 添加淡入动画
+    const styleEl = document.createElement('style');
+    styleEl.textContent = `
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    `;
+    document.head.appendChild(styleEl);
+    </script>
+
 </body>
 </html>
