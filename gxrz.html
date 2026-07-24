@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>更新日志 | 见证与改变 | MingDynasty</title>
-    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png" />
     <style>
         /* 全局样式 */
         * {
@@ -13,7 +13,7 @@
             box-sizing: border-box;
             transition: background-color 0.3s, color 0.3s, border-color 0.3s;
         }
-        
+
         :root {
             /* 亮色主题变量 */
             --bg-color: #f8f3e6;
@@ -29,7 +29,7 @@
             --time-bg: linear-gradient(135deg, #8b0000, #d4af37);
             --pattern-opacity: 0.05;
         }
-        
+
         .dark-mode {
             /* 暗色主题变量 */
             --bg-color: #1a1a1a;
@@ -45,7 +45,7 @@
             --time-bg: linear-gradient(135deg, #600000, #9b7a1f);
             --pattern-opacity: 0.1;
         }
-        
+
         body {
             font-family: 'SimSun', '宋体', serif;
             background-color: var(--bg-color);
@@ -55,13 +55,13 @@
             padding: 0;
             margin: 0;
         }
-        
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
-        
+
         /* 页眉样式 */
         header {
             background: var(--header-bg);
@@ -72,20 +72,20 @@
             text-align: center;
             position: relative;
         }
-        
+
         header h1 {
             font-size: 2.5rem;
             text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
             letter-spacing: 5px;
             margin-bottom: 10px;
         }
-        
+
         header p {
             font-size: 1.2rem;
             max-width: 800px;
             margin: 0 auto;
         }
-        
+
         /* 导航样式 */
         nav {
             background-color: var(--nav-bg);
@@ -98,7 +98,7 @@
             align-items: center;
             flex-wrap: wrap;
         }
-        
+
         nav a {
             color: #f8f3e6;
             text-decoration: none;
@@ -108,18 +108,18 @@
             border-radius: 5px;
             transition: background-color 0.3s;
         }
-        
+
         nav a:hover {
             background-color: rgba(255, 255, 255, 0.1);
         }
-        
+
         /* 主题切换按钮 */
         .theme-switch {
             margin-left: 20px;
             display: flex;
             align-items: center;
         }
-        
+
         .theme-switch-label {
             display: flex;
             align-items: center;
@@ -127,11 +127,11 @@
             color: #f8f3e6;
             font-size: 0.9rem;
         }
-        
+
         .theme-switch-label i {
             margin-right: 5px;
         }
-        
+
         .switch {
             position: relative;
             display: inline-block;
@@ -139,13 +139,13 @@
             height: 24px;
             margin-left: 10px;
         }
-        
+
         .switch input {
             opacity: 0;
             width: 0;
             height: 0;
         }
-        
+
         .slider {
             position: absolute;
             cursor: pointer;
@@ -157,7 +157,7 @@
             transition: .4s;
             border-radius: 24px;
         }
-        
+
         .slider:before {
             position: absolute;
             content: "";
@@ -169,15 +169,15 @@
             transition: .4s;
             border-radius: 50%;
         }
-        
-        input:checked + .slider {
+
+        input:checked+.slider {
             background-color: var(--gold-color);
         }
-        
-        input:checked + .slider:before {
+
+        input:checked+.slider:before {
             transform: translateX(26px);
         }
-        
+
         /* 个人信息卡片样式 */
         .profile-card {
             background: var(--card-bg);
@@ -191,7 +191,7 @@
             align-items: center;
             gap: 20px;
         }
-        
+
         .profile-avatar {
             width: 120px;
             height: 120px;
@@ -200,32 +200,32 @@
             object-fit: cover;
             flex-shrink: 0;
         }
-        
+
         .profile-info {
             flex: 1;
             min-width: 300px;
         }
-        
+
         .profile-name {
             font-size: 1.8rem;
             color: var(--accent-color);
             margin-bottom: 10px;
             font-family: 'KaiTi', '楷体', serif;
         }
-        
+
         .profile-bio {
             font-size: 1.1rem;
             margin-bottom: 15px;
             line-height: 1.5;
         }
-        
+
         .profile-stats {
             display: flex;
             flex-wrap: wrap;
             gap: 15px;
             margin-top: 15px;
         }
-        
+
         .stat-item {
             display: flex;
             align-items: center;
@@ -234,18 +234,19 @@
             border-radius: 20px;
             font-size: 0.9rem;
         }
-        
+
         .stat-item i {
             margin-right: 5px;
             color: var(--accent-color);
         }
-        
+
         .profile-links {
             display: flex;
             gap: 10px;
             margin-top: 15px;
+            flex-wrap: wrap;
         }
-        
+
         .profile-link {
             display: inline-block;
             padding: 8px 15px;
@@ -256,17 +257,17 @@
             font-size: 0.9rem;
             transition: background 0.3s;
         }
-        
+
         .profile-link:hover {
             background: var(--nav-bg);
         }
-        
+
         /* 更新日志特定样式 */
         .changelog-container {
             max-width: 900px;
             margin: 0 auto;
         }
-        
+
         .changelog-year {
             margin: 40px 0 20px;
             padding-bottom: 10px;
@@ -274,7 +275,7 @@
             color: var(--accent-color);
             font-family: 'KaiTi', '楷体', serif;
         }
-        
+
         .changelog-item {
             background: var(--card-bg);
             border-radius: 8px;
@@ -284,40 +285,41 @@
             border-left: 5px solid var(--gold-color);
             position: relative;
         }
-        
+
         .changelog-date {
             font-weight: bold;
             color: var(--accent-color);
             margin-bottom: 5px;
             display: flex;
             align-items: center;
+            flex-wrap: wrap;
         }
-        
+
         .changelog-date::before {
             content: "📅";
             margin-right: 8px;
         }
-        
+
         .changelog-content {
             margin-left: 25px;
         }
-        
+
         .changelog-content h3 {
             color: var(--accent-color);
             margin: 10px 0 5px;
             font-size: 1.2rem;
         }
-        
+
         .changelog-content ul {
             margin: 10px 0;
             padding-left: 20px;
         }
-        
+
         .changelog-content li {
             margin-bottom: 8px;
             position: relative;
         }
-        
+
         .changelog-content li::before {
             content: "•";
             color: var(--gold-color);
@@ -326,7 +328,7 @@
             width: 1em;
             margin-left: -1em;
         }
-        
+
         .update-type {
             display: inline-block;
             padding: 3px 8px;
@@ -336,19 +338,19 @@
             background: var(--gold-color);
             color: #fff;
         }
-        
+
         .type-feature {
             background: #28a745;
         }
-        
+
         .type-fix {
             background: #dc3545;
         }
-        
+
         .type-improvement {
             background: #17a2b8;
         }
-        
+
         /* 时间线样式 */
         .changelog-item::after {
             content: "";
@@ -360,11 +362,11 @@
             background: var(--gold-color);
             z-index: 1;
         }
-        
+
         .changelog-item:last-child::after {
             display: none;
         }
-        
+
         .changelog-item::before {
             content: "";
             position: absolute;
@@ -376,7 +378,7 @@
             background: var(--gold-color);
             z-index: 2;
         }
-        
+
         /* 页脚样式 */
         footer {
             background: var(--header-bg);
@@ -386,43 +388,48 @@
             margin-top: 40px;
             border-top: 5px solid var(--gold-color);
         }
-        
+
+        footer a {
+            color: #f8f3e6;
+            text-decoration: underline;
+        }
+
         /* 响应式设计 */
         @media (max-width: 768px) {
             header h1 {
                 font-size: 2rem;
             }
-            
+
             nav a {
                 display: block;
                 margin: 10px 0;
             }
-            
+
             .theme-switch {
                 margin: 10px 0;
             }
-            
+
             .changelog-content {
                 margin-left: 15px;
             }
-            
+
             .profile-card {
                 flex-direction: column;
                 text-align: center;
             }
-            
+
             .profile-info {
                 min-width: auto;
             }
         }
-        
+
         /* 明朝特色装饰 */
         .ming-decoration {
             font-family: 'KaiTi', '楷体', serif;
             color: var(--accent-color);
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
         }
-        
+
         .back-btn {
             display: inline-block;
             background: var(--accent-color);
@@ -434,19 +441,19 @@
             transition: background 0.3s;
             margin: 20px 0;
         }
-        
+
         .back-btn:hover {
             background: var(--nav-bg);
         }
-        
-        /* 新功能预览样式 */
+
+        /* 功能预览样式 */
         .feature-preview {
             margin-top: 15px;
             border: 1px solid var(--border-color);
             border-radius: 8px;
             overflow: hidden;
         }
-        
+
         .feature-preview-header {
             background: var(--accent-color);
             color: #f8f3e6;
@@ -455,20 +462,20 @@
             display: flex;
             align-items: center;
         }
-        
+
         .feature-preview-header i {
             margin-right: 8px;
         }
-        
+
         .feature-preview-content {
             padding: 15px;
             background: rgba(139, 0, 0, 0.05);
         }
-        
+
         .feature-preview-content p {
             margin-bottom: 10px;
         }
-        
+
         .feature-link {
             display: inline-block;
             background: var(--gold-color);
@@ -480,11 +487,11 @@
             margin-top: 10px;
             transition: background 0.3s;
         }
-        
+
         .feature-link:hover {
             background: #b8941f;
         }
-        
+
         /* 博客预览样式 */
         .blog-preview {
             display: flex;
@@ -492,7 +499,7 @@
             gap: 15px;
             margin-top: 15px;
         }
-        
+
         .blog-item-preview {
             flex: 1;
             min-width: 200px;
@@ -502,24 +509,24 @@
             padding: 15px;
             transition: transform 0.3s, box-shadow 0.3s;
         }
-        
+
         .blog-item-preview:hover {
             transform: translateY(-5px);
             box-shadow: 0 5px 15px var(--shadow-color);
         }
-        
+
         .blog-item-preview h4 {
             color: var(--accent-color);
             margin-bottom: 8px;
             font-size: 1rem;
         }
-        
+
         .blog-item-preview p {
             font-size: 0.9rem;
             color: var(--text-color);
             opacity: 0.8;
         }
-        
+
         .blog-link {
             display: inline-block;
             margin-top: 10px;
@@ -528,11 +535,11 @@
             font-size: 0.9rem;
             font-weight: bold;
         }
-        
+
         .blog-link:hover {
             text-decoration: underline;
         }
-        
+
         /* 联系我们预览样式 */
         .contact-preview {
             margin-top: 15px;
@@ -540,7 +547,7 @@
             border-radius: 8px;
             overflow: hidden;
         }
-        
+
         .contact-preview-header {
             background: var(--accent-color);
             color: #f8f3e6;
@@ -549,20 +556,20 @@
             display: flex;
             align-items: center;
         }
-        
+
         .contact-preview-header i {
             margin-right: 8px;
         }
-        
+
         .contact-preview-content {
             padding: 15px;
             background: rgba(139, 0, 0, 0.05);
         }
-        
+
         .contact-preview-content p {
             margin-bottom: 10px;
         }
-        
+
         .contact-link {
             display: inline-block;
             background: var(--gold-color);
@@ -574,9 +581,127 @@
             margin-top: 10px;
             transition: background 0.3s;
         }
-        
+
         .contact-link:hover {
             background: #b8941f;
+        }
+
+        /* 游戏预览卡片 */
+        .game-preview-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .game-preview-card {
+            flex: 1;
+            min-width: 180px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .game-preview-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px var(--shadow-color);
+        }
+
+        .game-preview-card i {
+            font-size: 2.5rem;
+            color: var(--gold-color);
+            margin-bottom: 10px;
+        }
+
+        .game-preview-card h4 {
+            color: var(--accent-color);
+            margin-bottom: 5px;
+            font-size: 1rem;
+        }
+
+        .game-preview-card p {
+            font-size: 0.85rem;
+            color: var(--text-color);
+            opacity: 0.7;
+        }
+
+        /* 加载特效预览 */
+        .loading-preview {
+            background: #1a1a2e;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: #f8f3e6;
+            font-family: 'Courier New', monospace;
+            margin-top: 10px;
+            border: 1px solid var(--gold-color);
+        }
+
+        .loading-preview .loading-text {
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            animation: blink 1.2s infinite;
+        }
+
+        .loading-preview .loading-bar {
+            width: 100%;
+            height: 6px;
+            background: #333;
+            border-radius: 3px;
+            margin-top: 12px;
+            overflow: hidden;
+        }
+
+        .loading-preview .loading-bar-inner {
+            width: 70%;
+            height: 100%;
+            background: linear-gradient(to right, var(--gold-color), #ff6b35);
+            border-radius: 3px;
+            animation: loading-progress 2s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        @keyframes loading-progress {
+            0% {
+                width: 10%;
+            }
+            50% {
+                width: 80%;
+            }
+            100% {
+                width: 10%;
+            }
+        }
+
+        /* 安全防护预览 */
+        .security-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(40, 167, 69, 0.15);
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid #28a745;
+            color: #28a745;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .security-badge i {
+            color: #28a745;
         }
     </style>
 </head>
@@ -587,14 +712,14 @@
             <p>记录MingDynasty个人主页的演变与改进</p>
         </div>
     </header>
-    
+
     <nav>
         <div class="container">
             <a href="https://mingdynasty1.github.io/">返回主页</a>
             <a href="https://mingdynasty1.github.io/OImap.html">主页导航</a>
             <a href="https://mingdynasty1.github.io/friends/friends.html">友链</a>
             <a href="https://MingDynasty1.github.io/contact-us-MgDy.html">联系我们</a>
-            
+
             <div class="theme-switch">
                 <label class="theme-switch-label">
                     <i class="fas fa-moon"></i>
@@ -607,13 +732,13 @@
             </div>
         </div>
     </nav>
-    
+
     <div class="container">
         <a href="https://mingdynasty1.github.io/" class="back-btn">← 返回主页</a>
-        
+
         <!-- 个人信息卡片 -->
         <div class="profile-card">
-            <img src="https://MingDynasty1.github.io/000000000000000000.png" alt="                  大明皇帝" class="profile-avatar">
+            <img src="https://MingDynasty1.github.io/000000000000000000.png" alt="大明皇帝" class="profile-avatar">
             <div class="profile-info">
                 <h2 class="profile-name">MingDynasty</h2>
                 <p class="profile-bio">算法竞赛爱好者 | 前端开发者 | 明朝文化传承者</p>
@@ -638,11 +763,273 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="changelog-container">
+
+            <!-- ==================== 2026年 ==================== -->
+            <h2 class="changelog-year">2026年</h2>
+
+            <!-- 2026.7.22 OI教练模拟器 -->
+            <div class="changelog-item">
+                <div class="changelog-date">2026年7月22日 <span class="update-type type-feature">新功能</span></div>
+                <div class="changelog-content">
+                    <h3>🧠 增加 OI 教练模拟器</h3>
+                    <ul>
+                        <li>AI驱动的算法训练助手，智能规划学习路径</li>
+                        <li>个性化学习路径推荐，根据用户水平动态调整</li>
+                        <li>题目难度自适应，从入门到省选全覆盖</li>
+                        <li>实时代码分析和反馈，指出优化方向</li>
+                        <li>竞赛模拟功能，还原真实OI赛场环境</li>
+                        <li>学习数据可视化，直观展示进步轨迹</li>
+                        <li>集成主流OJ题库，一键跳转练习</li>
+                    </ul>
+                    <div class="feature-preview">
+                        <div class="feature-preview-header">
+                            <i class="fas fa-robot"></i> OI教练模拟器预览
+                        </div>
+                        <div class="feature-preview-content">
+                            <p>OI教练模拟器是专为算法竞赛学习者打造的智能助手，结合AI技术提供从入门到进阶的全方位训练支持。</p>
+                            <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;">
+                                <span style="background:var(--accent-color);color:#f8f3e6;padding:4px 12px;border-radius:12px;font-size:0.85rem;">🧩 智能推荐</span>
+                                <span style="background:var(--accent-color);color:#f8f3e6;padding:4px 12px;border-radius:12px;font-size:0.85rem;">📊 数据分析</span>
+                                <span style="background:var(--accent-color);color:#f8f3e6;padding:4px 12px;border-radius:12px;font-size:0.85rem;">⚡ 实时反馈</span>
+                                <span style="background:var(--accent-color);color:#f8f3e6;padding:4px 12px;border-radius:12px;font-size:0.85rem;">🏆 竞赛模拟</span>
+                            </div>
+                            <a href="https://mgdyqwq.github.io/OI_game/" class="feature-link" style="margin-top:15px;">前往体验 →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2026.6.18 用户功能 -->
+            <div class="changelog-item">
+                <div class="changelog-date">2026年6月18日 <span class="update-type type-feature">新功能</span></div>
+                <div class="changelog-content">
+                    <h3>👤 上线用户功能</h3>
+                    <ul>
+                        <li>用户注册和登录系统，支持邮箱/手机号验证</li>
+                        <li>个人资料管理，可自定义头像和签名</li>
+                        <li>评论和互动功能，支持点赞、回复、收藏</li>
+                        <li>用户积分和等级体系，激励活跃参与</li>
+                        <li>收藏和订阅功能，不错过任何更新</li>
+                        <li>消息通知中心，实时提醒互动动态</li>
+                        <li>用户隐私设置，自主控制信息可见性</li>
+                    </ul>
+                    <div class="feature-preview">
+                        <div class="feature-preview-header">
+                            <i class="fas fa-user-circle"></i> 用户功能预览
+                        </div>
+                        <div class="feature-preview-content">
+                            <p>全新的用户系统让每位访客都能拥有专属身份，享受评论、收藏、积分等丰富互动体验，构建更活跃的社区生态。</p>
+                            <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;">
+                                <span style="background:var(--accent-color);color:#f8f3e6;padding:4px 12px;border-radius:12px;font-size:0.85rem;">🔐 安全登录</span>
+                                <span style="background:var(--accent-color);color:#f8f3e6;padding:4px 12px;border-radius:12px;font-size:0.85rem;">⭐ 积分等级</span>
+                                <span style="background:var(--accent-color);color:#f8f3e6;padding:4px 12px;border-radius:12px;font-size:0.85rem;">💬 互动评论</span>
+                                <span style="background:var(--accent-color);color:#f8f3e6;padding:4px 12px;border-radius:12px;font-size:0.85rem;">🔔 消息通知</span>
+                            </div>
+                            <a href="https://mingdynasty1.github.io/" class="feature-link" style="margin-top:15px;">前往登录 →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2026.5.17 大明写字板 -->
+            <div class="changelog-item">
+                <div class="changelog-date">2026年5月17日 <span class="update-type type-feature">新功能</span></div>
+                <div class="changelog-content">
+                    <h3>✍️ 增加大明写字板</h3>
+                    <ul>
+                        <li>在线文本编辑器，支持Markdown语法</li>
+                        <li>明朝风格界面设计，典雅大气</li>
+                        <li>自动保存和导出功能，支持多种格式</li>
+                        <li>支持代码高亮，适合技术写作</li>
+                        <li>快捷键支持，提升编辑效率</li>
+                        <li>字数统计和阅读时间预估</li>
+                        <li>云同步功能，多设备无缝衔接</li>
+                    </ul>
+                    <div class="feature-preview">
+                        <div class="feature-preview-header">
+                            <i class="fas fa-pen-fancy"></i> 大明写字板预览
+                        </div>
+                        <div class="feature-preview-content">
+                            <p>大明写字板是一款融合明朝美学与现代编辑功能的在线写作工具，无论是写博客、记笔记还是撰写技术文档，都能获得优雅的书写体验。</p>
+                            <a href="https://mgdyqwq.github.io/note/useful-tips.html" class="feature-link">打开大明写字板 →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2026.4.26 防护机制 -->
+            <div class="changelog-item">
+                <div class="changelog-date">2026年4月26日 <span class="update-type type-feature">新功能</span></div>
+                <div class="changelog-content">
+                    <h3>🛡️ 增加防护机制</h3>
+                    <ul>
+                        <li>添加多层安全防护层，抵御恶意攻击</li>
+                        <li>实现请求频率限制，防止DDoS攻击</li>
+                        <li>添加内容安全策略(CSP)，防范XSS注入</li>
+                        <li>增强数据加密传输，保障用户隐私</li>
+                        <li>定期安全审计和漏洞扫描</li>
+                        <li>异常行为实时监测与自动拦截</li>
+                        <li>安全日志记录，便于追溯分析</li>
+                    </ul>
+                    <div class="feature-preview">
+                        <div class="feature-preview-header">
+                            <i class="fas fa-shield-alt"></i> 安全防护概览
+                        </div>
+                        <div class="feature-preview-content">
+                            <p>为保障用户数据安全和网站稳定运行，我们部署了全方位的安全防护体系，让每一位访客都能安心使用。</p>
+                            <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;">
+                                <span class="security-badge"><i class="fas fa-check-circle"></i> 频率限制</span>
+                                <span class="security-badge"><i class="fas fa-check-circle"></i> CSP防护</span>
+                                <span class="security-badge"><i class="fas fa-check-circle"></i> 加密传输</span>
+                                <span class="security-badge"><i class="fas fa-check-circle"></i> 实时监测</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2026.3.4 loading特效 -->
+            <div class="changelog-item">
+                <div class="changelog-date">2026年3月4日 <span class="update-type type-improvement">改进</span></div>
+                <div class="changelog-content">
+                    <h3>🚀 大改主页增加 Loading 特效</h3>
+                    <ul>
+                        <li>全新加载动画 "Please wait while MingDynasty's Website is loading"</li>
+                        <li>优化首屏加载性能，减少白屏时间</li>
+                        <li>添加进度条显示，让等待更有预期</li>
+                        <li>明朝风格视觉元素融入加载过程</li>
+                        <li>平滑过渡效果，提升用户体验</li>
+                        <li>适配慢速网络环境，显示加载状态</li>
+                        <li>资源预加载策略，加速后续访问</li>
+                    </ul>
+                    <div class="feature-preview">
+                        <div class="feature-preview-header">
+                            <i class="fas fa-spinner"></i> Loading 特效预览
+                        </div>
+                        <div class="feature-preview-content">
+                            <div class="loading-preview">
+                                <div class="loading-text">✦ Please wait while MingDynasty's Website is loading ✦</div>
+                                <div class="loading-bar">
+                                    <div class="loading-bar-inner"></div>
+                                </div>
+                                <div style="margin-top:8px;font-size:0.8rem;opacity:0.6;font-family:inherit;">加载中 · 大明风华</div>
+                            </div>
+                            <p style="margin-top:12px;font-size:0.9rem;">全新的加载动画将明朝美学与现代Web技术结合，让每一次访问都充满仪式感。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2026.2.18 大明坦克 -->
+            <div class="changelog-item">
+                <div class="changelog-date">2026年2月18日 <span class="update-type type-feature">新功能</span></div>
+                <div class="changelog-content">
+                    <h3>🎯 增加"大明坦克"游戏</h3>
+                    <ul>
+                        <li>基于Canvas开发的坦克对战游戏</li>
+                        <li>明朝风格的美术设计，独具特色</li>
+                        <li>多种关卡和敌人类型，挑战性十足</li>
+                        <li>支持键盘和触屏操作，全平台适配</li>
+                        <li>积分排名系统，与好友一较高下</li>
+                        <li>丰富的音效和特效，沉浸式体验</li>
+                        <li>关卡编辑器，玩家可自定义地图</li>
+                    </ul>
+                    <div class="feature-preview">
+                        <div class="feature-preview-header">
+                            <i class="fas fa-tank"></i> 大明坦克预览
+                        </div>
+                        <div class="feature-preview-content">
+                            <p>大明坦克是一款以明朝为背景的坦克对战游戏，玩家操控坦克在战场上驰骋，击败敌人，保卫大明疆土。</p>
+                            <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;">
+                                <span style="background:var(--accent-color);color:#f8f3e6;padding:4px 12px;border-radius:12px;font-size:0.85rem;">🎮 双人对战</span>
+                                <span style="background:var(--accent-color);color:#f8f3e6;padding:4px 12px;border-radius:12px;font-size:0.85rem;">🏯 明朝风格</span>
+                                <span style="background:var(--accent-color);color:#f8f3e6;padding:4px 12px;border-radius:12px;font-size:0.85rem;">📈 积分排名</span>
+                            </div>
+                            <a href="https://mingdynasty1.github.io/tank/" class="feature-link" style="margin-top:15px;">进入大明坦克 →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2026.1.1 关于大明 -->
+            <div class="changelog-item">
+                <div class="changelog-date">2026年1月1日 <span class="update-type type-feature">新功能</span></div>
+                <div class="changelog-content">
+                    <h3>🏛️ 增加"关于大明"页面</h3>
+                    <ul>
+                        <li>详细介绍MingDynasty品牌故事与愿景</li>
+                        <li>展示网站发展历程和重要里程碑</li>
+                        <li>添加团队介绍和联系方式</li>
+                        <li>明朝文化理念深度阐述</li>
+                        <li>未来发展规划与路线图</li>
+                        <li>用户数据统计与网站影响力展示</li>
+                        <li>加入时间线交互，回顾成长足迹</li>
+                    </ul>
+                    <div class="feature-preview">
+                        <div class="feature-preview-header">
+                            <i class="fas fa-landmark"></i> 关于大明预览
+                        </div>
+                        <div class="feature-preview-content">
+                            <p>"关于大明"页面全方位展示了MingDynasty的品牌内涵、文化理念与发展历程，是了解我们的最佳窗口。</p>
+                            <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;">
+                                <span style="background:var(--accent-color);color:#f8f3e6;padding:4px 12px;border-radius:12px;font-size:0.85rem;">📖 品牌故事</span>
+                                <span style="background:var(--accent-color);color:#f8f3e6;padding:4px 12px;border-radius:12px;font-size:0.85rem;">🗺️ 发展历程</span>
+                                <span style="background:var(--accent-color);color:#f8f3e6;padding:4px 12px;border-radius:12px;font-size:0.85rem;">🎯 未来规划</span>
+                            </div>
+                            <a href="https://mgdyqwq.github.io/about" class="feature-link" style="margin-top:15px;">访问关于大明 →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== 2025年 ==================== -->
             <h2 class="changelog-year">2025年</h2>
-            
-            <!-- 2025年10月8日条目（放在最前面） -->
+
+            <!-- 2025.12.22 游戏主页 -->
+            <div class="changelog-item">
+                <div class="changelog-date">2025年12月22日 <span class="update-type type-feature">新功能</span></div>
+                <div class="changelog-content">
+                    <h3>🎮 游戏主页上线</h3>
+                    <ul>
+                        <li>创建游戏中心主页，汇集各类小游戏</li>
+                        <li>包含大明坦克、华容道、2048等经典游戏</li>
+                        <li>优化游戏加载速度和用户体验</li>
+                        <li>添加游戏分类和搜索功能</li>
+                        <li>响应式设计，完美适配移动端</li>
+                        <li>游戏排行榜与成就系统</li>
+                    </ul>
+                    <div class="feature-preview">
+                        <div class="feature-preview-header">
+                            <i class="fas fa-gamepad"></i> 游戏主页预览
+                        </div>
+                        <div class="feature-preview-content">
+                            <p>游戏中心汇集了多款精心制作的HTML5小游戏，涵盖休闲、策略、益智等多种类型，是放松娱乐的好去处。</p>
+                            <div class="game-preview-grid">
+                                <div class="game-preview-card">
+                                    <i class="fas fa-tank"></i>
+                                    <h4>大明坦克</h4>
+                                    <p>经典坦克对战</p>
+                                </div>
+                                <div class="game-preview-card">
+                                    <i class="fas fa-puzzle-piece"></i>
+                                    <h4>华容道</h4>
+                                    <p>明朝主题华容道</p>
+                                </div>
+                                <div class="game-preview-card">
+                                    <i class="fas fa-cubes"></i>
+                                    <h4>2048</h4>
+                                    <p>数字合成挑战</p>
+                                </div>
+                            </div>
+                            <a href="https://mingdynasty1.github.io/games/" class="feature-link">进入游戏主页 →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2025.10.18 论坛与OJ -->
             <div class="changelog-item">
                 <div class="changelog-date">2025年10月18日 <span class="update-type type-feature">新功能</span></div>
                 <div class="changelog-content">
@@ -655,7 +1042,6 @@
                         <li>完成网站备案手续，获得备案编号</li>
                         <li>优化用户认证流程，增强账号安全性</li>
                     </ul>
-                    
                     <div class="feature-preview">
                         <div class="feature-preview-header">
                             <i class="fas fa-comments"></i> 社区论坛预览
@@ -667,8 +1053,8 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- 新增联系我们条目 -->
+
+            <!-- 2025.10.2 联系我们 -->
             <div class="changelog-item">
                 <div class="changelog-date">2025年10月2日 <span class="update-type type-feature">新功能</span></div>
                 <div class="changelog-content">
@@ -681,7 +1067,6 @@
                         <li>优化移动端联系表单体验</li>
                         <li>添加常见问题解答(FAQ)部分</li>
                     </ul>
-                    
                     <div class="contact-preview">
                         <div class="contact-preview-header">
                             <i class="fas fa-envelope"></i> 联系我们预览
@@ -693,8 +1078,8 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- 新增的皇帝的博客条目 -->
+
+            <!-- 2025.9.28 皇帝的博客 -->
             <div class="changelog-item">
                 <div class="changelog-date">2025年9月28日 <span class="update-type type-feature">新功能</span></div>
                 <div class="changelog-content">
@@ -707,14 +1092,12 @@
                         <li>优化博客响应式设计，适配各种设备</li>
                         <li>添加优雅的动画效果和交互体验</li>
                     </ul>
-                    
                     <div class="feature-preview">
                         <div class="feature-preview-header">
                             <i class="fas fa-blog"></i> 博客预览
                         </div>
                         <div class="feature-preview-content">
                             <p>皇帝的博客采用明朝美学设计，包含优雅的排版、传统印章元素和宣纸色调背景，提供优质的阅读体验。</p>
-                            
                             <div class="blog-preview">
                                 <div class="blog-item-preview">
                                     <h4>P10702 题解</h4>
@@ -732,13 +1115,13 @@
                                     <a href="https://MingDynasty1.github.io/blog/MingDynasty/CF366B.html" class="blog-link">阅读全文 →</a>
                                 </div>
                             </div>
-                            
                             <a href="https://MingDynasty1.github.io/blog/" class="feature-link">访问皇帝的博客</a>
                         </div>
                     </div>
                 </div>
             </div>
-            
+
+            <!-- 2025.9.27 大明历史&模拟器 -->
             <div class="changelog-item">
                 <div class="changelog-date">2025年9月27日 <span class="update-type type-feature">新功能</span></div>
                 <div class="changelog-content">
@@ -750,7 +1133,6 @@
                         <li>集成明朝疆域变化地图，展示不同时期的版图变化</li>
                         <li>添加明朝文化成就展示，包括文学、艺术和科技</li>
                     </ul>
-                    
                     <div class="feature-preview">
                         <div class="feature-preview-header">
                             <i class="fas fa-history"></i> 功能预览
@@ -762,7 +1144,8 @@
                     </div>
                 </div>
             </div>
-            
+
+            <!-- 2025.9.24 个人信息页面更新 -->
             <div class="changelog-item">
                 <div class="changelog-date">2025年9月24日 <span class="update-type type-feature">新功能</span></div>
                 <div class="changelog-content">
@@ -774,7 +1157,8 @@
                     </ul>
                 </div>
             </div>
-            
+
+            <!-- 2025.7.18 主题系统大更新 -->
             <div class="changelog-item">
                 <div class="changelog-date">2025年7月18日 <span class="update-type type-feature">新功能</span></div>
                 <div class="changelog-content">
@@ -786,7 +1170,8 @@
                     </ul>
                 </div>
             </div>
-            
+
+            <!-- 2025.7.15 页面功能增强 -->
             <div class="changelog-item">
                 <div class="changelog-date">2025年7月15日 <span class="update-type type-improvement">改进</span></div>
                 <div class="changelog-content">
@@ -798,7 +1183,8 @@
                     </ul>
                 </div>
             </div>
-            
+
+            <!-- 2025.7.10 个人主页上线 -->
             <div class="changelog-item">
                 <div class="changelog-date">2025年7月10日 <span class="update-type type-feature">新功能</span></div>
                 <div class="changelog-content">
@@ -811,9 +1197,10 @@
                     </ul>
                 </div>
             </div>
-            
+
+            <!-- ==================== 2024年 ==================== -->
             <h2 class="changelog-year">2024年</h2>
-            
+
             <div class="changelog-item">
                 <div class="changelog-date">2024年12月5日 <span class="update-type type-improvement">改进</span></div>
                 <div class="changelog-content">
@@ -825,7 +1212,7 @@
                     </ul>
                 </div>
             </div>
-            
+
             <div class="changelog-item">
                 <div class="changelog-date">2024年10月20日 <span class="update-type type-fix">修复</span></div>
                 <div class="changelog-content">
@@ -837,9 +1224,10 @@
                     </ul>
                 </div>
             </div>
-            
+
+            <!-- ==================== 2023年 ==================== -->
             <h2 class="changelog-year">2023年</h2>
-            
+
             <div class="changelog-item">
                 <div class="changelog-date">2023年8月12日 <span class="update-type type-feature">新功能</span></div>
                 <div class="changelog-content">
@@ -851,34 +1239,36 @@
                     </ul>
                 </div>
             </div>
-        </div>
-    </div>
-    
+
+        </div><!-- /changelog-container -->
+    </div><!-- /container -->
+
     <footer>
         <div class="container">
             <p>© 2013-2026 MingDynasty,Inc. MingDynasty 的更新日志 | 灵感源于明朝美学</p>
             <p>开局一个碗，结局一根绳 | 传承与创新</p>
             <p>
-                <a href="https://icp.gov.moe/?keyword=20250643" target="_blank" style="color: #f8f3e6; text-decoration: underline;" data-lang="zh">萌ICP备20250643号</a>
+                <a href="https://icp.gov.moe/?keyword=20250643" target="_blank" style="color: #f8f3e6; text-decoration: underline;">萌ICP备20250643号</a>
             </p>
         </div>
     </footer>
 
     <!-- Font Awesome 图标 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js">
+    </script>
 
     <script>
         // 主题切换功能
         const themeToggle = document.getElementById('theme-toggle');
         const body = document.body;
-        
+
         // 检查本地存储的主题偏好
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'dark') {
             body.classList.add('dark-mode');
             themeToggle.checked = true;
         }
-        
+
         // 切换主题
         themeToggle.addEventListener('change', function() {
             if (this.checked) {
@@ -889,7 +1279,7 @@
                 localStorage.setItem('theme', 'light');
             }
         });
-        
+
         // 根据系统偏好设置初始主题
         if (!savedTheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
             body.classList.add('dark-mode');
