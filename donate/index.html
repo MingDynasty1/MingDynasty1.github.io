@@ -241,9 +241,11 @@
             border-right: 3px solid #8B2500;
         }
 
+        /* ========== 重点修改：适配920*1080竖版图片 ========== */
         .qr-code {
-            width: 220px;
-            height: 220px;
+            max-width: 280px;   /* 限制最大宽度，高度auto自动跟随原图比例，不会拉伸 */
+            width: 100%;
+            height: auto;
             display: block;
         }
 
@@ -358,9 +360,11 @@
                 font-size: 1.6em;
             }
 
+            /* 手机端缩小最大宽度，height依旧auto */
             .qr-code {
-                width: 180px;
-                height: 180px;
+                max-width: 200px;
+                width:100%;
+                height: auto;
             }
 
             .avatar {
