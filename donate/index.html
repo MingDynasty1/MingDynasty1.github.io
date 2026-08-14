@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>打赏明皇 | MingDynasty</title>
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', '宋体', serif;
+            background-color: #FFFEF8;
+            background-image: 
+                radial-gradient(ellipse at 20% 50%, rgba(139, 37, 0, 0.03) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 50%, rgba(212, 175, 55, 0.03) 0%, transparent 50%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* 仿宣纸纹理 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* 顶部云纹装饰 */
+        .cloud-border-top, .cloud-border-bottom {
+            width: 100%;
+            height: 40px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                #8B2500 10%, 
+                #D4AF37 30%, 
+                #8B2500 50%, 
+                #D4AF37 70%, 
+                #8B2500 90%, 
+                transparent 100%);
+            opacity: 0.6;
+            position: fixed;
+            left: 0;
+            z-index: 10;
+        }
+
+        .cloud-border-top {
+            top: 0;
+            clip-path: polygon(0 0, 100% 0, 100% 60%, 95% 100%, 85% 60%, 75% 100%, 65% 60%, 55% 100%, 45% 60%, 35% 100%, 25% 60%, 15% 100%, 5% 60%, 0 100%);
+        }
+
+        .cloud-border-bottom {
+            bottom: 0;
+            clip-path: polygon(0 100%, 100% 100%, 100% 40%, 95% 0, 85% 40%, 75% 0, 65% 40%, 55% 0, 45% 40%, 35% 0, 25% 40%, 15% 0, 5% 40%, 0 0);
+        }
+
+        /* 右上角头像 - 完整显示 */
+        .avatar {
+            position: fixed;
+            top: 50px;
+            right: 30px;
+            width: auto;
+            height: auto;
+            max-width: 120px;
+            max-height: 120px;
+            border-radius: 0;
+            border: 3px solid #D4AF37;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+            z-index: 100;
+            object-fit: contain;
+        }
+
+        /* 主容器 */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            padding: 50px 40px;
+            background: rgba(255, 254, 248, 0.9);
+            border: 2px solid #D4AF37;
+            border-radius: 4px;
+            box-shadow: 
+                0 0 0 1px #8B2500,
+                0 0 0 4px rgba(212, 175, 55, 0.3),
+                0 8px 32px rgba(139, 37, 0, 0.1);
+        }
+
+        /* 四角装饰 */
+        .container::before,
+        .container::after {
+            content: '◆';
+            position: absolute;
+            color: #D4AF37;
+            font-size: 20px;
+        }
+
+        .container::before {
+            top: 10px;
+            left: 15px;
+        }
+
+        .container::after {
+            top: 10px;
+            right: 15px;
+        }
+
+        .corner-bl, .corner-br {
+            position: absolute;
+            color: #D4AF37;
+            font-size: 20px;
+        }
+
+        .corner-bl {
+            bottom: 10px;
+            left: 15px;
+        }
+
+        .corner-br {
+            bottom: 10px;
+            right: 15px;
+        }
+
+        /* 标题 */
+        .title {
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 2.5em;
+            color: #8B2500;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(139, 37, 0, 0.2);
+        }
+
+        .subtitle {
+            font-size: 1em;
+            color: #8B6914;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+        }
+
+        /* 分隔线 */
+        .divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 25px 0;
+            gap: 10px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+        }
+
+        .divider span {
+            color: #D4AF37;
+            font-size: 14px;
+        }
+
+        /* 捐赠让我们活下去 */
+        .survival-text {
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 2em;
+            color: #8B2500;
+            margin: 20px 0;
+            text-shadow: 1px 1px 2px rgba(139, 37, 0, 0.15);
+        }
+
+        /* 收款码区域 */
+        .qr-wrapper {
+            display: inline-block;
+            padding: 15px;
+            border: 2px solid #D4AF37;
+            border-radius: 8px;
+            background: #fff;
+            position: relative;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(139, 37, 0, 0.1);
+        }
+
+        .qr-wrapper::before,
+        .qr-wrapper::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-color: #8B2500;
+        }
+
+        .qr-wrapper::before {
+            top: -2px;
+            left: -2px;
+            border-top: 3px solid #8B2500;
+            border-left: 3px solid #8B2500;
+        }
+
+        .qr-wrapper::after {
+            top: -2px;
+            right: -2px;
+            border-top: 3px solid #8B2500;
+            border-right: 3px solid #8B2500;
+        }
+
+        .qr-bottom-left,
+        .qr-bottom-right {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+        }
+
+        .qr-bottom-left {
+            bottom: -2px;
+            left: -2px;
+            border-bottom: 3px solid #8B2500;
+            border-left: 3px solid #8B2500;
+        }
+
+        .qr-bottom-right {
+            bottom: -2px;
+            right: -2px;
+            border-bottom: 3px solid #8B2500;
+            border-right: 3px solid #8B2500;
+        }
+
+        .qr-code {
+            width: 220px;
+            height: 220px;
+            display: block;
+        }
+
+        .qr-label {
+            margin-top: 15px;
+            font-size: 1.1em;
+            color: #8B2500;
+            font-weight: 700;
+            letter-spacing: 3px;
+        }
+
+        /* 免责声明 */
+        .disclaimer {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(139, 37, 0, 0.04);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            border-radius: 4px;
+            text-align: left;
+        }
+
+        .disclaimer h3 {
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 1.3em;
+            color: #8B2500;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .disclaimer ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .disclaimer li {
+            padding: 6px 0;
+            font-size: 0.9em;
+            color: #5a3a1a;
+            line-height: 1.6;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .disclaimer li::before {
+            content: '※';
+            position: absolute;
+            left: 0;
+            color: #D4AF37;
+        }
+
+        .disclaimer .highlight {
+            color: #8B2500;
+            font-weight: 700;
+        }
+
+        /* 底部 */
+        .footer {
+            margin-top: 35px;
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 1.2em;
+            color: #8B6914;
+            letter-spacing: 3px;
+        }
+
+        /* 浮动云纹动画 */
+        .floating-cloud {
+            position: fixed;
+            opacity: 0.06;
+            z-index: 0;
+            animation: floatCloud 20s ease-in-out infinite;
+        }
+
+        .floating-cloud:nth-child(1) {
+            top: 15%;
+            left: 5%;
+            font-size: 80px;
+            animation-delay: 0s;
+        }
+
+        .floating-cloud:nth-child(2) {
+            top: 60%;
+            right: 8%;
+            font-size: 60px;
+            animation-delay: -7s;
+        }
+
+        .floating-cloud:nth-child(3) {
+            bottom: 20%;
+            left: 15%;
+            font-size: 50px;
+            animation-delay: -14s;
+        }
+
+        @keyframes floatCloud {
+            0%, 100% { transform: translateX(0) translateY(0); }
+            25% { transform: translateX(15px) translateY(-10px); }
+            50% { transform: translateX(0) translateY(-20px); }
+            75% { transform: translateX(-15px) translateY(-10px); }
+        }
+
+        /* 响应式 */
+        @media (max-width: 480px) {
+            .container {
+                padding: 35px 20px;
+            }
+
+            .title {
+                font-size: 2em;
+            }
+
+            .survival-text {
+                font-size: 1.6em;
+            }
+
+            .qr-code {
+                width: 180px;
+                height: 180px;
+            }
+
+            .avatar {
+                max-width: 80px;
+                max-height: 80px;
+                top: 48px;
+                right: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 云纹装饰 -->
+    <div class="cloud-border-top"></div>
+    <div class="cloud-border-bottom"></div>
+
+    <!-- 浮动云纹 -->
+    <div class="floating-cloud">☁</div>
+    <div class="floating-cloud">☁</div>
+    <div class="floating-cloud">☁</div>
+
+    <!-- 右上角头像 -->
+    <img src="https://mgdyqwq.github.io/email.png" alt="头像" class="avatar">
+
+    <!-- 主容器 -->
+    <div class="container">
+        <span class="corner-bl">◆</span>
+        <span class="corner-br">◆</span>
+
+        <h1 class="title">打赏支持</h1>
+        <p class="subtitle">—— 感君一顾，铭感五内 ——</p>
+
+        <div class="divider"><span>❖</span></div>
+
+        <p class="survival-text">捐赠让我们活下去</p>
+
+        <div class="divider"><span>❖</span></div>
+
+        <!-- 收款码 -->
+        <div class="qr-wrapper">
+            <div class="qr-bottom-left"></div>
+            <div class="qr-bottom-right"></div>
+            <img src="https://mgdyqwq.github.io/donate.png" alt="支付宝收款码" class="qr-code">
+        </div>
+        <p class="qr-label">支付宝扫码打赏</p>
+
+        <!-- 免责声明 -->
+        <div class="disclaimer">
+            <h3>⚠ 打赏须知 ⚠</h3>
+            <ul>
+                <li><span class="highlight">理智打赏，量力而行。</span>请勿因一时冲动而超出自身经济能力进行打赏。</li>
+                <li>本站打赏为<span class="highlight">自愿行为</span>，不附带任何强制性义务或服务承诺。</li>
+                <li>打赏金额<span class="highlight">原则上不予退还</span>，请在确认前仔细核对。</li>
+                <li>未成年人请在监护人知情并同意的前提下进行打赏。</li>
+                <li>您的每一份支持，都是我们持续前行的动力，衷心感谢。</li>
+            </ul>
+        </div>
+
+        <!-- 底部 -->
+        <div class="divider"><span>❖</span></div>
+        <p class="footer">以寸心寄华夏，将岁月赠山河</p>
+        </div>
+        <footer>
+          <p>© 2013-2026 MingDynasty,Inc. 给明皇打赏 | 给户部捐赠 | 量力而行
+        </footer>
+</body>
+</html>
