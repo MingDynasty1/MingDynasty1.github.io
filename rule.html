@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+ <html lang="zh-CN"> 
+<head> 
+<meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>大明网站规则 | MingDynasty's Website Rules | MingDynasty</title> 
+
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+<!-- 引入 TailwindCSS --> 
+<script src="https://cdn.tailwindcss.com"></script> 
+<!-- 引入 Font Awesome --> 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> 
+<!-- 引入 Google Fonts: Noto Serif SC (模拟古籍字体) --> 
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+    /* 全局字体设置 */
+    body {
+        font-family: 'Noto Serif SC', serif;
+    }
+
+    /* 自定义滚动条 */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1; 
+    }
+    .dark ::-webkit-scrollbar-track {
+        background: #2c2c2c; 
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #8B0000; 
+        border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #5a0000; 
+    }
+
+    /* 宣纸纹理背景 (亮色模式) */
+    .bg-xuan-paper {
+        background-color: #fdfbf7;
+        background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+    }
+
+    /* 墨色背景 (暗色模式) */
+    .bg-ink-dark {
+        background-color: #1a1a1a;
+        background-image: radial-gradient(circle at 50% 50%, #2a2a2a 0%, #1a1a1a 100%);
+    }
+
+    /* 竖排文字类 */
+    .vertical-text {
+        writing-mode: vertical-rl;
+        text-orientation: upright;
+    }
+
+    /* 印章效果 */
+    .seal {
+        border: 3px solid #b91c1c;
+        color: #b91c1c;
+        border-radius: 4px;
+        padding: 4px 8px;
+        font-weight: 900;
+        display: inline-block;
+        transform: rotate(-5deg);
+        box-shadow: inset 0 0 0 2px #fff, 0 0 0 2px #b91c1c;
+    }
+    .dark .seal {
+        border-color: #ef4444;
+        color: #ef4444;
+        box-shadow: inset 0 0 0 2px #1a1a1a, 0 0 0 2px #ef4444;
+    }
+
+    /* 云纹装饰 */
+    .cloud-pattern {
+        background-image: url("data:image/svg+xml,%3Csvg width='40' height='20' viewBox='0 0 40 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20c0-11.046 8.954-20 20-20v20H20z' fill='%23d4af37' fill-opacity='0.1'/%3E%3C/svg%3E");
+    }
+
+    /* 过渡动画 */
+    .theme-transition {
+        transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
+    }
+</style>
+
+<script>
+    // 初始化主题，防止闪烁
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+    } else {
+        document.documentElement.classList.remove('dark');
+    }
+</script>
+</head> <body class="bg-xuan-paper dark:bg-ink-dark text-stone-800 dark:text-stone-200 theme-transition min-h-screen flex flex-col">
+<!-- 顶部导航栏 -->
+<header class="sticky top-0 z-50 bg-[#fdfbf7]/90 dark:bg-[#1a1a1a]/90 backdrop-blur-md border-b-2 border-[#8B0000] shadow-lg theme-transition">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+        <!-- Logo / 标题 -->
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 bg-[#8B0000] rounded-full flex items-center justify-center text-[#d4af37] font-bold text-xl border-2 border-[#d4af37]">
+                明
+            </div>
+            <h1 class="text-2xl font-black tracking-widest text-[#8B0000] dark:text-[#d4af37]">大明律例</h1>
+        </div>
+
+        <!-- 导航菜单 (桌面端) -->
+        <nav class="hidden md:flex space-x-8 text-lg font-bold">
+            <a href="#" class="hover:text-[#8B0000] dark:hover:text-[#d4af37] transition-colors">首页</a>
+            <a href="#rules" class="hover:text-[#8B0000] dark:hover:text-[#d4af37] transition-colors">站规</a>
+            <a href="#penalties" class="hover:text-[#8B0000] dark:hover:text-[#d4af37] transition-colors">刑罚</a>
+            <a href="#appeal" class="hover:text-[#8B0000] dark:hover:text-[#d4af37] transition-colors">申诉</a>
+        </nav>
+
+        <!-- 右侧操作区 -->
+        <div class="flex items-center space-x-4">
+            <!-- 主题切换按钮 -->
+            <button id="theme-toggle" class="p-2 rounded-full hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors focus:outline-none" aria-label="切换主题">
+                <i class="fas fa-moon text-xl text-stone-600 dark:hidden"></i>
+                <i class="fas fa-sun text-xl text-[#d4af37] hidden dark:inline"></i>
+            </button>
+            
+            <!-- 移动端菜单按钮 -->
+            <button class="md:hidden p-2 text-[#8B0000] dark:text-[#d4af37]">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- 主要内容区域 -->
+<main class="flex-grow container mx-auto px-4 py-8 relative">
+    
+    <!-- 背景装饰：云纹 -->
+    <div class="absolute inset-0 cloud-pattern opacity-30 pointer-events-none z-0"></div>
+
+    <!-- 英雄区域 / 引言 -->
+    <section class="relative z-10 text-center mb-16 mt-8">
+        <div class="inline-block border-4 border-double border-[#8B0000] dark:border-[#d4af37] p-8 bg-white/50 dark:bg-black/30 backdrop-blur-sm rounded-lg shadow-xl max-w-3xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-black mb-4 text-[#8B0000] dark:text-[#d4af37] tracking-widest">奉天承运</h2>
+            <p class="text-xl md:text-2xl font-serif italic text-stone-700 dark:text-stone-300 mb-6">
+                "国有国法，家有家规。网络并非法外之地，望诸君恪守本分，共筑清朗空间。"
+            </p>
+            <div class="seal text-lg">钦此</div>
+        </div>
+    </section>
+
+    <!-- 规则列表区域 -->
+    <section id="rules" class="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+        
+        <!-- 规则卡片 1 -->
+        <article class="bg-white dark:bg-[#252525] border-l-8 border-[#8B0000] dark:border-[#d4af37] p-6 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 group">
+            <div class="flex justify-between items-start mb-4">
+                <h3 class="text-2xl font-bold text-stone-800 dark:text-stone-100 group-hover:text-[#8B0000] dark:group-hover:text-[#d4af37] transition-colors">
+                    <i class="fas fa-scroll mr-2"></i>第一条：言论规范
+                </h3>
+                <span class="text-xs font-bold bg-stone-200 dark:bg-stone-700 px-2 py-1 rounded">甲字卷</span>
+            </div>
+            <p class="text-stone-600 dark:text-stone-400 leading-relaxed mb-4">
+                凡在本站发言者，须遵礼守法。不得散布谣言、诽谤他人、宣扬暴力或发布违背公序良俗之内容。违者视情节轻重，予以禁言或封号处理。
+            </p>
+            <div class="border-t border-stone-200 dark:border-stone-700 pt-4 flex justify-end">
+                <button class="text-[#8B0000] dark:text-[#d4af37] font-bold hover:underline">查看详情 &rarr;</button>
+            </div>
+        </article>
+
+        <!-- 规则卡片 2 -->
+        <article class="bg-white dark:bg-[#252525] border-l-8 border-[#8B0000] dark:border-[#d4af37] p-6 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 group">
+            <div class="flex justify-between items-start mb-4">
+                <h3 class="text-2xl font-bold text-stone-800 dark:text-stone-100 group-hover:text-[#8B0000] dark:group-hover:text-[#d4af37] transition-colors">
+                    <i class="fas fa-user-shield mr-2"></i>第二条：隐私保护
+                </h3>
+                <span class="text-xs font-bold bg-stone-200 dark:bg-stone-700 px-2 py-1 rounded">乙字卷</span>
+            </div>
+            <p class="text-stone-600 dark:text-stone-400 leading-relaxed mb-4">
+                严禁人肉搜索、泄露他人隐私信息（包括但不限于姓名、住址、联系方式）。尊重每一位网民的合法权益，维护网络安宁。
+            </p>
+            <div class="border-t border-stone-200 dark:border-stone-700 pt-4 flex justify-end">
+                <button class="text-[#8B0000] dark:text-[#d4af37] font-bold hover:underline">查看详情 &rarr;</button>
+            </div>
+        </article>
+
+        <!-- 规则卡片 3 -->
+        <article class="bg-white dark:bg-[#252525] border-l-8 border-[#8B0000] dark:border-[#d4af37] p-6 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 group">
+            <div class="flex justify-between items-start mb-4">
+                <h3 class="text-2xl font-bold text-stone-800 dark:text-stone-100 group-hover:text-[#8B0000] dark:group-hover:text-[#d4af37] transition-colors">
+                    <i class="fas fa-gavel mr-2"></i>第三条：版权尊重
+                </h3>
+                <span class="text-xs font-bold bg-stone-200 dark:bg-stone-700 px-2 py-1 rounded">丙字卷</span>
+            </div>
+            <p class="text-stone-600 dark:text-stone-400 leading-relaxed mb-4">
+                转载文章、图片、视频等作品时，务必注明出处及作者。严禁剽窃、盗版他人智力成果。原创不易，望诸君珍惜。
+            </p>
+            <div class="border-t border-stone-200 dark:border-stone-700 pt-4 flex justify-end">
+                <button class="text-[#8B0000] dark:text-[#d4af37] font-bold hover:underline">查看详情 &rarr;</button>
+            </div>
+        </article>
+
+        <!-- 规则卡片 4 -->
+        <article class="bg-white dark:bg-[#252525] border-l-8 border-[#8B0000] dark:border-[#d4af37] p-6 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 group">
+            <div class="flex justify-between items-start mb-4">
+                <h3 class="text-2xl font-bold text-stone-800 dark:text-stone-100 group-hover:text-[#8B0000] dark:group-hover:text-[#d4af37] transition-colors">
+                    <i class="fas fa-ban mr-2"></i>第四条：广告禁令
+                </h3>
+                <span class="text-xs font-bold bg-stone-200 dark:bg-stone-700 px-2 py-1 rounded">丁字卷</span>
+            </div>
+            <p class="text-stone-600 dark:text-stone-400 leading-relaxed mb-4">
+                未经许可，不得在评论区、帖子中发布商业广告、引流链接或诈骗信息。违者永久封禁。
+            </p>
+            <div class="border-t border-stone-200 dark:border-stone-700 pt-4 flex justify-end">
+                <button class="text-[#8B0000] dark:text-[#d4af37] font-bold hover:underline">查看详情 &rarr;</button>
+            </div>
+        </article>
+    </section>
+
+    <!-- 刑罚展示区 (表格形式) -->
+    <section id="penalties" class="relative z-10 mb-16">
+        <div class="flex items-center mb-6">
+            <div class="h-1 w-10 bg-[#8B0000] dark:bg-[#d4af37] mr-4"></div>
+            <h2 class="text-3xl font-bold text-stone-800 dark:text-stone-100">刑罚律令</h2>
+        </div>
+        
+        <div class="overflow-x-auto bg-white dark:bg-[#252525] shadow-xl rounded-lg border border-stone-200 dark:border-stone-700">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-[#8B0000] dark:bg-[#3a1c1c] text-[#fdfbf7] dark:text-[#d4af37]">
+                        <th class="p-4 font-bold border-b border-[#d4af37]/30">违律行为</th>
+                        <th class="p-4 font-bold border-b border-[#d4af37]/30">初犯</th>
+                        <th class="p-4 font-bold border-b border-[#d4af37]/30">再犯</th>
+                        <th class="p-4 font-bold border-b border-[#d4af37]/30">累犯</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-stone-200 dark:divide-stone-700">
+                    <tr class="hover:bg-stone-50 dark:hover:bg-stone-800 transition-colors">
+                        <td class="p-4 font-medium">刷屏</td>
+                        <td class="p-4 text-stone-600 dark:text-stone-400">邮件警告</td>
+                        <td class="p-4 text-stone-600 dark:text-stone-400">禁言 1 日</td>
+                        <td class="p-4 text-red-600 dark:text-red-400 font-bold">禁言 7 日</td>
+                    </tr>
+                    <tr class="hover:bg-stone-50 dark:hover:bg-stone-800 transition-colors">
+                        <td class="p-4 font-medium">人身攻击/辱骂</td>
+                        <td class="p-4 text-stone-600 dark:text-stone-400">禁言 3 日</td>
+                        <td class="p-4 text-stone-600 dark:text-stone-400">禁言 30 日</td>
+                        <td class="p-4 text-red-600 dark:text-red-400 font-bold">永久封禁</td>
+                    </tr>
+                    <tr class="hover:bg-stone-50 dark:hover:bg-stone-800 transition-colors">
+                        <td class="p-4 font-medium">发布违法信息</td>
+                        <td class="p-4 text-red-600 dark:text-red-400 font-bold">永久封禁</td>
+                        <td class="p-4 text-stone-600 dark:text-stone-400">-</td>
+                        <td class="p-4 text-stone-600 dark:text-stone-400">移交司法机关</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- 申诉与联系 -->
+    <section id="appeal" class="relative z-10 bg-[#8B0000] dark:bg-[#2a1a1a] text-[#fdfbf7] rounded-lg p-8 shadow-2xl text-center">
+        <h2 class="text-3xl font-bold mb-4">冤屈申诉</h2>
+        <p class="mb-8 max-w-2xl mx-auto opacity-90">
+            若阁下认为处罚有误，或有重要线索举报，可通过下方渠道联系我们。我们将秉公处理，绝不偏私。
+        </p>
+        <div class="flex flex-col md:flex-row justify-center gap-4">
+            <a href="https://mingdynasty1.github.io/contact-us-MgDy.html" class="px-8 py-3 bg-[#d4af37] text-[#3a1c1c] font-bold rounded hover:bg-[#e5c158] transition-colors shadow-lg inline-block">
+                <i class="fas fa-envelope mr-2"></i> 联系我们
+            </a>
+        </div>
+    </section>
+
+</main>
+
+<!-- 页脚 -->
+<footer class="bg-stone-900 text-stone-400 py-8 border-t-4 border-[#8B0000] dark:border-[#d4af37]">
+    <div class="container mx-auto px-4 text-center">
+        <p class="text-sm opacity-70">
+            &copy; 2013-2026 MingDynasty,Inc. 大明规则 | 奉天启运 <br>
+            <a href="https://icp.gov.moe/?keyword=20250643" target="_blank" style="color: #f8f3e6; text-decoration: underline;" data-lang="zh">萌ICP备20250643号</a>    
+        </p>
+    </div>
+</footer>
+
+<!-- JavaScript 逻辑 -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        
+        // 检查本地存储或系统偏好
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme === 'dark') {
+            htmlElement.classList.add('dark');
+        } else {
+            htmlElement.classList.remove('dark');
+        }
+
+        // 切换主题函数
+        function toggleTheme() {
+            if (htmlElement.classList.contains('dark')) {
+                htmlElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                htmlElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // 绑定点击事件
+        themeToggleBtn.addEventListener('click', toggleTheme);
+
+        // 简单的平滑滚动效果优化
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    });
+</script>
+</body> 
+</html>
