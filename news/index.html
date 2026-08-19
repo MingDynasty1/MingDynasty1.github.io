@@ -1,565 +1,283 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>明闻阁 - 明朝风格新闻 | MingDynasty</title>
-    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
-    <style>
-        /* 基础样式 */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: "SimSun", "宋体", serif;
-            background-color: #f8f3e6;
-            color: #333;
-            line-height: 1.6;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        /* 暗色模式样式 */
-        body.dark-mode {
-            background-color: #2c2c2c;
-            color: #f0e6d2;
-        }
-        
-        /* 公告栏样式 */
-        .announcement {
-            background: linear-gradient(to right, #7a0000, #9a0000);
-            color: #f8f3e6;
-            padding: 10px 0;
-            text-align: center;
-            border-bottom: 2px solid #d4af37;
-            position: relative;
-        }
-        
-        .announcement-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .announcement a {
-            color: #d4af37;
-            text-decoration: none;
-            font-weight: bold;
-            margin-left: 10px;
-            padding: 3px 8px;
-            border: 1px solid #d4af37;
-            border-radius: 3px;
-            transition: all 0.3s;
-        }
-        
-        .announcement a:hover {
-            background-color: #d4af37;
-            color: #7a0000;
-        }
-
-        /* 模式切换按钮 */
-        .mode-toggle {
-            background-color: #d4af37;
-            color: #7a0000;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 3px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-
-        .mode-toggle:hover {
-            background-color: #f8f3e6;
-        }
-        
-        /* 头部样式 */
-        header {
-            background: linear-gradient(to bottom, #9a0000, #7a0000);
-            color: #f8f3e6;
-            padding: 20px 0;
-            border-bottom: 5px solid #d4af37;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-            transition: background 0.3s;
-        }
-
-        body.dark-mode header {
-            background: linear-gradient(to bottom, #5a0000, #4a0000);
-        }
-        
-        .header-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-        }
-        
-        .logo h1 {
-            font-size: 2.5rem;
-            font-weight: bold;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            letter-spacing: 5px;
-            margin-left: 15px;
-        }
-        
-        .logo-icon {
-            width: 60px;
-            height: 60px;
-            background-color: #d4af37;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.8rem;
-            color: #7a0000;
-            border: 2px solid #f8f3e6;
-        }
-        
-        nav ul {
-            display: flex;
-            list-style: none;
-        }
-        
-        nav li {
-            margin-left: 25px;
-        }
-        
-        nav a {
-            color: #f8f3e6;
-            text-decoration: none;
-            font-size: 1.2rem;
-            padding: 5px 10px;
-            border-bottom: 2px solid transparent;
-            transition: all 0.3s;
-        }
-        
-        nav a:hover {
-            border-bottom: 2px solid #d4af37;
-        }
-        
-        /* 主要内容区 */
-        .container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 30px;
-        }
-        
-        /* 新闻卡片样式 */
-        .news-card {
-            background-color: #fff;
-            border: 1px solid #d4af37;
-            border-radius: 5px;
-            margin-bottom: 25px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            transition: background-color 0.3s;
-        }
-
-        body.dark-mode .news-card {
-            background-color: #3c3c3c;
-            border-color: #b89020;
-        }
-        
-        .news-card-header {
-            background-color: #7a0000;
-            color: #f8f3e6;
-            padding: 15px 20px;
-            position: relative;
-            transition: background-color 0.3s;
-        }
-
-        body.dark-mode .news-card-header {
-            background-color: #5a0000;
-        }
-        
-        .news-card-header h2 {
-            font-size: 1.5rem;
-            margin-bottom: 5px;
-        }
-        
-        .news-card-date {
-            font-size: 0.9rem;
-            color: #d4af37;
-        }
-        
-        .news-card-content {
-            padding: 20px;
-        }
-        
-        .news-card-content img {
-            width: 100%;
-            height: auto;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-        }
-
-        body.dark-mode .news-card-content img {
-            border-color: #555;
-        }
-        
-        .news-card-content p {
-            margin-bottom: 15px;
-            text-indent: 2em;
-        }
-        
-        .read-more {
-            display: inline-block;
-            background-color: #7a0000;
-            color: #f8f3e6;
-            padding: 8px 15px;
-            text-decoration: none;
-            border-radius: 3px;
-            transition: background-color 0.3s;
-        }
-
-        body.dark-mode .read-more {
-            background-color: #5a0000;
-        }
-        
-        .read-more:hover {
-            background-color: #9a0000;
-        }
-
-        body.dark-mode .read-more:hover {
-            background-color: #6a0000;
-        }
-        
-        /* 侧边栏样式 */
-        .sidebar {
-            background-color: #fff;
-            border: 1px solid #d4af37;
-            border-radius: 5px;
-            padding: 20px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-            transition: background-color 0.3s, border-color 0.3s;
-        }
-
-        body.dark-mode .sidebar {
-            background-color: #3c3c3c;
-            border-color: #b89020;
-        }
-        
-        .sidebar h3 {
-            color: #7a0000;
-            border-bottom: 2px solid #d4af37;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-            font-size: 1.3rem;
-            transition: color 0.3s, border-color 0.3s;
-        }
-
-        body.dark-mode .sidebar h3 {
-            color: #e0c060;
-            border-bottom-color: #b89020;
-        }
-        
-        .sidebar-news {
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px dashed #ddd;
-            transition: border-color 0.3s;
-        }
-
-        body.dark-mode .sidebar-news {
-            border-bottom-color: #555;
-        }
-        
-        .sidebar-news:last-child {
-            border-bottom: none;
-        }
-        
-        .sidebar-news h4 {
-            color: #333;
-            margin-bottom: 8px;
-            font-size: 1.1rem;
-            transition: color 0.3s;
-        }
-
-        body.dark-mode .sidebar-news h4 {
-            color: #e0d6c0;
-        }
-        
-        .sidebar-news p {
-            font-size: 0.9rem;
-            color: #666;
-            transition: color 0.3s;
-        }
-
-        body.dark-mode .sidebar-news p {
-            color: #b0a690;
-        }
-        
-        /* 页脚样式 */
-        footer {
-            background-color: #333;
-            color: #f8f3e6;
-            padding: 30px 0;
-            margin-top: 40px;
-            transition: background-color 0.3s;
-        }
-
-        body.dark-mode footer {
-            background-color: #1c1c1c;
-        }
-        
-        .footer-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-            padding: 0 20px;
-        }
-        
-        .footer-section h3 {
-            color: #d4af37;
-            margin-bottom: 15px;
-            font-size: 1.2rem;
-            transition: color 0.3s;
-        }
-
-        body.dark-mode .footer-section h3 {
-            color: #e0c060;
-        }
-        
-        .footer-section p, .footer-section a {
-            color: #ccc;
-            font-size: 0.9rem;
-            line-height: 1.8;
-            transition: color 0.3s;
-        }
-
-        body.dark-mode .footer-section p, 
-        body.dark-mode .footer-section a {
-            color: #b0a690;
-        }
-        
-        .footer-section a {
-            text-decoration: none;
-            display: block;
-            margin-bottom: 5px;
-        }
-        
-        .footer-section a:hover {
-            color: #d4af37;
-        }
-
-        body.dark-mode .footer-section a:hover {
-            color: #e0c060;
-        }
-        
-        .copyright {
-            text-align: center;
-            padding-top: 20px;
-            margin-top: 20px;
-            border-top: 1px solid #555;
-            color: #999;
-            font-size: 0.8rem;
-            transition: border-color 0.3s, color 0.3s;
-        }
-
-        body.dark-mode .copyright {
-            border-top-color: #333;
-            color: #777;
-        }
-        
-        /* 响应式设计 */
-        @media (max-width: 768px) {
-            .container {
-                grid-template-columns: 1fr;
-            }
-            
-            .header-container {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            nav ul {
-                margin-top: 15px;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            
-            nav li {
-                margin: 5px 10px;
-            }
-            
-            .footer-container {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-
-            .announcement-content {
-                flex-direction: column;
-                gap: 10px;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>明闻阁 - 明朝风格新闻 | MingDynasty</title>
+<link rel="icon" href="https://mingdynasty.cc.cd/000000000000000000.png" type="image/png">
+<style>
+    :root {
+        --bg-color: #f4f1e1;
+        --bg-card: rgba(255,255,255,0.6);
+        --bg-card-hover: rgba(255,255,255,0.85);
+        --ink-color: #2c2c2c;
+        --primary-color: #8b2500;
+        --secondary-color: #5c4033;
+        --border-color: #8b2500;
+        --sub-text: #7a6f63;
+        --shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    body.dark {
+        --bg-color: #1e1a14;
+        --bg-card: rgba(44,38,30,0.7);
+        --bg-card-hover: rgba(58,50,40,0.9);
+        --ink-color: #e8e0cf;
+        --primary-color: #d4553a;
+        --secondary-color: #b08d6e;
+        --border-color: #d4553a;
+        --sub-text: #9a8f80;
+        --shadow: 0 4px 18px rgba(0,0,0,0.45);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        background-color: var(--bg-color);
+        color: var(--ink-color);
+        font-family: "STKaiti","KaiTi","楷体","SimSun",serif;
+        min-height: 100vh;
+        transition: background-color .4s, color .4s;
+        background-image:
+            radial-gradient(circle at 15% 20%, rgba(139,37,0,.04) 0%, transparent 45%),
+            radial-gradient(circle at 85% 80%, rgba(92,64,51,.04) 0%, transparent 45%);
+    }
+    body.dark {
+        background-image:
+            radial-gradient(circle at 15% 20%, rgba(212,85,58,.06) 0%, transparent 45%),
+            radial-gradient(circle at 85% 80%, rgba(176,141,110,.05) 0%, transparent 45%);
+    }
+    .topbar {
+        position: sticky; top: 0; z-index: 100;
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 16px 28px;
+        background: var(--bg-card);
+        backdrop-filter: blur(8px);
+        border-bottom: 2px solid var(--border-color);
+    }
+    .brand { position: relative; display: inline-block; }
+    .brand h1 {
+        font-size: 26px; letter-spacing: 6px; color: var(--primary-color);
+        text-shadow: 1px 1px 2px rgba(0,0,0,.1);
+    }
+    .beta-tag {
+        position: absolute; top: -10px; right: -52px;
+        font-size: 11px; font-family: sans-serif; font-weight: bold;
+        padding: 2px 10px; border: 1.5px solid transparent; border-radius: 20px;
+        background: linear-gradient(var(--bg-color),var(--bg-color)) padding-box,
+                    linear-gradient(135deg,#4facfe 0%,#a18cd1 100%) border-box;
+        color: var(--ink-color);
+        letter-spacing: 1px;
+    }
+    .theme-toggle {
+        cursor: pointer; font-size: 20px; background: none; border: 1px solid var(--border-color);
+        border-radius: 50%; width: 40px; height: 40px; display:flex;align-items:center;justify-content:center;
+        color: var(--primary-color); transition: transform .3s;
+    }
+    .theme-toggle:hover { transform: rotate(20deg) scale(1.1); }
+    .layout { display: flex; gap: 24px; max-width: 1100px; margin: 24px auto; padding: 0 20px; align-items: flex-start; }
+    .sidebar { width: 210px; flex-shrink: 0; position: sticky; top: 88px; }
+    .year-item { border: 1.5px solid var(--border-color); border-radius: 8px; margin-bottom: 12px; overflow: hidden; background: var(--bg-card); transition: all .3s; }
+    .year-header {
+        cursor: pointer; padding: 12px 14px; display:flex; justify-content: space-between; align-items:center;
+        font-size: 18px; letter-spacing: 2px; color: var(--primary-color); user-select: none;
+    }
+    .year-header .arrow { font-size: 12px; transition: transform .3s; color: var(--secondary-color); }
+    .year-item.open .year-header { background: var(--primary-color); color: #fff; }
+    .year-item.open .year-header .arrow { transform: rotate(180deg); color:#fff; }
+    .year-body { max-height: 0; overflow: hidden; transition: max-height .4s ease; }
+    .year-item.open .year-body { max-height: 500px; overflow-y:auto; }
+    .year-body::-webkit-scrollbar { width: 4px; }
+    .year-body::-webkit-scrollbar-thumb { background: var(--primary-color); border-radius: 2px; }
+    .head-link {
+        display:block; padding: 7px 14px; font-size: 13px; color: var(--ink-color);
+        border-top: 1px dashed rgba(139,37,0,.2); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .year-body .head-link:first-child { border-top: none; }
+    .head-link:hover { color: var(--primary-color); background: rgba(139,37,0,.06); }
+    .main { flex: 1; min-width: 0; }
+    .year-banner {
+        text-align: center; margin-bottom: 22px; font-size: 22px; letter-spacing: 4px; color: var(--primary-color);
+        display:flex; align-items:center; gap: 14px;
+    }
+    .year-banner::before, .year-banner::after { content:''; flex:1; height:1px; background: linear-gradient(90deg,transparent,var(--border-color),transparent); }
+    .news-card {
+        position: relative; background: var(--bg-card); backdrop-filter: blur(5px);
+        border: 1.5px solid var(--border-color); border-radius: 8px;
+        padding: 20px 22px 18px; margin-bottom: 18px; box-shadow: var(--shadow);
+        transition: all .3s;
+    }
+    .news-card:hover { background: var(--bg-card-hover); transform: translateY(-2px); }
+    .news-card::before {
+        content:''; position:absolute; inset:6px; border:1px solid rgba(139,37,0,.18); border-radius:5px; pointer-events:none;
+    }
+    .news-meta { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+    .news-date { font-family: sans-serif; font-size: 12px; color: var(--sub-text); }
+    .news-cat {
+        font-size: 12px; padding: 2px 9px; border-radius: 4px; color:#fff; letter-spacing:1px;
+        border: 1px solid transparent;
+    }
+    .news-title { font-size: 19px; color: var(--ink-color); margin-bottom: 8px; line-height: 1.4; }
+    .news-summary { font-size: 14px; line-height: 1.9; color: var(--sub-text); text-align: justify; }
+    .news-card::after {
+        content:'闻'; position:absolute; top: 12px; right: 12px; font-size: 13px; color: var(--primary-color);
+        border: 1.5px solid var(--primary-color); border-radius: 4px; padding: 2px 4px; opacity:.6;
+    }
+    .footer { text-align:center; padding: 26px 0 40px; color: var(--sub-text); font-size:13px; letter-spacing:2px; }
+    @media (max-width: 760px) {
+        .layout { flex-direction: column; }
+        .sidebar { width: 100%; position: static; }
+    }
+</style>
 </head>
 <body>
-    <!-- 公告栏 -->
-    <div class="announcement">
-        <div class="announcement-content">
-            <div>
-                <strong>公告：</strong> MingDynasty1.github.io MingDynasty1的个人主页v1.1.3发布
-                <a href="https://MingDynasty1.github.io" target="_blank">立即访问</a>
-            </div>
-            <button class="mode-toggle" id="modeToggle">切换暗色模式</button>
-        </div>
+
+<div class="topbar">
+    <div class="brand">
+        <h1>新闻志</h1>
+        <span class="beta-tag">Beta</span>
     </div>
+    <button class="theme-toggle" id="themeToggle" title="切换明暗">☾</button>
+</div>
 
-    <!-- 页面头部 -->
-    <header>
-        <div class="header-container">
-            <div class="logo">
-                <div class="logo-icon">明</div>
-                <h1>明闻阁</h1>
-            </div>
-            <nav>
-                <ul>
-                    <li><a href="#">首页</a></li>
-                    <li><a href="#">朝堂要闻</a></li>
-                    <li><a href="#">民生百态</a></li>
-                    <li><a href="#">文苑雅集</a></li>
-                    <li><a href="#">商贾资讯</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+<div class="layout">
+    <aside class="sidebar" id="sidebar"></aside>
+    <main class="main" id="main"></main>
+</div>
 
-    <!-- 主要内容区 -->
-    <div class="container">
-        <main>
-            <!-- 头条新闻 -->
-            <article class="news-card">
-                <div class="news-card-header">
-                    <h2>伊朗与美国外交关系紧张，特朗普政府重启制裁措施</h2>
-                    <div class="news-card-date">万历四十五年 三月初七</div>
-                </div>
-                <div class="news-card-content">
-                    <img src="https://mingdynasty1.github.io/mgdy.png" alt="美伊外交局势">
-                    <p>近日，据西洋传来消息，米利坚（美国）总统特朗普宣布重启对波斯（伊朗）的全面制裁措施，此举引发两国外交关系急剧恶化，中东地区局势再度紧张。</p>
-                    <p>特朗普政府表示，制裁旨在迫使伊朗放弃核计划及地区扩张行为，包括限制伊朗石油出口、冻结海外资产、禁止国际企业与伊朗进行贸易往来等多项措施。</p>
-                    <p>伊朗方面则强硬回应，称将继续推进核计划，并考虑退出核不扩散条约。波斯国王表示，米利坚的制裁是"经济恐怖主义"，伊朗不会屈服于外部压力。</p>
-                    <a href="#" class="read-more">阅读全文</a>
-                </div>
-            </article>
+<div class="footer">&copy; 2013-2026 MingDyasnty,Inc.大明新闻 | 博古通今 · 鉴往知来 </div>
 
-            <!-- 次要新闻 -->
-            <article class="news-card">
-                <div class="news-card-header">
-                    <h2>江南丝绸业繁荣，苏杭织造局产量创新高</h2>
-                    <div class="news-card-date">万历四十五年 三月初五</div>
-                </div>
-                <div class="news-card-content">
-                    <img src="mgdy.jpg" alt="江南丝绸">
-                    <p>据苏州织造局最新统计，今年春季丝绸产量较去年同期增长三成，创历史新高。江南各地丝织作坊生意兴隆，产品远销海外。</p>
-                    <p>苏州织造局官员表示，近年来朝廷对丝绸业的支持政策成效显著，加上海外需求增加，促使丝绸产量大幅提升。目前，江南丝绸已成为对外贸易的重要商品，为国家带来丰厚税收。</p>
-                    <p>同时，丝绸业的繁荣也带动了相关产业发展，如蚕桑养殖、染料制作、纺织机械等，为当地百姓提供了大量就业机会。</p>
-                    <a href="#" class="read-more">阅读全文</a>
-                </div>
-            </article>
-        </main>
+<script>
+const NEWS = {
+    "2026": [
+        {date:"2026-08-12",cat:"国内",title:"朱镕基同志在北京逝世",summary:"国务院原总理朱镕基同志因病医治无效，于2026年8月12日11时06分在北京逝世，享年98岁。朱镕基同志是中国共产党的优秀党员，久经考验的忠诚的共产主义战士，伟大的无产阶级革命家、政治家，党和国家卓越领导人。他一生清正廉洁、刚正不阿，以“不管前面是地雷阵还是万丈深渊，我都将勇往直前”的铮铮誓言深入人心。在担任国务院总理期间，他大刀阔斧推进国有企业改革、金融体制改革和政府机构改革，为中国融入全球经济体系、建立社会主义市场经济体制奠定了坚实基础。他的逝世是党和国家的重大损失。8月18日，朱镕基同志遗体在北京火化，天安门、新华门等地降半旗志哀，全国各族人民以各种方式深切缅怀这位深受爱戴的领导人。"},
+        {date:"2026-08-17",cat:"科技",title:"我国成功发射卫星互联网低轨24组卫星",summary:"2026年8月17日，我国在酒泉卫星发射中心使用长征系列运载火箭，成功将卫星互联网低轨第24组卫星送入预定轨道，发射任务取得圆满成功。此次发射标志着我国低轨卫星互联网星座组网进入高密度部署新阶段。该星座是我国自主建设的天地一体化信息网络核心组成部分，旨在为全球用户提供高速、低延迟、广覆盖的宽带通信服务，尤其服务于偏远地区、海洋、航空等传统地面网络难以覆盖的场景。自2024年底启动批量组网以来，已累计完成24次专属发射任务，在轨卫星数量突破300颗。本次发射的卫星采用新一代星间链路技术和可重构载荷平台，单星通信容量较前期型号提升40%，并具备在轨智能调度能力。此次任务还验证了火箭快速响应发射流程，从总装到点火仅用时72小时，大幅提升了星座部署效率。这不仅是航天强国建设的重要里程碑，也为6G时代空天地海一体化通信奠定了坚实技术基础。"},
+        {date:"2026-06",cat:"民生",title:"我国启动2026年新能源汽车下乡活动",summary:"2026年6月，工业和信息化部联合农业农村部、商务部等部门正式启动新一轮新能源汽车下乡活动。本次活动共有155款新能源车型参与，涵盖纯电、插混及增程式等多种技术路线，价格区间覆盖5万至20万元，精准匹配农村家庭出行与生产运输需求。与往年不同，今年政策明确乡村地区换购消费者可直接申领国家以旧换新补贴，且不受地方补贴资格数量限制，真正实现“应补尽补”。活动现场同步设立充电设施咨询专区，推动“车桩协同”下沉，解决农村用户“充电难”后顾之忧。据统计，2025年农村地区新能源汽车渗透率已达28%，但仍有巨大增长空间。此次活动不仅是一场促销，更是国家推动绿色交通普惠城乡、助力乡村振兴的战略举措。通过降低购置门槛、完善基础设施、培育使用生态，新能源汽车正从城市走向田野，成为新时代中国乡村现代化生活的新标志。"},
+        {date:"2026-06-01",cat:"科技",title:"长征十二号乙运载火箭首飞成功",summary:"2026年6月1日，我国自主研发的新一代中型运载火箭长征十二号乙在海南商业航天发射场成功首飞，将千帆极轨08组卫星精确送入预定轨道。这是长征十二号乙的首次飞行试验，也是长征系列运载火箭的第647次飞行。该火箭采用两级构型+液体上面级设计，芯一级配备四台液氧煤油发动机，具备垂直回收复用潜力，标志着我国商业航天进入可重复使用运载器工程验证新阶段。本次任务搭载的千帆星座卫星用于低轨互联网组网，同时验证了火箭高精度入轨、多星分离时序控制等关键技术。首飞全程遥测数据正常，箭体结构、动力系统、导航制导与控制等均达到设计指标。长征十二号乙的成功，填补了我国中型可复用火箭的工程空白，为未来高频次、低成本商业发射奠定基础。它也象征着中国航天从“国家队主导”向“国家+商业”双轮驱动转型的关键一步，对构建自主可控的空间运输体系具有深远意义。"},
+        {date:"2026-05-30",cat:"科技",title:"全球首个超临界二氧化碳余热发电示范工程建成",summary:"2026年5月30日，位于贵州六盘水的“超碳一号”超临界二氧化碳余热发电示范工程第二台机组顺利并网发电，标志着全球首个基于超临界二氧化碳布雷顿循环的工业余热发电项目全面建成投运。该技术利用钢厂、水泥厂等高温工业废气作为热源，以超临界态CO₂为工质替代传统水蒸气，系统效率比常规蒸汽轮机高出15%–20%，且设备体积缩小60%以上。“超碳一号”由中科院工程热物理研究所牵头研发，历经十年攻关，突破了高温换热器、紧凑型涡轮机等核心瓶颈。两台机组总装机容量12兆瓦，年发电量超8000万千瓦时，相当于减排二氧化碳约6万吨。该项目不仅为我国高耗能行业低碳转型提供了可复制的技术路径，更在全球率先实现该技术的工程化应用，彰显了我国在先进能源动力领域的原始创新能力。未来，该技术有望推广至核电、光热等领域，成为新型电力系统的重要支撑。"}
+    ],
+    "2025": [
+        {date:"2025-01-07",cat:"国内",title:"西藏定日县发生6.8级地震",summary:"2025年1月7日9时5分，西藏自治区日喀则市定日县发生6.8级地震，震源深度10千米。由于震中位于高海拔偏远山区，当地房屋抗震能力较弱，加之冬季严寒，灾害造成重大人员伤亡和财产损失。地震发生后，党中央高度重视，立即启动国家四级救灾应急响应。解放军、武警部队、消防救援队伍及医疗防疫队第一时间驰援灾区，搭建临时安置点，调拨棉帐篷、取暖设备、食品药品等物资。交通运输部紧急抢通受损道路，电力通信部门昼夜奋战恢复生命线工程。截至1月底，累计转移安置群众逾3万人，伤员全部得到妥善救治。此次地震也暴露出高原边疆地区防灾减灾体系的短板。灾后重建规划迅速出台，强调提高农房抗震标准、加强地质灾害监测预警、完善基层应急力量。这场灾难再次检验了中国应急管理体系的动员力与温度，也推动了西部边疆安全韧性建设的全面升级。"},
+        {date:"2025-01",cat:"科技",title:"国产AI大模型DeepSeek引发全球关注",summary:"2025年1月，中国人工智能公司深度求索（DeepSeek）发布开源大模型DeepSeek-R1，以其卓越的推理能力和极低的训练成本震动全球科技界。该模型在数学、代码、逻辑推理等多项基准测试中媲美甚至超越同期国际顶尖闭源模型，而其训练所用算力仅为同类产品的十分之一。这一突破打破了“大模型必靠巨量算力”的行业迷思，证明算法创新与架构优化同样能驱动性能飞跃。DeepSeek-R1完全开源，允许商业使用，迅速被全球开发者采纳，GitHub星标数两周内突破10万。其成功不仅提振了中国AI产业的信心，更促使国际社会重新评估中国在基础研究与工程落地上的综合实力。多家跨国企业宣布接入DeepSeek API，学术界纷纷基于其开展下游研究。这一事件标志着中国AI从“追赶者”迈向“规则共建者”，也为全球AI发展注入了多元竞争与技术民主化的新动能。"},
+        {date:"2025-09-03",cat:"国内",title:"隆重纪念抗战胜利暨世界反法西斯战争胜利80周年",summary:"2025年9月3日，中国人民抗日战争暨世界反法西斯战争胜利80周年纪念大会在北京天安门广场隆重举行。党和国家领导人同首都各界代表一万余人出席大会。上午10时，礼炮鸣响80响，国旗护卫队迈着铿锵步伐护送五星红旗冉冉升起。随后举行盛大阅兵式，受阅官兵精神抖擞，新型装备列阵长安街，空中梯队拉出绚丽彩烟。群众游行以“铭记历史、开创未来”为主题，再现全民族抗战壮烈图景与新时代奋进风貌。当晚，人民大会堂举办文艺晚会《正义的胜利》，以史诗叙事致敬英烈、昭示和平。全国各地同步举行敬献花篮、主题展览、老兵座谈等活动。此次纪念不仅是对历史的回望，更是对和平的庄严宣示。在当前国际局势复杂多变背景下，中国重申坚持走和平发展道路，倡导构建人类命运共同体，彰显负责任大国担当。"},
+        {date:"2025-11",cat:"军事",title:"我国首艘电磁弹射型航母福建舰入列",summary:"2025年11月，我国完全自主设计建造的首艘弹射型航空母舰福建舰正式加入中国人民解放军海军序列。福建舰满载排水量八万余吨，采用平直通长飞行甲板，配置三条电磁弹射轨道和拦阻装置，可高效起降歼-35隐身战斗机、空警-600预警机及各类无人机。相比前两艘滑跃起飞航母，电磁弹射使舰载机出动率提升50%以上，并能支持更重、更多样的机型，极大增强了远洋作战与体系对抗能力。入列仪式上，中央军委主席签署命令，授予福建舰军旗、命名证书。该舰从开工到服役历时七年，攻克了综合电力系统、高能储能、精密传动等一系列“卡脖子”技术，标志着中国航母建设迈入世界先进行列。福建舰的入列，不仅是海军装备现代化的里程碑，更是国家综合实力与科技自立自强的集中体现。它将与中国现有航母编队形成梯次搭配，显著提升维护国家主权、安全和发展利益的能力。"},
+        {date:"2025",cat:"科技",title:"中国“人造太阳”创“亿度千秒”世界纪录",summary:"2025年，中国科学院等离子体物理研究所的全超导托卡马克核聚变实验装置EAST（东方超环）成功实现上亿摄氏度等离子体稳态运行超过1000秒，刷新了高约束模等离子体运行的世界纪录。这一成果意味着中国在磁约束核聚变领域已处于全球领跑地位。“亿度千秒”是聚变能实用化的关键门槛——只有同时满足极高温度与足够长的能量 confinement 时间，才能实现净能量增益。EAST团队通过优化加热方案、改进边界控制策略、提升超导磁体稳定性，克服了等离子体破裂、杂质积累等长期难题。此次实验还验证了国产高性能钨偏滤器在极端热负荷下的可靠性，为未来聚变堆材料选型提供宝贵数据。该突破不仅加速了中国聚变工程实验堆（CFETR）的设计进程，也为国际热核聚变实验堆（ITER）贡献了中国智慧。它象征着人类离“终极清洁能源”又近了一步，展现了中国在前沿基础研究中的战略定力与创新能力。"}
+    ],
+    "2024": [
+        {date:"2024-05-03",cat:"科技",title:"嫦娥六号发射，开启月背采样返回之旅",summary:"2024年5月3日，嫦娥六号探测器在文昌航天发射场由长征五号遥八运载火箭成功发射，踏上人类首次月球背面采样返回的征程。此次任务目标区域为南极-艾特肯盆地内的阿波罗撞击坑，该区域地质古老、成分独特，蕴含太阳系早期演化关键信息。由于月背无法直接与地球通信，任务依赖鹊桥二号中继星提供地月间数据传输。探测器经历地月转移、近月制动、环月飞行后，于6月2日精准着陆月背预选区。着陆器携带钻取与表取两种采样装置，在48小时内完成约2公斤月壤采集，并由上升器携样升空，与轨返组合体对接后启程返地。整个任务历时53天，技术难度远超以往任何月球探测。嫦娥六号不仅拓展了人类对月球二分性的认知，更验证了深空自主导航、弱信号测控、月面智能作业等核心技术。它的成功，是中国探月工程“绕、落、回”三步走战略的完美收官，也为后续载人登月与国际月球科研站建设铺平道路。"},
+        {date:"2024-07-26",cat:"体育",title:"巴黎奥运会开幕，中国代表团夺40金",summary:"2024年7月26日，第33届夏季奥林匹克运动会在法国巴黎塞纳河畔拉开帷幕。中国体育代表团共派出405名运动员参加30个大项、236个小项的比赛。经过16天激烈角逐，中国队最终以40枚金牌、27枚银牌、24枚铜牌的成绩位列奖牌榜第二，创下境外参赛历史最佳战绩。跳水、举重、乒乓球等传统优势项目继续捍卫荣耀，射击、游泳、田径等项目实现多点突破。其中，潘展乐在男子100米自由泳决赛中以46秒40打破世界纪录夺冠，成为中国首位奥运百米飞鱼；郑钦文夺得网球女单金牌，创造亚洲选手历史。赛场内外，中国运动员展现出的自信、开放与尊重赢得广泛赞誉。本届奥运会也是中国体育深化改革成果的集中展示：科学化训练体系、复合型保障团队、青少年后备人才梯队建设成效显著。40金背后，是无数教练员、科研人员与基层体育工作者的默默耕耘。它不仅是一串数字，更是新时代中国体育从“金牌导向”迈向“全面发展”的生动注脚。"},
+        {date:"2024-09-26",cat:"经济",title:"中央政治局会议部署一揽子增量政策",summary:"2024年9月26日，中共中央政治局召开会议，分析研究当前经济形势和经济工作，明确提出加大宏观政策逆周期调节力度，推出一揽子增量政策措施。会议指出，尽管前三季度经济运行总体平稳，但有效需求不足、部分企业经营困难、市场预期偏弱等问题仍突出。为此，财政政策加力提效，加快发行超长期特别国债，扩大地方政府专项债用途；货币政策灵活适度，适时降准降息，保持流动性合理充裕；房地产政策进一步优化，取消限购限贷，支持刚性和改善性住房需求；资本市场推出多项稳定举措，提振投资者信心。会议强调政策要“打得准、落得实”，避免大水漫灌，注重结构性发力。会后，各部委密集出台配套细则，市场反应积极，A股连续上涨，消费与投资信心逐步修复。这次会议被视为中国经济稳增长的关键转折点，体现了党中央对复杂局面的精准研判与果断施策，为全年经济社会发展目标达成提供了有力支撑。"},
+        {date:"2024-12-04",cat:"文化",title:"中国“春节”申遗成功",summary:"2024年12月4日，联合国教科文组织保护非物质文化遗产政府间委员会第19届常会通过决议，将“春节——中国人庆祝传统新年的社会实践”列入人类非物质文化遗产代表作名录。这是中国第44个入选项目，也是首个以节庆整体形态获认定的非遗。春节作为中华民族最隆重的传统节日，承载着辞旧迎新、祈福纳祥、阖家团圆、敬老爱幼等深厚文化内涵，其习俗包括贴春联、守岁、拜年、吃年夜饭、舞龙舞狮等，遍及城乡乃至海外华人社区。申遗文本强调春节不仅是民俗活动，更是维系社会关系、传承伦理价值、增强文化认同的核心实践。评审委员会高度评价其“活态传承”特征与当代生命力。申遗成功并非终点，而是新起点。文旅部随即启动“春节文化生态保护计划”，鼓励各地因地制宜恢复传统仪式，抵制过度商业化。此举既是对中华文明连续性的国际确认，也为全球多元文化对话贡献了中国智慧。春节从此不仅是中国的节日，更是全人类共享的文化瑰宝。"},
+        {date:"2024",cat:"科技",title:"神舟十八号、十九号载人飞行任务相继成功",summary:"2024年，中国空间站进入常态化运营阶段，神舟十八号与神舟十九号载人飞行任务接续实施，圆满完成航天员乘组在轨轮换。4月25日，神舟十八号搭载叶光富、李聪、李广苏三名航天员升空，在轨驻留192天，开展了空间生命科学、微重力燃烧、舱外维修等数十项实验，并完成两次出舱活动。10月30日，神舟十九号发射，蔡旭哲、宋令东、王浩泽接替值守，重点验证空间站扩展模块兼容性，并为后续货运飞船对接做准备。两次任务均实现“零失误”发射、“零差错”返回，着陆场搜救回收时间缩短至30分钟以内。这标志着中国载人航天已从“建造期”转入“应用与发展期”，空间站成为国家级太空实验室。航天员选拔更加注重专业多样性，工程师、科学家比例上升；地面支持系统高度自动化，减少人力依赖。这些变化反映出中国航天正从“能上天”迈向“用好天”。空间站的稳定运行，不仅服务于科学研究与国家需求，也为国际合作打开大门，已有多个发展中国家提出联合实验申请。中国正以实际行动践行“和平利用外层空间”的承诺。"}
+    ],
+    "2023": [
+        {date:"2023-05-28",cat:"科技",title:"国产大飞机C919完成首次商业飞行",summary:"2023年5月28日，中国东方航空使用国产大型客机C919执飞MU9191航班，从上海虹桥机场起飞，平稳降落在北京首都国际机场，圆满完成首次商业载客飞行。这标志着C919正式投入航线运营，中国民航迎来自主研制干线客机的新时代。C919是我国按照国际通行适航标准自行研制、具有自主知识产权的喷气式干线客机，最大载客量192座，航程5555公里。首航航班搭载128名旅客，全程体验良好，乘客普遍反馈噪音低、座椅舒适、客舱宽敞。为保障首航安全，东航组建了专属机组与维修团队，进行了数百小时模拟机训练与地面演练。C919的研发历时十六年，凝聚了全国22个省市、200多家企业、36所高校的智慧，突破了气动设计、复合材料、航电集成等上百项关键技术。它的成功不仅打破了波音、空客对全球干线客机市场的垄断，更带动了中国高端制造业集群升级。目前，C919已获得国内外订单超千架，后续还将推出加长型、货运型等衍生型号。C919的商业首飞，是中国制造向中国创造跃升的象征，也是民族工业自信的里程碑。"},
+        {date:"2023-09-23",cat:"体育",title:"杭州亚运会开幕",summary:"2023年9月23日，第十九届亚洲运动会在杭州奥体中心体育场盛大开幕。这是继1990年北京、2010年广州之后，中国第三次举办亚运会。开幕式以“潮起亚细亚”为主题，融合良渚文明、江南韵味与数字科技，首创“数字火炬手”跨越钱塘江点燃主火炬塔，惊艳世界。本届亚运会设40个大项、481个小项，吸引45个国家和地区逾1.2万名运动员参赛，规模创历届之最。中国代表团以201枚金牌、111枚银牌、71枚铜牌的辉煌成绩位居榜首，金牌数首次突破200大关。游泳名将张雨霏独揽6金，电竞、霹雳舞等新项目首次入亚即夺金，展现青春活力。赛事组织高效有序，场馆赛后利用方案提前落地，体现“简约、安全、精彩”办赛理念。杭州亚运会不仅是体育盛会，更是中华文化与现代文明的交融舞台。从西湖烟雨到钱塘潮涌，从宋韵美学到智能亚运，杭州向世界展示了中国式现代化的生动图景。它也为后疫情时代亚洲团结合作注入信心，诠释了“心心相融，@未来”的深刻内涵。"},
+        {date:"2023-10-17",cat:"国际",title:"第三届“一带一路”国际合作高峰论坛举行",summary:"2023年10月17日至18日，第三届“一带一路”国际合作高峰论坛在北京举行，主题为“高质量共建‘一带一路’，携手实现共同发展繁荣”。来自151个国家和41个国际组织的代表参会，注册总人数超万人。国家主席习近平出席开幕式并发表主旨演讲，宣布中国支持高质量共建“一带一路”的八项行动，包括构建立体互联互通网络、支持开放型世界经济、开展务实合作、促进绿色发展、推动科技创新、支持民间交往、建设廉洁之路、完善国际合作机制。论坛期间达成458项成果，涵盖基础设施、经贸、金融、人文等领域，企业家大会签约总额达972亿美元。十年来，“一带一路”已形成3000多个合作项目，拉动近万亿美元投资，帮助近4000万人摆脱贫困。本届论坛标志着共建“一带一路”从“大写意”进入“工笔画”新阶段，更加注重民生、绿色、数字与规则对接。在全球地缘政治紧张、发展赤字加剧的背景下，“一带一路”以其包容性、务实性与可持续性，成为推动全球南方国家现代化的重要公共产品，也为重构更加公正合理的全球治理体系提供了中国方案。"},
+        {date:"2023-12-18",cat:"国内",title:"甘肃积石山发生6.2级地震",summary:"2023年12月18日23时59分，甘肃省临夏回族自治州积石山县发生6.2级地震，震源深度10千米。由于发震时间在深夜，加之当地农村房屋多为土木结构，抗震性能差，导致严重人员伤亡和大量民房倒塌。地震发生时正值寒冬，气温低至零下15摄氏度，救援与安置面临严峻挑战。党中央第一时间作出指示，国务院启动国家三级救灾应急响应。解放军、武警、消防、医疗等力量连夜驰援，72小时内打通所有进村道路，搭建保温帐篷逾万顶，调拨棉被、炉具、热食等御寒物资。截至12月底，累计转移安置群众14万余人，伤员全部得到有效救治，无一人因冻饿伤亡。此次地震暴露出西部欠发达地区农村住房安全短板。灾后重建规划迅速制定，明确三年内完成危房改造与公共服务设施提升，并将抗震设防标准提高至8度。同时，应急管理部推动建立“冬春灾害防范”长效机制。这场发生在岁末的灾难，考验了国家应急体系的极限响应能力，也彰显了“人民至上、生命至上”的执政理念在关键时刻的温度与力量。"},
+        {date:"2023-02",cat:"科技",title:"ChatGPT火爆全球，掀起AI大模型竞赛",summary:"2023年2月，OpenAI发布的聊天机器人ChatGPT在全球范围内引发现象级热潮，短短两个月用户破亿，成为史上增长最快的消费应用。其流畅的自然语言理解与生成能力，让公众首次直观感受到通用人工智能的潜力。ChatGPT不仅能写诗、编程、翻译，还能进行逻辑推理与角色扮演，颠覆了人们对机器智能的认知。这一突破迅速点燃全球科技巨头的大模型军备竞赛：谷歌推出Bard，微软将GPT整合进Office与搜索引擎，Meta开源LLaMA，百度发布文心一言。各国政府也将AI列为国家战略，纷纷出台扶持政策与伦理规范。在中国，多家科技企业紧急跟进，短短数月内涌现出数十个国产大模型，形成“百模大战”格局。ChatGPT的爆火不仅改变了人机交互范式，更重塑了教育、媒体、客服、软件开发等行业生态。但它也引发关于版权、虚假信息、就业替代的深度忧虑。这场由一个聊天窗口掀起的浪潮，标志着人工智能从实验室走向大众生活，也开启了人类社会与智能机器深度融合的新纪元。"}
+    ],
+    "2022": [
+        {date:"2022-02-04",cat:"体育",title:"北京冬奥会开幕，“一起向未来”",summary:"2022年2月4日晚，第二十四届冬季奥林匹克运动会在北京国家体育场“鸟巢”盛大开幕。北京由此成为全球首个既举办过夏奥会又举办冬奥会的“双奥之城”。开幕式以“简约、安全、精彩”为原则，摒弃大规模人海表演，转而运用LED地屏、人工智能、实时动捕等科技手段，呈现“一朵雪花”贯穿始终的诗意叙事。二十四节气倒计时、黄河之水天上来、破冰而出的冰雪五环等创意惊艳世界。本届冬奥会设7个大项、109个小项，91个国家和地区近3000名运动员参赛。中国代表团以9金4银2铜的历史最佳战绩位列奖牌榜第三，实现全项目参赛、多点突破。谷爱凌、苏翊鸣等年轻选手崭露头角，武大靖、徐梦桃等老将圆梦赛场。赛事期间，所有场馆100%使用绿电，二氧化碳制冰技术首次应用，兑现“绿色冬奥”承诺。闭环管理下零聚集性疫情，保障安全顺畅。北京冬奥会不仅是一场体育盛会，更是在疫情阴霾下传递希望与团结的全球仪式。“一起向未来”的口号，超越了竞技本身，成为人类共克时艰的精神象征。它也为中国冰雪运动普及与产业升级注入持久动力。"},
+        {date:"2022-02-24",cat:"国际",title:"俄罗斯对乌克兰发起特别军事行动",summary:"2022年2月24日，俄罗斯总统普京宣布对乌克兰发起“特别军事行动”，俄乌冲突全面爆发。俄军从北、东、南三线进入乌克兰领土，初期攻势迅猛，但遭遇乌军顽强抵抗与西方大规模军援，战事陷入僵持。冲突迅速外溢，引发二战以来欧洲最大难民危机，超千万乌克兰人流离失所。美欧对俄实施史上最严厉制裁，冻结外汇储备、切断SWIFT、禁运能源，全球能源、粮食、化肥供应链剧烈震荡，通胀飙升，多国陷入生计困境。联合国多次呼吁停火谈判，但双方立场悬殊，和平遥遥无期。这场冲突深刻改变了国际格局：北约重获凝聚力，芬兰瑞典申请入盟；欧洲加速能源转型；全球南方国家拒绝选边站队，凸显多极化趋势。对中国而言，冲突带来复杂挑战：一方面坚持劝和促谈，发布十二点和平主张；另一方面承受外部压力，经贸往来受限。俄乌冲突不仅是地缘博弈，更是旧秩序瓦解与新秩序孕育的阵痛。它警示世人：安全不可分割，对抗没有赢家，唯有对话协商才是出路。"},
+        {date:"2022-11-30",cat:"国内",title:"江泽民同志逝世",summary:"2022年11月30日12时13分，中国共产党、中国人民解放军、中华人民共和国的主要缔造者之一，党的第三代中央领导集体的核心，伟大的无产阶级革命家、政治家，党和国家卓越领导人江泽民同志在上海逝世，享年96岁。江泽民同志在改革开放关键时期担任党和国家重要领导职务，提出“三个代表”重要思想，推动社会主义市场经济体制确立，引领中国加入世界贸易组织，实现港澳回归，为国家长治久安与民族复兴作出历史性贡献。他学识渊博、视野开阔，精通多国语言，热爱音乐与科技，深受人民爱戴。逝世消息公布后，全国上下沉浸在深切哀悼之中。12月5日，遗体在北京火化，天安门等地降半旗志哀。追悼大会庄重肃穆，全党全军全国各族人民缅怀其丰功伟绩与崇高风范。江泽民同志的一生，是为党和人民事业不懈奋斗的一生。他的思想与实践，已深深融入中国特色社会主义伟大事业。在新时代征程上，继承和发扬老一辈革命家的精神遗产，是对逝者最好的告慰。"},
+        {date:"2022-12",cat:"国内",title:"“新十条”发布，疫情防控优化调整",summary:"2022年12月7日，国务院联防联控机制发布《关于进一步优化落实新冠肺炎疫情防控措施的通知》，简称“新十条”。文件明确不再开展落地检、不再查验核酸阴性证明、无症状轻症可居家隔离、取消全员核酸检测等十项优化措施，标志着中国疫情防控进入新阶段。此前三年，中国坚持“动态清零”策略，最大限度保护了人民生命安全，但也对经济社会运行造成一定影响。随着病毒变异、疫苗普及与医疗能力提升，调整防控策略成为必然。“新十条”出台后，各地迅速响应，复工复产复市有序推进，跨区域流动逐步恢复。然而，短期内感染高峰也给医疗系统带来压力，部分地区出现药品短缺。中央政府紧急调配资源，加强重症救治与老年人疫苗接种。这次调整不是“躺平”，而是基于科学研判的主动适应。它体现了“人民至上、生命至上”理念的与时俱进，也为2023年经济强劲复苏奠定基础。回望三年抗疫，中国人民展现出非凡韧性与团结精神。“新十条”既是终点，也是新起点，开启后疫情时代高质量发展的新篇章。"},
+        {date:"2022-12",cat:"科技",title:"中国空间站全面建成",summary:"2022年12月，随着梦天实验舱顺利完成转位并与天和核心舱、问天实验舱形成“T”字基本构型，中国空间站正式宣告全面建成。这是人类历史上第三个长期有人照料的空间站，也是中国航天史上规模最大、复杂度最高的系统工程。空间站总重约100吨，设计寿命10年以上，可容纳3名航天员长期驻留、6人短期轮换。自2021年天和核心舱发射以来，中国先后完成6次载人飞行、4次货运补给、3次舱段对接，攻克了再生生保、柔性太阳翼、机械臂操作等关键技术。空间站作为国家级太空实验室，已部署上千项科学实验，涵盖生命科学、材料、流体、天文等领域。其建成不仅打破了西方国家对中国载人航天的长期封锁，更彰显了中国新型举国体制的优势。更重要的是，中国空间站始终坚持开放合作，已向联合国所有会员国开放实验机会，首批17国项目入选。这体现了“和平利用外空、造福全人类”的中国主张。从东方红一号到天宫家园，中国航天用半个世纪走完发达国家百年之路。空间站的星辰大海，属于中国，也属于世界。"}
+    ],
+    "2021": [
+        {date:"2021-02-25",cat:"国内",title:"中国宣布脱贫攻坚取得全面胜利",summary:"2021年2月25日，全国脱贫攻坚总结表彰大会在北京人民大会堂隆重举行。国家主席庄严宣告：我国脱贫攻坚战取得了全面胜利，现行标准下9899万农村贫困人口全部脱贫，832个贫困县全部摘帽，12.8万个贫困村全部出列，区域性整体贫困得到解决，完成了消除绝对贫困的艰巨任务。这一成就创造了人类减贫史上的奇迹。八年攻坚，党中央把脱贫攻坚摆在治国理政突出位置，构建起五级书记抓扶贫、全党动员促攻坚的工作体系。数百万扶贫干部扎根一线，1800多名同志献出生命。东西部协作、定点帮扶、社会参与形成合力。产业扶贫、易地搬迁、生态补偿、教育医疗保障等精准施策，确保真脱贫、脱真贫。脱贫不是终点，而是新生活、新奋斗的起点。大会同时部署巩固拓展脱贫攻坚成果同乡村振兴有效衔接，防止规模性返贫。脱贫攻坚的伟大胜利，彰显了中国共产党领导和中国特色社会主义制度的显著优势，也为全球减贫事业贡献了中国智慧与中国方案。它证明：只要坚持以人民为中心，再难的堡垒也能攻克。这份沉甸甸的成绩单，写在广袤大地上，刻在亿万人民心中。"},
+        {date:"2021-05-15",cat:"科技",title:"天问一号着陆火星，祝融号开启巡视",summary:"2021年5月15日，中国首次火星探测任务“天问一号”探测器成功着陆于火星乌托邦平原南部预选区，随后“祝融号”火星车驶上火星表面，开始巡视探测。这使中国成为继美国之后第二个实现火星软着陆并开展巡视探测的国家，且一次性完成“绕、着、巡”三大目标，创下世界航天史先例。天问一号于2020年7月发射，历经295天、4.75亿公里奔火旅程，在火星轨道环绕三个月后择机着陆。着陆过程被称为“黑色九分钟”，需自主完成气动减速、伞降、悬停避障等复杂动作，全程无地面干预。祝融号重240公斤，设计寿命90个火星日，实际超期服役至2022年5月，行驶1921米，传回大量地质、气象、磁场数据。探测发现火星地表存在含水矿物，为研究火星水历史提供关键证据。天问一号的成功，标志着中国深空探测能力跻身世界第一梯队。它不仅验证了超远距离测控、自主导航、火星环境适应等核心技术，更激发了全民探索宇宙的热情。从嫦娥奔月到祝融探火，中华民族千年梦想正一步步变为现实。"},
+        {date:"2021-07-01",cat:"国内",title:"庆祝中国共产党成立100周年大会举行",summary:"2021年7月1日上午8时，庆祝中国共产党成立100周年大会在北京天安门广场隆重举行。7万余名各界代表齐聚一堂，共同见证这一历史性时刻。大会在庄严国歌声中开始，直升机悬挂党旗与标语飞过上空。共青团员与少先队员代表集体致献词，喊出“请党放心，强国有我”的青春誓言。国家主席发表重要讲话，回顾百年奋斗光辉历程，阐明伟大建党精神，宣告全面建成小康社会，号召全体中华儿女向着第二个百年奋斗目标迈进。讲话中，“人民”一词出现86次，彰显初心使命。大会未安排阅兵，但仪式感丝毫不减。从石库门到天安门，从小小红船到巍巍巨轮，百年党史浓缩于此一刻。全国各地同步举行庆祝活动，党史学习教育推向高潮。这次大会不仅是对过去的总结，更是对未来的动员。它凝聚了全党全国各族人民的意志，为实现中华民族伟大复兴注入了强大精神动力。百年恰是风华正茂，新征程已然开启。"},
+        {date:"2021-08-15",cat:"国际",title:"美军撤离阿富汗，塔利班掌控喀布尔",summary:"2021年8月15日，阿富汗塔利班武装进入首都喀布尔，总统加尼仓皇出逃，持续20年的阿富汗战争事实终结。此前，美国总统拜登宣布5月1日起全面撤军，塔利班趁机发动闪电攻势，三周内控制全国大部分地区。喀布尔陷落当日，机场陷入混乱，数千民众试图攀附美军飞机逃离，多人坠亡。美国及其盟友紧急组织空运，两周内撤出逾12万人，但仍有大量曾协助西方的阿富汗人被遗弃。塔利班宣布成立“阿富汗伊斯兰酋长国”，承诺组建包容政府、保障妇女权利、打击恐怖主义，但其政策仍受国际社会质疑。阿富汗局势剧变引发多重连锁反应：难民潮冲击周边国家，毒品产量回升，极端组织趁虚而入。对美国而言，这是继越南之后又一次战略挫败，暴露其对外干预模式的深层缺陷。对中国而言，邻国动荡带来安全挑战，中方积极推动阿富汗邻国外长会，倡导“阿人主导、阿人所有”解决方案。阿富汗悲剧警示世人：外部强加的秩序终难持久，唯有尊重主权、包容和解，方能实现真正和平。"},
+        {date:"2021-11-11",cat:"国内",title:"十九届六中全会通过第三个历史决议",summary:"2021年11月11日，中国共产党第十九届中央委员会第六次全体会议审议通过《中共中央关于党的百年奋斗重大成就和历史经验的决议》。这是继1945年、1981年后，党在百年华诞之际制定的第三个历史决议。决议系统总结了党在四个历史时期的重大成就，提炼出“十个坚持”的历史经验：坚持党的领导、人民至上、理论创新、独立自主、中国道路、胸怀天下、开拓创新、敢于斗争、统一战线、自我革命。决议突出中国特色社会主义新时代这个重点，对习近平新时代中国特色社会主义思想作出新的概括，确立其指导地位。全会强调，党确立习近平同志党中央的核心、全党的核心地位，确立习近平新时代中国特色社会主义思想的指导地位，对新时代党和国家事业发展具有决定性意义。第三个历史决议不是简单回顾过去，而是为了统一思想、坚定信心、开创未来。它为党的二十大召开做了充分准备，也为全面建设社会主义现代化国家提供了历史镜鉴与行动指南。这份文献，承载着百年大党的清醒与自觉，指引着民族复兴的航向。"}
+    ],
+    "2020": [
+        {date:"2020-01-23",cat:"国内",title:"武汉宣布暂时“封城”阻击疫情",summary:"2020年1月23日凌晨，武汉市新型冠状病毒感染的肺炎疫情防控指挥部发布通告：自当日10时起，全市城市公交、地铁、轮渡、长途客运暂停运营，机场、火车站离汉通道暂时关闭。这是人类历史上首次对一个千万级人口城市采取如此严格的封控措施，旨在遏制新冠病毒向全国扩散。彼时，疫情已在武汉社区传播，病例激增，医疗资源濒临崩溃。封城决定艰难而果决，体现了“宁可十防九空，不可失防万一”的决心。1100万市民顾全大局，闭门居家两月有余。全国4.2万名医护人员逆行驰援，19个省份对口支援湖北。火神山、雷神山医院十天建成，方舱医院应收尽收。封城期间，物资保供、心理疏导、社区防控环环相扣。4月8日，武汉解封，76天的坚守换来全国疫情拐点。这场战役付出了巨大代价，但也铸就了伟大抗疫精神。武汉封城不仅是中国抗疫的关键转折，也为全球疫情防控提供了宝贵经验。它证明：在重大公共卫生危机面前，科学决策、全民动员、制度优势是战胜灾难的根本保障。英雄的武汉人民，用行动书写了人间大爱。"},
+        {date:"2020-06-23",cat:"科技",title:"北斗三号全球卫星导航系统完成组网",summary:"2020年6月23日，我国在西昌卫星发射中心用长征三号乙运载火箭，成功发射北斗系统第五十五颗导航卫星，即北斗三号最后一颗全球组网卫星。至此，北斗三号全球卫星导航系统星座部署全面完成，比原计划提前半年。该系统由24颗中圆地球轨道卫星、3颗倾斜地球同步轨道卫星和3颗地球静止轨道卫星组成，可为全球用户提供全天候、全天时、高精度的定位、导航、授时服务。北斗三号攻克了星间链路、高精度原子钟、短报文通信等核心技术，定位精度达厘米级，授时精度优于20纳秒，性能指标世界一流。自1994年启动建设以来，北斗走过“三步走”发展历程：2000年建成北斗一号服务中国，2012年建成北斗二号服务亚太，2020年建成北斗三号服务全球。如今，北斗已应用于交通运输、农林渔业、气象测报、电力调度、应急救援等各行各业，终端产品出口120余个国家和地区。北斗的建成，彻底摆脱了对GPS的依赖，保障了国家安全与经济命脉。它不仅是国之重器，更是中国科技自立自强的象征。从仰望星空到主宰星辰，中国人终于拥有了自己的“天眼”。"},
+        {date:"2020-11-15",cat:"国际",title:"区域全面经济伙伴关系协定（RCEP）签署",summary:"2020年11月15日，东盟十国与中国、日本、韩国、澳大利亚、新西兰共同签署《区域全面经济伙伴关系协定》（RCEP），标志着全球人口最多、经贸规模最大、最具发展潜力的自由贸易区正式诞生。RCEP覆盖22亿人口、GDP总量26万亿美元、贸易额占全球三分之一。协定涵盖货物贸易、服务贸易、投资、知识产权、电子商务、竞争政策等20个章节，承诺90%以上货物贸易最终零关税，原产地规则统一累积，大幅降低区域供应链成本。谈判始于2012年，历经8年、31轮磋商，克服成员国发展水平差异、地缘政治干扰等重重困难，终于在疫情肆虐的2020年达成。RCEP的签署，是多边主义与自由贸易的重大胜利，对冲了逆全球化逆流。对中国而言，这是首次与日韩建立自贸关系，深化了与东盟产业链融合，为“双循环”新发展格局提供外部支撑。对亚太而言，RCEP构建了包容、均衡、互惠的区域经济架构，助力疫后复苏。它证明：即便在最黑暗的时刻，合作仍是照亮前路的光。RCEP不是终点，而是亚太一体化的新起点。"},
+        {date:"2020-12-17",cat:"科技",title:"嫦娥五号携月壤样品返回地球",summary:"2020年12月17日凌晨，嫦娥五号返回器携带1731克月球样品在内蒙古四子王旗预定区域安全着陆，标志着我国首次地外天体采样返回任务取得圆满成功。这是人类时隔44年再次从月球带回样本，也是中国探月工程“绕、落、回”三步走战略的完美收官。嫦娥五号于11月24日发射，12月1日着陆月球正面风暴洋吕姆克山脉附近，钻取与表取结合采集月壤，上升器携样升空并与轨返组合体在月球轨道自动对接——这是人类首次在38万公里外实现无人交会对接。返回器以接近第二宇宙速度再入大气层，采用“打水漂”式跳跃再入技术，精准着陆。所采样品来自月球最年轻玄武岩区域，年龄约20亿年，填补了美苏样本的时间空白。科学家据此修正了月球火山活动模型，揭示了晚期岩浆演化奥秘。嫦娥五号突破了月面起飞、月球轨道对接、高速再入等11项重大关键技术，验证了深空探测全链条能力。它的成功，不仅为科学研究提供珍贵素材，更为后续载人登月、月球科研站建设奠定技术基础。从“嫦娥奔月”传说到“嫦娥揽月”现实，中华民族千年梦想照进星辰大海。"},
+        {date:"2020-09-08",cat:"国内",title:"全国抗击新冠肺炎疫情表彰大会举行",summary:"2020年9月8日上午，全国抗击新冠肺炎疫情表彰大会在北京人民大会堂隆重举行。大会对在抗疫斗争中作出杰出贡献的个人和集体进行表彰，授予钟南山“共和国勋章”，授予张伯礼、张定宇、陈薇“人民英雄”国家荣誉称号。国家主席发表重要讲话，全面总结抗疫斗争伟大实践，精辟概括“生命至上、举国同心、舍生忘死、尊重科学、命运与共”的伟大抗疫精神。讲话指出，抗疫斗争是一场惊心动魄的大战，也是一次艰苦卓绝的历史大考。中国共产党领导力、中国人民意志力、中国特色社会主义制度优势、新中国成立以来积累的国力、社会主义核心价值观、中华优秀传统文化，是取得胜利的根本保证。大会现场，受表彰代表佩戴奖章，全场起立致敬。这一刻，泪水与荣光交织。从白衣为甲的医护到日夜值守的社区工作者，从志愿者到普通市民，14亿人同舟共济，筑起钢铁长城。表彰大会不仅是对英雄的礼赞，更是对民族精神的淬炼。它昭示：任何困难都压不倒英雄的中国人民。这份精神财富，将激励我们在复兴路上勇毅前行。"}
+    ]
+};
 
-        <!-- 侧边栏 -->
-        <aside class="sidebar">
-            <h3>最新消息</h3>
-            <div class="sidebar-news">
-                <h4>京城科举会试即将举行</h4>
-                <p>今年科举会试定于四月初八举行，各地举子已陆续抵达京城备考。</p>
-            </div>
-            <div class="sidebar-news">
-                <h4>郑和船队后裔筹建航海博物馆</h4>
-                <p>为纪念郑和下西洋壮举，其后裔计划在南京筹建航海博物馆。</p>
-            </div>
-            <div class="sidebar-news">
-                <h4>景德镇官窑推出新款青花瓷</h4>
-                <p>景德镇官窑近日推出新款青花瓷器，图案精美，工艺精湛，备受收藏家青睐。</p>
-            </div>
-            <div class="sidebar-news">
-                <h4>《永乐大典》修缮工程进展顺利</h4>
-                <p>国家图书馆《永乐大典》修缮工程已完成过半，预计明年可全部完工。</p>
-            </div>
+const CAT_COLOR = {
+    "国内":"#8b2500","国际":"#3d5a80","科技":"#4a7c59","经济":"#a66a00",
+    "体育":"#6d3b8f","文化":"#c0392b","社会":"#7a5c3e","军事":"#4b5563"
+};
 
-            <h3>热门话题</h3>
-            <div class="sidebar-news">
-                <h4>海禁政策利弊之辩</h4>
-                <p>朝堂之上，关于海禁政策的争论日益激烈，各方观点不一。</p>
-            </div>
-            <div class="sidebar-news">
-                <h4>书院教育何去何从</h4>
-                <p>随着科举制度日益僵化，书院教育的改革方向成为士林热议话题。</p>
-            </div>
-        </aside>
-    </div>
+const years = Object.keys(NEWS).sort((a,b)=>parseInt(b)-parseInt(a));
+let activeYear = years[0];
+const sidebarEl = document.getElementById('sidebar');
+const mainEl = document.getElementById('main');
 
-    <!-- 页脚 -->
-    <footer>
-        <div class="footer-container">
-            <div class="footer-section">
-                <h3>关于明闻阁</h3>
-                <p>明闻阁创立于万历年间，致力于传播真实、及时的新闻资讯，传承中华文化，服务天下百姓。</p>
-            </div>
-            <div class="footer-section">
-                <h3>快速链接</h3>
-                <a href="#">朝堂要闻</a>
-                <a href="#">民生百态</a>
-                <a href="#">文苑雅集</a>
-                <a href="#">商贾资讯</a>
-                <a href="#">联系我们</a>
-            </div>
-            <div class="footer-section">
-                <h3>联系我们</h3>
-                <p>地址：长安碑林区</p>
-                <p>投稿邮箱：wangzyy1368@163.com</p>
-                <p>官方驿使：暂时还没有</p>
-            </div>
-        </div>
-        <div class="copyright">
-            &copy; 2013-2026 MingDynasty,Inc. 大明新闻 | 明朝美学
-        </div>
-    </footer>
-
-    <script>
-        // 明暗模式切换功能
-        const modeToggle = document.getElementById('modeToggle');
-        const body = document.body;
-
-        // 检查本地存储的模式偏好
-        if (localStorage.getItem('darkMode') === 'true') {
-            body.classList.add('dark-mode');
-            modeToggle.textContent = '切换亮色模式';
+function renderSidebar(){
+    sidebarEl.innerHTML = '';
+    years.forEach(y=>{
+        const item = document.createElement('div');
+        item.className = 'year-item' + (y===activeYear ? ' open' : '');
+        const head = document.createElement('div');
+        head.className = 'year-header';
+        head.innerHTML = `<span>公元 ${y}</span><span class="arrow">▼</span>`;
+        head.onclick = ()=>{ setActiveYear(y); };
+        item.appendChild(head);
+        const body = document.createElement('div');
+        body.className = 'year-body';
+        if(y===activeYear){
+            NEWS[y].forEach((n,i)=>{
+                const a = document.createElement('div');
+                a.className = 'head-link';
+                a.textContent = n.title;
+                a.onclick = (e)=>{ e.stopPropagation(); scrollToCard(i); };
+                body.appendChild(a);
+            });
         }
+        item.appendChild(body);
+        sidebarEl.appendChild(item);
+    });
+}
 
-        // 切换模式按钮点击事件
-        modeToggle.addEventListener('click', function() {
-            // 切换暗色模式类
-            body.classList.toggle('dark-mode');
-            
-            // 更新按钮文本
-            if (body.classList.contains('dark-mode')) {
-                modeToggle.textContent = '切换亮色模式';
-                localStorage.setItem('darkMode', 'true');
-            } else {
-                modeToggle.textContent = '切换暗色模式';
-                localStorage.setItem('darkMode', 'false');
-            }
-        });
-    </script>
+function renderMain(){
+    mainEl.innerHTML = '';
+    const banner = document.createElement('div');
+    banner.className = 'year-banner';
+    banner.textContent = `公元 ${activeYear} 年 · 纪事`;
+    mainEl.appendChild(banner);
+    NEWS[activeYear].forEach((n,i)=>{
+        const card = document.createElement('article');
+        card.className = 'news-card';
+        card.id = 'card-'+i;
+        const color = CAT_COLOR[n.cat] || '#8b2500';
+        card.innerHTML = `
+            <div class="news-meta">
+                <span class="news-date">${n.date}</span>
+                <span class="news-cat" style="background:${color}">${n.cat}</span>
+            </div>
+            <div class="news-title">${n.title}</div>
+            <div class="news-summary">${n.summary}</div>`;
+        mainEl.appendChild(card);
+    });
+}
+
+function setActiveYear(y){
+    activeYear = y;
+    renderSidebar();
+    renderMain();
+    window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function scrollToCard(i){
+    const el = document.getElementById('card-'+i);
+    if(el){ el.scrollIntoView({behavior:'smooth', block:'center'});
+        el.style.borderColor = CAT_COLOR[NEWS[activeYear][i].cat];
+        setTimeout(()=>{ el.style.borderColor=''; }, 1200);
+    }
+}
+
+const themeBtn = document.getElementById('themeToggle');
+themeBtn.onclick = ()=>{
+    document.body.classList.toggle('dark');
+    themeBtn.textContent = document.body.classList.contains('dark') ? '☀' : '☾';
+};
+
+renderSidebar();
+renderMain();
+</script>
 </body>
 </html>
