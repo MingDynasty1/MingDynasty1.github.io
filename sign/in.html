@@ -7,10 +7,12 @@
     <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- 注意：确保 supabase-js 版本兼容 -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://mingdynasty1.github.io/supabase-client.js"></script>
     
     <style>
+        /* 原有样式保持不变 */
         .seal-button {
             background-color: #A62424;
             color: #FFFFF0;
@@ -55,6 +57,35 @@
             color: #333;
         }
 
+        /* 新增：Figma 按钮特定样式 */
+        .figma-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #0ACF83; /* Figma 绿色 */
+            border-radius: 8px;
+            background: #FFFFF0;
+            color: #2C2C2C;
+            font-family: 'serif', 'SimSun', 'FangSong';
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            margin-bottom: 12px; /* 与 GitHub 按钮间隔 */
+        }
+        .figma-btn:hover {
+            background: #f0fdf4;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(10, 207, 131, 0.2);
+        }
+        .figma-btn i {
+            font-size: 1.6rem;
+            color: #0ACF83;
+        }
+
         .divider {
             display: flex;
             align-items: center;
@@ -85,7 +116,7 @@
         .law-link:hover { text-decoration: underline; }
         .paper-texture {
             background-color: #FFFFF0;
-            background-image: url('data:image/png;base64,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');
+            background-image: url('data:image/png;base64,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');
         }
 
         /* 加载动画 */
@@ -129,6 +160,15 @@
             </div>
             
             <div class="p-6 md:p-8 paper-texture">
+                
+                <!-- ===== Continue with Figma (新增) ===== -->
+                <button onclick="socialLogin('figma')" id="figmaLoginBtn" class="figma-btn">
+                    <!-- 使用 FontAwesome 的笔刷图标代表 Figma，或者你可以替换为 Figma SVG -->
+                    <i class="fa fa-paint-brush"></i> 
+                    <span id="figmaBtnText">Continue with Figma</span>
+                    <span id="figmaLoading" class="spinner" style="display:none;"></span>
+                </button>
+
                 <!-- ===== Continue with GitHub ===== -->
                 <button onclick="socialLogin('github')" id="githubLoginBtn" class="github-btn">
                     <i class="fa fa-github"></i> 
@@ -179,7 +219,7 @@
                         </button>
                     </div>
                 </form>
-                <!-- 在 </form> 之后，<div class="mt-6 text-center"> 之前添加 -->
+                
                 <div class="text-right mt-2">
                     <a href="https://mingdynasty1.github.io/sign/re.html" class="text-sm text-[#A62424] hover:underline law-link">
                         🔑 忘记密码？
@@ -206,40 +246,62 @@
     
     <script>
         // ============================================================
-        // GitHub 第三方登录
+        // 第三方登录通用函数
         // ============================================================
         async function socialLogin(provider) {
-            const btn = document.getElementById('githubLoginBtn');
-            const btnText = document.getElementById('githubBtnText');
-            const loading = document.getElementById('githubLoading');
+            let btn, btnText, loading;
+            
+            // 根据 provider 选择对应的 DOM 元素
+            if (provider === 'github') {
+                btn = document.getElementById('githubLoginBtn');
+                btnText = document.getElementById('githubBtnText');
+                loading = document.getElementById('githubLoading');
+            } else if (provider === 'figma') {
+                btn = document.getElementById('figmaLoginBtn');
+                btnText = document.getElementById('figmaBtnText');
+                loading = document.getElementById('figmaLoading');
+            }
+            
             const errorEl = document.getElementById('loginError');
             
             // 显示加载状态
-            btn.style.opacity = '0.7';
-            btnText.textContent = '正在跳转到 GitHub...';
-            loading.style.display = 'inline-block';
-            errorEl.classList.add('hidden');
+            if(btn) {
+                btn.style.opacity = '0.7';
+                btn.disabled = true;
+            }
+            if(btnText) btnText.textContent = `正在跳转到 ${provider === 'figma' ? 'Figma' : 'GitHub'}...`;
+            if(loading) loading.style.display = 'inline-block';
+            if(errorEl) errorEl.classList.add('hidden');
             
             try {
+                // 调用 Supabase Auth
                 const { data, error } = await supabaseClient.auth.signInWithOAuth({
                     provider: provider,
                     options: {
+                        // 重要：这里必须是你之前在 Figma OAuth App 中设置的 Redirect URL
+                        // 通常格式为: https://<your-project-ref>.supabase.co/auth/v1/callback
+                        // 但为了用户体验，建议设置为登录成功后的跳转页，Supabase 会处理中间回调
                         redirectTo: 'https://mingdynasty1.github.io/'
                     }
                 });
                 
                 if (error) throw error;
-                // Supabase 会自动跳转到 GitHub 授权页面
-                // 这里不需要额外操作
+                // Supabase 会自动处理重定向到 Provider 授权页
                 
             } catch (error) {
-                // 恢复按钮
-                btn.style.opacity = '1';
-                btnText.textContent = 'Continue with GitHub';
-                loading.style.display = 'none';
+                // 恢复按钮状态
+                if(btn) {
+                    btn.style.opacity = '1';
+                    btn.disabled = false;
+                }
+                if(btnText) btnText.textContent = provider === 'figma' ? 'Continue with Figma' : 'Continue with GitHub';
+                if(loading) loading.style.display = 'none';
                 
-                errorEl.textContent = '登录失败：' + error.message;
-                errorEl.classList.remove('hidden');
+                if(errorEl) {
+                    errorEl.textContent = '登录失败：' + error.message;
+                    errorEl.classList.remove('hidden');
+                }
+                console.error("OAuth Error:", error);
             }
         }
 
@@ -276,16 +338,20 @@
                 emailLoginBtn.disabled = true;
                 emailLoginBtn.textContent = '登录中...';
 
-                const result = await loginUser(email, password);
+                // 假设 supabaseClient 已在全局可用
+                const { data, error } = await supabaseClient.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
                 
                 emailLoginBtn.disabled = false;
                 emailLoginBtn.textContent = '登 录';
                 
-                if (result.success) {
-                    window.location.href = 'https://mingdynasty1.github.io/';
-                } else {
-                    errorEl.textContent = '登录失败：' + (result.error || '请检查邮箱和密码');
+                if (error) {
+                    errorEl.textContent = '登录失败：' + error.message;
                     errorEl.classList.remove('hidden');
+                } else {
+                    window.location.href = 'https://mingdynasty1.github.io/';
                 }
             });
         });
