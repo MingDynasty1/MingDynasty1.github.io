@@ -145,7 +145,7 @@
         
         .contact-item {
             display: flex;
-            align-items: center;
+            align-items: flex-start; /* 改为flex-start以适应多行内容 */
             margin-bottom: 25px;
             padding: 15px;
             background: var(--card-hover-bg);
@@ -160,8 +160,9 @@
         }
         
         .icon {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
+            min-width: 50px; /* 防止压缩 */
             background: var(--primary-color);
             border-radius: 50%;
             display: flex;
@@ -169,7 +170,12 @@
             justify-content: center;
             margin-right: 20px;
             color: white;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        .contact-details {
+            flex: 1;
         }
         
         .contact-details h3 {
@@ -180,25 +186,67 @@
         
         .contact-details p {
             color: var(--text-color);
-            opacity: 0.8;
+            opacity: 0.9;
             margin-bottom: 5px;
+            font-size: 0.95rem;
+        }
+        
+        .email-address {
+            display: block;
+            font-family: monospace;
+            background: rgba(0,0,0,0.05);
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin: 5px 0;
+            word-break: break-all;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        
+        .dark-mode .email-address {
+            background: rgba(255,255,255,0.1);
+            color: var(--accent-color);
         }
         
         .contact-link {
             display: inline-block;
             margin-top: 8px;
-            padding: 8px 15px;
+            padding: 6px 12px;
             background: var(--primary-color);
             color: white;
             text-decoration: none;
             border-radius: 4px;
             transition: all 0.3s ease;
             font-weight: bold;
+            font-size: 0.9rem;
         }
         
         .contact-link:hover {
             background: var(--secondary-color);
             transform: translateY(-2px);
+        }
+        
+        .notice-box {
+            background: rgba(139, 26, 29, 0.1);
+            border: 1px dashed var(--primary-color);
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .dark-mode .notice-box {
+            background: rgba(201, 76, 79, 0.1);
+        }
+        
+        .notice-text {
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .dark-mode .notice-text {
+            color: var(--decoration-color);
         }
         
         .decoration {
@@ -286,6 +334,7 @@
             .contact-item {
                 flex-direction: column;
                 text-align: center;
+                align-items: center;
             }
             
             .icon {
@@ -322,9 +371,13 @@
         
         <div class="content">
             <div class="contact-info">
-                <h2>联系信息</h2>
+                <h2>联系须知</h2>
                 <p>我们秉承明朝"以诚待人"的传统美德，期待与您建立真诚的联系。无论您有任何疑问、建议或合作意向，我们都将竭诚为您服务。</p>
-                <p>我们的团队将尽快回复您的信息，感谢您的关注与支持。</p>
+                
+                <div class="notice-box">
+                    <p class="notice-text">⚠️ 重要提示 ⚠️</p>
+                    <p>为了提高沟通效率，请在发送邮件时<br><strong>在信件最前端注明您的来意</strong></p>
+                </div>
                 
                 <div class="decoration">
                     <span class="decoration-line"></span>
@@ -337,26 +390,85 @@
             </div>
             
             <div class="contact-methods">
-                <h2>联系方式</h2>
+                <h2>专用联络通道</h2>
                 
+                <!-- 洛谷聊天 -->
                 <div class="contact-item">
                     <div class="icon">洛</div>
                     <div class="contact-details">
-                        <h3>在线沟通</h3>
-                        <p>通过洛谷聊天系统与我们直接交流</p>
+                        <h3>在线即时沟通</h3>
+                        <p>通过洛谷聊天系统与我们直接交流，响应最快</p>
                         <a href="https://www.luogu.com.cn/chat?uid=1625468" class="contact-link" target="_blank">开始对话</a>
                     </div>
                 </div>
                 
+                <!-- 商业合作 -->
                 <div class="contact-item">
-                    <div class="icon">邮</div>
+                    <div class="icon">商</div>
                     <div class="contact-details">
-                        <h3>电子邮件</h3>
-                        <p>发送邮件至我们的官方邮箱</p>
-                        <a href="mailto:wangzyy1368@163.com" class="contact-link">发送邮件</a>
+                        <h3>商业合作</h3>
+                        <p>涉及商务合作、赞助及联合开发事宜</p>
+                        <span class="email-address">mingdynasty@love.ml</span>
+                        <a href="mailto:mingdynasty@love.ml?subject=【商业合作】" class="contact-link">发送合作意向</a>
+                    </div>
+                </div>
+
+                <!-- 线下服务 -->
+                <div class="contact-item">
+                    <div class="icon">线</div>
+                    <div class="contact-details">
+                        <h3>线下服务预约</h3>
+                        <p>面对面技术支持、设备维护等线下服务</p>
+                        <span class="email-address">wangzyy1368@outlook.com</span>
+                        <a href="mailto:wangzyy1368@outlook.com?subject=【线下服务】" class="contact-link">预约服务</a>
+                    </div>
+                </div>
+
+                <!-- 建议与改善 -->
+                <div class="contact-item">
+                    <div class="icon">谏</div>
+                    <div class="contact-details">
+                        <h3>建议与改善</h3>
+                        <p>原官方主邮箱，用于接收网站改进建议、Bug反馈</p>
+                        <span class="email-address">wangzyy1368@163.com</span>
+                        <a href="mailto:wangzyy1368@163.com?subject=【建议改善】" class="contact-link">提交建议</a>
+                    </div>
+                </div>
+
+                <!-- 前端问题统计 -->
+                <div class="contact-item">
+                    <div class="icon">码</div>
+                    <div class="contact-details">
+                        <h3>新前端问题统计</h3>
+                        <p>专门处理前端页面显示、交互逻辑等技术问题</p>
+                        <span class="email-address">1@mingdynasty.cc.cd</span>
+                        <a href="mailto:1@mingdynasty.cc.cd?subject=【前端问题】" class="contact-link">报告问题</a>
+                    </div>
+                </div>
+
+                <!-- 博客展览 -->
+                <div class="contact-item">
+                    <div class="icon">文</div>
+                    <div class="contact-details">
+                        <h3>博客展览投稿</h3>
+                        <p>文章收录、博客展示申请及相关内容合作</p>
+                        <span class="email-address">1@blog.mingdynasty.cc.cd</span>
+                        <a href="mailto:1@blog.mingdynasty.cc.cd?subject=【博客展览】" class="contact-link">投稿申请</a>
+                    </div>
+                </div>
+
+                <!-- HTML5游戏展示 -->
+                <div class="contact-item">
+                    <div class="icon">游</div>
+                    <div class="contact-details">
+                        <h3>HTML5 游戏展示</h3>
+                        <p>提交您的HTML5游戏作品进行展示（需附带HTML文件）</p>
+                        <span class="email-address">1@game.mingdynasty.cc.cd</span>
+                        <a href="mailto:1@game.mingdynasty.cc.cd?subject=【游戏展示】" class="contact-link">提交游戏</a>
                     </div>
                 </div>
                 
+                <!-- 传统书信 -->
                 <div class="contact-item">
                     <div class="icon">信</div>
                     <div class="contact-details">
@@ -366,12 +478,13 @@
                     </div>
                 </div>
                 
+                <!-- 亲临拜访 -->
                 <div class="contact-item">
                     <div class="icon">访</div>
                     <div class="contact-details">
                         <h3>亲临拜访</h3>
-                        <p>地址：请通过前三个方式预约得知</p>
-                        <p>拜访前请通过前三个方式提前预约</p>
+                        <p>地址：请通过前几个方式预约得知</p>
+                        <p>拜访前请务必提前预约</p>
                     </div>
                 </div>
             </div>
