@@ -437,6 +437,44 @@
             color: #aaa;
         }
         
+        /* 成功图片遮罩层样式 */
+        .success-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 9998;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+            pointer-events: none;
+        }
+        
+        .success-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .success-image {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            max-width: 80%;
+            max-height: 80%;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+            pointer-events: none;
+        }
+        
+        .success-image.active {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        
         /* 页脚样式 */
         footer {
             background: var(--header-bg);
@@ -461,6 +499,11 @@
     </style>
 </head>
 <body class="light-mode">
+    <!-- 成功图片遮罩层 -->
+    <div class="success-overlay" id="success-overlay"></div>
+    <!-- 成功图片 -->
+    <img src="https://mgdyqaq.github.io/good.png" alt="恭喜全AC" class="success-image" id="success-image">
+    
     <header>
         <div class="container">
             <h1 class="ming-decoration">大明编程挑战</h1>
@@ -628,6 +671,29 @@ int main() {
             themeToggle.checked = true;
         }
         
+        // 提前加载成功图片
+        const successImageEl = document.getElementById('success-image');
+        const successOverlay = document.getElementById('success-overlay');
+        
+        // 预加载图片
+        const preloadImg = new Image();
+        preloadImg.src = 'https://mgdyqaq.github.io/good.png';
+        preloadImg.onload = function() {
+            console.log('成功图片已预加载');
+        };
+        
+        // 显示成功图片的函数
+        function showSuccessImage() {
+            successOverlay.classList.add('active');
+            successImageEl.classList.add('active');
+            
+            // 5秒后淡出
+            setTimeout(() => {
+                successOverlay.classList.remove('active');
+                successImageEl.classList.remove('active');
+            }, 5000);
+        }
+        
         // 代码提交功能
         const submitBtn = document.getElementById('submit-btn');
         const resultOutput = document.getElementById('result-output');
@@ -652,6 +718,10 @@ int main() {
                 return;
             }
             
+            // 隐藏之前的成功图片（如果正在显示）
+            successOverlay.classList.remove('active');
+            successImageEl.classList.remove('active');
+            
             // 显示编译中
             resultOutput.innerHTML = "正在编译代码...\n\n";
             
@@ -674,6 +744,7 @@ int main() {
                 
                 // 模拟测试用例运行
                 let allPassed = true;
+                let completedTests = 0;
                 
                 // 延迟显示每个测试用例的结果
                 let delay = 500;
@@ -721,6 +792,8 @@ int main() {
                         
                         resultOutput.appendChild(testCaseElement);
                         
+                        completedTests++;
+                        
                         // 如果是最后一个测试用例，显示最终结果
                         if (index === testCases.length - 1) {
                             setTimeout(() => {
@@ -734,6 +807,9 @@ int main() {
                                     finalResult.style.backgroundColor = '#2e7d32';
                                     finalResult.style.color = 'white';
                                     finalResult.textContent = '✓ 恭喜！所有测试用例通过！';
+                                    
+                                    // 全部AC，显示成功图片
+                                    showSuccessImage();
                                 } else {
                                     finalResult.style.backgroundColor = '#c62828';
                                     finalResult.style.color = 'white';
@@ -856,5 +932,6 @@ rl.on('line', (line) => {
             codeEditor.value = sampleCode;
         });
     </script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"9e49524833114b12a2834a71ff201742","r":1}' crossorigin="anonymous"></script>
 </body>
 </html>
