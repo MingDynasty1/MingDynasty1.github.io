@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>地铁跑酷金陵版 | Subway Surf Jinling | MingDynasty</title>
+  
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: "华文楷体", "STKaiti", "KaiTi", "楷体", serif;
+      background-color: #1a1410;
+    }
+    #info {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      color: #e8d5b0;
+      text-shadow: 2px 2px 0 #3a2a1e, 4px 4px 8px rgba(0,0,0,0.7);
+      z-index: 10;
+      pointer-events: none;
+      user-select: none;
+      background: rgba(30, 20, 12, 0.5);
+      padding: 10px 20px;
+      border-radius: 40px;
+      border-left: 4px solid #b89a6b;
+      backdrop-filter: blur(2px);
+      letter-spacing: 2px;
+    }
+    #info h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      font-weight: normal;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    #info h1 small {
+      font-size: 0.9rem;
+      color: #c9b088;
+      letter-spacing: 1px;
+    }
+    #score {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      color: #f5e7c8;
+      font-size: 2rem;
+      background: rgba(20, 12, 6, 0.7);
+      padding: 8px 24px;
+      border-radius: 50px;
+      border: 1px solid #b89a6b;
+      backdrop-filter: blur(4px);
+      box-shadow: 0 0 30px rgba(0,0,0,0.5);
+      z-index: 10;
+      letter-spacing: 4px;
+      text-shadow: 0 0 12px #c9a87c;
+      font-weight: bold;
+    }
+    #controls {
+      position: absolute;
+      bottom: 40px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      z-index: 20;
+      pointer-events: none;
+      flex-wrap: wrap;
+      padding: 0 10px;
+    }
+    .ctrl-btn {
+      pointer-events: auto;
+      background: rgba(60, 40, 24, 0.75);
+      backdrop-filter: blur(4px);
+      border: 2px solid #b89a6b;
+      color: #efddc0;
+      font-size: 2.2rem;
+      padding: 12px 24px;
+      border-radius: 60px;
+      cursor: pointer;
+      box-shadow: 0 8px 0 #2f1e12, 0 10px 30px rgba(0,0,0,0.6);
+      transition: 0.08s linear;
+      font-family: "华文楷体", "STKaiti", serif;
+      min-width: 80px;
+      letter-spacing: 4px;
+      text-shadow: 0 0 8px #b28b5a;
+      user-select: none;
+      flex: 1 1 auto;
+      max-width: 160px;
+    }
+    .ctrl-btn:active {
+      transform: translateY(6px);
+      box-shadow: 0 2px 0 #2f1e12;
+    }
+    .ctrl-btn.jump {
+      background: rgba(80, 50, 20, 0.85);
+      border-color: #d4a86a;
+      color: #ffecce;
+      flex: 2 1 auto;
+      max-width: 200px;
+    }
+    @media (max-width: 600px) {
+      .ctrl-btn { font-size: 1.6rem; padding: 8px 16px; min-width: 60px; letter-spacing: 2px; }
+      #info h1 { font-size: 1.2rem; }
+      #score { font-size: 1.4rem; padding: 4px 16px; }
+    }
+    #restart-tip {
+      position: absolute;
+      bottom: 140px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      color: #dac29c;
+      font-size: 1.2rem;
+      text-shadow: 0 4px 12px #000;
+      background: rgba(0,0,0,0.3);
+      padding: 8px;
+      backdrop-filter: blur(2px);
+      width: fit-content;
+      margin: 0 auto;
+      border-radius: 60px;
+      padding: 8px 28px;
+      border: 1px solid #6a5238;
+      letter-spacing: 2px;
+      pointer-events: none;
+      z-index: 15;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+  <div id="info">
+    <h1>🏮 明·疾驰 <small>金陵地铁</small></h1>
+  </div>
+  <div id="score">🏯 <span id="scoreValue">0</span></div>
+  <div id="controls">
+    <div class="ctrl-btn" id="btnLeft">◀ 左</div>
+    <div class="ctrl-btn jump" id="btnJump">⬆ 跃</div>
+    <div class="ctrl-btn" id="btnRight">右 ▶</div>
+  </div>
+  <div id="restart-tip">⚡ 跳跃避障 · 触壁或障碍则重开</div>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.128.0/build/three.module.js"
+      }
+    }
+  </script>
+
+  <script type="module">
+    import * as THREE from 'three';
+
+    // --- 初始化场景、相机、渲染器 ---
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x1a1410);
+    scene.fog = new THREE.Fog(0x1a1410, 20, 55); // 加大雾距，避免远处消失
+
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(0, 4.2, 9);
+    camera.lookAt(0, 0.5, 6);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    document.body.appendChild(renderer.domElement);
+
+    // --- 光影 ---
+    const ambientLight = new THREE.AmbientLight(0x403020, 0.6);
+    scene.add(ambientLight);
+    const mainLight = new THREE.DirectionalLight(0xffdd99, 1.2);
+    mainLight.position.set(5, 12, 8);
+    mainLight.castShadow = true;
+    mainLight.shadow.mapSize.width = 1024;
+    mainLight.shadow.mapSize.height = 1024;
+    scene.add(mainLight);
+    const fillLight = new THREE.DirectionalLight(0xffaa66, 0.5);
+    fillLight.position.set(-4, 6, 10);
+    scene.add(fillLight);
+    const backLight = new THREE.DirectionalLight(0x446688, 0.3);
+    backLight.position.set(0, 2, -10);
+    scene.add(backLight);
+    const lanternLight = new THREE.PointLight(0xff8844, 0.6, 15);
+    lanternLight.position.set(0, 3, 5);
+    scene.add(lanternLight);
+
+    // --- 轨道 (明代风格) - 无限循环 ---
+    const groundWidth = 6;
+    const segmentLength = 4;
+    const totalSegments = 80; // 增加段数，保证前方始终有路
+
+    function createTrackSegment(zPos) {
+      const group = new THREE.Group();
+      const stoneMat = new THREE.MeshStandardMaterial({ color: 0x5a4a3a, roughness: 0.8, metalness: 0.1, emissive: new THREE.Color(0x1a120a), emissiveIntensity: 0.1 });
+      const stone = new THREE.Mesh(new THREE.BoxGeometry(groundWidth, 0.3, segmentLength), stoneMat);
+      stone.position.y = -0.15;
+      stone.receiveShadow = true;
+      stone.castShadow = true;
+      group.add(stone);
+
+      const railMat = new THREE.MeshStandardMaterial({ color: 0x7a6a5a, roughness: 0.7, metalness: 0.2, emissive: new THREE.Color(0x2a1a0a), emissiveIntensity: 0.05 });
+      for (let side = -1; side <= 1; side+=2) {
+        const rail = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.2, segmentLength), railMat);
+        rail.position.set(side * 1.8, 0.1, 0);
+        rail.receiveShadow = true;
+        rail.castShadow = true;
+        group.add(rail);
+      }
+      // 装饰
+      const decoMat = new THREE.MeshStandardMaterial({ color: 0x8a7a5a, emissive: new THREE.Color(0x3a2a1a), emissiveIntensity: 0.1 });
+      for (let i = -1; i <= 1; i++) {
+        const deco = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.05, 0.3), decoMat);
+        deco.position.set(i * 1.2, 0.2, 0);
+        group.add(deco);
+      }
+      // 望柱
+      const pillarMat = new THREE.MeshStandardMaterial({ color: 0x8a7a5a, roughness: 0.9, emissive: new THREE.Color(0x2a1a0a), emissiveIntensity: 0.1 });
+      for (let side = -1; side <= 1; side+=2) {
+        const pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.2, 0.5, 8), pillarMat);
+        pillar.position.set(side * 2.5, 0.25, 0);
+        pillar.castShadow = true;
+        pillar.receiveShadow = true;
+        group.add(pillar);
+      }
+      group.position.z = zPos;
+      return group;
+    }
+
+    // 轨道组 - 使用循环队列方式，不断复用
+    const trackSegments = [];
+    const trackGroup = new THREE.Group();
+    const trackStartZ = -30;
+    const trackEndZ = 30;
+    for (let i = 0; i < totalSegments; i++) {
+      const z = trackStartZ + i * segmentLength;
+      const seg = createTrackSegment(z);
+      trackGroup.add(seg);
+      trackSegments.push(seg);
+    }
+    scene.add(trackGroup);
+
+    // --- 宫灯 (也做循环) ---
+    const lanterns = [];
+    function createLantern(x, z) {
+      const group = new THREE.Group();
+      const poleMat = new THREE.MeshStandardMaterial({ color: 0x4a2a1a, roughness: 0.9 });
+      const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.1, 1.2, 6), poleMat);
+      pole.position.y = 0.6;
+      group.add(pole);
+      const lanternMat = new THREE.MeshStandardMaterial({ color: 0xcc8844, emissive: new THREE.Color(0xcc6633), emissiveIntensity: 0.3, roughness: 0.4 });
+      const lanternBody = new THREE.Mesh(new THREE.SphereGeometry(0.35, 8, 8), lanternMat);
+      lanternBody.position.y = 1.0;
+      lanternBody.castShadow = true;
+      group.add(lanternBody);
+      const tasselMat = new THREE.MeshStandardMaterial({ color: 0xcc8844 });
+      const tassel = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.08, 0.3, 4), tasselMat);
+      tassel.position.y = 0.7;
+      group.add(tassel);
+      group.position.set(x, 0, z);
+      return group;
+    }
+
+    for (let i = 0; i < totalSegments; i+=2) {
+      const z = trackStartZ + i * segmentLength;
+      for (let side = -1; side <= 1; side+=2) {
+        const lantern = createLantern(side * 3.0, z);
+        scene.add(lantern);
+        lanterns.push(lantern);
+      }
+    }
+
+    // --- 远处楼阁 (静态) ---
+    function createDistantBuilding(x, z) {
+      const group = new THREE.Group();
+      const baseMat = new THREE.MeshStandardMaterial({ color: 0x2a1a0a, emissive: new THREE.Color(0x0a0500), emissiveIntensity: 0.2 });
+      const base = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.6, 0.8), baseMat);
+      base.position.y = 0.3;
+      group.add(base);
+      const body = new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.0, 0.6), baseMat);
+      body.position.y = 0.9;
+      group.add(body);
+      const roof = new THREE.Mesh(new THREE.ConeGeometry(0.7, 0.6, 4), baseMat);
+      roof.position.y = 1.5;
+      roof.rotation.y = Math.PI/4;
+      group.add(roof);
+      group.position.set(x, 0, z);
+      return group;
+    }
+    for (let i = -3; i <= 3; i+=2) {
+      for (let j = -2; j <= 2; j+=2) {
+        const building = createDistantBuilding(i * 5.5, -30 + j * 6);
+        scene.add(building);
+      }
+    }
+
+    // --- 玩家 (明代角色) ---
+    const playerGroup = new THREE.Group();
+    const bodyMat = new THREE.MeshStandardMaterial({ color: 0x8a1a1a, emissive: new THREE.Color(0x2a0a0a), emissiveIntensity: 0.1, roughness: 0.5 });
+    const body = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.8, 0.4), bodyMat);
+    body.position.y = 0.5;
+    body.castShadow = true;
+    playerGroup.add(body);
+    const headMat = new THREE.MeshStandardMaterial({ color: 0xe0c8a0, roughness: 0.7 });
+    const head = new THREE.Mesh(new THREE.SphereGeometry(0.25, 8, 8), headMat);
+    head.position.y = 1.0;
+    head.castShadow = true;
+    playerGroup.add(head);
+    const hatMat = new THREE.MeshStandardMaterial({ color: 0x1a1a2a, roughness: 0.8 });
+    const hat = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.35, 0.1, 6), hatMat);
+    hat.position.y = 1.15;
+    hat.rotation.y = Math.PI/6;
+    playerGroup.add(hat);
+    const ribbonMat = new THREE.MeshStandardMaterial({ color: 0xcc3333 });
+    const ribbon = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.1, 0.3), ribbonMat);
+    ribbon.position.set(0.1, 1.0, 0.2);
+    playerGroup.add(ribbon);
+    playerGroup.position.set(0, 0.2, 0);
+    scene.add(playerGroup);
+
+    // --- 障碍物 (石狮/铜缸) ---
+    function createObstacle(x, z) {
+      const group = new THREE.Group();
+      const matStone = new THREE.MeshStandardMaterial({ color: 0x7a6a5a, roughness: 0.9, emissive: new THREE.Color(0x1a120a), emissiveIntensity: 0.1 });
+      const base = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.5, 0.4, 6), matStone);
+      base.position.y = 0.2;
+      base.castShadow = true;
+      base.receiveShadow = true;
+      group.add(base);
+      const bodyObs = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.35, 0.5, 6), matStone);
+      bodyObs.position.y = 0.5;
+      bodyObs.castShadow = true;
+      bodyObs.receiveShadow = true;
+      group.add(bodyObs);
+      const headStone = new THREE.Mesh(new THREE.SphereGeometry(0.15, 5), matStone);
+      headStone.position.set(0.2, 0.65, 0.2);
+      group.add(headStone);
+      group.position.set(x, 0, z);
+      return group;
+    }
+
+    let obstacles = [];
+    const maxObstacles = 20;
+    function spawnObstacle(zPos) {
+      const lane = Math.floor(Math.random() * 3) - 1;
+      const x = lane * 1.8;
+      const obstacle = createObstacle(x, zPos);
+      scene.add(obstacle);
+      obstacles.push(obstacle);
+    }
+
+    // 初始障碍 - 分布更均匀
+    for (let i = 0; i < 12; i++) {
+      const z = 6 + i * 3.5 + Math.random() * 1.5;
+      spawnObstacle(z);
+    }
+
+    // --- 列车 (明代风格车厢) ---
+    const trainGroup = new THREE.Group();
+    function createCarriage(offsetX, offsetZ) {
+      const g = new THREE.Group();
+      const matCar = new THREE.MeshStandardMaterial({ color: 0x4a2a1a, roughness: 0.8, emissive: new THREE.Color(0x1a0a00), emissiveIntensity: 0.1 });
+      const bodyCar = new THREE.Mesh(new THREE.BoxGeometry(1.6, 1.2, 2.5), matCar);
+      bodyCar.position.y = 0.6;
+      bodyCar.castShadow = true;
+      bodyCar.receiveShadow = true;
+      g.add(bodyCar);
+      const winMat = new THREE.MeshStandardMaterial({ color: 0xf0d090, emissive: new THREE.Color(0x886633), emissiveIntensity: 0.2 });
+      for (let i = -1; i <= 1; i+=2) {
+        const win = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.3, 0.1), winMat);
+        win.position.set(i * 0.5, 0.7, 1.26);
+        g.add(win);
+        const win2 = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.3, 0.1), winMat);
+        win2.position.set(i * 0.5, 0.7, -1.26);
+        g.add(win2);
+      }
+      const roofMat = new THREE.MeshStandardMaterial({ color: 0x3a2a1a });
+      const roofDec = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.1, 1.0), roofMat);
+      roofDec.position.y = 1.2;
+      g.add(roofDec);
+      g.position.set(offsetX, 0, offsetZ);
+      return g;
+    }
+
+    const trainPositions = [
+      { x: 0, z: 0 },
+      { x: 0, z: -3.0 },
+      { x: 0, z: -6.0 }
+    ];
+    trainPositions.forEach(pos => {
+      const car = createCarriage(pos.x, pos.z);
+      trainGroup.add(car);
+    });
+    trainGroup.position.set(0, 0.2, -10);
+    scene.add(trainGroup);
+
+    // --- 游戏状态 ---
+    let score = 0;
+    let gameOver = false;
+    let targetLane = 0;
+    let currentLane = 0;
+    let isJumping = false;
+    let jumpVelocity = 0;
+    const gravity = -0.025;
+    const jumpPower = 0.32;
+    
+    let baseSpeed = 0.12;
+    const maxSpeed = 0.45;
+    const speedThreshold = 500;
+
+    const scoreSpan = document.getElementById('scoreValue');
+
+    // 控制
+    document.getElementById('btnLeft').addEventListener('click', () => { if (!gameOver) targetLane = Math.max(-1, targetLane - 1); });
+    document.getElementById('btnRight').addEventListener('click', () => { if (!gameOver) targetLane = Math.min(1, targetLane + 1); });
+    document.getElementById('btnJump').addEventListener('click', () => { if (!gameOver && !isJumping) { isJumping = true; jumpVelocity = jumpPower; } });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft' || e.key === 'a') { if (!gameOver) targetLane = Math.max(-1, targetLane - 1); e.preventDefault(); }
+      else if (e.key === 'ArrowRight' || e.key === 'd') { if (!gameOver) targetLane = Math.min(1, targetLane + 1); e.preventDefault(); }
+      else if (e.key === ' ' || e.key === 'w' || e.key === 'ArrowUp') { 
+        if (!gameOver && !isJumping) { isJumping = true; jumpVelocity = jumpPower; }
+        e.preventDefault();
+      }
+    });
+
+    // --- 重置 ---
+    function resetGame() {
+      obstacles.forEach(obj => scene.remove(obj));
+      obstacles = [];
+      playerGroup.position.set(0, 0.2, 0);
+      currentLane = 0;
+      targetLane = 0;
+      score = 0;
+      scoreSpan.textContent = '0';
+      gameOver = false;
+      isJumping = false;
+      jumpVelocity = 0;
+      baseSpeed = 0.12;
+      // 重置轨道位置
+      trackGroup.position.z = 0;
+      // 重置宫灯
+      lanterns.forEach((l, idx) => {
+        const z = trackStartZ + (idx % (totalSegments/2)) * segmentLength * 2;
+        l.position.z = z;
+      });
+      // 重置障碍
+      for (let i = 0; i < 12; i++) {
+        const z = 6 + i * 3.5 + Math.random() * 1.5;
+        spawnObstacle(z);
+      }
+      camera.position.set(0, 4.2, 9);
+      camera.lookAt(0, 0.5, 6);
+      trainGroup.position.set(0, 0.2, -10);
+    }
+
+    // --- 碰撞检测 ---
+    function checkCollision() {
+      const px = playerGroup.position.x;
+      const pz = playerGroup.position.z;
+      const py = playerGroup.position.y;
+      if (py > 0.9) return false;
+      for (let obs of obstacles) {
+        const ox = obs.position.x;
+        const oz = obs.position.z;
+        const distX = Math.abs(px - ox);
+        const distZ = Math.abs(pz - oz);
+        if (distX < 0.6 && distZ < 0.6) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    // --- 循环更新轨道和宫灯 ---
+    function updateTrackAndLanterns(playerZ) {
+      // 轨道循环
+      const threshold = 20;
+      for (let seg of trackSegments) {
+        if (seg.position.z < playerZ - threshold) {
+          seg.position.z += totalSegments * segmentLength;
+        }
+      }
+      // 宫灯循环
+      for (let l of lanterns) {
+        if (l.position.z < playerZ - threshold) {
+          l.position.z += totalSegments * segmentLength;
+        }
+      }
+    }
+
+    // --- 动画循环 ---
+    function animate() {
+      requestAnimationFrame(animate);
+
+      if (!gameOver) {
+        // 动态速度
+        let speedFactor = 1.0;
+        if (score > speedThreshold) {
+          const progress = Math.min((score - speedThreshold) / 800, 1.0);
+          speedFactor = 1.0 + progress * 2.2;
+        }
+        const currentSpeed = baseSpeed * speedFactor;
+        const clampedSpeed = Math.min(currentSpeed, maxSpeed);
+
+        // 横向移动
+        const diff = targetLane - currentLane;
+        if (Math.abs(diff) > 0.01) {
+          currentLane += Math.sign(diff) * 0.08;
+        } else {
+          currentLane = targetLane;
+        }
+        playerGroup.position.x = currentLane * 1.8;
+
+        // 跳跃
+        if (isJumping) {
+          jumpVelocity += gravity;
+          playerGroup.position.y += jumpVelocity;
+          if (playerGroup.position.y <= 0.2) {
+            playerGroup.position.y = 0.2;
+            isJumping = false;
+            jumpVelocity = 0;
+          }
+        }
+
+        // 前进
+        playerGroup.position.z += clampedSpeed;
+        
+        // 相机
+        camera.position.x = playerGroup.position.x * 0.15;
+        camera.position.z = playerGroup.position.z - 4.5;
+        camera.lookAt(playerGroup.position.x * 0.1, 0.5, playerGroup.position.z + 5);
+
+        // 分数
+        score += 0.3 * (clampedSpeed / 0.2);
+        scoreSpan.textContent = Math.floor(score);
+
+        // 障碍移动 & 回收
+        for (let i = obstacles.length - 1; i >= 0; i--) {
+          const obs = obstacles[i];
+          obs.position.z -= clampedSpeed;
+          if (obs.position.z < playerGroup.position.z - 20) {
+            scene.remove(obs);
+            obstacles.splice(i, 1);
+          }
+        }
+
+        // 生成新障碍 - 保持前方有足够障碍
+        const lastObstacleZ = obstacles.length > 0 ? obstacles[obstacles.length-1].position.z : playerGroup.position.z;
+        const maxSpawnZ = playerGroup.position.z + 25;
+        while (obstacles.length < maxObstacles && lastObstacleZ < maxSpawnZ) {
+          const newZ = lastObstacleZ + 3.0 + Math.random() * 3.0;
+          spawnObstacle(newZ);
+        }
+
+        // 列车移动
+        trainGroup.position.z += clampedSpeed * 0.85;
+        if (trainGroup.position.z > playerGroup.position.z + 30) {
+          trainGroup.position.z = playerGroup.position.z - 25;
+        }
+
+        // 更新轨道和宫灯循环
+        updateTrackAndLanterns(playerGroup.position.z);
+
+        // 碰撞
+        if (checkCollision()) {
+          gameOver = true;
+          setTimeout(() => { resetGame(); }, 400);
+        }
+        if (Math.abs(playerGroup.position.x) > 3.2) {
+          gameOver = true;
+          setTimeout(() => { resetGame(); }, 400);
+        }
+      }
+
+      const time = Date.now() * 0.002;
+      lanternLight.intensity = 0.6 + Math.sin(time) * 0.15;
+
+      renderer.render(scene, camera);
+    }
+
+    animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    window.addEventListener('contextmenu', e => e.preventDefault());
+    console.log('🏮 修复版：轨道和障碍物持续生成，不再消失！');
+  </script>
+</body>
+</html>
