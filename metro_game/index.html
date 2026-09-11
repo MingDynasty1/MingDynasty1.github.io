@@ -3,14 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>地铁跑酷金陵版 | Subway Surf Jinling | MingDynasty</title>
-    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+  <title>地铁跑酷金陵版 · 明 · 珍宝 · 神州行</title>
+  <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
   <style>
     body {
       margin: 0;
       overflow: hidden;
       font-family: "华文楷体", "STKaiti", "KaiTi", "楷体", serif;
       background-color: #1a1410;
+      transition: background-color 0.5s;
     }
     #info {
       position: absolute;
@@ -58,6 +59,65 @@
       text-shadow: 0 0 12px #c9a87c;
       font-weight: bold;
     }
+    #best-score {
+      position: absolute;
+      top: 100px;
+      right: 20px;
+      color: #ffd966;
+      font-size: 1.4rem;
+      background: rgba(20, 12, 6, 0.7);
+      padding: 5px 24px;
+      border-radius: 50px;
+      border: 1px solid #b89a6b;
+      backdrop-filter: blur(4px);
+      z-index: 10;
+      letter-spacing: 2px;
+      text-shadow: 0 0 12px #ffaa00;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    #coin-display {
+      position: absolute;
+      top: 160px;
+      right: 20px;
+      color: #ffd966;
+      font-size: 1.4rem;
+      background: rgba(20, 12, 6, 0.7);
+      padding: 5px 24px;
+      border-radius: 50px;
+      border: 1px solid #b89a6b;
+      backdrop-filter: blur(4px);
+      z-index: 10;
+      letter-spacing: 2px;
+      text-shadow: 0 0 12px #ffaa00;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    #time-toggle {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(60, 40, 24, 0.8);
+      backdrop-filter: blur(4px);
+      border: 2px solid #b89a6b;
+      color: #efddc0;
+      font-size: 1.4rem;
+      padding: 8px 24px;
+      border-radius: 40px;
+      cursor: pointer;
+      z-index: 30;
+      font-family: inherit;
+      letter-spacing: 2px;
+      transition: 0.2s;
+      box-shadow: 0 4px 0 #2f1e12;
+    }
+    #time-toggle:active {
+      transform: translateX(-50%) translateY(4px);
+      box-shadow: 0 0 0 #2f1e12;
+    }
     #controls {
       position: absolute;
       bottom: 40px;
@@ -102,10 +162,202 @@
       flex: 2 1 auto;
       max-width: 200px;
     }
-    @media (max-width: 600px) {
+
+    /* ========== 地图容器（真地图形式） ========== */
+    #map-container {
+      position: absolute;
+      top: 80px;
+      left: 20px;
+      width: 420px;
+      height: 360px;
+      background: rgba(20, 16, 12, 0.96);
+      border: 2px solid #b89a6b;
+      border-radius: 16px;
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.85);
+      padding: 10px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.35s ease, opacity 0.35s ease;
+      user-select: none;
+    }
+    #map-container.collapsed {
+      transform: translateX(calc(100% - 46px));
+      opacity: 0.9;
+    }
+    #map-container.collapsed #map-grid {
+      display: none;
+    }
+    #map-container.collapsed #map-title {
+      writing-mode: vertical-rl;
+      text-orientation: upright;
+      height: 100%;
+      border-bottom: none;
+      padding: 8px 2px;
+      justify-content: center;
+    }
+    #map-container.collapsed #map-title .title-text,
+    #map-container.collapsed #map-title #map-toggle-hint {
+      display: none;
+    }
+    #map-container.collapsed #map-title::after {
+      content: '🗺️';
+      font-size: 1.6rem;
+      writing-mode: horizontal-tb;
+    }
+
+    #map-title {
+      color: #e8d5b0;
+      font-size: 0.9rem;
+      text-align: center;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #6a5238;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 26px;
+      flex-shrink: 0;
+    }
+    #map-title span:last-child {
+      font-size: 0.8rem;
+      color: #b89a6b;
+      flex-shrink: 0;
+    }
+
+    /* 关键：地图网格 8列 × 7行 */
+    #map-grid {
+      flex: 1 1 auto;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      grid-template-rows: repeat(7, 1fr);
+      gap: 3px;
+      overflow: hidden;
+    }
+
+    .province-btn {
+      background: rgba(90, 74, 58, 0.75);
+      border: 1px solid #8a7a5a;
+      border-radius: 5px;
+      color: #e8d5b0;
+      font-size: 0.62rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.12s;
+      font-family: inherit;
+      line-height: 1.05;
+      overflow: hidden;
+      padding: 1px;
+      word-break: break-all;
+    }
+    .province-btn:hover {
+      background: rgba(184, 154, 107, 0.95);
+      color: #1a1410;
+      transform: scale(1.12);
+      z-index: 5;
+      box-shadow: 0 0 12px #b89a6b;
+    }
+    .province-btn.active {
+      background: rgba(255, 200, 100, 0.95);
+      color: #1a1410;
+      border-color: #ffd966;
+      box-shadow: 0 0 16px #ffaa00;
+      font-weight: bold;
+    }
+    .province-btn.keyboard-selected {
+      outline: 2px solid #ffd966;
+      outline-offset: -1px;
+      box-shadow: 0 0 20px #ffaa00;
+    }
+
+    /* ========== 暂停遮罩 ========== */
+    #pause-mask {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.35);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 90; /* 低于地图面板(100)，高于游戏 */
+      pointer-events: none;
+    }
+    #pause-mask.show {
+      display: flex;
+    }
+    #pause-mask .pause-text {
+      color: #ffd966;
+      font-size: 2.2rem;
+      text-shadow: 0 0 24px #ffaa00, 4px 4px 0 #3a2a1e;
+      letter-spacing: 6px;
+      text-align: center;
+      animation: pulse 1.4s infinite;
+    }
+    #pause-mask .pause-text small {
+      display: block;
+      font-size: 1rem;
+      color: #e8d5b0;
+      margin-top: 8px;
+      letter-spacing: 2px;
+      animation: none;
+    }
+
+    /* ========== 倒计时遮罩 ========== */
+    #countdown-mask {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.55);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 300;
+      pointer-events: none;
+    }
+    #countdown-mask.show {
+      display: flex;
+    }
+    #countdown-mask .countdown-text {
+      color: #ffd966;
+      font-size: 6rem;
+      text-shadow: 0 0 40px #ffaa00, 6px 6px 0 #3a2a1e;
+      letter-spacing: 4px;
+      text-align: center;
+      animation: countdownPulse 1s infinite;
+      font-weight: bold;
+    }
+    #countdown-mask .countdown-text small {
+      display: block;
+      font-size: 1.2rem;
+      color: #e8d5b0;
+      margin-top: 12px;
+      letter-spacing: 3px;
+      animation: none;
+      font-weight: normal;
+    }
+    @keyframes countdownPulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.25); opacity: 0.9; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @media (max-width: 700px) {
       .ctrl-btn { font-size: 1.6rem; padding: 8px 16px; min-width: 60px; letter-spacing: 2px; }
       #info h1 { font-size: 1.2rem; }
       #score { font-size: 1.4rem; padding: 4px 16px; }
+      #coin-display { font-size: 1rem; padding: 3px 12px; top: 130px; }
+      #best-score { font-size: 1rem; padding: 3px 12px; top: 80px; }
+      #time-toggle { font-size: 1rem; padding: 6px 12px; }
+      #map-container { width: 320px; height: 280px; top: 70px; left: 10px; }
+      .province-btn { font-size: 0.5rem; }
+      #pause-mask .pause-text { font-size: 1.6rem; }
+      #countdown-mask .countdown-text { font-size: 4rem; }
     }
     #restart-tip {
       position: absolute;
@@ -117,31 +369,99 @@
       font-size: 1.2rem;
       text-shadow: 0 4px 12px #000;
       background: rgba(0,0,0,0.3);
-      padding: 8px;
+      padding: 8px 28px;
       backdrop-filter: blur(2px);
       width: fit-content;
       margin: 0 auto;
       border-radius: 60px;
-      padding: 8px 28px;
       border: 1px solid #6a5238;
       letter-spacing: 2px;
       pointer-events: none;
       z-index: 15;
       opacity: 0.7;
     }
+    #gameover-mask {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 200;
+      pointer-events: none;
+    }
+    #gameover-mask.show {
+      display: flex;
+    }
+    #gameover-mask .msg {
+      color: #ffd966;
+      font-size: 2.4rem;
+      text-shadow: 0 0 24px #ffaa00, 4px 4px 0 #3a2a1e;
+      letter-spacing: 4px;
+      text-align: center;
+      animation: pulse 1.2s infinite;
+    }
+    #gameover-mask .msg small {
+      display: block;
+      font-size: 1rem;
+      color: #e8d5b0;
+      margin-top: 12px;
+      letter-spacing: 2px;
+      animation: none;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+    }
   </style>
 </head>
 <body>
   <div id="info">
-    <h1>🏮 明·疾驰 <small>金陵地铁</small></h1>
+    <h1>🏮 明·疾驰 <small id="stationLabel">金陵地铁 · 神州行</small></h1>
   </div>
   <div id="score">🏯 <span id="scoreValue">0</span></div>
+  <div id="best-score">🏆 最佳 <span id="bestScoreValue">0</span></div>
+  <div id="coin-display">🪙 <span id="coinValue">0</span></div>
+  <div id="time-toggle">🌙 暮色</div>
+  
+  <!-- 地图区域 -->
+  <div id="map-container">
+    <div id="map-title">
+      <span class="title-text">🗺️ 点击地图省份切换地铁站</span>
+      <span id="map-toggle-hint">▼</span>
+    </div>
+    <div id="map-grid"></div>
+  </div>
+
+  <!-- 暂停遮罩 -->
+  <div id="pause-mask">
+    <div class="pause-text">
+      ⏸ 游戏暂停
+      <small>选择省份后继续 · 按 Esc 返回</small>
+    </div>
+  </div>
+
+  <!-- 倒计时遮罩 -->
+  <div id="countdown-mask">
+    <div class="countdown-text" id="countdownText">
+      3
+      <small id="countdownSub">即将开始</small>
+    </div>
+  </div>
+
   <div id="controls">
     <div class="ctrl-btn" id="btnLeft">◀ 左</div>
     <div class="ctrl-btn jump" id="btnJump">⬆ 跃</div>
     <div class="ctrl-btn" id="btnRight">右 ▶</div>
   </div>
-  <div id="restart-tip">⚡ 跳跃避障 · 触壁或障碍则重开</div>
+  <div id="restart-tip">⚡ 跳跃避障 · 拾取金币与滑板 · 触壁或障碍则重开</div>
+
+  <div id="gameover-mask">
+    <div class="msg">
+      🏁 游戏结束
+      <small>按 空格 重新开始 · 按 Enter 选择省份</small>
+    </div>
+  </div>
 
   <script type="importmap">
     {
@@ -154,10 +474,60 @@
   <script type="module">
     import * as THREE from 'three';
 
-    // --- 初始化场景、相机、渲染器 ---
+    // ========== 省份数据（含地图行列坐标） ==========
+    const provinces = [
+      { short: '黑', full: '黑龙江', capital: '哈尔滨', col: 7, row: 1 },
+      { short: '新', full: '新疆', capital: '乌鲁木齐', col: 1, row: 2 },
+      { short: '蒙', full: '内蒙古', capital: '呼和浩特', col: 5, row: 2 },
+      { short: '吉', full: '吉林', capital: '长春', col: 7, row: 2 },
+      { short: '辽', full: '辽宁', capital: '沈阳', col: 7, row: 3 },
+      { short: '青', full: '青海', capital: '西宁', col: 2, row: 3 },
+      { short: '甘', full: '甘肃', capital: '兰州', col: 3, row: 3 },
+      { short: '宁', full: '宁夏', capital: '银川', col: 4, row: 3 },
+      { short: '陕', full: '陕西', capital: '西安', col: 4, row: 4 },
+      { short: '晋', full: '山西', capital: '太原', col: 5, row: 4 },
+      { short: '冀', full: '河北', capital: '石家庄', col: 6, row: 4 },
+      { short: '京', full: '北京', capital: '北京', col: 6, row: 3 },
+      { short: '津', full: '天津', capital: '天津', col: 7, row: 4 },
+      { short: '藏', full: '西藏', capital: '拉萨', col: 1, row: 4 },
+      { short: '川', full: '四川', capital: '成都', col: 3, row: 4 },
+      { short: '渝', full: '重庆', capital: '重庆', col: 4, row: 5 },
+      { short: '豫', full: '河南', capital: '郑州', col: 5, row: 5 },
+      { short: '鲁', full: '山东', capital: '济南', col: 6, row: 5 },
+      { short: '滇', full: '云南', capital: '昆明', col: 2, row: 5 },
+      { short: '黔', full: '贵州', capital: '贵阳', col: 3, row: 5 },
+      { short: '湘', full: '湖南', capital: '长沙', col: 4, row: 6 },
+      { short: '鄂', full: '湖北', capital: '武汉', col: 5, row: 6 },
+      { short: '皖', full: '安徽', capital: '合肥', col: 6, row: 6 },
+      { short: '苏', full: '江苏', capital: '南京', col: 7, row: 6 },
+      { short: '沪', full: '上海', capital: '上海', col: 8, row: 6 },
+      { short: '桂', full: '广西', capital: '南宁', col: 3, row: 6 },
+      { short: '粤', full: '广东', capital: '广州', col: 4, row: 7 },
+      { short: '赣', full: '江西', capital: '南昌', col: 5, row: 7 },
+      { short: '闽', full: '福建', capital: '福州', col: 6, row: 7 },
+      { short: '浙', full: '浙江', capital: '杭州', col: 7, row: 7 },
+      { short: '台', full: '台湾', capital: '台北', col: 8, row: 7 },
+      { short: '琼', full: '海南', capital: '海口', col: 4, row: 8 },
+      { short: '港', full: '香港', capital: '香港', col: 5, row: 8 },
+      { short: '澳', full: '澳门', capital: '澳门', col: 6, row: 8 }
+    ];
+
+    // ========== Cookie 最佳成绩 ==========
+    function getBestScore() {
+      const match = document.cookie.match(/(?:^|;\s*)Metro_best_score=([^;]*)/);
+      return match ? parseInt(match[1]) || 0 : 0;
+    }
+    function setBestScore(score) {
+      document.cookie = `Metro_best_score=${score}; path=/; max-age=31536000`;
+    }
+    let bestScore = getBestScore();
+    const bestScoreSpan = document.getElementById('bestScoreValue');
+    bestScoreSpan.textContent = bestScore;
+
+    // ========== 初始化场景 ==========
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x1a1410);
-    scene.fog = new THREE.Fog(0x1a1410, 20, 55); // 加大雾距，避免远处消失
+    scene.fog = new THREE.Fog(0x1a1410, 20, 55);
 
     const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
     camera.position.set(0, 4.2, 9);
@@ -169,7 +539,7 @@
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     document.body.appendChild(renderer.domElement);
 
-    // --- 光影 ---
+    // ========== 光影 ==========
     const ambientLight = new THREE.AmbientLight(0x403020, 0.6);
     scene.add(ambientLight);
     const mainLight = new THREE.DirectionalLight(0xffdd99, 1.2);
@@ -187,11 +557,16 @@
     const lanternLight = new THREE.PointLight(0xff8844, 0.6, 15);
     lanternLight.position.set(0, 3, 5);
     scene.add(lanternLight);
+    const moonLight = new THREE.DirectionalLight(0xaaccff, 0.0);
+    moonLight.position.set(-5, 10, -5);
+    scene.add(moonLight);
 
-    // --- 轨道 (明代风格) - 无限循环 ---
+    let isNight = false;
+
+    // ========== 轨道 ==========
     const groundWidth = 6;
     const segmentLength = 4;
-    const totalSegments = 80; // 增加段数，保证前方始终有路
+    const totalSegments = 80;
 
     function createTrackSegment(zPos) {
       const group = new THREE.Group();
@@ -210,14 +585,12 @@
         rail.castShadow = true;
         group.add(rail);
       }
-      // 装饰
       const decoMat = new THREE.MeshStandardMaterial({ color: 0x8a7a5a, emissive: new THREE.Color(0x3a2a1a), emissiveIntensity: 0.1 });
       for (let i = -1; i <= 1; i++) {
         const deco = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.05, 0.3), decoMat);
         deco.position.set(i * 1.2, 0.2, 0);
         group.add(deco);
       }
-      // 望柱
       const pillarMat = new THREE.MeshStandardMaterial({ color: 0x8a7a5a, roughness: 0.9, emissive: new THREE.Color(0x2a1a0a), emissiveIntensity: 0.1 });
       for (let side = -1; side <= 1; side+=2) {
         const pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.2, 0.5, 8), pillarMat);
@@ -230,11 +603,9 @@
       return group;
     }
 
-    // 轨道组 - 使用循环队列方式，不断复用
     const trackSegments = [];
     const trackGroup = new THREE.Group();
     const trackStartZ = -30;
-    const trackEndZ = 30;
     for (let i = 0; i < totalSegments; i++) {
       const z = trackStartZ + i * segmentLength;
       const seg = createTrackSegment(z);
@@ -243,7 +614,7 @@
     }
     scene.add(trackGroup);
 
-    // --- 宫灯 (也做循环) ---
+    // ========== 宫灯 ==========
     const lanterns = [];
     function createLantern(x, z) {
       const group = new THREE.Group();
@@ -273,7 +644,7 @@
       }
     }
 
-    // --- 远处楼阁 (静态) ---
+    // ========== 远处楼阁 ==========
     function createDistantBuilding(x, z) {
       const group = new THREE.Group();
       const baseMat = new THREE.MeshStandardMaterial({ color: 0x2a1a0a, emissive: new THREE.Color(0x0a0500), emissiveIntensity: 0.2 });
@@ -297,7 +668,7 @@
       }
     }
 
-    // --- 玩家 (明代角色) ---
+    // ========== 玩家 ==========
     const playerGroup = new THREE.Group();
     const bodyMat = new THREE.MeshStandardMaterial({ color: 0x8a1a1a, emissive: new THREE.Color(0x2a0a0a), emissiveIntensity: 0.1, roughness: 0.5 });
     const body = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.8, 0.4), bodyMat);
@@ -321,7 +692,7 @@
     playerGroup.position.set(0, 0.2, 0);
     scene.add(playerGroup);
 
-    // --- 障碍物 (石狮/铜缸) ---
+    // ========== 障碍物 ==========
     function createObstacle(x, z) {
       const group = new THREE.Group();
       const matStone = new THREE.MeshStandardMaterial({ color: 0x7a6a5a, roughness: 0.9, emissive: new THREE.Color(0x1a120a), emissiveIntensity: 0.1 });
@@ -352,13 +723,99 @@
       obstacles.push(obstacle);
     }
 
-    // 初始障碍 - 分布更均匀
     for (let i = 0; i < 12; i++) {
       const z = 6 + i * 3.5 + Math.random() * 1.5;
       spawnObstacle(z);
     }
 
-    // --- 列车 (明代风格车厢) ---
+    // ========== 金币 ==========
+    let coinsCollected = 0;
+    const coinValueSpan = document.getElementById('coinValue');
+    const coinMeshes = [];
+    const coinMaterial = new THREE.MeshStandardMaterial({ color: 0xffd966, emissive: new THREE.Color(0xffaa00), emissiveIntensity: 0.6, roughness: 0.3, metalness: 0.7 });
+    const coinGeo = new THREE.TorusGeometry(0.22, 0.08, 6, 12);
+
+    function spawnCoin(x, z, y = 0.8) {
+      const coin = new THREE.Mesh(coinGeo, coinMaterial.clone());
+      coin.position.set(x, y, z);
+      coin.rotation.x = Math.PI / 2;
+      coin.castShadow = true;
+      scene.add(coin);
+      coinMeshes.push(coin);
+    }
+
+    function spawnCoinLine(zStart) {
+      const lane = Math.floor(Math.random() * 3) - 1;
+      const x = lane * 1.8;
+      const count = 3 + Math.floor(Math.random() * 3);
+      for (let i = 0; i < count; i++) {
+        spawnCoin(x, zStart + i * 1.0, 0.8 + Math.sin(i * 0.8) * 0.1);
+      }
+    }
+
+    for (let i = 0; i < 10; i++) {
+      spawnCoinLine(12 + i * 7 + Math.random() * 3);
+    }
+
+    // ========== 滑板系统（放大 + 15秒） ==========
+    let hasSkateboard = false;
+    let skateboardTimer = 0;
+    const skateboardDuration = 900;
+    const skateboardMeshes = [];
+    
+    function createSkateboardMesh(x, z) {
+      const group = new THREE.Group();
+      const boardMat = new THREE.MeshStandardMaterial({ color: 0x8b5a2b, roughness: 0.5, emissive: new THREE.Color(0x3a1a0a), emissiveIntensity: 0.3 });
+      const board = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.18, 0.8), boardMat);
+      board.position.y = 0.09;
+      board.castShadow = true;
+      board.receiveShadow = true;
+      group.add(board);
+      const wheelMat = new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.3, metalness: 0.8, emissive: new THREE.Color(0x111111), emissiveIntensity: 0.4 });
+      for (let dx = -0.65; dx <= 0.65; dx+=1.3) {
+        for (let dz = -0.3; dz <= 0.3; dz+=0.6) {
+          const wheel = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.16, 8), wheelMat);
+          wheel.position.set(dx, 0.16, dz);
+          wheel.rotation.z = Math.PI/2;
+          wheel.castShadow = true;
+          group.add(wheel);
+        }
+      }
+      const dragonMat = new THREE.MeshStandardMaterial({ color: 0xffcc44, emissive: new THREE.Color(0xffaa00), emissiveIntensity: 1.0, roughness: 0.2, metalness: 0.7 });
+      const dragon = new THREE.Mesh(new THREE.ConeGeometry(0.28, 0.5, 6), dragonMat);
+      dragon.position.set(1.0, 0.35, 0);
+      dragon.rotation.z = -0.3;
+      dragon.rotation.x = Math.PI/2;
+      dragon.castShadow = true;
+      group.add(dragon);
+      const eyeMat = new THREE.MeshStandardMaterial({ color: 0xff0000, emissive: new THREE.Color(0xff2200), emissiveIntensity: 1.5 });
+      const eye1 = new THREE.Mesh(new THREE.SphereGeometry(0.08, 6), eyeMat);
+      eye1.position.set(1.12, 0.38, 0.14);
+      group.add(eye1);
+      const eye2 = new THREE.Mesh(new THREE.SphereGeometry(0.08, 6), eyeMat);
+      eye2.position.set(1.12, 0.38, -0.14);
+      group.add(eye2);
+      const glowMat = new THREE.MeshStandardMaterial({ color: 0xffaa00, emissive: new THREE.Color(0xffaa00), emissiveIntensity: 0.5, transparent: true, opacity: 0.2 });
+      const glow = new THREE.Mesh(new THREE.SphereGeometry(0.8, 8), glowMat);
+      glow.position.y = 0.45;
+      group.add(glow);
+      group.position.set(x, 0.05, z);
+      return group;
+    }
+
+    function spawnSkateboardItem(zPos) {
+      const lane = Math.floor(Math.random() * 3) - 1;
+      const x = lane * 1.8;
+      const mesh = createSkateboardMesh(x, zPos);
+      scene.add(mesh);
+      skateboardMeshes.push(mesh);
+    }
+
+    for (let i = 0; i < 3; i++) {
+      spawnSkateboardItem(20 + i * 20 + Math.random() * 10);
+    }
+
+    // ========== 列车 ==========
     const trainGroup = new THREE.Group();
     function createCarriage(offsetX, offsetZ) {
       const g = new THREE.Group();
@@ -397,9 +854,11 @@
     trainGroup.position.set(0, 0.2, -10);
     scene.add(trainGroup);
 
-    // --- 游戏状态 ---
+    // ========== 游戏状态 ==========
     let score = 0;
     let gameOver = false;
+    let paused = false;              // 暂停状态
+    let countdownActive = false;     // 倒计时状态
     let targetLane = 0;
     let currentLane = 0;
     let isJumping = false;
@@ -413,51 +872,370 @@
 
     const scoreSpan = document.getElementById('scoreValue');
 
-    // 控制
-    document.getElementById('btnLeft').addEventListener('click', () => { if (!gameOver) targetLane = Math.max(-1, targetLane - 1); });
-    document.getElementById('btnRight').addEventListener('click', () => { if (!gameOver) targetLane = Math.min(1, targetLane + 1); });
-    document.getElementById('btnJump').addEventListener('click', () => { if (!gameOver && !isJumping) { isJumping = true; jumpVelocity = jumpPower; } });
+    // 当前选中省份
+    let currentProvince = '江苏';
+    let currentCapital = '南京';
+
+    // 地图键盘导航状态
+    let mapKeyboardMode = false;
+    let keyboardIndex = provinces.findIndex(p => p.full === currentProvince);
+
+    // 更新站点标签
+    function updateTitle() {
+      const label = document.getElementById('stationLabel');
+      if (label) {
+        label.textContent = `${currentCapital}地铁 · 神州行`;
+      }
+    }
+    updateTitle();
+
+    // ========== 地图渲染 ==========
+    const mapContainer = document.getElementById('map-container');
+    const mapTitle = document.getElementById('map-title');
+    const mapToggleHint = document.getElementById('map-toggle-hint');
+    const grid = document.getElementById('map-grid');
+    const pauseMask = document.getElementById('pause-mask');
+    const countdownMask = document.getElementById('countdown-mask');
+    const countdownText = document.getElementById('countdownText');
+    const countdownSub = document.getElementById('countdownSub');
+
+    function renderMap() {
+      grid.innerHTML = '';
+      provinces.forEach((p, idx) => {
+        const btn = document.createElement('div');
+        btn.className = 'province-btn' + (p.full === currentProvince ? ' active' : '');
+        btn.textContent = p.short;
+        btn.title = `${p.full} · ${p.capital}`;
+        btn.dataset.index = idx;
+        // 按地理坐标放置
+        btn.style.gridColumn = p.col;
+        btn.style.gridRow = p.row;
+        btn.addEventListener('click', () => {
+          if (gameOver) return;
+          selectProvince(idx);
+        });
+        grid.appendChild(btn);
+      });
+    }
+
+    function selectProvince(idx) {
+      const p = provinces[idx];
+      currentProvince = p.full;
+      currentCapital = p.capital;
+      updateTitle();
+      document.querySelectorAll('.province-btn').forEach((b, i) => {
+        b.classList.toggle('active', i === idx);
+        b.classList.remove('keyboard-selected');
+      });
+      keyboardIndex = idx;
+      collapseMap();
+      // 退出暂停状态，显示3秒倒计时后重开
+      paused = false;
+      pauseMask.classList.remove('show');
+      mapKeyboardMode = false;
+      startCountdown();
+    }
+
+    function collapseMap() {
+      mapContainer.classList.add('collapsed');
+      mapToggleHint.textContent = '◀';
+      mapKeyboardMode = false;
+    }
+
+    function expandMap() {
+      mapContainer.classList.remove('collapsed');
+      mapToggleHint.textContent = '▼';
+      const activeBtn = document.querySelector('.province-btn.active');
+      if (activeBtn) {
+        activeBtn.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
+    }
+
+    renderMap();
+
+    // 地图折叠/展开（点击标题）
+    mapTitle.addEventListener('click', () => {
+      if (mapContainer.classList.contains('collapsed')) {
+        // 展开地图 → 暂停游戏
+        expandMap();
+        if (!gameOver) {
+          paused = true;
+          pauseMask.classList.add('show');
+        }
+      } else {
+        // 折叠地图 → 恢复游戏
+        collapseMap();
+        paused = false;
+        pauseMask.classList.remove('show');
+      }
+    });
+
+    // ========== 3秒倒计时 ==========
+    function startCountdown() {
+      countdownActive = true;
+      let count = 3;
+      countdownText.innerHTML = count + '<small id="countdownSub">即将开始</small>';
+      countdownMask.classList.add('show');
+      
+      const timer = setInterval(() => {
+        count--;
+        if (count > 0) {
+          countdownText.innerHTML = count + '<small id="countdownSub">即将开始</small>';
+        } else if (count === 0) {
+          countdownText.innerHTML = '开始!<small id="countdownSub">加油!</small>';
+        } else {
+          clearInterval(timer);
+          countdownMask.classList.remove('show');
+          countdownActive = false;
+          // 真正重开游戏
+          resetGame();
+        }
+      }, 1000);
+    }
+
+    // ========== 键盘导航 ==========
+    function handleMapKeyboard(e) {
+      if (!mapKeyboardMode) return false;
+      // 按地理坐标排序索引，用于方向键导航
+      const sorted = provinces.map((p, i) => ({...p, idx: i})).sort((a, b) => {
+        if (a.row !== b.row) return a.row - b.row;
+        return a.col - b.col;
+      });
+      const currentPos = sorted.findIndex(p => p.idx === keyboardIndex);
+      
+      if (e.key === 'ArrowRight') {
+        // 找同行右侧最近的省份
+        const cur = sorted[currentPos];
+        let best = -1, bestDist = Infinity;
+        for (let i = 0; i < sorted.length; i++) {
+          if (sorted[i].row === cur.row && sorted[i].col > cur.col) {
+            const d = sorted[i].col - cur.col;
+            if (d < bestDist) { bestDist = d; best = i; }
+          }
+        }
+        if (best >= 0) keyboardIndex = sorted[best].idx;
+        e.preventDefault();
+      } else if (e.key === 'ArrowLeft') {
+        const cur = sorted[currentPos];
+        let best = -1, bestDist = Infinity;
+        for (let i = 0; i < sorted.length; i++) {
+          if (sorted[i].row === cur.row && sorted[i].col < cur.col) {
+            const d = cur.col - sorted[i].col;
+            if (d < bestDist) { bestDist = d; best = i; }
+          }
+        }
+        if (best >= 0) keyboardIndex = sorted[best].idx;
+        e.preventDefault();
+      } else if (e.key === 'ArrowDown') {
+        const cur = sorted[currentPos];
+        let best = -1, bestDist = Infinity;
+        for (let i = 0; i < sorted.length; i++) {
+          if (sorted[i].col === cur.col && sorted[i].row > cur.row) {
+            const d = sorted[i].row - cur.row;
+            if (d < bestDist) { bestDist = d; best = i; }
+          }
+        }
+        if (best >= 0) keyboardIndex = sorted[best].idx;
+        e.preventDefault();
+      } else if (e.key === 'ArrowUp') {
+        const cur = sorted[currentPos];
+        let best = -1, bestDist = Infinity;
+        for (let i = 0; i < sorted.length; i++) {
+          if (sorted[i].col === cur.col && sorted[i].row < cur.row) {
+            const d = cur.row - sorted[i].row;
+            if (d < bestDist) { bestDist = d; best = i; }
+          }
+        }
+        if (best >= 0) keyboardIndex = sorted[best].idx;
+        e.preventDefault();
+      } else if (e.key === 'Enter') {
+        selectProvince(keyboardIndex);
+        e.preventDefault();
+        return true;
+      } else if (e.key === 'Escape') {
+        collapseMap();
+        paused = false;
+        pauseMask.classList.remove('show');
+        e.preventDefault();
+        return true;
+      } else {
+        return false;
+      }
+      // 更新高亮
+      document.querySelectorAll('.province-btn').forEach((b, i) => {
+        b.classList.toggle('keyboard-selected', i === keyboardIndex);
+      });
+      const btn = document.querySelectorAll('.province-btn')[keyboardIndex];
+      if (btn) btn.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      return true;
+    }
+
+    // ========== 控制 ==========
+    document.getElementById('btnLeft').addEventListener('click', () => { if (!gameOver && !paused && !countdownActive) targetLane = Math.max(-1, targetLane - 1); });
+    document.getElementById('btnRight').addEventListener('click', () => { if (!gameOver && !paused && !countdownActive) targetLane = Math.min(1, targetLane + 1); });
+    document.getElementById('btnJump').addEventListener('click', () => { if (!gameOver && !paused && !countdownActive && !isJumping) { isJumping = true; jumpVelocity = jumpPower; } });
+
+    const gameoverMask = document.getElementById('gameover-mask');
 
     window.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft' || e.key === 'a') { if (!gameOver) targetLane = Math.max(-1, targetLane - 1); e.preventDefault(); }
-      else if (e.key === 'ArrowRight' || e.key === 'd') { if (!gameOver) targetLane = Math.min(1, targetLane + 1); e.preventDefault(); }
+      // 倒计时期间忽略所有游戏操作
+      if (countdownActive) {
+        e.preventDefault();
+        return;
+      }
+
+      // 优先处理地图键盘模式
+      if (mapKeyboardMode) {
+        if (handleMapKeyboard(e)) return;
+      }
+
+      // 暂停状态：按 Esc 返回游戏
+      if (paused) {
+        if (e.key === 'Escape') {
+          collapseMap();
+          paused = false;
+          pauseMask.classList.remove('show');
+          e.preventDefault();
+          return;
+        }
+        return;
+      }
+
+      // 游戏结束后：
+      if (gameOver) {
+        if (e.key === ' ' || e.key === 'Spacebar') {
+          resetGame();
+          e.preventDefault();
+          return;
+        }
+        if (e.key === 'Enter') {
+          // 打开地图并暂停（此时游戏已结束，但仍然显示地图）
+          expandMap();
+          paused = true;
+          pauseMask.classList.add('show');
+          mapKeyboardMode = true;
+          keyboardIndex = provinces.findIndex(p => p.full === currentProvince);
+          document.querySelectorAll('.province-btn').forEach((b, i) => {
+            b.classList.toggle('keyboard-selected', i === keyboardIndex);
+          });
+          e.preventDefault();
+          return;
+        }
+        return;
+      }
+
+      // 正常游戏中的控制
+      if (e.key === 'ArrowLeft' || e.key === 'a') { targetLane = Math.max(-1, targetLane - 1); e.preventDefault(); }
+      else if (e.key === 'ArrowRight' || e.key === 'd') { targetLane = Math.min(1, targetLane + 1); e.preventDefault(); }
       else if (e.key === ' ' || e.key === 'w' || e.key === 'ArrowUp') { 
-        if (!gameOver && !isJumping) { isJumping = true; jumpVelocity = jumpPower; }
+        if (!isJumping) { isJumping = true; jumpVelocity = jumpPower; }
         e.preventDefault();
       }
     });
 
-    // --- 重置 ---
+    // ========== 昼夜切换 ==========
+    const timeToggle = document.getElementById('time-toggle');
+    function setTimeOfDay(night) {
+      isNight = night;
+      if (night) {
+        scene.background = new THREE.Color(0x0a0a1a);
+        scene.fog = new THREE.Fog(0x0a0a1a, 15, 45);
+        ambientLight.intensity = 0.3;
+        mainLight.intensity = 0.2;
+        fillLight.intensity = 0.2;
+        backLight.intensity = 0.5;
+        moonLight.intensity = 0.8;
+        lanternLight.intensity = 1.2;
+        lanterns.forEach(l => {
+          l.children.forEach(c => {
+            if (c.material && c.material.emissive) c.material.emissiveIntensity = 0.8;
+          });
+        });
+        timeToggle.textContent = '☀️ 白昼';
+        timeToggle.style.background = 'rgba(20, 30, 60, 0.9)';
+      } else {
+        scene.background = new THREE.Color(0x1a1410);
+        scene.fog = new THREE.Fog(0x1a1410, 20, 55);
+        ambientLight.intensity = 0.6;
+        mainLight.intensity = 1.2;
+        fillLight.intensity = 0.5;
+        backLight.intensity = 0.3;
+        moonLight.intensity = 0.0;
+        lanternLight.intensity = 0.6;
+        lanterns.forEach(l => {
+          l.children.forEach(c => {
+            if (c.material && c.material.emissive) c.material.emissiveIntensity = 0.3;
+          });
+        });
+        timeToggle.textContent = '🌙 暮色';
+        timeToggle.style.background = 'rgba(60, 40, 24, 0.8)';
+      }
+    }
+
+    timeToggle.addEventListener('click', () => {
+      setTimeOfDay(!isNight);
+    });
+
+    setTimeOfDay(false);
+
+    // ========== 重置 ==========
     function resetGame() {
       obstacles.forEach(obj => scene.remove(obj));
       obstacles = [];
+      coinMeshes.forEach(c => scene.remove(c));
+      coinMeshes.length = 0;
+      skateboardMeshes.forEach(s => scene.remove(s));
+      skateboardMeshes.length = 0;
+      
       playerGroup.position.set(0, 0.2, 0);
       currentLane = 0;
       targetLane = 0;
       score = 0;
+      coinsCollected = 0;
+      coinValueSpan.textContent = '0';
       scoreSpan.textContent = '0';
       gameOver = false;
+      paused = false;
       isJumping = false;
       jumpVelocity = 0;
       baseSpeed = 0.12;
-      // 重置轨道位置
+      hasSkateboard = false;
+      skateboardTimer = 0;
+      
+      gameoverMask.classList.remove('show');
+      pauseMask.classList.remove('show');
+      countdownMask.classList.remove('show');
+      countdownActive = false;
+      
       trackGroup.position.z = 0;
-      // 重置宫灯
+      
       lanterns.forEach((l, idx) => {
         const z = trackStartZ + (idx % (totalSegments/2)) * segmentLength * 2;
         l.position.z = z;
       });
-      // 重置障碍
+      
       for (let i = 0; i < 12; i++) {
         const z = 6 + i * 3.5 + Math.random() * 1.5;
         spawnObstacle(z);
       }
+      
+      for (let i = 0; i < 10; i++) {
+        spawnCoinLine(12 + i * 7 + Math.random() * 3);
+      }
+      
+      for (let i = 0; i < 3; i++) {
+        spawnSkateboardItem(20 + i * 20 + Math.random() * 10);
+      }
+      
       camera.position.set(0, 4.2, 9);
       camera.lookAt(0, 0.5, 6);
       trainGroup.position.set(0, 0.2, -10);
+      
+      setTimeOfDay(isNight);
+      updateTitle();
     }
 
-    // --- 碰撞检测 ---
+    // ========== 碰撞检测 ==========
     function checkCollision() {
       const px = playerGroup.position.x;
       const pz = playerGroup.position.z;
@@ -468,23 +1246,19 @@
         const oz = obs.position.z;
         const distX = Math.abs(px - ox);
         const distZ = Math.abs(pz - oz);
-        if (distX < 0.6 && distZ < 0.6) {
-          return true;
-        }
+        if (distX < 0.6 && distZ < 0.6) return true;
       }
       return false;
     }
 
-    // --- 循环更新轨道和宫灯 ---
+    // ========== 更新轨道和宫灯 ==========
     function updateTrackAndLanterns(playerZ) {
-      // 轨道循环
       const threshold = 20;
       for (let seg of trackSegments) {
         if (seg.position.z < playerZ - threshold) {
           seg.position.z += totalSegments * segmentLength;
         }
       }
-      // 宫灯循环
       for (let l of lanterns) {
         if (l.position.z < playerZ - threshold) {
           l.position.z += totalSegments * segmentLength;
@@ -492,12 +1266,88 @@
       }
     }
 
-    // --- 动画循环 ---
+    // ========== 更新金币和滑板 ==========
+    function updateCollectibles(playerZ, clampedSpeed) {
+      for (let i = coinMeshes.length - 1; i >= 0; i--) {
+        const coin = coinMeshes[i];
+        coin.position.z -= clampedSpeed;
+        coin.rotation.z += 0.05;
+        coin.rotation.y += 0.03;
+        
+        const dx = Math.abs(coin.position.x - playerGroup.position.x);
+        const dz = Math.abs(coin.position.z - playerGroup.position.z);
+        const dy = Math.abs(coin.position.y - playerGroup.position.y - 0.5);
+        if (dx < 0.7 && dz < 0.7 && dy < 0.9) {
+          coinsCollected++;
+          coinValueSpan.textContent = coinsCollected;
+          scene.remove(coin);
+          coinMeshes.splice(i, 1);
+          continue;
+        }
+        
+        if (coin.position.z < playerZ - 20) {
+          scene.remove(coin);
+          coinMeshes.splice(i, 1);
+        }
+      }
+      
+      for (let i = skateboardMeshes.length - 1; i >= 0; i--) {
+        const board = skateboardMeshes[i];
+        board.position.z -= clampedSpeed;
+        board.rotation.y += 0.02;
+        
+        const dx = Math.abs(board.position.x - playerGroup.position.x);
+        const dz = Math.abs(board.position.z - playerGroup.position.z);
+        if (dx < 0.9 && dz < 0.9 && playerGroup.position.y < 0.8) {
+          hasSkateboard = true;
+          skateboardTimer = skateboardDuration;
+          scene.remove(board);
+          skateboardMeshes.splice(i, 1);
+          continue;
+        }
+        
+        if (board.position.z < playerZ - 20) {
+          scene.remove(board);
+          skateboardMeshes.splice(i, 1);
+        }
+      }
+      
+      while (coinMeshes.length < 30) {
+        const lastCoinZ = coinMeshes.length > 0 ? Math.max(...coinMeshes.map(c => c.position.z)) : playerZ;
+        const newZ = lastCoinZ + 5 + Math.random() * 8;
+        spawnCoinLine(newZ);
+      }
+      
+      if (skateboardMeshes.length < 4 && Math.random() < 0.02) {
+        const lastBoardZ = skateboardMeshes.length > 0 ? Math.max(...skateboardMeshes.map(s => s.position.z)) : playerZ;
+        if (lastBoardZ < playerZ + 30) {
+          spawnSkateboardItem(playerZ + 30 + Math.random() * 20);
+        }
+      }
+    }
+
+    // ========== 更新最佳成绩 ==========
+    function updateBestScore() {
+      const currentScore = Math.floor(score);
+      if (currentScore > bestScore) {
+        bestScore = currentScore;
+        setBestScore(bestScore);
+        bestScoreSpan.textContent = bestScore;
+      }
+    }
+
+    // ========== 游戏结束处理 ==========
+    function triggerGameOver() {
+      gameOver = true;
+      gameoverMask.classList.add('show');
+    }
+
+    // ========== 动画循环 ==========
     function animate() {
       requestAnimationFrame(animate);
 
-      if (!gameOver) {
-        // 动态速度
+      // 暂停或倒计时期间：只渲染不更新游戏逻辑
+      if (!gameOver && !paused && !countdownActive) {
         let speedFactor = 1.0;
         if (score > speedThreshold) {
           const progress = Math.min((score - speedThreshold) / 800, 1.0);
@@ -506,7 +1356,6 @@
         const currentSpeed = baseSpeed * speedFactor;
         const clampedSpeed = Math.min(currentSpeed, maxSpeed);
 
-        // 横向移动
         const diff = targetLane - currentLane;
         if (Math.abs(diff) > 0.01) {
           currentLane += Math.sign(diff) * 0.08;
@@ -515,7 +1364,6 @@
         }
         playerGroup.position.x = currentLane * 1.8;
 
-        // 跳跃
         if (isJumping) {
           jumpVelocity += gravity;
           playerGroup.position.y += jumpVelocity;
@@ -526,19 +1374,17 @@
           }
         }
 
-        // 前进
         playerGroup.position.z += clampedSpeed;
         
-        // 相机
         camera.position.x = playerGroup.position.x * 0.15;
         camera.position.z = playerGroup.position.z - 4.5;
         camera.lookAt(playerGroup.position.x * 0.1, 0.5, playerGroup.position.z + 5);
 
-        // 分数
         score += 0.3 * (clampedSpeed / 0.2);
         scoreSpan.textContent = Math.floor(score);
+        
+        updateBestScore();
 
-        // 障碍移动 & 回收
         for (let i = obstacles.length - 1; i >= 0; i--) {
           const obs = obstacles[i];
           obs.position.z -= clampedSpeed;
@@ -548,7 +1394,6 @@
           }
         }
 
-        // 生成新障碍 - 保持前方有足够障碍
         const lastObstacleZ = obstacles.length > 0 ? obstacles[obstacles.length-1].position.z : playerGroup.position.z;
         const maxSpawnZ = playerGroup.position.z + 25;
         while (obstacles.length < maxObstacles && lastObstacleZ < maxSpawnZ) {
@@ -556,28 +1401,57 @@
           spawnObstacle(newZ);
         }
 
-        // 列车移动
         trainGroup.position.z += clampedSpeed * 0.85;
         if (trainGroup.position.z > playerGroup.position.z + 30) {
           trainGroup.position.z = playerGroup.position.z - 25;
         }
 
-        // 更新轨道和宫灯循环
+        updateCollectibles(playerGroup.position.z, clampedSpeed);
+
+        if (hasSkateboard) {
+          skateboardTimer--;
+          playerGroup.position.y = Math.max(playerGroup.position.y, 0.3);
+          if (skateboardTimer <= 0) {
+            hasSkateboard = false;
+            if (!isJumping) playerGroup.position.y = 0.2;
+          }
+        }
+
         updateTrackAndLanterns(playerGroup.position.z);
 
-        // 碰撞
         if (checkCollision()) {
-          gameOver = true;
-          setTimeout(() => { resetGame(); }, 400);
+          if (hasSkateboard) {
+            hasSkateboard = false;
+            skateboardTimer = 0;
+            playerGroup.position.y = 0.2;
+            if (obstacles.length > 0) {
+              let closest = obstacles[0];
+              let minDist = Infinity;
+              for (let obs of obstacles) {
+                const d = Math.abs(obs.position.z - playerGroup.position.z);
+                if (d < minDist) { minDist = d; closest = obs; }
+              }
+              scene.remove(closest);
+              obstacles.splice(obstacles.indexOf(closest), 1);
+            }
+          } else {
+            triggerGameOver();
+          }
         }
         if (Math.abs(playerGroup.position.x) > 3.2) {
-          gameOver = true;
-          setTimeout(() => { resetGame(); }, 400);
+          if (hasSkateboard) {
+            hasSkateboard = false;
+            targetLane = 0;
+            currentLane = 0;
+            playerGroup.position.x = 0;
+          } else {
+            triggerGameOver();
+          }
         }
       }
 
       const time = Date.now() * 0.002;
-      lanternLight.intensity = 0.6 + Math.sin(time) * 0.15;
+      lanternLight.intensity = (isNight ? 1.2 : 0.6) + Math.sin(time) * 0.15;
 
       renderer.render(scene, camera);
     }
@@ -591,7 +1465,7 @@
     });
 
     window.addEventListener('contextmenu', e => e.preventDefault());
-    console.log('🏮 修复版：轨道和障碍物持续生成，不再消失！');
+    console.log('🏮 神州行 · 地图版：选省暂停 · 3秒倒计时 · 空格重开 · Enter选省');
   </script>
 </body>
-</html>
+</html>  
