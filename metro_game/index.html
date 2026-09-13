@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>大明神州地铁行 | MingDynasty</title>
-  
+
     <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
   <style>
     body { margin: 0; overflow: hidden; font-family: "华文楷体", serif; background: #1a1410; user-select: none; touch-action: none; }
@@ -21,30 +21,119 @@
     #info-box h1 { margin: 0; font-size: 1.4rem; font-weight: normal; }
     #info-box small { color: #c9b088; font-size: 0.8rem; }
 
+    #rank-badge {
+      position: absolute; top: 80px; left: 20px;
+      background: rgba(30, 20, 12, 0.85);
+      border: 2px solid #b89a6b; border-radius: 16px;
+      padding: 8px 16px; display: flex; align-items: center; gap: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      transition: all 0.3s;
+    }
+    #rank-badge.up { animation: rankUp 1s ease-out; }
+    @keyframes rankUp {
+      0% { transform: scale(1); box-shadow: 0 0 0 rgba(255,215,0,0); }
+      50% { transform: scale(1.3); box-shadow: 0 0 30px rgba(255,215,0,0.9); }
+      100% { transform: scale(1); box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+    }
+    #rank-icon { font-size: 1.6rem; }
+    #rank-info { display: flex; flex-direction: column; line-height: 1.1; }
+    #rank-name { font-size: 0.95rem; font-weight: bold; }
+    #rank-score { font-size: 0.7rem; color: #aaa; }
+
+    /* 载具 & 宠物 徽章 */
+    #vehicle-badge {
+      position: absolute; top: 152px; left: 20px;
+      background: rgba(30, 20, 12, 0.85);
+      border: 2px solid #6b9ab8; border-radius: 14px;
+      padding: 5px 12px; display: flex; align-items: center; gap: 6px;
+      font-size: 0.8rem; color: #e8d5b0;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+    #pet-badge {
+      position: absolute; top: 192px; left: 20px;
+      background: rgba(30, 20, 12, 0.85);
+      border: 2px solid #6bdb6b; border-radius: 14px;
+      padding: 5px 12px; display: flex; align-items: center; gap: 6px;
+      font-size: 0.8rem; color: #e8d5b0;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+    #vehicle-badge.hidden, #pet-badge.hidden { display: none; }
+
+    #quest-panel {
+      position: absolute; top: 80px; right: 20px;
+      background: rgba(30, 20, 12, 0.85);
+      border: 2px solid #b89a6b; border-radius: 16px;
+      padding: 12px 16px; width: 240px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      transition: transform 0.3s;
+    }
+    #quest-panel h3 {
+      margin: 0 0 10px; font-size: 0.95rem; color: #ffd966;
+      text-align: center; border-bottom: 1px solid #4a3a2a; padding-bottom: 6px;
+    }
+    .quest-item {
+      display: flex; flex-direction: column; gap: 4px;
+      padding: 6px 0; border-bottom: 1px solid #3a2a1e;
+      font-size: 0.8rem; color: #e8d5b0;
+    }
+    .quest-item:last-child { border-bottom: none; }
+    .quest-item.done { opacity: 0.5; }
+    .quest-item.done .quest-text { text-decoration: line-through; }
+    .quest-row { display: flex; justify-content: space-between; align-items: center; }
+    .quest-reward { color: #ffd966; font-size: 0.75rem; }
+    .quest-bar {
+      width: 100%; height: 4px; background: rgba(0,0,0,0.5);
+      border-radius: 2px; overflow: hidden;
+    }
+    .quest-bar-fill {
+      height: 100%; background: linear-gradient(90deg, #b89a6b, #ffd966);
+      transition: width 0.3s;
+    }
+    .quest-item.done .quest-bar-fill { background: #6bdb6b; }
+
+    #super-overlay {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 7; opacity: 0;
+      background: radial-gradient(ellipse at center, rgba(255,215,0,0.1) 0%, rgba(255,150,0,0.3) 100%);
+      transition: opacity 0.3s;
+    }
+    #super-overlay.active { opacity: 1; animation: superPulse 1s infinite; }
+    @keyframes superPulse { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; } }
+    #super-banner {
+      position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%) scale(0);
+      font-size: 4rem; font-weight: bold; color: #ffd966;
+      text-shadow: 0 0 30px #ff8800, 0 0 60px #ff4400, 4px 4px 0 #000;
+      z-index: 260; pointer-events: none; opacity: 0;
+    }
+    #super-banner.show { animation: superBannerIn 2s ease-out; }
+    @keyframes superBannerIn {
+      0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0; }
+      20% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+      80% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+    }
+    #super-timer {
+      position: absolute; top: 120px; left: 50%; transform: translateX(-50%);
+      color: #ffd966; font-size: 1.2rem; font-weight: bold;
+      text-shadow: 0 0 10px #ff8800;
+      opacity: 0; transition: opacity 0.3s; z-index: 260;
+    }
+    #super-timer.show { opacity: 1; }
+
     #stats-box { top: 20px; right: 20px; flex-direction: column; align-items: flex-end; gap: 6px; }
     .stat-row { font-size: 1.2rem; letter-spacing: 1px; text-shadow: 0 0 5px rgba(255,215,0,0.3); }
 
-    /* ===== 指针式速度表 ===== */
     #speedometer {
       position: absolute; bottom: 20px; left: 20px;
       width: 140px; height: 140px;
       pointer-events: none;
     }
-    #speedometer svg {
-      width: 100%; height: 100%;
-      filter: drop-shadow(0 0 8px rgba(0,0,0,0.6));
-    }
-    #speed-needle {
-      transform-origin: 70px 70px;
-      transform: rotate(-120deg);
-      transition: transform 0.08s linear;
-    }
+    #speedometer svg { width: 100%; height: 100%; filter: drop-shadow(0 0 8px rgba(0,0,0,0.6)); }
+    #speed-needle { transform-origin: 70px 70px; transform: rotate(-120deg); transition: transform 0.08s linear; }
     #speed-readout {
       position: absolute; bottom: 32px; left: 0; right: 0;
-      text-align: center;
-      color: #ffd966; font-size: 1.1rem; font-weight: bold;
-      text-shadow: 0 0 5px #000;
-      font-family: monospace;
+      text-align: center; color: #ffd966; font-size: 1.1rem; font-weight: bold;
+      text-shadow: 0 0 5px #000; font-family: monospace;
     }
     #speed-readout small { font-size: 0.6rem; color: #aaa; display: block; }
 
@@ -189,14 +278,15 @@
     .mask-text { color: #ffd966; font-size: 2.5rem; text-align: center; text-shadow: 0 0 20px #ffaa00; animation: pulse 1.5s infinite; }
     @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
 
-    #gameover-content, #pause-content, #settings-content, #shop-content, #daily-content, #leaderboard-content {
+    #gameover-content, #pause-content, #settings-content, #shop-content, #daily-content, #leaderboard-content,
+    #weekly-content, #signin-content, #share-content {
       background: rgba(30, 20, 12, 0.95);
       border: 2px solid #b89a6b;
       padding: 30px 40px;
       border-radius: 20px;
       text-align: center;
       box-shadow: 0 0 50px rgba(0,0,0,0.8);
-      max-width: 520px; max-height: 90vh; overflow-y: auto;
+      max-width: 560px; max-height: 90vh; overflow-y: auto;
       color: #e8d5b0;
     }
     #go-title { font-size: 2rem; color: #ffd966; margin-bottom: 20px; }
@@ -217,6 +307,7 @@
     .btn-restart:hover { background: #ffd966; transform: scale(1.05); }
     .btn-secondary { background: #5a4a3a; color: #e8d5b0; }
     .btn-danger { background: #8a2a2a; color: #ffd0d0; }
+    .btn-gold { background: #ffd966; color: #1a1410; }
 
     #leaderboard { text-align: left; margin: 15px 0; font-size: 0.95rem; }
     #leaderboard h3 { margin: 0 0 8px; color: #ffd966; font-size: 1rem; }
@@ -227,19 +318,21 @@
     #run-stats { text-align: left; margin: 15px 0; font-size: 0.9rem; color: #ccc; }
     #run-stats div { padding: 3px 0; }
 
-    #mute-btn, #screenshot-btn, #settings-btn, #shop-btn, #daily-btn, #online-btn {
+    #mute-btn, #screenshot-btn, #settings-btn, #shop-btn, #daily-btn, #online-btn, #weekly-btn, #signin-btn {
       position: absolute; top: 20px;
       background: rgba(60, 40, 24, 0.8); border: 1px solid #b89a6b;
-      color: #e8d5b0; padding: 5px 15px; border-radius: 20px;
-      cursor: pointer; pointer-events: auto; font-size: 1rem;
+      color: #e8d5b0; padding: 5px 12px; border-radius: 20px;
+      cursor: pointer; pointer-events: auto; font-size: 0.9rem;
       z-index: 20;
     }
     #mute-btn { left: 50%; transform: translateX(-50%); }
-    #screenshot-btn { left: 50%; transform: translateX(calc(-50% + 100px)); }
-    #settings-btn { left: 50%; transform: translateX(calc(-50% + 200px)); }
-    #shop-btn { left: 50%; transform: translateX(calc(-50% + 300px)); }
-    #daily-btn { left: 50%; transform: translateX(calc(-50% + 400px)); }
-    #online-btn { left: 50%; transform: translateX(calc(-50% + 500px)); }
+    #screenshot-btn { left: 50%; transform: translateX(calc(-50% + 80px)); }
+    #settings-btn { left: 50%; transform: translateX(calc(-50% + 160px)); }
+    #shop-btn { left: 50%; transform: translateX(calc(-50% + 240px)); }
+    #daily-btn { left: 50%; transform: translateX(calc(-50% + 320px)); }
+    #online-btn { left: 50%; transform: translateX(calc(-50% + 400px)); }
+    #weekly-btn { left: 50%; transform: translateX(calc(-50% + 490px)); }
+    #signin-btn { left: 50%; transform: translateX(calc(-50% + 580px)); }
 
     #speed-lines {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -292,6 +385,17 @@
     }
     .setting-btn.active { background: #ffd966; color: #1a1410; font-weight: bold; }
 
+    /* 商店标签页 */
+    .shop-tabs {
+      display: flex; gap: 5px; margin-bottom: 15px; justify-content: center;
+    }
+    .shop-tab {
+      background: #5a4a3a; color: #e8d5b0; border: 1px solid #b89a6b;
+      padding: 6px 18px; border-radius: 20px; cursor: pointer;
+      font-family: inherit; font-size: 0.9rem;
+    }
+    .shop-tab.active { background: #ffd966; color: #1a1410; font-weight: bold; }
+
     #shop-grid {
       display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
       margin: 20px 0;
@@ -320,6 +424,32 @@
     }
     .daily-done { color: #6bdb6b; font-weight: bold; }
 
+    #signin-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+      margin: 20px 0;
+    }
+    .signin-day {
+      background: rgba(60, 40, 24, 0.6); border: 2px solid #8a7a5a;
+      border-radius: 10px; padding: 10px 5px;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      font-size: 0.8rem;
+      transition: all 0.2s;
+    }
+    .signin-day.claimed { background: rgba(107, 219, 107, 0.2); border-color: #6bdb6b; }
+    .signin-day.today {
+      border-color: #ffd966; box-shadow: 0 0 15px rgba(255,215,0,0.5);
+      animation: pulse 1.5s infinite;
+    }
+    .signin-day .num { font-size: 1.1rem; font-weight: bold; color: #ffd966; }
+    .signin-day .reward { color: #ffd966; font-size: 0.75rem; }
+    .signin-day.claimed .num { color: #6bdb6b; }
+
+    #share-preview {
+      max-width: 100%; max-height: 60vh;
+      border: 2px solid #b89a6b; border-radius: 12px;
+      margin: 15px 0;
+    }
+
     #online-list { text-align: left; margin: 15px 0; }
     #online-list .row {
       display: flex; justify-content: space-between;
@@ -328,6 +458,12 @@
     }
     #online-list .row.top { color: #ffd966; font-weight: bold; }
     #online-loading { color: #aaa; font-size: 0.9rem; }
+
+    #weekly-rule {
+      background: rgba(60, 40, 24, 0.6); border-left: 3px solid #ffd966;
+      padding: 10px 15px; margin: 10px 0; text-align: left;
+      font-size: 0.95rem; border-radius: 0 8px 8px 0;
+    }
   </style>
 </head>
 <body>
@@ -340,39 +476,62 @@
       <div class="stat-row">🪙 <span id="coinVal">0</span></div>
       <div class="stat-row" style="font-size:0.9rem; color:#aaa;">🏆 <span id="bestVal">0</span></div>
     </div>
+
+    <div id="rank-badge">
+      <div id="rank-icon">🥉</div>
+      <div id="rank-info">
+        <div id="rank-name">青铜</div>
+        <div id="rank-score">最高 0 分</div>
+      </div>
+    </div>
+
+    <div id="vehicle-badge" class="hidden">
+      <span id="vehicle-icon">🛹</span>
+      <span id="vehicle-name">滑板</span>
+    </div>
+
+    <div id="pet-badge" class="hidden">
+      <span id="pet-icon">🐶</span>
+      <span id="pet-name">小狗</span>
+    </div>
+
+    <div id="quest-panel">
+      <h3>🎯 本局任务</h3>
+      <div id="quest-list"></div>
+    </div>
+
     <div id="combo-display">COMBO x0</div>
     <div id="tutorial-tip">按 A / ◀ 向左移动</div>
-    <div id="mute-btn" onclick="toggleMute()">🔊 声音</div>
+    <div id="mute-btn" onclick="toggleMute()">🔊</div>
     <div id="screenshot-btn" onclick="takeScreenshot()">📷</div>
     <div id="settings-btn" onclick="toggleSettings()">⚙️</div>
-    <div id="shop-btn" onclick="toggleShop()">🎨 商店</div>
-    <div id="daily-btn" onclick="toggleDaily()">🏆 每日</div>
-    <div id="online-btn" onclick="toggleOnline()">🌐 在线榜</div>
+    <div id="shop-btn" onclick="toggleShop()">🎨</div>
+    <div id="daily-btn" onclick="toggleDaily()">🏆</div>
+    <div id="online-btn" onclick="toggleOnline()">🌐</div>
+    <div id="weekly-btn" onclick="toggleWeekly()">📅</div>
+    <div id="signin-btn" onclick="toggleSignin()">🎁</div>
 
     <div id="tip-toast">💡 连击越高，单金币分数越多</div>
     <div id="double-jump-ring"></div>
     <div id="speed-lines"></div>
     <div id="danger-flash"></div>
     <div id="vignette"></div>
+    <div id="super-overlay"></div>
 
-    <!-- ===== 指针式速度表 ===== -->
+    <div id="super-banner">⚡ 超级模式 ⚡</div>
+    <div id="super-timer">超级模式 10.0s</div>
+
     <div id="speedometer">
       <svg viewBox="0 0 140 140">
-        <!-- 外圈 -->
         <circle cx="70" cy="70" r="66" fill="rgba(20,14,8,0.85)" stroke="#b89a6b" stroke-width="2"/>
         <circle cx="70" cy="70" r="60" fill="none" stroke="#3a2a1e" stroke-width="1"/>
-        <!-- 刻度 -->
         <g id="speed-ticks" stroke="#e8d5b0" stroke-width="1.5"></g>
-        <!-- 刻度文字 -->
         <g id="speed-labels" fill="#c9b088" font-size="7" font-family="monospace" text-anchor="middle"></g>
-        <!-- 危险区（150-200 红色弧） -->
         <path d="M 70 70 m -52 0 a 52 52 0 0 1 26 -45" fill="none" stroke="#aa2222" stroke-width="3" opacity="0.7"/>
-        <!-- 指针 -->
         <g id="speed-needle">
           <line x1="70" y1="70" x2="70" y2="22" stroke="#ff4444" stroke-width="2.5" stroke-linecap="round"/>
           <line x1="70" y1="70" x2="70" y2="80" stroke="#ff4444" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
         </g>
-        <!-- 中心圆 -->
         <circle cx="70" cy="70" r="6" fill="#b89a6b" stroke="#5a4a3a" stroke-width="1.5"/>
         <circle cx="70" cy="70" r="2.5" fill="#1a1410"/>
       </svg>
@@ -382,9 +541,7 @@
       </div>
     </div>
 
-    <div id="slide-bar">
-      <div id="slide-bar-fill"></div>
-    </div>
+    <div id="slide-bar"><div id="slide-bar-fill"></div></div>
 
     <div id="active-effects">
       <div id="eff-jet" class="effect-row">🚀 飞行中 <span class="effect-timer">0.0s</span></div>
@@ -459,11 +616,17 @@
     </div>
   </div>
 
+  <!-- 商店（含载具、宠物） -->
   <div id="shop-mask" class="mask" style="z-index:180">
     <div id="shop-content">
-      <div style="font-size:1.8rem; color:#ffd966; margin-bottom:5px;">🎨 皮肤商店</div>
+      <div style="font-size:1.8rem; color:#ffd966; margin-bottom:5px;">🎨 商店</div>
       <div style="font-size:0.9rem; color:#aaa; margin-bottom:15px;">
         总金币: <span id="shop-coins" style="color:#ffd966;">0</span>
+      </div>
+      <div class="shop-tabs">
+        <button class="shop-tab active" data-tab="skin" onclick="switchShopTab('skin')">🎭 皮肤</button>
+        <button class="shop-tab" data-tab="vehicle" onclick="switchShopTab('vehicle')">🛹 载具</button>
+        <button class="shop-tab" data-tab="pet" onclick="switchShopTab('pet')">🐾 宠物</button>
       </div>
       <div id="shop-grid"></div>
       <button class="btn-restart btn-secondary" onclick="toggleShop()">关闭</button>
@@ -489,6 +652,51 @@
       <div id="daily-status" style="margin: 15px 0; font-size:1rem;"></div>
       <button class="btn-restart" onclick="startDailyChallenge()" id="daily-start-btn">开始挑战</button>
       <button class="btn-restart btn-secondary" onclick="toggleDaily()">关闭</button>
+    </div>
+  </div>
+
+  <div id="weekly-mask" class="mask" style="z-index:180">
+    <div id="weekly-content">
+      <div style="font-size:1.8rem; color:#ffd966; margin-bottom:15px;">📅 每周挑战</div>
+      <div style="font-size:0.85rem; color:#aaa; margin-bottom:10px;" id="weekly-date">-</div>
+      <div class="daily-rule">
+        <div style="color:#ffd966; font-size:0.85rem;">📍 出发地</div>
+        <div id="weekly-prov" style="font-size:1.1rem; margin-top:4px;">-</div>
+      </div>
+      <div class="daily-rule">
+        <div style="color:#ffd966; font-size:0.85rem;">⚡ 特殊规则</div>
+        <div id="weekly-rule-text" style="font-size:1.1rem; margin-top:4px;">-</div>
+      </div>
+      <div class="daily-rule">
+        <div style="color:#ffd966; font-size:0.85rem;">🎁 通关奖励</div>
+        <div id="weekly-reward" style="font-size:1.1rem; margin-top:4px;">-</div>
+      </div>
+      <div id="weekly-status" style="margin: 15px 0; font-size:1rem;"></div>
+      <button class="btn-restart" onclick="startWeeklyChallenge()" id="weekly-start-btn">开始挑战</button>
+      <button class="btn-restart btn-secondary" onclick="toggleWeekly()">关闭</button>
+    </div>
+  </div>
+
+  <div id="signin-mask" class="mask" style="z-index:180">
+    <div id="signin-content">
+      <div style="font-size:1.8rem; color:#ffd966; margin-bottom:5px;">🎁 每日签到</div>
+      <div style="font-size:0.9rem; color:#aaa; margin-bottom:15px;">
+        连续签到 <span id="signin-streak" style="color:#ffd966;">0</span> 天
+      </div>
+      <div id="signin-grid"></div>
+      <div id="signin-msg" style="margin: 10px 0; font-size:1rem; min-height: 1.5em;"></div>
+      <button class="btn-restart btn-gold" onclick="claimSignin()" id="signin-claim-btn">签到</button>
+      <button class="btn-restart btn-secondary" onclick="toggleSignin()">关闭</button>
+    </div>
+  </div>
+
+  <div id="share-mask" class="mask" style="z-index:200">
+    <div id="share-content">
+      <div style="font-size:1.5rem; color:#ffd966; margin-bottom:10px;">📸 分享图</div>
+      <img id="share-preview" src="" alt="分享图预览">
+      <div style="font-size:0.85rem; color:#aaa; margin: 10px 0;">长按图片保存 / 右键另存为</div>
+      <button class="btn-restart" onclick="downloadShareImage()">💾 下载</button>
+      <button class="btn-restart btn-secondary" onclick="closeShare()">关闭</button>
     </div>
   </div>
 
@@ -519,13 +727,15 @@
         <div>最高连击: <span id="go-combo">0</span></div>
         <div>道具使用: <span id="go-items">0</span> 次</div>
         <div>里程: <span id="go-distance">0</span> m</div>
+        <div>任务完成: <span id="go-quests">0</span> / 3</div>
       </div>
       <div id="leaderboard">
         <h3>🏅 本地排行榜</h3>
         <ol id="leaderboard-list"></ol>
       </div>
       <button class="btn-restart" onclick="restartFromGameOver()">再次出发</button>
-      <button class="btn-restart btn-secondary" onclick="playReplay()">🎬 观看回放</button>
+      <button class="btn-restart btn-gold" onclick="generateShareImage()">📸 分享图</button>
+      <button class="btn-restart btn-secondary" onclick="playReplay()">🎬 回放</button>
       <button class="btn-restart btn-secondary" onclick="submitScoreOnline()">🌐 提交在线榜</button>
       <div style="margin-top:15px; font-size:0.9rem; color:#888;">按空格键快速重开</div>
     </div>
@@ -553,7 +763,6 @@
   <script type="module">
     import * as THREE from 'three';
 
-    // ================= 缓存池 =================
     const geoCache = {};
     const matCache = {};
     function getGeo(key, factory) {
@@ -565,19 +774,17 @@
       return matCache[key];
     }
 
-    // ================= 在线排行榜配置 =================
     const ONLINE_CONFIG = {
       binId: '6aa61b76ac6210605ac6a887',
       apiKey: '$2a$10$j5j5FhZNVTvYzqatPtjIbew14N4vXOf9vZ5DYysy0G4KROVzbTHm.',
       enabled: false
     };
-    if (ONLINE_CONFIG.binId && ONLINE_CONFIG.apiKey) ONLINE_CONFIG.enabled = true;
+    if (ONLINE_CONFIG.binId && ONLINE_CONFIG.apiKey && ONLINE_CONFIG.binId !== 'YOUR_BIN_ID') {
+      ONLINE_CONFIG.enabled = true;
+    }
 
-    // ================= 设置 =================
     const settings = { volume: 0.7, quality: 'mid', shake: true };
-    try {
-      Object.assign(settings, JSON.parse(localStorage.getItem('metro_settings') || '{}'));
-    } catch(e) {}
+    try { Object.assign(settings, JSON.parse(localStorage.getItem('metro_settings') || '{}')); } catch(e) {}
     function saveSettings() { localStorage.setItem('metro_settings', JSON.stringify(settings)); }
 
     window.setVolume = (v) => { settings.volume = v; saveSettings(); updateSettingsUI(); };
@@ -613,7 +820,7 @@
       m.classList.toggle('show');
       if (m.classList.contains('show')) {
         paused = true;
-        ['pause-mask','shop-mask','daily-mask','online-mask'].forEach(id => document.getElementById(id).classList.remove('show'));
+        ['pause-mask','shop-mask','daily-mask','online-mask','weekly-mask','signin-mask'].forEach(id => document.getElementById(id).classList.remove('show'));
         updateTotalStats();
       } else {
         if (!gameOver && !cdActive && mapBox.classList.contains('collapsed')) paused = false;
@@ -622,10 +829,8 @@
 
     function updateTotalStats() {
       const s = JSON.parse(localStorage.getItem('metro_total') || '{"coins":0,"runs":0,"distance":0}');
-      document.getElementById('total-stats').textContent = 
-        `金币 ${s.coins} · 局数 ${s.runs} · 里程 ${Math.floor(s.distance)}m`;
+      document.getElementById('total-stats').textContent = `金币 ${s.coins} · 局数 ${s.runs} · 里程 ${Math.floor(s.distance)}m`;
     }
-
     function getTotalCoins() {
       const s = JSON.parse(localStorage.getItem('metro_total') || '{"coins":0}');
       return s.coins || 0;
@@ -636,7 +841,196 @@
       localStorage.setItem('metro_total', JSON.stringify(s));
     }
 
-    // ================= 皮肤系统 =================
+    // ================= 段位 =================
+    const RANKS = [
+      { name: '青铜', icon: '🥉', min: 0,    color: '#b87333' },
+      { name: '白银', icon: '🥈', min: 500,  color: '#c0c0c0' },
+      { name: '黄金', icon: '🥇', min: 1500, color: '#ffd700' },
+      { name: '铂金', icon: '💎', min: 3000, color: '#88e0ff' },
+      { name: '钻石', icon: '💠', min: 5000, color: '#55ffff' },
+      { name: '王者', icon: '👑', min: 8000, color: '#ff4444' }
+    ];
+    function getRank(score) {
+      let r = RANKS[0];
+      for (const rank of RANKS) if (score >= rank.min) r = rank;
+      return r;
+    }
+    function getRankIndex(score) {
+      let idx = 0;
+      RANKS.forEach((rank, i) => { if (score >= rank.min) idx = i; });
+      return idx;
+    }
+    function updateRankBadge() {
+      const r = getRank(bestScore);
+      document.getElementById('rank-icon').textContent = r.icon;
+      document.getElementById('rank-name').textContent = r.name;
+      document.getElementById('rank-name').style.color = r.color;
+      document.getElementById('rank-score').textContent = '最高 ' + bestScore + ' 分';
+    }
+    function checkRankUp(oldScore, newScore) {
+      const oldIdx = getRankIndex(oldScore);
+      const newIdx = getRankIndex(newScore);
+      if (newIdx > oldIdx) {
+        const r = RANKS[newIdx];
+        const badge = document.getElementById('rank-badge');
+        badge.classList.remove('up'); void badge.offsetWidth; badge.classList.add('up');
+        showTipText(`🎉 段位提升：${r.icon} ${r.name}！`);
+        playSound('achieve');
+      }
+    }
+
+    // ================= 载具系统 =================
+    const VEHICLES = [
+      { id: 'none',     name: '无',       icon: '🚶', price: 0,   speedMul: 1.0,  laneSpeed: 0.1,  canDoubleJump: true,  autoShield: false, drain: 0 },
+      { id: 'skate',    name: '滑板',     icon: '🛹', price: 150, speedMul: 1.1,  laneSpeed: 0.1,  canDoubleJump: false, autoShield: false, drain: 0 },
+      { id: 'bike',     name: '自行车',   icon: '🚲', price: 300, speedMul: 0.8,  laneSpeed: 0.1,  canDoubleJump: true,  autoShield: true,  drain: 0 },
+      { id: 'car',      name: '跑车',     icon: '🏎️', price: 600, speedMul: 1.3,  laneSpeed: 0.06, canDoubleJump: true,  autoShield: false, drain: 0 },
+      { id: 'rocket',   name: '火箭',     icon: '🚀', price: 1200,speedMul: 1.5,  laneSpeed: 0.1,  canDoubleJump: true,  autoShield: false, drain: 5 }
+    ];
+    let ownedVehicles = JSON.parse(localStorage.getItem('metro_owned_vehicles') || '["none"]');
+    let activeVehicle = localStorage.getItem('metro_active_vehicle') || 'none';
+    let vehicleDrainTimer = 0;
+
+    function getVehicle() {
+      return VEHICLES.find(v => v.id === activeVehicle) || VEHICLES[0];
+    }
+    function updateVehicleBadge() {
+      const v = getVehicle();
+      const el = document.getElementById('vehicle-badge');
+      if (v.id === 'none') { el.classList.add('hidden'); return; }
+      el.classList.remove('hidden');
+      document.getElementById('vehicle-icon').textContent = v.icon;
+      document.getElementById('vehicle-name').textContent = v.name;
+    }
+
+    // ================= 宠物系统 =================
+    const PETS = [
+      { id: 'none',   name: '无',       icon: '❌', price: 0,   effect: null },
+      { id: 'dog',    name: '小狗',     icon: '🐶', price: 200, effect: 'magnet5' },
+      { id: 'cat',    name: '小猫',     icon: '🐱', price: 400, effect: 'comboKeep' },
+      { id: 'panda',  name: '熊猫宝宝', icon: '🐼', price: 700, effect: 'item30' },
+      { id: 'dragon', name: '小龙',     icon: '🐉', price: 1000,effect: 'coin10' }
+    ];
+    let ownedPets = JSON.parse(localStorage.getItem('metro_owned_pets') || '["none"]');
+    let activePet = localStorage.getItem('metro_active_pet') || 'none';
+    let petTimer = 0;
+    let petMesh = null;
+
+    function getPet() {
+      return PETS.find(p => p.id === activePet) || PETS[0];
+    }
+    function updatePetBadge() {
+      const p = getPet();
+      const el = document.getElementById('pet-badge');
+      if (p.id === 'none') { el.classList.add('hidden'); return; }
+      el.classList.remove('hidden');
+      document.getElementById('pet-icon').textContent = p.icon;
+      document.getElementById('pet-name').textContent = p.name;
+    }
+    function createPetMesh() {
+      if (petMesh) { scene.remove(petMesh); petMesh = null; }
+      const p = getPet();
+      if (p.id === 'none') return;
+      const g = new THREE.Group();
+      const bodyColor = { dog: 0xc9a06a, cat: 0x888888, panda: 0xffffff, dragon: 0x44aa44 }[p.id] || 0xffffff;
+      const body = new THREE.Mesh(getGeo('pet_body', () => new THREE.SphereGeometry(0.25, 8, 8)), getMat('pet_mat_' + p.id, () => new THREE.MeshStandardMaterial({color: bodyColor})));
+      body.position.y = 0.25;
+      const head = new THREE.Mesh(getGeo('pet_head', () => new THREE.SphereGeometry(0.18, 8, 8)), getMat('pet_head_mat_' + p.id, () => new THREE.MeshStandardMaterial({color: bodyColor})));
+      head.position.y = 0.55;
+      const earGeo = getGeo('pet_ear', () => new THREE.SphereGeometry(0.06, 6, 6));
+      const earMat = getMat('pet_ear_mat_' + p.id, () => new THREE.MeshStandardMaterial({color: p.id === 'panda' ? 0x111111 : bodyColor}));
+      const earL = new THREE.Mesh(earGeo, earMat); earL.position.set(-0.1, 0.68, 0);
+      const earR = new THREE.Mesh(earGeo, earMat); earR.position.set(0.1, 0.68, 0);
+      g.add(body, head, earL, earR);
+      g.userData = { bobPhase: 0 };
+      scene.add(g);
+      petMesh = g;
+    }
+    function updatePetMesh() {
+      if (!petMesh) return;
+      petMesh.position.x = player.position.x - lane * 0.3;
+      petMesh.position.z = player.position.z - 1.0;
+      petMesh.userData.bobPhase += 0.15;
+      petMesh.position.y = 0.2 + Math.sin(petMesh.userData.bobPhase) * 0.08;
+    }
+    function triggerPetEffect(dt) {
+      const p = getPet();
+      if (p.id === 'none') return;
+      petTimer++;
+      if (p.effect === 'magnet5' && petTimer % 300 === 0) {
+        // 每 5 秒吸一颗最近金币
+        let nearest = null, minD = Infinity;
+        coinObjs.forEach(c => {
+          const d = c.position.distanceTo(player.position);
+          if (d < minD) { minD = d; nearest = c; }
+        });
+        if (nearest) nearest.position.lerp(player.position, 0.5);
+      }
+      if (p.effect === 'comboKeep') {
+        // 连击超时时，不清零，只减半
+        if (comboTimer <= 0 && combo > 0) {
+          comboTimer = 60;
+        }
+      }
+      if (p.effect === 'item30' && petTimer % 1800 === 0) {
+        // 每 30 秒给一个随机道具
+        const kinds = [1,2,3,4];
+        const k = kinds[Math.floor(Math.random() * 4)];
+        if (k === 1) { pus.skate.on = true; pus.skate.t = 600; pus.skate.el.classList.add('visible'); }
+        if (k === 2) { pus.magnet.on = true; pus.magnet.t = 600; pus.magnet.el.classList.add('visible'); }
+        if (k === 3) { pus.double.on = true; pus.double.t = 600; pus.double.el.classList.add('visible'); doubleMul = 2; }
+        if (k === 4) { pus.jet.on = true; pus.jet.t = 300; pus.jet.el.classList.add('visible'); }
+        showTipText('🐼 熊猫宝宝送你一个道具！');
+      }
+      if (p.effect === 'coin10' && petTimer % 600 === 0) {
+        // 每 10 秒生成一颗金币
+        const l = Math.floor(Math.random() * 3) - 1;
+        const mesh = new THREE.Mesh(coinGeo, coinMat);
+        mesh.position.set(l * 1.8, 0.8, player.position.z + 25);
+        mesh.rotation.x = Math.PI / 2;
+        scene.add(mesh);
+        coinObjs.push(mesh);
+      }
+    }
+
+    // ================= 皮肤特效 =================
+    const SKIN_TRAILS = {
+      red: null,
+      blue: { color: 0x44aaff, size: 0.08, rate: 0.4 },
+      green: { color: 0x66dd44, size: 0.1, rate: 0.4 },
+      purple: { color: 0xcc44ff, size: 0.07, rate: 0.5 },
+      gold: { color: 0xffd966, size: 0.06, rate: 0.7 },
+      panda: { color: 0x111111, size: 0.09, rate: 0.4 },
+      shadow: { color: 0x222222, size: 0.12, rate: 0.6 }
+    };
+    let trailParticles = [];
+    function spawnTrail() {
+      const t = SKIN_TRAILS[activeSkin];
+      if (!t) return;
+      if (Math.random() > t.rate) return;
+      const geo = getGeo('trail_sphere_' + t.size, () => new THREE.SphereGeometry(t.size, 4, 4));
+      const mat = getMat('trail_mat_' + activeSkin, () => new THREE.MeshBasicMaterial({color: t.color, transparent: true, opacity: 0.7}));
+      const p = new THREE.Mesh(geo, mat);
+      p.position.set(player.position.x + (Math.random()-0.5)*0.4, player.position.y + 0.3 + Math.random()*0.4, player.position.z - 0.3);
+      p.userData = { life: 1, v: new THREE.Vector3((Math.random()-0.5)*0.05, 0.02, -0.1) };
+      scene.add(p);
+      trailParticles.push(p);
+    }
+    function updateTrails() {
+      for (let i = trailParticles.length - 1; i >= 0; i--) {
+        const p = trailParticles[i];
+        p.position.add(p.userData.v);
+        p.userData.life -= 0.03;
+        p.scale.setScalar(Math.max(0, p.userData.life));
+        p.material.opacity = p.userData.life * 0.7;
+        if (p.userData.life <= 0) {
+          scene.remove(p);
+          trailParticles.splice(i, 1);
+        }
+      }
+    }
+
+    // ================= 商店 =================
     const SKINS = [
       { id: 'red',    name: '红袍',   body: 0x8a1a1a, head: 0xe0c8a0, price: 0,   shape: 'box' },
       { id: 'blue',   name: '蓝衣',   body: 0x1a1a8a, head: 0xe0c8a0, price: 100, shape: 'box' },
@@ -648,6 +1042,7 @@
     ];
     let ownedSkins = JSON.parse(localStorage.getItem('metro_owned_skins') || '["red"]');
     let activeSkin = localStorage.getItem('metro_active_skin') || 'red';
+    let shopTab = 'skin';
 
     function applySkin() {
       const s = SKINS.find(x => x.id === activeSkin) || SKINS[0];
@@ -669,45 +1064,88 @@
       }
     }
 
+    window.switchShopTab = (tab) => {
+      shopTab = tab;
+      document.querySelectorAll('.shop-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+      renderShop();
+    };
+
     function renderShop() {
       const grid = document.getElementById('shop-grid');
       grid.innerHTML = '';
       document.getElementById('shop-coins').textContent = getTotalCoins();
-      SKINS.forEach(s => {
-        const card = document.createElement('div');
-        card.className = 'skin-card';
-        if (ownedSkins.includes(s.id)) card.classList.add('owned');
-        if (activeSkin === s.id) card.classList.add('active');
-        
-        const preview = document.createElement('div');
-        preview.className = 'skin-preview';
-        const bodyDiv = document.createElement('div');
-        bodyDiv.className = 'skin-body';
-        bodyDiv.style.background = '#' + s.body.toString(16).padStart(6, '0');
-        const headDiv = document.createElement('div');
-        headDiv.className = 'skin-head';
-        headDiv.style.background = '#' + s.head.toString(16).padStart(6, '0');
-        preview.appendChild(bodyDiv);
-        preview.appendChild(headDiv);
-        
-        const name = document.createElement('div');
-        name.className = 'skin-name';
-        name.textContent = s.name;
-        
-        const price = document.createElement('div');
-        price.className = 'skin-price';
-        if (ownedSkins.includes(s.id)) {
-          price.textContent = activeSkin === s.id ? '✅ 使用中' : '点击使用';
-        } else {
-          price.textContent = `🪙 ${s.price}`;
-        }
-        
-        card.appendChild(preview);
-        card.appendChild(name);
-        card.appendChild(price);
-        card.onclick = () => selectSkin(s);
-        grid.appendChild(card);
-      });
+      if (shopTab === 'skin') {
+        SKINS.forEach(s => {
+          const card = document.createElement('div');
+          card.className = 'skin-card';
+          if (ownedSkins.includes(s.id)) card.classList.add('owned');
+          if (activeSkin === s.id) card.classList.add('active');
+          const preview = document.createElement('div');
+          preview.className = 'skin-preview';
+          const bodyDiv = document.createElement('div');
+          bodyDiv.className = 'skin-body';
+          bodyDiv.style.background = '#' + s.body.toString(16).padStart(6, '0');
+          const headDiv = document.createElement('div');
+          headDiv.className = 'skin-head';
+          headDiv.style.background = '#' + s.head.toString(16).padStart(6, '0');
+          preview.appendChild(bodyDiv);
+          preview.appendChild(headDiv);
+          const name = document.createElement('div');
+          name.className = 'skin-name';
+          name.textContent = s.name;
+          const price = document.createElement('div');
+          price.className = 'skin-price';
+          if (ownedSkins.includes(s.id)) price.textContent = activeSkin === s.id ? '✅ 使用中' : '点击使用';
+          else price.textContent = `🪙 ${s.price}`;
+          card.appendChild(preview); card.appendChild(name); card.appendChild(price);
+          card.onclick = () => selectSkin(s);
+          grid.appendChild(card);
+        });
+      } else if (shopTab === 'vehicle') {
+        VEHICLES.forEach(v => {
+          const card = document.createElement('div');
+          card.className = 'skin-card';
+          if (ownedVehicles.includes(v.id)) card.classList.add('owned');
+          if (activeVehicle === v.id) card.classList.add('active');
+          const preview = document.createElement('div');
+          preview.className = 'skin-preview';
+          preview.style.fontSize = '50px';
+          preview.style.height = '70px';
+          preview.textContent = v.icon;
+          const name = document.createElement('div');
+          name.className = 'skin-name';
+          name.textContent = v.name;
+          const price = document.createElement('div');
+          price.className = 'skin-price';
+          if (ownedVehicles.includes(v.id)) price.textContent = activeVehicle === v.id ? '✅ 使用中' : '点击使用';
+          else price.textContent = `🪙 ${v.price}`;
+          card.appendChild(preview); card.appendChild(name); card.appendChild(price);
+          card.onclick = () => selectVehicle(v);
+          grid.appendChild(card);
+        });
+      } else if (shopTab === 'pet') {
+        PETS.forEach(p => {
+          const card = document.createElement('div');
+          card.className = 'skin-card';
+          if (ownedPets.includes(p.id)) card.classList.add('owned');
+          if (activePet === p.id) card.classList.add('active');
+          const preview = document.createElement('div');
+          preview.className = 'skin-preview';
+          preview.style.fontSize = '50px';
+          preview.style.height = '70px';
+          preview.textContent = p.icon;
+          const name = document.createElement('div');
+          name.className = 'skin-name';
+          name.textContent = p.name;
+          const price = document.createElement('div');
+          price.className = 'skin-price';
+          if (ownedPets.includes(p.id)) price.textContent = activePet === p.id ? '✅ 使用中' : '点击使用';
+          else price.textContent = `🪙 ${p.price}`;
+          card.appendChild(preview); card.appendChild(name); card.appendChild(price);
+          card.onclick = () => selectPet(p);
+          grid.appendChild(card);
+        });
+      }
     }
 
     function selectSkin(s) {
@@ -730,23 +1168,218 @@
             renderShop();
             playSound('achieve');
           }
-        } else {
-          alert(`金币不足！需要 ${s.price}，你有 ${total}。`);
-        }
+        } else alert(`金币不足！需要 ${s.price}，你有 ${total}。`);
       }
     }
-
+    function selectVehicle(v) {
+      if (ownedVehicles.includes(v.id)) {
+        activeVehicle = v.id;
+        localStorage.setItem('metro_active_vehicle', activeVehicle);
+        updateVehicleBadge();
+        renderShop();
+        playSound('coin');
+      } else {
+        const total = getTotalCoins();
+        if (total >= v.price) {
+          if (confirm(`花费 ${v.price} 金币解锁「${v.name}」？`)) {
+            addTotalCoins(-v.price);
+            ownedVehicles.push(v.id);
+            localStorage.setItem('metro_owned_vehicles', JSON.stringify(ownedVehicles));
+            activeVehicle = v.id;
+            localStorage.setItem('metro_active_vehicle', activeVehicle);
+            updateVehicleBadge();
+            renderShop();
+            playSound('achieve');
+          }
+        } else alert(`金币不足！需要 ${v.price}，你有 ${total}。`);
+      }
+    }
+    function selectPet(p) {
+      if (ownedPets.includes(p.id)) {
+        activePet = p.id;
+        localStorage.setItem('metro_active_pet', activePet);
+        updatePetBadge();
+        createPetMesh();
+        renderShop();
+        playSound('coin');
+      } else {
+        const total = getTotalCoins();
+        if (total >= p.price) {
+          if (confirm(`花费 ${p.price} 金币解锁「${p.name}」？`)) {
+            addTotalCoins(-p.price);
+            ownedPets.push(p.id);
+            localStorage.setItem('metro_owned_pets', JSON.stringify(ownedPets));
+            activePet = p.id;
+            localStorage.setItem('metro_active_pet', activePet);
+            updatePetBadge();
+            createPetMesh();
+            renderShop();
+            playSound('achieve');
+          }
+        } else alert(`金币不足！需要 ${p.price}，你有 ${total}。`);
+      }
+    }
     window.toggleShop = () => {
       const m = document.getElementById('shop-mask');
       m.classList.toggle('show');
       if (m.classList.contains('show')) {
         paused = true;
-        ['pause-mask','settings-mask','daily-mask','online-mask'].forEach(id => document.getElementById(id).classList.remove('show'));
+        ['pause-mask','settings-mask','daily-mask','online-mask','weekly-mask','signin-mask'].forEach(id => document.getElementById(id).classList.remove('show'));
         renderShop();
       } else {
         if (!gameOver && !cdActive && mapBox.classList.contains('collapsed')) paused = false;
       }
     };
+
+    // ================= 任务 =================
+    const QUEST_POOL = [
+      { id: 'coin30',  text: '收集 30 金币',    type: 'coin',    target: 30,   reward: 30 },
+      { id: 'coin50',  text: '收集 50 金币',    type: 'coin',    target: 50,   reward: 50 },
+      { id: 'combo30', text: '达成 30 连击',    type: 'combo',   target: 30,   reward: 40 },
+      { id: 'combo50', text: '达成 50 连击',    type: 'combo',   target: 50,   reward: 60 },
+      { id: 'score500',text: '单局 500 分不用道具', type: 'scoreNoItem', target: 500, reward: 50 },
+      { id: 'dist1000',text: '跑 1000 米',      type: 'distance',target: 1000, reward: 40 },
+      { id: 'jump20',  text: '跳跃 20 次',      type: 'jump',    target: 20,   reward: 30 },
+      { id: 'slide10', text: '滑铲 10 次',      type: 'slide',   target: 10,   reward: 30 }
+    ];
+    let activeQuests = [];
+    let questProgress = {};
+    let jumpCount = 0;
+    let slideCount = 0;
+    let questsCompletedThisRun = 0;
+    function pickQuests() {
+      const shuffled = [...QUEST_POOL].sort(() => Math.random() - 0.5);
+      activeQuests = shuffled.slice(0, 3);
+      activeQuests.forEach(q => q._done = false);
+      questProgress = {};
+      activeQuests.forEach(q => questProgress[q.id] = 0);
+      jumpCount = 0; slideCount = 0; questsCompletedThisRun = 0;
+    }
+    function renderQuests() {
+      const list = document.getElementById('quest-list');
+      list.innerHTML = '';
+      activeQuests.forEach(q => {
+        const done = questProgress[q.id] >= q.target;
+        const item = document.createElement('div');
+        item.className = 'quest-item' + (done ? ' done' : '');
+        const pct = Math.min(100, (questProgress[q.id] / q.target) * 100);
+        item.innerHTML = `
+          <div class="quest-row">
+            <span class="quest-text">${done ? '✅' : '▫'} ${q.text}</span>
+            <span class="quest-reward">+${q.reward}🪙</span>
+          </div>
+          <div class="quest-bar"><div class="quest-bar-fill" style="width:${pct}%"></div></div>
+        `;
+        list.appendChild(item);
+      });
+    }
+    function checkQuestComplete() {
+      activeQuests.forEach(q => {
+        if (questProgress[q.id] >= q.target && !q._done) {
+          q._done = true;
+          questsCompletedThisRun++;
+          addTotalCoins(q.reward);
+          showTipText(`✅ 任务完成：${q.text} +${q.reward}🪙`);
+          playSound('achieve');
+        }
+      });
+      renderQuests();
+    }
+
+    // ================= 超级模式 =================
+    let superMode = false;
+    let superTimer = 0;
+    const SUPER_DURATION = 600;
+    let superTriggered = false;
+    function triggerSuperMode() {
+      superMode = true; superTimer = SUPER_DURATION; superTriggered = true;
+      document.getElementById('super-overlay').classList.add('active');
+      const banner = document.getElementById('super-banner');
+      banner.classList.remove('show'); void banner.offsetWidth; banner.classList.add('show');
+      document.getElementById('super-timer').classList.add('show');
+      playSound('achieve');
+    }
+    function endSuperMode() {
+      superMode = false; superTimer = 0;
+      document.getElementById('super-overlay').classList.remove('active');
+      document.getElementById('super-timer').classList.remove('show');
+      combo = 0;
+      document.getElementById('combo-display').classList.remove('show');
+    }
+
+    // ================= 签到 =================
+    const SIGNIN_REWARDS = [10, 20, 30, 50, 80, 120, 200];
+    let signinData = { lastDate: null, streak: 0 };
+    try { signinData = JSON.parse(localStorage.getItem('metro_signin') || 'null') || signinData; } catch(e) {}
+    function todayStr() {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    }
+    function daysBetween(d1, d2) {
+      return Math.floor((new Date(d2) - new Date(d1)) / (1000 * 60 * 60 * 24));
+    }
+    function checkSigninReset() {
+      if (!signinData.lastDate) return;
+      if (daysBetween(signinData.lastDate, todayStr()) > 1) {
+        signinData.streak = 0;
+        localStorage.setItem('metro_signin', JSON.stringify(signinData));
+      }
+    }
+    function hasSignedToday() { return signinData.lastDate === todayStr(); }
+    window.toggleSignin = () => {
+      const m = document.getElementById('signin-mask');
+      m.classList.toggle('show');
+      if (m.classList.contains('show')) {
+        paused = true;
+        ['pause-mask','settings-mask','shop-mask','daily-mask','online-mask','weekly-mask'].forEach(id => document.getElementById(id).classList.remove('show'));
+        renderSignin();
+      } else {
+        if (!gameOver && !cdActive && mapBox.classList.contains('collapsed')) paused = false;
+      }
+    };
+    function renderSignin() {
+      document.getElementById('signin-streak').textContent = signinData.streak;
+      const grid = document.getElementById('signin-grid');
+      grid.innerHTML = '';
+      for (let i = 0; i < 7; i++) {
+        const day = document.createElement('div');
+        const claimed = i < signinData.streak;
+        const isToday = i === signinData.streak && !hasSignedToday();
+        day.className = 'signin-day' + (claimed ? ' claimed' : '') + (isToday ? ' today' : '');
+        day.innerHTML = `<div class="num">${claimed ? '✅' : i+1}</div><div class="reward">+${SIGNIN_REWARDS[i]}</div>`;
+        grid.appendChild(day);
+      }
+      const msg = document.getElementById('signin-msg');
+      const btn = document.getElementById('signin-claim-btn');
+      if (hasSignedToday()) {
+        msg.innerHTML = '<span style="color:#6bdb6b;">✅ 今天已签到</span>';
+        btn.disabled = true; btn.style.opacity = 0.5; btn.textContent = '已签到';
+      } else {
+        msg.textContent = `第 ${signinData.streak + 1} 天，可领 ${SIGNIN_REWARDS[signinData.streak]} 金币`;
+        btn.disabled = false; btn.style.opacity = 1; btn.textContent = '签到';
+      }
+    }
+    window.claimSignin = () => {
+      if (hasSignedToday()) return;
+      if (signinData.streak >= 7) signinData.streak = 0;
+      const reward = SIGNIN_REWARDS[signinData.streak];
+      addTotalCoins(reward);
+      signinData.streak++;
+      signinData.lastDate = todayStr();
+      localStorage.setItem('metro_signin', JSON.stringify(signinData));
+      playSound('achieve');
+      renderSignin();
+      showTipText(`🎁 签到成功 +${reward} 金币！`);
+    };
+    function autoPromptSignin() {
+      checkSigninReset();
+      if (!hasSignedToday()) {
+        setTimeout(() => {
+          document.getElementById('signin-mask').classList.add('show');
+          renderSignin();
+        }, 1500);
+      }
+    }
 
     // ================= 每日挑战 =================
     const DAILY_RULES = [
@@ -758,42 +1391,27 @@
       { id: 'hard',      name: '地狱模式',    desc: '障碍物全是高的',   apply: () => { dailyHard = true; } }
     ];
     let dailyNoItem = false, dailySpeedMul = 1, dailyNoJump = false, dailyHard = false;
-
     function getDailyChallenge() {
       const today = new Date().toDateString();
       const seed = today.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
       const provIdx = seed % provinces.length;
       const ruleIdx = (seed * 7) % DAILY_RULES.length;
-      return {
-        date: today,
-        prov: provinces[provIdx],
-        rule: DAILY_RULES[ruleIdx],
-        reward: 200,
-        targetScore: 1500
-      };
+      return { date: today, prov: provinces[provIdx], rule: DAILY_RULES[ruleIdx], reward: 200, targetScore: 1500 };
     }
-
     function getDailyProgress() {
-      try {
-        return JSON.parse(localStorage.getItem('metro_daily') || '{}');
-      } catch(e) { return {}; }
+      try { return JSON.parse(localStorage.getItem('metro_daily') || '{}'); } catch(e) { return {}; }
     }
-    function setDailyProgress(obj) {
-      localStorage.setItem('metro_daily', JSON.stringify(obj));
-    }
-
     window.toggleDaily = () => {
       const m = document.getElementById('daily-mask');
       m.classList.toggle('show');
       if (m.classList.contains('show')) {
         paused = true;
-        ['pause-mask','settings-mask','shop-mask','online-mask'].forEach(id => document.getElementById(id).classList.remove('show'));
+        ['pause-mask','settings-mask','shop-mask','online-mask','weekly-mask','signin-mask'].forEach(id => document.getElementById(id).classList.remove('show'));
         renderDaily();
       } else {
         if (!gameOver && !cdActive && mapBox.classList.contains('collapsed')) paused = false;
       }
     };
-
     function renderDaily() {
       const d = getDailyChallenge();
       const p = getDailyProgress();
@@ -812,29 +1430,20 @@
         btn.textContent = '开始挑战';
       }
     }
-
     let dailyMode = false;
-    let dailyCompletedThisRun = false;
-
     window.startDailyChallenge = () => {
       const d = getDailyChallenge();
-      dailyMode = true;
-      dailyCompletedThisRun = false;
+      dailyMode = true; weeklyMode = false;
       dailyNoItem = false; dailySpeedMul = 1; dailyNoJump = false; dailyHard = false;
-      curProv.name = d.prov.n;
-      curProv.bio = d.prov.bio;
-      curProv.color = d.prov.t;
-      curProv.city = d.prov.c;
+      curProv.name = d.prov.n; curProv.bio = d.prov.bio; curProv.color = d.prov.t; curProv.city = d.prov.c;
       document.getElementById('stationLabel').textContent = `${d.prov.c}地铁`;
       scene.background = new THREE.Color(d.prov.t).multiplyScalar(0.5);
-      renderMap();
-      initScenery();
+      renderMap(); initScenery();
       d.rule.apply();
       document.getElementById('daily-mask').classList.remove('show');
       startCD();
       setTimeout(() => { showTipText(`🏆 每日挑战：${d.rule.name}`); }, 3000);
     };
-
     function checkDailyComplete() {
       if (!dailyMode) return;
       const d = getDailyChallenge();
@@ -842,14 +1451,12 @@
         const p = getDailyProgress();
         if (!p[d.date] || !p[d.date].completed) {
           p[d.date] = { completed: true, score: Math.floor(score), time: Date.now() };
-          setDailyProgress(p);
+          localStorage.setItem('metro_daily', JSON.stringify(p));
           addTotalCoins(d.reward);
-          dailyCompletedThisRun = true;
           showTipText(`🎉 每日挑战完成！+${d.reward} 金币`);
         }
       }
     }
-
     function showTipText(t) {
       const tip = document.getElementById('tip-toast');
       tip.textContent = t;
@@ -857,41 +1464,151 @@
       setTimeout(() => tip.classList.remove('show'), 3000);
     }
 
-    // ================= 回放系统 =================
+    // ================= 每周挑战 =================
+    const WEEKLY_RULES = [
+      { id: 'no_item',   name: '无道具',      desc: '本局不会生成道具',       apply: () => { dailyNoItem = true; } },
+      { id: 'double_speed', name: '双倍速度', desc: '游戏速度翻倍',           apply: () => { dailySpeedMul = 2; } },
+      { id: 'hard',      name: '地狱模式',    desc: '障碍物全是高的',         apply: () => { dailyHard = true; } },
+      { id: 'triple_speed', name: '三倍速度', desc: '游戏速度三倍，慎入',     apply: () => { dailySpeedMul = 3; } }
+    ];
+    function getISOWeek(date) {
+      const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+      const dayNum = d.getUTCDay() || 7;
+      d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+      const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+      return { year: d.getUTCFullYear(), week: Math.ceil((((d - yearStart) / 86400000) + 1) / 7) };
+    }
+    function getWeeklyChallenge() {
+      const { year, week } = getISOWeek(new Date());
+      const key = `${year}-W${week}`;
+      const seed = key.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+      const provIdx = (seed * 3) % provinces.length;
+      const ruleIdx = (seed * 11) % WEEKLY_RULES.length;
+      return { key, year, week, prov: provinces[provIdx], rule: WEEKLY_RULES[ruleIdx], reward: 500, targetScore: 3000 };
+    }
+    function getWeeklyProgress() {
+      try { return JSON.parse(localStorage.getItem('metro_weekly') || '{}'); } catch(e) { return {}; }
+    }
+    window.toggleWeekly = () => {
+      const m = document.getElementById('weekly-mask');
+      m.classList.toggle('show');
+      if (m.classList.contains('show')) {
+        paused = true;
+        ['pause-mask','settings-mask','shop-mask','daily-mask','online-mask','signin-mask'].forEach(id => document.getElementById(id).classList.remove('show'));
+        renderWeekly();
+      } else {
+        if (!gameOver && !cdActive && mapBox.classList.contains('collapsed')) paused = false;
+      }
+    };
+    function renderWeekly() {
+      const w = getWeeklyChallenge();
+      const p = getWeeklyProgress();
+      const done = p[w.key] && p[w.key].completed;
+      document.getElementById('weekly-date').textContent = `${w.year} 年第 ${w.week} 周`;
+      document.getElementById('weekly-prov').textContent = `${w.prov.c} · ${w.prov.n}（${w.prov.bio}）`;
+      document.getElementById('weekly-rule-text').textContent = `${w.rule.name} —— ${w.rule.desc}`;
+      document.getElementById('weekly-reward').textContent = `🪙 ${w.reward} 金币（达成 ${w.targetScore} 分）`;
+      const status = document.getElementById('weekly-status');
+      const btn = document.getElementById('weekly-start-btn');
+      if (done) {
+        status.innerHTML = '<span class="daily-done">✅ 本周已完成</span>';
+        btn.textContent = '再玩一次（无奖励）';
+      } else {
+        status.textContent = '尚未完成';
+        btn.textContent = '开始挑战';
+      }
+    }
+    let weeklyMode = false;
+    window.startWeeklyChallenge = () => {
+      const w = getWeeklyChallenge();
+      weeklyMode = true; dailyMode = false;
+      dailyNoItem = false; dailySpeedMul = 1; dailyNoJump = false; dailyHard = false;
+      curProv.name = w.prov.n; curProv.bio = w.prov.bio; curProv.color = w.prov.t; curProv.city = w.prov.c;
+      document.getElementById('stationLabel').textContent = `${w.prov.c}地铁`;
+      scene.background = new THREE.Color(w.prov.t).multiplyScalar(0.5);
+      renderMap(); initScenery();
+      w.rule.apply();
+      document.getElementById('weekly-mask').classList.remove('show');
+      startCD();
+      setTimeout(() => { showTipText(`📅 每周挑战：${w.rule.name}`); }, 3000);
+    };
+    function checkWeeklyComplete() {
+      if (!weeklyMode) return;
+      const w = getWeeklyChallenge();
+      if (score >= w.targetScore) {
+        const p = getWeeklyProgress();
+        if (!p[w.key] || !p[w.key].completed) {
+          p[w.key] = { completed: true, score: Math.floor(score), time: Date.now() };
+          localStorage.setItem('metro_weekly', JSON.stringify(p));
+          addTotalCoins(w.reward);
+          showTipText(`🎉 每周挑战完成！+${w.reward} 金币`);
+        }
+      }
+    }
+
+    // ================= 分享图 =================
+    window.generateShareImage = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 600; canvas.height = 900;
+      const ctx = canvas.getContext('2d');
+      const grad = ctx.createLinearGradient(0, 0, 0, 900);
+      grad.addColorStop(0, '#2a1e12'); grad.addColorStop(0.5, '#3a2a1a'); grad.addColorStop(1, '#1a1410');
+      ctx.fillStyle = grad; ctx.fillRect(0, 0, 600, 900);
+      ctx.strokeStyle = '#b89a6b'; ctx.lineWidth = 4; ctx.strokeRect(20, 20, 560, 860);
+      ctx.strokeStyle = '#ffd966'; ctx.lineWidth = 1; ctx.strokeRect(30, 30, 540, 840);
+      ctx.fillStyle = '#ffd966'; ctx.font = 'bold 48px "华文楷体", serif'; ctx.textAlign = 'center';
+      ctx.fillText('🏮 明·疾驰', 300, 110);
+      ctx.fillStyle = '#c9b088'; ctx.font = '22px "华文楷体", serif';
+      ctx.fillText(`${curProv.city} · ${curProv.name}`, 300, 150);
+      const r = getRank(Math.floor(score));
+      ctx.font = '80px sans-serif'; ctx.fillText(r.icon, 300, 280);
+      ctx.fillStyle = r.color; ctx.font = 'bold 36px "华文楷体", serif'; ctx.fillText(r.name, 300, 330);
+      ctx.fillStyle = '#ffffff'; ctx.font = 'bold 96px "华文楷体", serif'; ctx.fillText(Math.floor(score), 300, 460);
+      ctx.fillStyle = '#aaa'; ctx.font = '20px "华文楷体", serif'; ctx.fillText('本次得分', 300, 495);
+      const stats = [['🪙 金币', coins], ['🔥 最高连击', maxCombo], ['📏 里程', Math.floor(distance) + 'm'], ['🎯 任务', questsCompletedThisRun + '/3']];
+      ctx.font = '24px "华文楷体", serif'; ctx.textAlign = 'left';
+      stats.forEach((s, i) => {
+        const y = 570 + i * 50;
+        ctx.fillStyle = '#c9b088'; ctx.fillText(s[0], 100, y);
+        ctx.fillStyle = '#ffd966'; ctx.fillText(String(s[1]), 400, y);
+      });
+      ctx.textAlign = 'center'; ctx.fillStyle = '#888'; ctx.font = '20px "华文楷体", serif';
+      ctx.fillText(`历史最佳: ${bestScore}`, 300, 800);
+      const d = new Date();
+      ctx.fillText(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`, 300, 835);
+      ctx.fillStyle = '#b89a6b'; ctx.font = 'bold 22px "华文楷体", serif';
+      ctx.fillText('来挑战我吧！', 300, 875);
+      const dataURL = canvas.toDataURL('image/png');
+      document.getElementById('share-preview').src = dataURL;
+      document.getElementById('share-mask').classList.add('show');
+      window._shareDataURL = dataURL;
+    };
+    window.downloadShareImage = () => {
+      if (!window._shareDataURL) return;
+      const a = document.createElement('a');
+      a.href = window._shareDataURL;
+      a.download = `metro-share-${Date.now()}.png`;
+      a.click();
+    };
+    window.closeShare = () => { document.getElementById('share-mask').classList.remove('show'); };
+
+    // ================= 回放 =================
     let replayRecording = [];
     let replayPlaying = false;
     let replayIndex = 0;
     let replayFrame = 0;
     const REPLAY_INTERVAL = 3;
-
-    function resetReplay() {
-      replayRecording = [];
-      replayFrame = 0;
-    }
-
+    function resetReplay() { replayRecording = []; replayFrame = 0; }
     function recordReplay() {
       if (replayFrame % REPLAY_INTERVAL === 0) {
-        replayRecording.push({
-          lane: lane,
-          y: player.position.y,
-          scaleY: player.scale.y,
-          action: isSliding ? 'slide' : (isJumping ? 'jump' : 'run')
-        });
+        replayRecording.push({ lane, y: player.position.y, scaleY: player.scale.y, action: isSliding ? 'slide' : (isJumping ? 'jump' : 'run') });
         if (replayRecording.length > 3000) replayRecording.shift();
       }
       replayFrame++;
     }
-
     function saveReplay() {
-      try {
-        localStorage.setItem('metro_replay', JSON.stringify({
-          data: replayRecording,
-          score: Math.floor(score),
-          date: Date.now()
-        }));
-      } catch(e) { console.warn('回放保存失败', e); }
+      try { localStorage.setItem('metro_replay', JSON.stringify({ data: replayRecording, score: Math.floor(score), date: Date.now() })); } catch(e) {}
     }
-
     window.playReplay = () => {
       const saved = localStorage.getItem('metro_replay');
       if (!saved) { alert('没有可用的回放'); return; }
@@ -899,13 +1616,10 @@
       if (!r.data || r.data.length === 0) { alert('回放为空'); return; }
       document.getElementById('gameover-mask').classList.remove('show');
       document.getElementById('replay-mask').classList.add('show');
-      replayPlaying = true;
-      replayIndex = 0;
-      replayRecording = r.data;
+      replayPlaying = true; replayIndex = 0; replayRecording = r.data;
       resetGame(true);
       paused = false; gameOver = false;
     };
-
     window.stopReplay = () => {
       replayPlaying = false;
       document.getElementById('replay-mask').classList.remove('show');
@@ -918,72 +1632,55 @@
       const listEl = document.getElementById('online-list');
       const noteEl = document.getElementById('online-note');
       listEl.innerHTML = '<div id="online-loading">加载中...</div>';
-      
       if (!ONLINE_CONFIG.enabled) {
         const local = JSON.parse(localStorage.getItem('metro_leaderboard') || '[]');
         listEl.innerHTML = '';
-        if (local.length === 0) {
-          listEl.innerHTML = '<div style="color:#aaa;">暂无数据</div>';
-        } else {
-          local.slice(0, 10).forEach((s, i) => {
-            const row = document.createElement('div');
-            row.className = 'row' + (i === 0 ? ' top' : '');
-            row.innerHTML = `<span>#${i+1}</span><span>${s} 分</span>`;
-            listEl.appendChild(row);
-          });
-        }
+        if (local.length === 0) listEl.innerHTML = '<div style="color:#aaa;">暂无数据</div>';
+        else local.slice(0, 10).forEach((s, i) => {
+          const row = document.createElement('div');
+          row.className = 'row' + (i === 0 ? ' top' : '');
+          row.innerHTML = `<span>#${i+1}</span><span>${s} 分</span>`;
+          listEl.appendChild(row);
+        });
         noteEl.textContent = '⚠️ 未配置在线后端，显示本地排行榜。';
         return;
       }
-      
       try {
-        const res = await fetch(`https://api.jsonbin.io/v3/b/${ONLINE_CONFIG.binId}/latest`, {
-          headers: { 'X-Master-Key': ONLINE_CONFIG.apiKey }
-        });
+        const res = await fetch(`https://api.jsonbin.io/v3/b/${ONLINE_CONFIG.binId}/latest`, { headers: { 'X-Master-Key': ONLINE_CONFIG.apiKey } });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const json = await res.json();
         const list = (json.record && json.record.scores) || [];
         listEl.innerHTML = '';
-        if (list.length === 0) {
-          listEl.innerHTML = '<div style="color:#aaa;">暂无数据</div>';
-        } else {
-          list.sort((a, b) => b.score - a.score).slice(0, 10).forEach((item, i) => {
-            const row = document.createElement('div');
-            row.className = 'row' + (i === 0 ? ' top' : '');
-            row.innerHTML = `<span>#${i+1} ${item.name || '匿名'}</span><span>${item.score} 分</span>`;
-            listEl.appendChild(row);
-          });
-        }
+        if (list.length === 0) listEl.innerHTML = '<div style="color:#aaa;">暂无数据</div>';
+        else list.sort((a, b) => b.score - a.score).slice(0, 10).forEach((item, i) => {
+          const row = document.createElement('div');
+          row.className = 'row' + (i === 0 ? ' top' : '');
+          row.innerHTML = `<span>#${i+1} ${item.name || '匿名'}</span><span>${item.score} 分</span>`;
+          listEl.appendChild(row);
+        });
         noteEl.textContent = '🌐 在线数据 · jsonbin.io';
       } catch(e) {
-        listEl.innerHTML = '<div style="color:#ff8888;">加载失败，请检查网络或配置</div>';
+        listEl.innerHTML = '<div style="color:#ff8888;">加载失败</div>';
         noteEl.textContent = '错误：' + e.message;
       }
     }
-
     window.toggleOnline = () => {
       const m = document.getElementById('online-mask');
       m.classList.toggle('show');
       if (m.classList.contains('show')) {
         paused = true;
-        ['pause-mask','settings-mask','shop-mask','daily-mask'].forEach(id => document.getElementById(id).classList.remove('show'));
+        ['pause-mask','settings-mask','shop-mask','daily-mask','weekly-mask','signin-mask'].forEach(id => document.getElementById(id).classList.remove('show'));
         loadOnlineLeaderboard();
       } else {
         if (!gameOver && !cdActive && mapBox.classList.contains('collapsed')) paused = false;
       }
     };
-
     window.submitScoreOnline = async () => {
-      if (!ONLINE_CONFIG.enabled) {
-        alert('未配置在线后端。');
-        return;
-      }
+      if (!ONLINE_CONFIG.enabled) { alert('未配置在线后端。'); return; }
       const name = prompt('输入你的昵称（最多 8 字）', '玩家') || '匿名';
       const finalScore = Math.floor(score);
       try {
-        const res = await fetch(`https://api.jsonbin.io/v3/b/${ONLINE_CONFIG.binId}/latest`, {
-          headers: { 'X-Master-Key': ONLINE_CONFIG.apiKey }
-        });
+        const res = await fetch(`https://api.jsonbin.io/v3/b/${ONLINE_CONFIG.binId}/latest`, { headers: { 'X-Master-Key': ONLINE_CONFIG.apiKey } });
         if (!res.ok) throw new Error(`读取失败 HTTP ${res.status}`);
         const json = await res.json();
         const list = (json.record && json.record.scores) || [];
@@ -992,32 +1689,23 @@
         const top = list.slice(0, 50);
         const writeRes = await fetch(`https://api.jsonbin.io/v3/b/${ONLINE_CONFIG.binId}`, {
           method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Master-Key': ONLINE_CONFIG.apiKey
-          },
+          headers: { 'Content-Type': 'application/json', 'X-Master-Key': ONLINE_CONFIG.apiKey },
           body: JSON.stringify({ scores: top })
         });
         if (!writeRes.ok) throw new Error(`写入失败 HTTP ${writeRes.status}`);
         const rank = top.findIndex(x => x.score === finalScore && x.name === name.slice(0,8)) + 1;
         alert(`✅ 提交成功！你排第 ${rank} 名`);
         loadOnlineLeaderboard();
-      } catch(e) {
-        alert('提交失败：' + e.message);
-      }
+      } catch(e) { alert('提交失败：' + e.message); }
     };
 
     // ================= 音频 =================
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    let audioCtx;
-    let isMuted = false;
-    let bgmNodes = [];
-
+    let audioCtx, isMuted = false, bgmNodes = [];
     function initAudio() {
       if (!audioCtx) audioCtx = new AudioCtx();
       if (audioCtx.state === 'suspended') audioCtx.resume();
     }
-
     function playSound(type, pitch = 1) {
       if (isMuted || !audioCtx || settings.volume === 0) return;
       const osc = audioCtx.createOscillator();
@@ -1056,20 +1744,17 @@
         osc.start(now); osc.stop(now + 0.4);
       }
     }
-
     function startBGM() {
       if (isMuted || !audioCtx || settings.volume === 0) return;
       if (bgmNodes.length > 0) return;
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.value = 110;
+      osc.type = 'triangle'; osc.frequency.value = 110;
       gain.gain.value = 0.05 * settings.volume;
       osc.connect(gain); gain.connect(audioCtx.destination);
       osc.start();
       bgmNodes.push({osc, gain});
     }
-
     function stopBGM() {
       if (!audioCtx) return;
       bgmNodes.forEach(o => {
@@ -1080,13 +1765,11 @@
       });
       bgmNodes = [];
     }
-
     window.toggleMute = () => {
       isMuted = !isMuted;
       document.getElementById('mute-btn').textContent = isMuted ? '🔇' : '🔊';
       if (isMuted) stopBGM(); else startBGM();
     };
-
     window.takeScreenshot = () => {
       renderer.render(scene, camera);
       const dataURL = renderer.domElement.toDataURL('image/png');
@@ -1096,7 +1779,7 @@
       a.click();
     };
 
-    // ================= 省份数据 =================
+    // ================= 省份 =================
     const provinces = [
       { s:'黑', n:'黑龙江', c:'哈尔滨', x:7, y:1, t:0x8899aa, bio: 'snow' },
       { s:'新', n:'新疆', c:'乌鲁木齐', x:1, y:2, t:0xddccaa, bio: 'desert' },
@@ -1133,16 +1816,13 @@
       { s:'港', n:'香港', c:'香港', x:5, y:8, t:0xccaa66, bio: 'modern' },
       { s:'澳', n:'澳门', c:'澳门', x:6, y:8, t:0xccaa66, bio: 'sea' }
     ];
-
     const curProv = { name: '江苏', bio: 'jiangnan', color: 0x88aacc, city: '南京' };
 
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x1a1410);
     scene.fog = new THREE.Fog(0x1a1410, 20, 60);
-
     const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 100);
     camera.position.set(0, 4.5, 9);
-
     const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.enabled = true;
@@ -1248,10 +1928,8 @@
         roof.position.y = 3.3; roof.rotation.y = Math.PI / 4;
         group.add(tower, roof);
       }
-      group.position.set(x, 0, z);
-      return group;
+      group.position.set(x, 0, z); return group;
     }
-
     function createTerraCottaItem(x, z) {
       const group = new THREE.Group();
       const count = 2 + Math.floor(Math.random() * 3);
@@ -1261,19 +1939,15 @@
       const headMat = getMat('tc_head_mat', () => new THREE.MeshStandardMaterial({color: 0x9a8a6a}));
       for (let i = 0; i < count; i++) {
         const soldier = new THREE.Group();
-        const body = new THREE.Mesh(bodyGeo, bodyMat);
-        body.position.y = 0.6;
-        const head = new THREE.Mesh(headGeo, headMat);
-        head.position.y = 1.35;
+        const body = new THREE.Mesh(bodyGeo, bodyMat); body.position.y = 0.6;
+        const head = new THREE.Mesh(headGeo, headMat); head.position.y = 1.35;
         soldier.add(body, head);
         soldier.position.set((Math.random() - 0.5) * 1.5, 0, (Math.random() - 0.5) * 1.5);
         soldier.rotation.y = Math.random() * Math.PI * 2;
         group.add(soldier);
       }
-      group.position.set(x, 0, z);
-      return group;
+      group.position.set(x, 0, z); return group;
     }
-
     function createOperaItem(x, z) {
       const group = new THREE.Group();
       const pole = new THREE.Mesh(getGeo('op_pole', () => new THREE.CylinderGeometry(0.08, 0.1, 2.5, 6)), getMat('op_pole_mat', () => new THREE.MeshStandardMaterial({color: 0x4a2a1a})));
@@ -1283,10 +1957,8 @@
       const redPart = new THREE.Mesh(getGeo('op_red', () => new THREE.CircleGeometry(0.5, 16, 0, Math.PI)), getMat('op_red_mat', () => new THREE.MeshStandardMaterial({color: 0xcc2222, side: THREE.DoubleSide})));
       redPart.position.set(0, 2.7, 0.01);
       group.add(pole, face, redPart);
-      group.position.set(x, 0, z);
-      return group;
+      group.position.set(x, 0, z); return group;
     }
-
     function createPandaExpressItem(x, z) {
       const group = new THREE.Group();
       const body = new THREE.Mesh(getGeo('pe_body', () => new THREE.BoxGeometry(3, 1.5, 1)), getMat('pe_body_mat', () => new THREE.MeshStandardMaterial({color: 0xffffff})));
@@ -1302,15 +1974,11 @@
       }
       const earGeo = getGeo('pe_ear', () => new THREE.SphereGeometry(0.2, 8, 8));
       const earMat = getMat('pe_ear_mat', () => new THREE.MeshStandardMaterial({color: 0x111111}));
-      const earL = new THREE.Mesh(earGeo, earMat);
-      earL.position.set(1.2, 2, 0);
-      const earR = new THREE.Mesh(earGeo, earMat);
-      earR.position.set(1.2, 2, 0.3);
+      const earL = new THREE.Mesh(earGeo, earMat); earL.position.set(1.2, 2, 0);
+      const earR = new THREE.Mesh(earGeo, earMat); earR.position.set(1.2, 2, 0.3);
       group.add(body, front, earL, earR);
-      group.position.set(x, 0, z);
-      return group;
+      group.position.set(x, 0, z); return group;
     }
-
     function createDesertItem(x, z) {
       const group = new THREE.Group();
       if (Math.random() > 0.5) {
@@ -1322,10 +1990,8 @@
         const cactus = new THREE.Mesh(getGeo('des_cactus', () => new THREE.CylinderGeometry(0.2, 0.2, 1.5, 5)), getMat('des_cactus_mat', () => new THREE.MeshStandardMaterial({color: 0x228822})));
         cactus.position.y = 0.75; group.add(cactus);
       }
-      group.position.set(x, 0, z);
-      return group;
+      group.position.set(x, 0, z); return group;
     }
-
     function createPlateauItem(x, z) {
       const group = new THREE.Group();
       const type = Math.random();
@@ -1346,10 +2012,8 @@
         const sheep = new THREE.Mesh(getGeo('pla_sheep', () => new THREE.SphereGeometry(0.4, 8, 8)), getMat('pla_sheep_mat', () => new THREE.MeshStandardMaterial({color: 0xffffff})));
         sheep.position.y = 0.4; group.add(sheep);
       }
-      group.position.set(x, 0, z);
-      return group;
+      group.position.set(x, 0, z); return group;
     }
-
     function createForbiddenItem(x, z) {
       const group = new THREE.Group();
       const r = Math.random();
@@ -1362,13 +2026,10 @@
         const pillar = new THREE.Mesh(getGeo('for_pillar', () => new THREE.CylinderGeometry(0.3, 0.3, 4, 8)), getMat('for_pillar_mat', () => new THREE.MeshStandardMaterial({color: 0xaa2222})));
         pillar.position.y = 2; group.add(pillar);
       } else {
-        const sub = createOperaItem(0, 0);
-        group.add(sub);
+        const sub = createOperaItem(0, 0); group.add(sub);
       }
-      group.position.set(x, 0, z);
-      return group;
+      group.position.set(x, 0, z); return group;
     }
-
     function createSnowItem(x, z) {
       const group = new THREE.Group();
       if (Math.random() > 0.3) {
@@ -1383,10 +2044,8 @@
         const ice = new THREE.Mesh(getGeo('snow_ice', () => new THREE.ConeGeometry(0.3, 1.5, 4)), getMat('snow_ice_mat', () => new THREE.MeshStandardMaterial({color: 0xaaddff, transparent: true, opacity: 0.8})));
         ice.position.y = 0.75; group.add(ice);
       }
-      group.position.set(x, 0, z);
-      return group;
+      group.position.set(x, 0, z); return group;
     }
-
     function createGrassItem(x, z) {
       const group = new THREE.Group();
       if (Math.random() > 0.5) {
@@ -1401,10 +2060,8 @@
         const cow = new THREE.Mesh(getGeo('gra_cow', () => new THREE.BoxGeometry(0.8, 0.6, 1.2)), Math.random() > 0.5 ? cowMat : cowMat2);
         cow.position.y = 0.3; group.add(cow);
       }
-      group.position.set(x, 0, z);
-      return group;
+      group.position.set(x, 0, z); return group;
     }
-
     function createLoessItem(x, z) {
       const group = new THREE.Group();
       const r = Math.random();
@@ -1418,13 +2075,10 @@
         const drum = new THREE.Mesh(getGeo('loe_drum', () => new THREE.CylinderGeometry(0.3, 0.3, 0.4, 8)), getMat('loe_drum_mat', () => new THREE.MeshStandardMaterial({color: 0xff4444})));
         drum.position.y = 0.2; drum.rotation.z = Math.PI / 2; group.add(drum);
       } else {
-        const sub = createTerraCottaItem(0, 0);
-        group.add(sub);
+        const sub = createTerraCottaItem(0, 0); group.add(sub);
       }
-      group.position.set(x, 0, z);
-      return group;
+      group.position.set(x, 0, z); return group;
     }
-
     function createSeaItem(x, z) {
       const group = new THREE.Group();
       if (Math.random() > 0.4) {
@@ -1447,10 +2101,8 @@
         board.position.y = 0.6; board.rotation.z = 0.2; board.rotation.y = Math.random();
         group.add(board);
       }
-      group.position.set(x, 0, z);
-      return group;
+      group.position.set(x, 0, z); return group;
     }
-
     function createJiangnanItem(x, z) {
       const group = new THREE.Group();
       if (Math.random() > 0.5) {
@@ -1466,10 +2118,8 @@
         leaves.position.y = 1.8;
         group.add(trunk, leaves);
       }
-      group.position.set(x, 0, z);
-      return group;
+      group.position.set(x, 0, z); return group;
     }
-
     function createModernItem(x, z) {
       const group = new THREE.Group();
       if (Math.random() > 0.5) {
@@ -1484,10 +2134,8 @@
         light.position.y = 2.5;
         group.add(pole, light);
       }
-      group.position.set(x, 0, z);
-      return group;
+      group.position.set(x, 0, z); return group;
     }
-
     function createForestItem(x, z) {
       const group = new THREE.Group();
       if (Math.random() > 0.5) {
@@ -1501,32 +2149,24 @@
         bamboo.position.y = 1.5;
         group.add(bamboo);
       }
-      group.position.set(x, 0, z);
-      return group;
+      group.position.set(x, 0, z); return group;
     }
-
     function createSichuanItem(x, z) {
       const group = new THREE.Group();
       const r = Math.random();
-      if (r > 0.75) {
-        const sub = createPandaExpressItem(0, 0);
-        group.add(sub);
-      } else if (r > 0.4) {
+      if (r > 0.75) { const sub = createPandaExpressItem(0, 0); group.add(sub); }
+      else if (r > 0.4) {
         const body = new THREE.Mesh(getGeo('sic_body', () => new THREE.SphereGeometry(0.5, 8, 8)), getMat('sic_body_mat', () => new THREE.MeshStandardMaterial({color: 0xffffff})));
         body.position.y = 0.5;
         const head = new THREE.Mesh(getGeo('sic_head', () => new THREE.SphereGeometry(0.35, 8, 8)), getMat('sic_head_mat', () => new THREE.MeshStandardMaterial({color: 0xffffff})));
         head.position.y = 1.0;
         const earGeo = getGeo('sic_ear', () => new THREE.SphereGeometry(0.12, 6, 6));
         const earMat = getMat('sic_ear_mat', () => new THREE.MeshStandardMaterial({color: 0x111111}));
-        const earL = new THREE.Mesh(earGeo, earMat);
-        earL.position.set(-0.25, 1.25, 0);
-        const earR = new THREE.Mesh(earGeo, earMat);
-        earR.position.set(0.25, 1.25, 0);
+        const earL = new THREE.Mesh(earGeo, earMat); earL.position.set(-0.25, 1.25, 0);
+        const earR = new THREE.Mesh(earGeo, earMat); earR.position.set(0.25, 1.25, 0);
         const eyeGeo = getGeo('sic_eye', () => new THREE.SphereGeometry(0.08, 6, 6));
-        const eyeL = new THREE.Mesh(eyeGeo, earMat);
-        eyeL.position.set(-0.12, 1.05, 0.25);
-        const eyeR = new THREE.Mesh(eyeGeo, earMat);
-        eyeR.position.set(0.12, 1.05, 0.25);
+        const eyeL = new THREE.Mesh(eyeGeo, earMat); eyeL.position.set(-0.12, 1.05, 0.25);
+        const eyeR = new THREE.Mesh(eyeGeo, earMat); eyeR.position.set(0.12, 1.05, 0.25);
         group.add(body, head, earL, earR, eyeL, eyeR);
       } else {
         const bamboo = new THREE.Mesh(getGeo('sic_bamboo', () => new THREE.CylinderGeometry(0.15, 0.18, 3.5, 8)), getMat('sic_bamboo_mat', () => new THREE.MeshStandardMaterial({color: 0x55aa55})));
@@ -1537,17 +2177,13 @@
         joint2.position.y = 2.5; joint2.rotation.x = Math.PI / 2;
         group.add(bamboo, joint, joint2);
       }
-      group.position.set(x, 0, z);
-      return group;
+      group.position.set(x, 0, z); return group;
     }
-
     function createCityItem(x, z) {
       const group = new THREE.Group();
       const r = Math.random();
-      if (r > 0.75) {
-        const sub = createGreatWallItem(0, 0);
-        group.add(sub);
-      } else if (r > 0.4) {
+      if (r > 0.75) { const sub = createGreatWallItem(0, 0); group.add(sub); }
+      else if (r > 0.4) {
         const pole = new THREE.Mesh(getGeo('cit_pole', () => new THREE.CylinderGeometry(0.08, 0.1, 2, 6)), getMat('cit_pole_mat', () => new THREE.MeshStandardMaterial({color: 0x4a2a1a})));
         pole.position.y = 1;
         const lantern = new THREE.Mesh(getGeo('cit_lantern', () => new THREE.SphereGeometry(0.3, 8, 8)), getMat('cit_lantern_mat', () => new THREE.MeshStandardMaterial({color: 0xff4444, emissive: 0xff0000, emissiveIntensity: 0.5})));
@@ -1558,15 +2194,13 @@
         const leaves = new THREE.Mesh(getGeo('cit_leaves', () => new THREE.ConeGeometry(0.8, 1.5, 8)), getMat('cit_leaves_mat', () => new THREE.MeshStandardMaterial({color: 0x228822})));
         leaves.position.y = 1.5; group.add(trunk, leaves);
       }
-      group.position.set(x, 0, z);
-      return group;
+      group.position.set(x, 0, z); return group;
     }
 
     // ================= 游戏状态 =================
     let score = 0, coins = 0;
     let bestScore = parseInt(localStorage.getItem('metro_best') || '0', 10);
     document.getElementById('bestVal').textContent = bestScore;
-
     let gameOver = false, paused = false, cdActive = false;
     let lane = 0, targetLane = 0;
     let isJumping = false, jumpV = 0, canDoubleJump = false;
@@ -1576,7 +2210,6 @@
     let combo = 0, comboTimer = 0, maxCombo = 0;
     let cameraShake = 0;
     let isFirstPlay = !localStorage.getItem('metro_has_played');
-    let lastSkinScore = 0;
     let itemsUsed = 0;
     let distance = 0;
     let tipTimer = 0;
@@ -1590,7 +2223,8 @@
       allProv: { name: '走遍神州', got: false },
       coin500: { name: '五百金', got: false },
       distance2000: { name: '两千米', got: false },
-      noItem1000: { name: '真功夫', got: false }
+      noItem1000: { name: '真功夫', got: false },
+      superMode: { name: '超级模式', got: false }
     };
     const visitedProvs = new Set(['江苏']);
 
@@ -1603,7 +2237,6 @@
     let doubleMul = 1;
 
     let obstacles = [], coinObjs = [], itemObjs = [], particles = [];
-
     let lastObstacleZ = 0;
     const waveGroups = new Map();
 
@@ -1626,18 +2259,9 @@
         const x = l * 1.8;
         const isHigh = dailyHard ? true : (blockCount === 2 ? (i !== lowIndex) : (Math.random() > 0.7));
         const isMoving = !dailyHard && blockCount === 1 && Math.random() < 0.1;
-        const mesh = isMoving 
-          ? new THREE.Mesh(movingGeo, movingMat)
-          : new THREE.Mesh(isHigh ? highGeo : lowGeo, obsMat);
+        const mesh = isMoving ? new THREE.Mesh(movingGeo, movingMat) : new THREE.Mesh(isHigh ? highGeo : lowGeo, obsMat);
         mesh.position.set(x, isMoving ? 0.5 : (isHigh ? 1.5 : 0.5), z);
-        mesh.userData = { 
-          isHigh: isMoving ? false : isHigh, 
-          waveZ: z,
-          isMoving: isMoving,
-          baseX: x,
-          movePhase: Math.random() * Math.PI * 2,
-          moveSpeed: 0.02 + Math.random() * 0.02
-        };
+        mesh.userData = { isHigh: isMoving ? false : isHigh, waveZ: z, isMoving, baseX: x, movePhase: Math.random() * Math.PI * 2, moveSpeed: 0.02 + Math.random() * 0.02 };
         mesh.castShadow = true;
         scene.add(mesh);
         obstacles.push(mesh);
@@ -1722,21 +2346,16 @@
       for (let i = 0; i < 10; i++) {
         const p = new THREE.Mesh(particleGeo, mat);
         p.position.copy(pos);
-        p.userData = {
-          v: new THREE.Vector3((Math.random() - 0.5) * 0.3, Math.random() * 0.3, (Math.random() - 0.5) * 0.3),
-          life: 1
-        };
+        p.userData = { v: new THREE.Vector3((Math.random() - 0.5) * 0.3, Math.random() * 0.3, (Math.random() - 0.5) * 0.3), life: 1 };
         scene.add(p); particles.push(p);
       }
     }
-
     function coinTrail(pos) {
       const p = new THREE.Mesh(trailGeo, trailMat);
       p.position.copy(pos);
       p.userData = { v: new THREE.Vector3(0, 0.02, 0), life: 1, fade: true };
       scene.add(p); particles.push(p);
     }
-
     function floatText(text, worldX, worldY) {
       const v = new THREE.Vector3(worldX, worldY, player.position.z);
       v.project(camera);
@@ -1745,12 +2364,10 @@
       const el = document.createElement('div');
       el.className = 'float-text';
       el.textContent = text;
-      el.style.left = x + 'px';
-      el.style.top = y + 'px';
+      el.style.left = x + 'px'; el.style.top = y + 'px';
       document.body.appendChild(el);
       setTimeout(() => el.remove(), 1000);
     }
-
     function updateDayNight() {
       const cycle = Math.floor(score / 100);
       const progress = (score % 100) / 100;
@@ -1764,7 +2381,6 @@
       sunLight.intensity = isDay ? 1.2 : 0.1;
       ambientLight.intensity = isDay ? 0.6 : 0.2;
     }
-
     function updateSea(time) {
       if (curProv.bio !== 'sea') { seaMesh.visible = false; return; }
       seaMesh.visible = true;
@@ -1780,7 +2396,6 @@
 
     const mapBox = document.getElementById('map-container');
     const grid = document.getElementById('map-grid');
-
     function renderMap() {
       grid.innerHTML = '';
       provinces.forEach(p => {
@@ -1792,44 +2407,35 @@
         grid.appendChild(btn);
       });
     }
-
     window.selectProv = (p) => {
-      curProv.name = p.n;
-      curProv.bio = p.bio;
-      curProv.color = p.t;
-      curProv.city = p.c;
+      curProv.name = p.n; curProv.bio = p.bio; curProv.color = p.t; curProv.city = p.c;
       document.getElementById('stationLabel').textContent = `${p.c}地铁`;
       scene.background = new THREE.Color(p.t).multiplyScalar(0.5);
       visitedProvs.add(p.n);
-      if (visitedProvs.size >= provinces.length && !achievements.allProv.got) {
-        unlockAchievement('allProv');
-      }
+      if (visitedProvs.size >= provinces.length && !achievements.allProv.got) unlockAchievement('allProv');
       renderMap();
       initScenery();
       toggleMap();
     };
-
     window.toggleMap = () => {
       mapBox.classList.toggle('collapsed');
       const isOpen = !mapBox.classList.contains('collapsed');
       if (isOpen) {
         paused = true;
-        ['pause-mask','settings-mask','shop-mask','daily-mask','online-mask'].forEach(id => document.getElementById(id).classList.remove('show'));
+        ['pause-mask','settings-mask','shop-mask','daily-mask','online-mask','weekly-mask','signin-mask'].forEach(id => document.getElementById(id).classList.remove('show'));
       } else {
         if (!gameOver && !cdActive) {
-          const anyPanelOpen = ['settings-mask','shop-mask','daily-mask','online-mask'].some(id => document.getElementById(id).classList.contains('show'));
+          const anyPanelOpen = ['settings-mask','shop-mask','daily-mask','online-mask','weekly-mask','signin-mask'].some(id => document.getElementById(id).classList.contains('show'));
           if (!anyPanelOpen) paused = false;
         }
       }
     };
-
     window.resumeGame = () => {
       if (!gameOver && !cdActive) {
         paused = false;
         document.getElementById('pause-mask').classList.remove('show');
       }
     };
-
     function updatePauseInfo() {
       document.getElementById('pause-score').textContent = Math.floor(score);
       document.getElementById('pause-speed').textContent = Math.floor(speed / 0.4 * 200);
@@ -1837,7 +2443,6 @@
       document.getElementById('pause-combo').textContent = maxCombo;
       document.getElementById('pause-items').textContent = itemsUsed;
     }
-
     function unlockAchievement(key) {
       if (achievements[key].got) return;
       achievements[key].got = true;
@@ -1847,7 +2452,6 @@
       playSound('achieve');
       setTimeout(() => toast.classList.remove('show'), 2500);
     }
-
     function startCD() {
       resetGame(true);
       paused = true; cdActive = true;
@@ -1863,18 +2467,15 @@
         else {
           clearInterval(t); mask.classList.remove('show');
           paused = false; cdActive = false;
-          initAudio();
-          startBGM();
+          initAudio(); startBGM();
         }
       }, 800);
     }
-
     window.restartFromGameOver = () => {
-      dailyMode = false;
+      dailyMode = false; weeklyMode = false;
       dailyNoItem = false; dailySpeedMul = 1; dailyNoJump = false; dailyHard = false;
       startCD();
     };
-
     function resetGame(isFullReset = true) {
       if (isFullReset) {
         gameOver = false; score = 0; coins = 0; speed = 0.15; combo = 0; comboTimer = 0;
@@ -1883,21 +2484,21 @@
         player.position.set(0, 0.2, 0);
         player.scale.set(1, 1, 1);
         player.rotation.z = 0;
-        lastSkinScore = 0;
         doubleMul = 1;
+        superMode = false; superTimer = 0; superTriggered = false;
+        petTimer = 0; vehicleDrainTimer = 0;
+        document.getElementById('super-overlay').classList.remove('active');
+        document.getElementById('super-timer').classList.remove('show');
         resetReplay();
         applySkin();
-
-        Object.values(pus).forEach(p => {
-          p.on = false; p.t = 0;
-          p.el.classList.remove('visible');
-        });
-
+        createPetMesh();
+        pickQuests();
+        renderQuests();
+        Object.values(pus).forEach(p => { p.on = false; p.t = 0; p.el.classList.remove('visible'); });
         document.getElementById('scoreVal').textContent = 0;
         document.getElementById('coinVal').textContent = 0;
         document.getElementById('combo-display').classList.remove('show');
         document.getElementById('combo-display').classList.remove('milestone');
-
         for (let i = obstacles.length - 1; i >= 0; i--) scene.remove(obstacles[i]);
         obstacles = [];
         for (let i = coinObjs.length - 1; i >= 0; i--) scene.remove(coinObjs[i]);
@@ -1906,21 +2507,19 @@
         itemObjs = [];
         for (let i = particles.length - 1; i >= 0; i--) scene.remove(particles[i]);
         particles = [];
+        for (let i = trailParticles.length - 1; i >= 0; i--) scene.remove(trailParticles[i]);
+        trailParticles = [];
         waveGroups.clear();
         lastObstacleZ = 0;
-
         for (let i = 0; i < 20; i++) {
           spawn('obs', 10 + i * 5);
           if (i % 2 === 0) spawn('coin', 12 + i * 5);
           if (i % 6 === 0) spawn('item', 15 + i * 5);
         }
       }
-
       document.getElementById('gameover-mask').classList.remove('show');
-
       if (isFirstPlay) showTutorial();
     }
-
     function showTutorial() {
       const tip = document.getElementById('tutorial-tip');
       tip.style.display = 'block';
@@ -1943,13 +2542,16 @@
         if (step > steps.length) clearInterval(interval);
       }, 2000);
     }
-
     window.move = (d) => { if (!paused && !gameOver && !cdActive && !replayPlaying) targetLane = Math.max(-1, Math.min(1, targetLane + d)); };
     window.jump = () => {
       if (paused || gameOver || cdActive || replayPlaying) return;
       if (dailyNoJump) return;
+      const v = getVehicle();
       if (!isJumping && !pus.jet.on) {
-        isJumping = true; jumpV = 0.3; canDoubleJump = true;
+        isJumping = true; jumpV = 0.3; canDoubleJump = v.canDoubleJump;
+        jumpCount++;
+        questProgress['jump20'] = jumpCount;
+        checkQuestComplete();
         playSound('jump');
       } else if (canDoubleJump && !pus.jet.on) {
         jumpV = 0.25; canDoubleJump = false; playSound('jump', 1.2);
@@ -1962,18 +2564,17 @@
       if (!isSliding && !isJumping && !pus.jet.on) {
         isSliding = true;
         slideTimer = SLIDE_DURATION;
+        slideCount++;
+        questProgress['slide10'] = slideCount;
+        checkQuestComplete();
         player.scale.y = 0.5;
         const bar = document.getElementById('slide-bar');
         bar.classList.add('show');
         document.getElementById('slide-bar-fill').style.width = '100%';
       }
     };
-
     let touchStartX = 0, touchStartY = 0;
-    window.addEventListener('touchstart', e => {
-      touchStartX = e.touches[0].clientX;
-      touchStartY = e.touches[0].clientY;
-    }, { passive: true });
+    window.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; }, { passive: true });
     window.addEventListener('touchend', e => {
       const dx = e.changedTouches[0].clientX - touchStartX;
       const dy = e.changedTouches[0].clientY - touchStartY;
@@ -1981,7 +2582,6 @@
       if (Math.abs(dx) > Math.abs(dy)) move(dx > 0 ? 1 : -1);
       else { if (dy > 0) slide(); else jump(); }
     }, { passive: true });
-
     window.addEventListener('keydown', e => {
       if (cdActive) return;
       if (replayPlaying && e.key === 'Escape') { stopReplay(); return; }
@@ -1989,7 +2589,7 @@
       if (e.key === ' ') {
         if (gameOver) startCD();
         else if (paused && mapBox.classList.contains('collapsed')) {
-          const anyPanelOpen = ['settings-mask','shop-mask','daily-mask','online-mask'].some(id => document.getElementById(id).classList.contains('show'));
+          const anyPanelOpen = ['settings-mask','shop-mask','daily-mask','online-mask','weekly-mask','signin-mask'].some(id => document.getElementById(id).classList.contains('show'));
           if (!anyPanelOpen) resumeGame();
         }
       }
@@ -1998,14 +2598,14 @@
         ui.style.display = ui.style.display === 'none' ? 'block' : 'none';
       }
       if (paused && e.key === 'Escape') {
-        const settingsOpen = document.getElementById('settings-mask').classList.contains('show');
-        const shopOpen = document.getElementById('shop-mask').classList.contains('show');
-        const dailyOpen = document.getElementById('daily-mask').classList.contains('show');
-        const onlineOpen = document.getElementById('online-mask').classList.contains('show');
-        if (settingsOpen) toggleSettings();
-        else if (shopOpen) toggleShop();
-        else if (dailyOpen) toggleDaily();
-        else if (onlineOpen) toggleOnline();
+        const open = ['settings-mask','shop-mask','daily-mask','online-mask','weekly-mask','signin-mask','share-mask'].find(id => document.getElementById(id).classList.contains('show'));
+        if (open === 'settings-mask') toggleSettings();
+        else if (open === 'shop-mask') toggleShop();
+        else if (open === 'daily-mask') toggleDaily();
+        else if (open === 'online-mask') toggleOnline();
+        else if (open === 'weekly-mask') toggleWeekly();
+        else if (open === 'signin-mask') toggleSignin();
+        else if (open === 'share-mask') closeShare();
         else toggleMap();
       }
       if (!paused && !gameOver && !cdActive && !replayPlaying) {
@@ -2015,7 +2615,6 @@
         if (e.key === 'ArrowDown' || e.key === 's') slide();
       }
     });
-
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) {
         if (!gameOver && !cdActive && !paused && !replayPlaying) {
@@ -2035,20 +2634,14 @@
       line.style.animationDelay = Math.random() + 's';
       speedLinesContainer.appendChild(line);
     }
-
-    // ========== 初始化表盘刻度 ==========
     (function initGauge() {
       const ticksGroup = document.getElementById('speed-ticks');
       const labelsGroup = document.getElementById('speed-labels');
       const cx = 70, cy = 70, rOuter = 60, rInner = 52;
-      // 0-200，每 20 一格，共 11 格
       for (let i = 0; i <= 10; i++) {
         const value = i * 20;
-        // -120° 到 +120°，总共 240°
         const angle = (-120 + (value / 200) * 240) * Math.PI / 180;
-        // SVG 坐标：0° 在三点钟方向，-90° 是十二点钟。我们要 -120° 起始（约七点半）
-        // 用 atan2 方式：从正上方顺时针测量
-        const svgAngle = angle - Math.PI / 2; // 调整到 SVG 的坐标系
+        const svgAngle = angle - Math.PI / 2;
         const x1 = cx + Math.cos(svgAngle) * rOuter;
         const y1 = cy + Math.sin(svgAngle) * rOuter;
         const x2 = cx + Math.cos(svgAngle) * rInner;
@@ -2059,28 +2652,23 @@
         line.setAttribute('stroke', value >= 140 ? '#ff6666' : '#e8d5b0');
         line.setAttribute('stroke-width', value % 40 === 0 ? '2' : '1');
         ticksGroup.appendChild(line);
-        
-        // 标签（每 40 一个）
         if (value % 40 === 0) {
           const lx = cx + Math.cos(svgAngle) * (rInner - 7);
           const ly = cy + Math.sin(svgAngle) * (rInner - 7) + 3;
           const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-          text.setAttribute('x', lx);
-          text.setAttribute('y', ly);
+          text.setAttribute('x', lx); text.setAttribute('y', ly);
           text.setAttribute('fill', value >= 140 ? '#ff6666' : '#c9b088');
           text.textContent = value;
           labelsGroup.appendChild(text);
         }
       }
     })();
-
     function updateSpeedometer(kmh) {
       const clamped = Math.max(0, Math.min(200, kmh));
       const angle = -120 + (clamped / 200) * 240;
       document.getElementById('speed-needle').style.transform = `rotate(${angle}deg)`;
       document.getElementById('speed-val').textContent = Math.floor(clamped);
     }
-
     function updateLeaderboard() {
       const list = JSON.parse(localStorage.getItem('metro_leaderboard') || '[]');
       const ol = document.getElementById('leaderboard-list');
@@ -2097,22 +2685,17 @@
         ol.appendChild(li);
       }
     }
-
     function saveLeaderboard(finalScore) {
       const list = JSON.parse(localStorage.getItem('metro_leaderboard') || '[]');
       list.push(Math.floor(finalScore));
       list.sort((a, b) => b - a);
       localStorage.setItem('metro_leaderboard', JSON.stringify(list.slice(0, 5)));
     }
-
     function updateTotalStatsSave(coins, dist) {
       const s = JSON.parse(localStorage.getItem('metro_total') || '{"coins":0,"runs":0,"distance":0}');
-      s.coins += coins;
-      s.runs += 1;
-      s.distance += dist;
+      s.coins += coins; s.runs += 1; s.distance += dist;
       localStorage.setItem('metro_total', JSON.stringify(s));
     }
-
     const tips = [
       "💡 连击越高，单金币分数越多",
       "💡 二段跳可以跳过更高的障碍",
@@ -2122,11 +2705,14 @@
       "💡 飞行时无敌，但时间短",
       "💡 每 10 连击全屏闪一下",
       "💡 切换省份会改变场景",
-      "💡 空格键可以暂停/继续",
-      "💡 按 ESC 打开地图",
-      "💡 每日挑战有额外金币",
-      "💡 商店可以解锁新皮肤",
-      "💡 在线榜可以看全球排名"
+      "💡 商店可以买载具和宠物",
+      "💡 自行车自带护盾",
+      "💡 小狗每 5 秒吸一颗金币",
+      "💡 小猫连击不会清零",
+      "💡 熊猫宝宝每 30 秒送道具",
+      "💡 小龙每 10 秒生成金币",
+      "💡 金衣有金色拖尾特效",
+      "💡 连击 100 触发超级模式"
     ];
     function showTip() {
       const tip = document.getElementById('tip-toast');
@@ -2141,8 +2727,9 @@
 
       if (!paused && !gameOver && !cdActive && !replayPlaying) {
         recordReplay();
-        
-        lane += (targetLane - lane) * 0.1;
+        const v = getVehicle();
+        const laneSpeed = v.laneSpeed;
+        lane += (targetLane - lane) * laneSpeed;
         player.position.x = lane * 1.8;
         player.rotation.z = THREE.MathUtils.lerp(player.rotation.z, -lane * 0.1, 0.1);
 
@@ -2165,7 +2752,6 @@
         } else if (pus.skate.on) {
           player.position.y = 0.35;
         }
-
         if (isSliding) {
           slideTimer--;
           document.getElementById('slide-bar-fill').style.width = (slideTimer / SLIDE_DURATION * 100) + '%';
@@ -2175,38 +2761,30 @@
           }
         }
 
-        const spd = speed * (doubleMul > 1 ? 1.2 : 1.0) * dailySpeedMul;
+        // 载具速度倍数
+        const superSpeedMul = superMode ? 1.5 : 1;
+        const spd = speed * (doubleMul > 1 ? 1.2 : 1.0) * dailySpeedMul * superSpeedMul * v.speedMul;
         player.position.z += spd;
         distance += spd;
         camera.position.z = player.position.z - 5;
         camera.position.x = lane * 0.3;
-
         if (cameraShake > 0 && settings.shake) {
           camera.position.y = 4.5 + Math.sin(time * 30) * 0.15 * (cameraShake / 6);
           cameraShake--;
-        } else {
-          camera.position.y = 4.5;
-        }
-
+        } else camera.position.y = 4.5;
         camera.lookAt(lane * 0.1, pus.jet.on ? 3 : 0.5, player.position.z + 10);
-
         tracks.forEach(t => { if (t.position.z < player.position.z - 10) t.position.z += 320; });
-
         for (let i = sceneryObjects.length - 1; i >= 0; i--) {
           const obj = sceneryObjects[i];
           obj.position.z -= spd;
-          if (obj.children[1] && obj.children[1].userData.isBlade) {
-            obj.children[1].rotation.z += obj.children[1].userData.speed;
-          }
+          if (obj.children[1] && obj.children[1].userData.isBlade) obj.children[1].rotation.z += obj.children[1].userData.speed;
           if (obj.position.z < player.position.z - 20) {
             obj.position.z += 300;
             const side = Math.random() > 0.5 ? 1 : -1;
             obj.position.x = side * (4 + Math.random() * 6);
           }
         }
-
         updateSea(time);
-
         if (curProv.bio === 'snow') {
           snowMat.opacity = 0.8; rainMat.opacity = 0;
           const positions = snowField.geometry.attributes.position.array;
@@ -2225,9 +2803,24 @@
           }
           rainField.geometry.attributes.position.needsUpdate = true;
           rainField.position.z = player.position.z;
-        } else {
-          snowMat.opacity = 0; rainMat.opacity = 0;
+        } else { snowMat.opacity = 0; rainMat.opacity = 0; }
+
+        // 载具火箭扣金币
+        if (v.drain > 0) {
+          vehicleDrainTimer++;
+          if (vehicleDrainTimer >= 180) {
+            vehicleDrainTimer = 0;
+            if (coins >= v.drain) { coins -= v.drain; document.getElementById('coinVal').textContent = coins; }
+            else { activeVehicle = 'none'; localStorage.setItem('metro_active_vehicle', 'none'); updateVehicleBadge(); showTipText('💸 金币不足，火箭已卸下'); }
+          }
         }
+
+        // 宠物
+        triggerPetEffect(1);
+        updatePetMesh();
+        // 皮肤拖尾
+        spawnTrail();
+        updateTrails();
 
         const passedWaves = new Set();
         for (let i = obstacles.length - 1; i >= 0; i--) {
@@ -2241,12 +2834,21 @@
           const dz = Math.abs(o.position.z - player.position.z);
           const dy = player.position.y;
           let hit = false;
-          if (!pus.jet.on && dx < 0.8 && dz < 0.8) {
+          if (!superMode && !pus.jet.on && dx < 0.8 && dz < 0.8) {
             if (o.userData.isHigh) { if (!isSliding) hit = true; }
             else { if (dy < 1.0) hit = true; }
           }
           if (hit) {
-            if (pus.skate.on) {
+            // 自行车自动护盾
+            if (v.autoShield) {
+              scene.remove(o); obstacles.splice(i, 1);
+              const wg = waveGroups.get(o.userData.waveZ);
+              if (wg) { const idx = wg.indexOf(o); if (idx >= 0) wg.splice(idx, 1); }
+              explode(player.position, 0x888888);
+              playSound('crash');
+              cameraShake = settings.shake ? 4 : 0;
+              showTipText('🚲 自行车护盾抵挡一次');
+            } else if (pus.skate.on) {
               pus.skate.on = false; pus.skate.t = 0; pus.skate.el.classList.remove('visible');
               scene.remove(o); obstacles.splice(i, 1);
               const wg = waveGroups.get(o.userData.waveZ);
@@ -2260,16 +2862,18 @@
               playSound('crash');
               cameraShake = settings.shake ? 10 : 0;
               checkDailyComplete();
+              checkWeeklyComplete();
               saveReplay();
+              const oldBest = bestScore;
               const isNewRecord = score > bestScore;
               if (isNewRecord) {
                 bestScore = Math.floor(score);
                 localStorage.setItem('metro_best', bestScore);
                 document.getElementById('bestVal').textContent = bestScore;
                 document.getElementById('go-new-record').style.display = 'block';
-              } else {
-                document.getElementById('go-new-record').style.display = 'none';
-              }
+              } else document.getElementById('go-new-record').style.display = 'none';
+              checkRankUp(oldBest, bestScore);
+              updateRankBadge();
               saveLeaderboard(score);
               updateLeaderboard();
               updateTotalStatsSave(coins, distance);
@@ -2279,6 +2883,7 @@
               document.getElementById('go-combo').textContent = maxCombo;
               document.getElementById('go-items').textContent = itemsUsed;
               document.getElementById('go-distance').textContent = Math.floor(distance);
+              document.getElementById('go-quests').textContent = questsCompletedThisRun;
               document.getElementById('gameover-mask').classList.add('show');
               document.body.classList.add('shake');
               setTimeout(() => document.body.classList.remove('shake'), 500);
@@ -2287,7 +2892,6 @@
           }
           if (o.position.z < player.position.z - 20) passedWaves.add(o.userData.waveZ);
         }
-
         passedWaves.forEach(wz => {
           const group = waveGroups.get(wz);
           if (!group) return;
@@ -2299,18 +2903,17 @@
           waveGroups.delete(wz);
           spawn('obs', player.position.z + 40 + Math.random() * 20);
         });
-
         for (let i = coinObjs.length - 1; i >= 0; i--) {
           const c = coinObjs[i];
           c.position.z -= spd;
           c.rotation.z += 0.1;
-          if (pus.magnet.on && c.position.distanceTo(player.position) < 10) {
+          if (superMode) c.position.lerp(player.position, 0.2);
+          else if (pus.magnet.on && c.position.distanceTo(player.position) < 10) {
             c.position.lerp(player.position, 0.15);
             if (Math.random() < 0.3) coinTrail(c.position);
           }
           if (c.position.distanceTo(player.position) < 1.0) {
-            coins++;
-            combo++;
+            coins++; combo++;
             if (combo > maxCombo) maxCombo = combo;
             comboTimer = 120;
             const comboEl = document.getElementById('combo-display');
@@ -2319,21 +2922,23 @@
             if (combo % 10 === 0) {
               comboEl.classList.add('milestone');
               document.getElementById('flash').classList.add('flash');
-              setTimeout(() => {
-                comboEl.classList.remove('milestone');
-                document.getElementById('flash').classList.remove('flash');
-              }, 400);
+              setTimeout(() => { comboEl.classList.remove('milestone'); document.getElementById('flash').classList.remove('flash'); }, 400);
               playSound('coin', 1 + combo / 100);
-            } else {
-              playSound('coin');
+            } else playSound('coin');
+            if (combo >= 100 && !superMode && !superTriggered) {
+              triggerSuperMode();
+              if (!achievements.superMode.got) unlockAchievement('superMode');
             }
             if (combo >= 50 && !achievements.combo50.got) unlockAchievement('combo50');
             if (combo >= 100 && !achievements.combo100.got) unlockAchievement('combo100');
             if (coins >= 500 && !achievements.coin500.got) unlockAchievement('coin500');
             if (distance >= 2000 && !achievements.distance2000.got) unlockAchievement('distance2000');
             if (Math.floor(score) >= 1000 && itemsUsed === 0 && !achievements.noItem1000.got) unlockAchievement('noItem1000');
+            questProgress['coin30'] = coins; questProgress['coin50'] = coins;
+            activeQuests.forEach(q => { if (q.type === 'combo' && questProgress[q.id] < combo) questProgress[q.id] = combo; });
+            checkQuestComplete();
             const comboBonus = Math.min(20, Math.floor(combo / 10));
-            const coinValue = (10 + comboBonus) * (pus.double.on ? 2 : 1) * doubleMul;
+            const coinValue = (10 + comboBonus) * (pus.double.on ? 2 : 1) * doubleMul * (superMode ? 2 : 1);
             score += coinValue;
             floatText(`+${coinValue}`, c.position.x, c.position.y + 0.5);
             document.getElementById('coinVal').textContent = coins;
@@ -2349,7 +2954,6 @@
             document.getElementById('combo-display').classList.remove('show');
           }
         }
-
         if (combo > 0) {
           comboTimer--;
           if (comboTimer <= 0) {
@@ -2357,7 +2961,6 @@
             document.getElementById('combo-display').classList.remove('show');
           }
         }
-
         for (let i = itemObjs.length - 1; i >= 0; i--) {
           const it = itemObjs[i];
           it.position.z -= spd;
@@ -2379,7 +2982,6 @@
             scene.remove(it); itemObjs.splice(i, 1);
           }
         }
-
         Object.values(pus).forEach(p => {
           if (p.on) {
             p.t--;
@@ -2390,35 +2992,36 @@
               p.el.classList.remove('visible');
               if (p === pus.double) doubleMul = 1;
             }
-          } else {
-            p.el.classList.remove('visible');
-          }
+          } else p.el.classList.remove('visible');
         });
-
         score += spd * dailySpeedMul;
         document.getElementById('scoreVal').textContent = Math.floor(score);
-
         if (Math.floor(score) >= 1000 && !achievements.score1000.got) unlockAchievement('score1000');
         if (Math.floor(score) >= 3000 && !achievements.score3000.got) unlockAchievement('score3000');
-
-        // ===== 速度表：按 spd 映射到 0-200 km/h =====
-        // spd 范围：0.15（开局）~ 0.4（满速）
-        // 映射：kmh = spd / 0.4 * 200
+        activeQuests.forEach(q => {
+          if (q.type === 'distance' && questProgress[q.id] < distance) questProgress[q.id] = Math.floor(distance);
+          if (q.type === 'scoreNoItem' && itemsUsed === 0 && questProgress[q.id] < score) questProgress[q.id] = Math.floor(score);
+        });
+        checkQuestComplete();
+        renderQuests();
+        if (superMode) {
+          superTimer--;
+          const seconds = (superTimer / 60).toFixed(1);
+          document.getElementById('super-timer').textContent = `⚡ 超级模式 ${seconds}s`;
+          if (superTimer <= 0) endSuperMode();
+        }
         const kmh = Math.floor((spd / 0.4) * 200);
         updateSpeedometer(kmh);
         document.getElementById('speed-lines').style.opacity = kmh > 100 ? Math.min(1, (kmh - 100) / 100) : 0;
-
         updateDayNight();
         if (speed < 0.4) speed += 0.00005;
-
         tipTimer++;
         if (tipTimer > 1800) { showTip(); tipTimer = 0; }
       }
 
       if (replayPlaying) {
-        if (replayIndex >= replayRecording.length) {
-          stopReplay();
-        } else {
+        if (replayIndex >= replayRecording.length) stopReplay();
+        else {
           const f = replayRecording[replayIndex];
           player.position.x = f.lane * 1.8;
           player.position.y = f.y;
@@ -2428,8 +3031,7 @@
           camera.position.x = f.lane * 0.3;
           camera.position.y = 4.5;
           camera.lookAt(f.lane * 0.1, 0.5, player.position.z + 10);
-          document.getElementById('replay-progress').textContent = 
-            Math.floor(replayIndex / replayRecording.length * 100) + '%';
+          document.getElementById('replay-progress').textContent = Math.floor(replayIndex / replayRecording.length * 100) + '%';
           replayIndex++;
         }
       }
@@ -2440,12 +3042,8 @@
         p.userData.life -= 0.05;
         p.scale.setScalar(Math.max(0, p.userData.life));
         if (p.userData.fade) p.material.opacity = p.userData.life;
-        if (p.userData.life <= 0) {
-          scene.remove(p);
-          particles.splice(i, 1);
-        }
+        if (p.userData.life <= 0) { scene.remove(p); particles.splice(i, 1); }
       }
-
       renderer.render(scene, camera);
     }
 
@@ -2454,11 +3052,15 @@
     initScenery();
     updateLeaderboard();
     updateSettingsUI();
+    updateRankBadge();
+    updateVehicleBadge();
+    updatePetBadge();
     resetGame(true);
     mapBox.classList.add('collapsed');
     paused = true;
     document.getElementById('pause-mask').classList.add('show');
     animate();
+    autoPromptSignin();
 
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
