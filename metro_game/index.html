@@ -3,1459 +3,2461 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>地铁跑酷金陵版 · 明 · 珍宝 · 神州行</title>
-  <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+  <title>大明神州地铁行 | MingDynasty</title>
+  
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
   <style>
-    body {
-      margin: 0;
+    body { margin: 0; overflow: hidden; font-family: "华文楷体", serif; background: #1a1410; user-select: none; touch-action: none; }
+    #ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 150; }
+
+    .hud-panel {
+      position: absolute; background: rgba(30, 20, 12, 0.75); backdrop-filter: blur(8px);
+      border: 1px solid #b89a6b; color: #e8d5b0; padding: 8px 20px; border-radius: 30px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 10px;
+      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .hud-panel.pop { transform: scale(1.15); }
+    #info-box { top: 20px; left: 20px; border-left: 4px solid #b89a6b; }
+    #info-box h1 { margin: 0; font-size: 1.4rem; font-weight: normal; }
+    #info-box small { color: #c9b088; font-size: 0.8rem; }
+
+    #stats-box { top: 20px; right: 20px; flex-direction: column; align-items: flex-end; gap: 6px; }
+    .stat-row { font-size: 1.2rem; letter-spacing: 1px; text-shadow: 0 0 5px rgba(255,215,0,0.3); }
+
+    /* ===== 指针式速度表 ===== */
+    #speedometer {
+      position: absolute; bottom: 20px; left: 20px;
+      width: 140px; height: 140px;
+      pointer-events: none;
+    }
+    #speedometer svg {
+      width: 100%; height: 100%;
+      filter: drop-shadow(0 0 8px rgba(0,0,0,0.6));
+    }
+    #speed-needle {
+      transform-origin: 70px 70px;
+      transform: rotate(-120deg);
+      transition: transform 0.08s linear;
+    }
+    #speed-readout {
+      position: absolute; bottom: 32px; left: 0; right: 0;
+      text-align: center;
+      color: #ffd966; font-size: 1.1rem; font-weight: bold;
+      text-shadow: 0 0 5px #000;
+      font-family: monospace;
+    }
+    #speed-readout small { font-size: 0.6rem; color: #aaa; display: block; }
+
+    #combo-display {
+      position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%);
+      font-size: 3rem; color: #ff4444; font-weight: bold;
+      text-shadow: 0 0 10px #fff, 2px 2px 0 #000;
+      opacity: 0; transition: opacity 0.3s, transform 0.1s; pointer-events: none;
+    }
+    #combo-display.show { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+    #combo-display.milestone { color: #ffdd44; text-shadow: 0 0 20px #ff8800, 3px 3px 0 #000; }
+
+    #slide-bar {
+      position: absolute; bottom: 130px; left: 50%; transform: translateX(-50%);
+      width: 200px; height: 8px;
+      background: rgba(0,0,0,0.5); border: 1px solid #6b9ab8; border-radius: 4px;
+      opacity: 0; transition: opacity 0.2s; pointer-events: none;
       overflow: hidden;
-      font-family: "华文楷体", "STKaiti", "KaiTi", "楷体", serif;
-      background-color: #1a1410;
-      transition: background-color 0.5s;
     }
-    #info {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      color: #e8d5b0;
-      text-shadow: 2px 2px 0 #3a2a1e, 4px 4px 8px rgba(0,0,0,0.7);
-      z-index: 10;
-      pointer-events: none;
-      user-select: none;
-      background: rgba(30, 20, 12, 0.5);
-      padding: 10px 20px;
-      border-radius: 40px;
-      border-left: 4px solid #b89a6b;
-      backdrop-filter: blur(2px);
-      letter-spacing: 2px;
+    #slide-bar-fill {
+      height: 100%; background: linear-gradient(90deg, #6b9ab8, #aaddff);
+      width: 100%; transition: width 0.05s linear;
     }
-    #info h1 {
-      margin: 0;
-      font-size: 1.8rem;
-      font-weight: normal;
-      display: flex;
-      align-items: center;
-      gap: 12px;
+    #slide-bar.show { opacity: 1; }
+
+    .float-text {
+      position: absolute; color: #ffd966; font-size: 1.2rem; font-weight: bold;
+      text-shadow: 0 0 5px #000, 0 0 10px #ffaa00;
+      pointer-events: none; z-index: 200;
+      animation: floatUp 1s ease-out forwards;
     }
-    #info h1 small {
-      font-size: 0.9rem;
-      color: #c9b088;
-      letter-spacing: 1px;
-    }
-    #score {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      color: #f5e7c8;
-      font-size: 2rem;
-      background: rgba(20, 12, 6, 0.7);
-      padding: 8px 24px;
-      border-radius: 50px;
-      border: 1px solid #b89a6b;
-      backdrop-filter: blur(4px);
-      box-shadow: 0 0 30px rgba(0,0,0,0.5);
-      z-index: 10;
-      letter-spacing: 4px;
-      text-shadow: 0 0 12px #c9a87c;
-      font-weight: bold;
-    }
-    #best-score {
-      position: absolute;
-      top: 100px;
-      right: 20px;
-      color: #ffd966;
-      font-size: 1.4rem;
-      background: rgba(20, 12, 6, 0.7);
-      padding: 5px 24px;
-      border-radius: 50px;
-      border: 1px solid #b89a6b;
-      backdrop-filter: blur(4px);
-      z-index: 10;
-      letter-spacing: 2px;
-      text-shadow: 0 0 12px #ffaa00;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    #coin-display {
-      position: absolute;
-      top: 160px;
-      right: 20px;
-      color: #ffd966;
-      font-size: 1.4rem;
-      background: rgba(20, 12, 6, 0.7);
-      padding: 5px 24px;
-      border-radius: 50px;
-      border: 1px solid #b89a6b;
-      backdrop-filter: blur(4px);
-      z-index: 10;
-      letter-spacing: 2px;
-      text-shadow: 0 0 12px #ffaa00;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    #time-toggle {
-      position: absolute;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(60, 40, 24, 0.8);
-      backdrop-filter: blur(4px);
-      border: 2px solid #b89a6b;
-      color: #efddc0;
-      font-size: 1.4rem;
-      padding: 8px 24px;
-      border-radius: 40px;
-      cursor: pointer;
-      z-index: 30;
-      font-family: inherit;
-      letter-spacing: 2px;
-      transition: 0.2s;
-      box-shadow: 0 4px 0 #2f1e12;
-    }
-    #time-toggle:active {
-      transform: translateX(-50%) translateY(4px);
-      box-shadow: 0 0 0 #2f1e12;
-    }
-    #controls {
-      position: absolute;
-      bottom: 40px;
-      left: 0;
-      right: 0;
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      z-index: 20;
-      pointer-events: none;
-      flex-wrap: wrap;
-      padding: 0 10px;
-    }
-    .ctrl-btn {
-      pointer-events: auto;
-      background: rgba(60, 40, 24, 0.75);
-      backdrop-filter: blur(4px);
-      border: 2px solid #b89a6b;
-      color: #efddc0;
-      font-size: 2.2rem;
-      padding: 12px 24px;
-      border-radius: 60px;
-      cursor: pointer;
-      box-shadow: 0 8px 0 #2f1e12, 0 10px 30px rgba(0,0,0,0.6);
-      transition: 0.08s linear;
-      font-family: "华文楷体", "STKaiti", serif;
-      min-width: 80px;
-      letter-spacing: 4px;
-      text-shadow: 0 0 8px #b28b5a;
-      user-select: none;
-      flex: 1 1 auto;
-      max-width: 160px;
-    }
-    .ctrl-btn:active {
-      transform: translateY(6px);
-      box-shadow: 0 2px 0 #2f1e12;
-    }
-    .ctrl-btn.jump {
-      background: rgba(80, 50, 20, 0.85);
-      border-color: #d4a86a;
-      color: #ffecce;
-      flex: 2 1 auto;
-      max-width: 200px;
+    @keyframes floatUp {
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(-80px); opacity: 0; }
     }
 
-    /* ========== 地图容器（真地图形式） ========== */
+    #danger-flash {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 8; opacity: 0;
+      box-shadow: inset 0 0 100px 30px rgba(255, 0, 0, 0.6);
+    }
+    #danger-flash.flash { animation: dangerFlash 0.3s ease-out; }
+    @keyframes dangerFlash { 0%{opacity:1} 100%{opacity:0} }
+
+    #vignette {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 4;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.5) 100%);
+    }
+
+    #tip-toast {
+      position: absolute; top: 70px; left: 50%; transform: translateX(-50%);
+      background: rgba(60, 40, 24, 0.9); border: 1px solid #b89a6b;
+      color: #e8d5b0; padding: 8px 20px; border-radius: 20px;
+      font-size: 0.9rem; opacity: 0; pointer-events: none;
+      transition: opacity 0.5s; z-index: 220;
+    }
+    #tip-toast.show { opacity: 1; }
+
+    #double-jump-ring {
+      position: absolute; top: 60%; left: 50%; transform: translate(-50%, -50%);
+      width: 60px; height: 60px; border: 3px solid #ffd966; border-radius: 50%;
+      opacity: 0; pointer-events: none; z-index: 6;
+    }
+    #double-jump-ring.show { animation: ringExpand 0.4s ease-out; }
+    @keyframes ringExpand {
+      0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(2); }
+    }
+
+    #tutorial-tip {
+      position: absolute; bottom: 150px; left: 0; right: 0;
+      text-align: center; color: #fff; font-size: 1.5rem;
+      text-shadow: 0 2px 4px #000; background: rgba(0,0,0,0.5);
+      padding: 10px; display: none; pointer-events: none;
+      animation: slideUp 0.5s ease-out;
+    }
+    @keyframes slideUp { from{transform:translateY(20px); opacity:0} to{transform:translateY(0); opacity:1} }
+
+    #active-effects {
+      position: absolute; bottom: 20px; right: 20px;
+      display: flex; flex-direction: column; align-items: flex-end; gap: 5px;
+      pointer-events: none;
+    }
+    .effect-row {
+      background: rgba(0, 0, 0, 0.6);
+      border-right: 3px solid #ffd966;
+      padding: 5px 15px;
+      border-radius: 4px 0 0 4px;
+      color: #fff; font-size: 1rem;
+      display: flex; align-items: center; gap: 10px;
+      transform: translateX(100%); opacity: 0;
+      transition: all 0.3s ease-out;
+      text-shadow: 0 0 5px rgba(255,255,255,0.5);
+    }
+    .effect-row.visible { transform: translateX(0); opacity: 1; }
+    .effect-timer { font-family: monospace; font-weight: bold; color: #ffd966; min-width: 40px; text-align: right; }
+
+    #controls { position: absolute; bottom: 30px; left: 0; right: 0; display: flex; justify-content: center; gap: 20px; pointer-events: auto; }
+    .ctrl-btn {
+      width: 70px; height: 70px; background: rgba(60, 40, 24, 0.8); border: 2px solid #b89a6b; border-radius: 50%;
+      color: #efddc0; font-size: 1.8rem; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 6px 0 #2f1e12; cursor: pointer; transition: 0.1s;
+    }
+    .ctrl-btn:active { transform: translateY(6px); box-shadow: 0 0 0 #2f1e12; }
+    .ctrl-btn.jump { width: 90px; height: 90px; font-size: 2.2rem; background: rgba(80, 50, 20, 0.9); }
+    .ctrl-btn.slide { background: rgba(40, 60, 80, 0.8); border-color: #6b9ab8; }
+
     #map-container {
-      position: absolute;
-      top: 80px;
-      left: 20px;
-      width: 420px;
-      height: 360px;
-      background: rgba(20, 16, 12, 0.96);
-      border: 2px solid #b89a6b;
-      border-radius: 16px;
-      backdrop-filter: blur(8px);
-      z-index: 100;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.85);
-      padding: 10px;
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      transition: transform 0.35s ease, opacity 0.35s ease;
-      user-select: none;
+      position: absolute; top: 80px; left: 20px; width: 380px; height: 320px;
+      background: rgba(20, 16, 12, 0.96); border: 2px solid #b89a6b; border-radius: 16px;
+      backdrop-filter: blur(10px); z-index: 160; box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+      padding: 10px; box-sizing: border-box; display: flex; flex-direction: column;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: auto;
     }
     #map-container.collapsed {
-      transform: translateX(calc(100% - 46px));
-      opacity: 0.9;
+      left: auto; right: 20px; top: 50%; transform: translateY(-50%);
+      width: 50px; height: 50px; padding: 0; border-radius: 25px;
+      background: rgba(60, 40, 24, 0.8); border: 2px solid #ffd966; cursor: pointer; overflow: hidden;
     }
-    #map-container.collapsed #map-grid {
-      display: none;
+    #map-container.collapsed #map-grid, #map-container.collapsed #map-header { display: none; }
+    #map-mini-icon {
+      display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      font-size: 24px; color: #ffd966; text-align: center; line-height: 1;
     }
-    #map-container.collapsed #map-title {
-      writing-mode: vertical-rl;
-      text-orientation: upright;
-      height: 100%;
-      border-bottom: none;
-      padding: 8px 2px;
-      justify-content: center;
+    #map-container.collapsed #map-mini-icon { display: block; }
+    #map-header { color: #e8d5b0; font-size: 0.9rem; border-bottom: 1px solid #6a5238; padding-bottom: 5px; margin-bottom: 5px; display: flex; justify-content: space-between; }
+    #map-grid { flex: 1; display: grid; grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(7, 1fr); gap: 2px; overflow: hidden; }
+    .prov-btn {
+      background: rgba(90, 74, 58, 0.7); border: 1px solid #8a7a5a; border-radius: 3px; color: #e8d5b0;
+      font-size: 0.55rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.1s;
     }
-    #map-container.collapsed #map-title .title-text,
-    #map-container.collapsed #map-title #map-toggle-hint {
-      display: none;
-    }
-    #map-container.collapsed #map-title::after {
-      content: '🗺️';
-      font-size: 1.6rem;
-      writing-mode: horizontal-tb;
-    }
+    .prov-btn:hover { background: #b89a6b; color: #1a1410; transform: scale(1.1); z-index: 2; }
+    .prov-btn.active { background: #ffd966; color: #3a2a1e; font-weight: bold; box-shadow: 0 0 8px #ffaa00; }
 
-    #map-title {
+    .mask {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);
+      display: none; justify-content: center; align-items: center; z-index: 90; pointer-events: auto;
+    }
+    .mask.show { display: flex; }
+    .mask-text { color: #ffd966; font-size: 2.5rem; text-align: center; text-shadow: 0 0 20px #ffaa00; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
+
+    #gameover-content, #pause-content, #settings-content, #shop-content, #daily-content, #leaderboard-content {
+      background: rgba(30, 20, 12, 0.95);
+      border: 2px solid #b89a6b;
+      padding: 30px 40px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 0 50px rgba(0,0,0,0.8);
+      max-width: 520px; max-height: 90vh; overflow-y: auto;
       color: #e8d5b0;
-      font-size: 0.9rem;
-      text-align: center;
-      letter-spacing: 2px;
-      margin-bottom: 8px;
-      padding-bottom: 6px;
-      border-bottom: 1px solid #6a5238;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      min-height: 26px;
-      flex-shrink: 0;
     }
-    #map-title span:last-child {
-      font-size: 0.8rem;
-      color: #b89a6b;
-      flex-shrink: 0;
+    #go-title { font-size: 2rem; color: #ffd966; margin-bottom: 20px; }
+    #go-score { font-size: 3rem; color: #fff; margin: 10px 0; font-weight: bold; }
+    #go-best { font-size: 1.2rem; color: #aaa; margin-bottom: 20px; }
+    #go-new-record {
+      color: #ff4444; font-size: 1.5rem; font-weight: bold;
+      display: none; margin-bottom: 15px;
+      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popIn { 0%{transform:scale(0)} 100%{transform:scale(1)} }
+    .btn-restart {
+      background: #b89a6b; color: #1a1410; border: none;
+      padding: 10px 30px; font-size: 1.2rem; border-radius: 30px;
+      cursor: pointer; font-family: inherit; font-weight: bold;
+      transition: 0.2s; margin: 5px;
+    }
+    .btn-restart:hover { background: #ffd966; transform: scale(1.05); }
+    .btn-secondary { background: #5a4a3a; color: #e8d5b0; }
+    .btn-danger { background: #8a2a2a; color: #ffd0d0; }
+
+    #leaderboard { text-align: left; margin: 15px 0; font-size: 0.95rem; }
+    #leaderboard h3 { margin: 0 0 8px; color: #ffd966; font-size: 1rem; }
+    #leaderboard ol { margin: 0; padding-left: 20px; color: #ccc; }
+    #leaderboard li { padding: 2px 0; }
+    #leaderboard li.top { color: #ffd966; font-weight: bold; }
+
+    #run-stats { text-align: left; margin: 15px 0; font-size: 0.9rem; color: #ccc; }
+    #run-stats div { padding: 3px 0; }
+
+    #mute-btn, #screenshot-btn, #settings-btn, #shop-btn, #daily-btn, #online-btn {
+      position: absolute; top: 20px;
+      background: rgba(60, 40, 24, 0.8); border: 1px solid #b89a6b;
+      color: #e8d5b0; padding: 5px 15px; border-radius: 20px;
+      cursor: pointer; pointer-events: auto; font-size: 1rem;
+      z-index: 20;
+    }
+    #mute-btn { left: 50%; transform: translateX(-50%); }
+    #screenshot-btn { left: 50%; transform: translateX(calc(-50% + 100px)); }
+    #settings-btn { left: 50%; transform: translateX(calc(-50% + 200px)); }
+    #shop-btn { left: 50%; transform: translateX(calc(-50% + 300px)); }
+    #daily-btn { left: 50%; transform: translateX(calc(-50% + 400px)); }
+    #online-btn { left: 50%; transform: translateX(calc(-50% + 500px)); }
+
+    #speed-lines {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 5; opacity: 0;
+      transition: opacity 0.5s;
+    }
+    .line {
+      position: absolute; background: rgba(255,255,255,0.3);
+      width: 2px; height: 100px;
+      animation: speedLine 0.5s linear infinite;
+    }
+    @keyframes speedLine {
+      from { transform: translateY(-100px); opacity: 0; }
+      to { transform: translateY(100vh); opacity: 1; }
     }
 
-    /* 关键：地图网格 8列 × 7行 */
-    #map-grid {
-      flex: 1 1 auto;
-      min-height: 0;
-      display: grid;
-      grid-template-columns: repeat(8, 1fr);
-      grid-template-rows: repeat(7, 1fr);
-      gap: 3px;
-      overflow: hidden;
+    #achievement-toast {
+      position: absolute; top: 120px; left: 50%; transform: translateX(-50%) translateY(-30px);
+      background: linear-gradient(135deg, #b89a6b, #ffd966);
+      color: #1a1410; padding: 15px 30px; border-radius: 12px;
+      font-size: 1.1rem; font-weight: bold;
+      box-shadow: 0 10px 30px rgba(255,215,0,0.5);
+      opacity: 0; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: none; z-index: 250; text-align: center;
     }
+    #achievement-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    #achievement-toast .ach-title { font-size: 0.8rem; opacity: 0.7; }
 
-    .province-btn {
-      background: rgba(90, 74, 58, 0.75);
-      border: 1px solid #8a7a5a;
-      border-radius: 5px;
-      color: #e8d5b0;
-      font-size: 0.62rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      cursor: pointer;
-      transition: 0.12s;
-      font-family: inherit;
-      line-height: 1.05;
-      overflow: hidden;
-      padding: 1px;
-      word-break: break-all;
-    }
-    .province-btn:hover {
-      background: rgba(184, 154, 107, 0.95);
-      color: #1a1410;
-      transform: scale(1.12);
-      z-index: 5;
-      box-shadow: 0 0 12px #b89a6b;
-    }
-    .province-btn.active {
-      background: rgba(255, 200, 100, 0.95);
-      color: #1a1410;
-      border-color: #ffd966;
-      box-shadow: 0 0 16px #ffaa00;
-      font-weight: bold;
-    }
-    .province-btn.keyboard-selected {
-      outline: 2px solid #ffd966;
-      outline-offset: -1px;
-      box-shadow: 0 0 20px #ffaa00;
-    }
+    .shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+    @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
 
-    /* ========== 暂停遮罩 ========== */
-    #pause-mask {
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.35);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 90; /* 低于地图面板(100)，高于游戏 */
-      pointer-events: none;
+    #flash {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: #fff; opacity: 0; pointer-events: none; z-index: 240;
     }
-    #pause-mask.show {
-      display: flex;
-    }
-    #pause-mask .pause-text {
-      color: #ffd966;
-      font-size: 2.2rem;
-      text-shadow: 0 0 24px #ffaa00, 4px 4px 0 #3a2a1e;
-      letter-spacing: 6px;
-      text-align: center;
-      animation: pulse 1.4s infinite;
-    }
-    #pause-mask .pause-text small {
-      display: block;
+    #flash.flash { animation: flashAnim 0.4s ease-out; }
+    @keyframes flashAnim { 0%{opacity:0.6} 100%{opacity:0} }
+
+    .setting-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 0; border-bottom: 1px solid #4a3a2a;
       font-size: 1rem;
-      color: #e8d5b0;
-      margin-top: 8px;
-      letter-spacing: 2px;
-      animation: none;
     }
+    .setting-row:last-child { border-bottom: none; }
+    .setting-btn-group { display: flex; gap: 5px; flex-wrap: wrap; }
+    .setting-btn {
+      background: #5a4a3a; color: #e8d5b0; border: 1px solid #b89a6b;
+      padding: 4px 12px; border-radius: 15px; cursor: pointer;
+      font-family: inherit; font-size: 0.9rem;
+    }
+    .setting-btn.active { background: #ffd966; color: #1a1410; font-weight: bold; }
 
-    /* ========== 倒计时遮罩 ========== */
-    #countdown-mask {
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.55);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 300;
-      pointer-events: none;
+    #shop-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+      margin: 20px 0;
     }
-    #countdown-mask.show {
-      display: flex;
+    .skin-card {
+      background: rgba(60, 40, 24, 0.6); border: 2px solid #8a7a5a;
+      border-radius: 12px; padding: 10px; cursor: pointer;
+      transition: all 0.2s;
     }
-    #countdown-mask .countdown-text {
-      color: #ffd966;
-      font-size: 6rem;
-      text-shadow: 0 0 40px #ffaa00, 6px 6px 0 #3a2a1e;
-      letter-spacing: 4px;
-      text-align: center;
-      animation: countdownPulse 1s infinite;
-      font-weight: bold;
+    .skin-card:hover { border-color: #ffd966; transform: translateY(-3px); }
+    .skin-card.owned { border-color: #6b9ab8; }
+    .skin-card.active { border-color: #ffd966; background: rgba(120, 90, 40, 0.6); box-shadow: 0 0 15px rgba(255,215,0,0.4); }
+    .skin-preview {
+      width: 60px; height: 80px; margin: 0 auto 8px;
+      display: flex; flex-direction: column; align-items: center;
     }
-    #countdown-mask .countdown-text small {
-      display: block;
-      font-size: 1.2rem;
-      color: #e8d5b0;
-      margin-top: 12px;
-      letter-spacing: 3px;
-      animation: none;
-      font-weight: normal;
-    }
-    @keyframes countdownPulse {
-      0% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.25); opacity: 0.9; }
-      100% { transform: scale(1); opacity: 1; }
-    }
+    .skin-body { width: 40px; height: 50px; border-radius: 4px; }
+    .skin-head { width: 24px; height: 24px; border-radius: 50%; margin-top: -3px; }
+    .skin-name { font-size: 0.85rem; color: #e8d5b0; }
+    .skin-price { font-size: 0.75rem; color: #ffd966; margin-top: 3px; }
 
-    @media (max-width: 700px) {
-      .ctrl-btn { font-size: 1.6rem; padding: 8px 16px; min-width: 60px; letter-spacing: 2px; }
-      #info h1 { font-size: 1.2rem; }
-      #score { font-size: 1.4rem; padding: 4px 16px; }
-      #coin-display { font-size: 1rem; padding: 3px 12px; top: 130px; }
-      #best-score { font-size: 1rem; padding: 3px 12px; top: 80px; }
-      #time-toggle { font-size: 1rem; padding: 6px 12px; }
-      #map-container { width: 320px; height: 280px; top: 70px; left: 10px; }
-      .province-btn { font-size: 0.5rem; }
-      #pause-mask .pause-text { font-size: 1.6rem; }
-      #countdown-mask .countdown-text { font-size: 4rem; }
+    .daily-rule {
+      background: rgba(60, 40, 24, 0.6); border-left: 3px solid #ffd966;
+      padding: 10px 15px; margin: 10px 0; text-align: left;
+      font-size: 0.95rem; border-radius: 0 8px 8px 0;
     }
-    #restart-tip {
-      position: absolute;
-      bottom: 140px;
-      left: 0;
-      right: 0;
-      text-align: center;
-      color: #dac29c;
-      font-size: 1.2rem;
-      text-shadow: 0 4px 12px #000;
-      background: rgba(0,0,0,0.3);
-      padding: 8px 28px;
-      backdrop-filter: blur(2px);
-      width: fit-content;
-      margin: 0 auto;
-      border-radius: 60px;
-      border: 1px solid #6a5238;
-      letter-spacing: 2px;
-      pointer-events: none;
-      z-index: 15;
-      opacity: 0.7;
+    .daily-done { color: #6bdb6b; font-weight: bold; }
+
+    #online-list { text-align: left; margin: 15px 0; }
+    #online-list .row {
+      display: flex; justify-content: space-between;
+      padding: 6px 10px; border-bottom: 1px solid #4a3a2a;
+      font-size: 0.95rem;
     }
-    #gameover-mask {
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.6);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 200;
-      pointer-events: none;
-    }
-    #gameover-mask.show {
-      display: flex;
-    }
-    #gameover-mask .msg {
-      color: #ffd966;
-      font-size: 2.4rem;
-      text-shadow: 0 0 24px #ffaa00, 4px 4px 0 #3a2a1e;
-      letter-spacing: 4px;
-      text-align: center;
-      animation: pulse 1.2s infinite;
-    }
-    #gameover-mask .msg small {
-      display: block;
-      font-size: 1rem;
-      color: #e8d5b0;
-      margin-top: 12px;
-      letter-spacing: 2px;
-      animation: none;
-    }
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.06); }
-    }
+    #online-list .row.top { color: #ffd966; font-weight: bold; }
+    #online-loading { color: #aaa; font-size: 0.9rem; }
   </style>
 </head>
 <body>
-  <div id="info">
-    <h1>🏮 明·疾驰 <small id="stationLabel">金陵地铁 · 神州行</small></h1>
-  </div>
-  <div id="score">🏯 <span id="scoreValue">0</span></div>
-  <div id="best-score">🏆 最佳 <span id="bestScoreValue">0</span></div>
-  <div id="coin-display">🪙 <span id="coinValue">0</span></div>
-  <div id="time-toggle">🌙 暮色</div>
-  
-  <!-- 地图区域 -->
-  <div id="map-container">
-    <div id="map-title">
-      <span class="title-text">🗺️ 点击地图省份切换地铁站</span>
-      <span id="map-toggle-hint">▼</span>
+  <div id="ui-layer">
+    <div id="info-box" class="hud-panel">
+      <h1>🏮 明·疾驰 <small id="stationLabel">金陵地铁</small></h1>
     </div>
-    <div id="map-grid"></div>
+    <div id="stats-box" class="hud-panel">
+      <div class="stat-row">🏯 <span id="scoreVal">0</span></div>
+      <div class="stat-row">🪙 <span id="coinVal">0</span></div>
+      <div class="stat-row" style="font-size:0.9rem; color:#aaa;">🏆 <span id="bestVal">0</span></div>
+    </div>
+    <div id="combo-display">COMBO x0</div>
+    <div id="tutorial-tip">按 A / ◀ 向左移动</div>
+    <div id="mute-btn" onclick="toggleMute()">🔊 声音</div>
+    <div id="screenshot-btn" onclick="takeScreenshot()">📷</div>
+    <div id="settings-btn" onclick="toggleSettings()">⚙️</div>
+    <div id="shop-btn" onclick="toggleShop()">🎨 商店</div>
+    <div id="daily-btn" onclick="toggleDaily()">🏆 每日</div>
+    <div id="online-btn" onclick="toggleOnline()">🌐 在线榜</div>
+
+    <div id="tip-toast">💡 连击越高，单金币分数越多</div>
+    <div id="double-jump-ring"></div>
+    <div id="speed-lines"></div>
+    <div id="danger-flash"></div>
+    <div id="vignette"></div>
+
+    <!-- ===== 指针式速度表 ===== -->
+    <div id="speedometer">
+      <svg viewBox="0 0 140 140">
+        <!-- 外圈 -->
+        <circle cx="70" cy="70" r="66" fill="rgba(20,14,8,0.85)" stroke="#b89a6b" stroke-width="2"/>
+        <circle cx="70" cy="70" r="60" fill="none" stroke="#3a2a1e" stroke-width="1"/>
+        <!-- 刻度 -->
+        <g id="speed-ticks" stroke="#e8d5b0" stroke-width="1.5"></g>
+        <!-- 刻度文字 -->
+        <g id="speed-labels" fill="#c9b088" font-size="7" font-family="monospace" text-anchor="middle"></g>
+        <!-- 危险区（150-200 红色弧） -->
+        <path d="M 70 70 m -52 0 a 52 52 0 0 1 26 -45" fill="none" stroke="#aa2222" stroke-width="3" opacity="0.7"/>
+        <!-- 指针 -->
+        <g id="speed-needle">
+          <line x1="70" y1="70" x2="70" y2="22" stroke="#ff4444" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="70" y1="70" x2="70" y2="80" stroke="#ff4444" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+        </g>
+        <!-- 中心圆 -->
+        <circle cx="70" cy="70" r="6" fill="#b89a6b" stroke="#5a4a3a" stroke-width="1.5"/>
+        <circle cx="70" cy="70" r="2.5" fill="#1a1410"/>
+      </svg>
+      <div id="speed-readout">
+        <span id="speed-val">0</span>
+        <small>KM/H</small>
+      </div>
+    </div>
+
+    <div id="slide-bar">
+      <div id="slide-bar-fill"></div>
+    </div>
+
+    <div id="active-effects">
+      <div id="eff-jet" class="effect-row">🚀 飞行中 <span class="effect-timer">0.0s</span></div>
+      <div id="eff-magnet" class="effect-row">🧲 磁铁吸附 <span class="effect-timer">0.0s</span></div>
+      <div id="eff-double" class="effect-row">✨ 双倍积分 <span class="effect-timer">0.0s</span></div>
+      <div id="eff-skate" class="effect-row">🛹 滑板保护 <span class="effect-timer">0.0s</span></div>
+    </div>
+
+    <div id="map-container">
+      <div id="map-mini-icon">🗺️<br><span style="font-size:10px">地图</span></div>
+      <div id="map-header">
+        <span>🗺️ 选择出发地</span>
+        <span style="cursor:pointer" onclick="toggleMap()">▼</span>
+      </div>
+      <div id="map-grid"></div>
+    </div>
+    <div id="controls">
+      <div class="ctrl-btn" onclick="move(-1)">◀</div>
+      <div class="ctrl-btn jump" onclick="jump()">⬆</div>
+      <div class="ctrl-btn slide" onclick="slide()">⬇</div>
+      <div class="ctrl-btn" onclick="move(1)">▶</div>
+    </div>
   </div>
 
-  <!-- 暂停遮罩 -->
-  <div id="pause-mask">
-    <div class="pause-text">
-      ⏸ 游戏暂停
-      <small>选择省份后继续 · 按 Esc 返回</small>
+  <div id="pause-mask" class="mask">
+    <div id="pause-content">
+      <div style="font-size:2rem; color:#ffd966; margin-bottom:15px;">⏸ 暂停</div>
+      <div id="run-stats">
+        <div>当前得分: <span id="pause-score">0</span></div>
+        <div>当前速度: <span id="pause-speed">0</span> KM/H</div>
+        <div>本局金币: <span id="pause-coins">0</span></div>
+        <div>最高连击: <span id="pause-combo">0</span></div>
+        <div>道具使用: <span id="pause-items">0</span> 次</div>
+      </div>
+      <div style="font-size:0.85rem; color:#aaa; margin-bottom:15px;">按空格键继续 · ESC 打开地图</div>
+      <button class="btn-restart btn-secondary" onclick="resumeGame()">继续游戏</button>
     </div>
   </div>
 
-  <!-- 倒计时遮罩 -->
-  <div id="countdown-mask">
-    <div class="countdown-text" id="countdownText">
-      3
-      <small id="countdownSub">即将开始</small>
+  <div id="settings-mask" class="mask" style="z-index:180">
+    <div id="settings-content">
+      <div style="font-size:1.8rem; color:#ffd966; margin-bottom:20px;">⚙️ 设置</div>
+      <div class="setting-row">
+        <span>音量</span>
+        <div class="setting-btn-group">
+          <button class="setting-btn" onclick="setVolume(0.3)">低</button>
+          <button class="setting-btn active" onclick="setVolume(0.7)">中</button>
+          <button class="setting-btn" onclick="setVolume(1.0)">高</button>
+          <button class="setting-btn" onclick="setVolume(0)">静音</button>
+        </div>
+      </div>
+      <div class="setting-row">
+        <span>画质</span>
+        <div class="setting-btn-group">
+          <button class="setting-btn" onclick="setQuality('low')">低</button>
+          <button class="setting-btn active" onclick="setQuality('mid')">中</button>
+          <button class="setting-btn" onclick="setQuality('high')">高</button>
+        </div>
+      </div>
+      <div class="setting-row">
+        <span>屏幕震动</span>
+        <div class="setting-btn-group">
+          <button class="setting-btn active" id="shake-on" onclick="setShake(true)">开</button>
+          <button class="setting-btn" id="shake-off" onclick="setShake(false)">关</button>
+        </div>
+      </div>
+      <div class="setting-row">
+        <span>游戏统计</span>
+        <span id="total-stats" style="font-size:0.85rem; color:#aaa;">-</span>
+      </div>
+      <button class="btn-restart btn-secondary" style="margin-top:20px;" onclick="toggleSettings()">关闭</button>
     </div>
   </div>
 
-  <div id="controls">
-    <div class="ctrl-btn" id="btnLeft">◀ 左</div>
-    <div class="ctrl-btn jump" id="btnJump">⬆ 跃</div>
-    <div class="ctrl-btn" id="btnRight">右 ▶</div>
-  </div>
-  <div id="restart-tip">⚡ 跳跃避障 · 拾取金币与滑板 · 触壁或障碍则重开</div>
-
-  <div id="gameover-mask">
-    <div class="msg">
-      🏁 游戏结束
-      <small>按 空格 重新开始 · 按 Enter 选择省份</small>
+  <div id="shop-mask" class="mask" style="z-index:180">
+    <div id="shop-content">
+      <div style="font-size:1.8rem; color:#ffd966; margin-bottom:5px;">🎨 皮肤商店</div>
+      <div style="font-size:0.9rem; color:#aaa; margin-bottom:15px;">
+        总金币: <span id="shop-coins" style="color:#ffd966;">0</span>
+      </div>
+      <div id="shop-grid"></div>
+      <button class="btn-restart btn-secondary" onclick="toggleShop()">关闭</button>
     </div>
   </div>
+
+  <div id="daily-mask" class="mask" style="z-index:180">
+    <div id="daily-content">
+      <div style="font-size:1.8rem; color:#ffd966; margin-bottom:15px;">🏆 每日挑战</div>
+      <div style="font-size:0.85rem; color:#aaa; margin-bottom:10px;" id="daily-date">-</div>
+      <div class="daily-rule">
+        <div style="color:#ffd966; font-size:0.85rem;">📍 出发地</div>
+        <div id="daily-prov" style="font-size:1.1rem; margin-top:4px;">-</div>
+      </div>
+      <div class="daily-rule">
+        <div style="color:#ffd966; font-size:0.85rem;">⚡ 特殊规则</div>
+        <div id="daily-rule-text" style="font-size:1.1rem; margin-top:4px;">-</div>
+      </div>
+      <div class="daily-rule">
+        <div style="color:#ffd966; font-size:0.85rem;">🎁 通关奖励</div>
+        <div id="daily-reward" style="font-size:1.1rem; margin-top:4px;">-</div>
+      </div>
+      <div id="daily-status" style="margin: 15px 0; font-size:1rem;"></div>
+      <button class="btn-restart" onclick="startDailyChallenge()" id="daily-start-btn">开始挑战</button>
+      <button class="btn-restart btn-secondary" onclick="toggleDaily()">关闭</button>
+    </div>
+  </div>
+
+  <div id="online-mask" class="mask" style="z-index:180">
+    <div id="leaderboard-content">
+      <div style="font-size:1.8rem; color:#ffd966; margin-bottom:15px;">🌐 在线排行榜</div>
+      <div id="online-list">
+        <div id="online-loading">加载中...</div>
+      </div>
+      <div style="font-size:0.8rem; color:#888; margin: 10px 0;" id="online-note"></div>
+      <button class="btn-restart btn-secondary" onclick="toggleOnline()">关闭</button>
+    </div>
+  </div>
+
+  <div id="countdown-mask" class="mask" style="z-index:300; background:rgba(0,0,0,0.8)">
+    <div class="mask-text" id="cd-text">3</div>
+  </div>
+
+  <div id="gameover-mask" class="mask" style="z-index:200">
+    <div id="gameover-content">
+      <div id="go-title">🏁 抵达终点</div>
+      <div id="go-new-record">🎉 新纪录！</div>
+      <div>本次得分</div>
+      <div id="go-score">0</div>
+      <div id="go-best">历史最佳: 0</div>
+      <div id="run-stats">
+        <div>本局金币: <span id="go-coins">0</span></div>
+        <div>最高连击: <span id="go-combo">0</span></div>
+        <div>道具使用: <span id="go-items">0</span> 次</div>
+        <div>里程: <span id="go-distance">0</span> m</div>
+      </div>
+      <div id="leaderboard">
+        <h3>🏅 本地排行榜</h3>
+        <ol id="leaderboard-list"></ol>
+      </div>
+      <button class="btn-restart" onclick="restartFromGameOver()">再次出发</button>
+      <button class="btn-restart btn-secondary" onclick="playReplay()">🎬 观看回放</button>
+      <button class="btn-restart btn-secondary" onclick="submitScoreOnline()">🌐 提交在线榜</button>
+      <div style="margin-top:15px; font-size:0.9rem; color:#888;">按空格键快速重开</div>
+    </div>
+  </div>
+
+  <div id="replay-mask" class="mask" style="z-index:260; background:rgba(0,0,0,0.7)">
+    <div style="text-align:center; color:#ffd966;">
+      <div style="font-size:2rem; margin-bottom:15px;">🎬 回放中</div>
+      <div id="replay-progress" style="font-size:1.2rem; margin-bottom:15px;">0%</div>
+      <button class="btn-restart btn-danger" onclick="stopReplay()">退出回放</button>
+    </div>
+  </div>
+
+  <div id="achievement-toast">
+    <div class="ach-title">🏆 成就解锁</div>
+    <div id="ach-name">首次飞行</div>
+  </div>
+
+  <div id="flash"></div>
 
   <script type="importmap">
-    {
-      "imports": {
-        "three": "https://unpkg.com/three@0.128.0/build/three.module.js"
-      }
-    }
+    { "imports": { "three": "https://unpkg.com/three@0.128.0/build/three.module.js" } }
   </script>
 
   <script type="module">
     import * as THREE from 'three';
 
-    // ========== 省份数据（含地图行列坐标） ==========
-    const provinces = [
-      { short: '黑', full: '黑龙江', capital: '哈尔滨', col: 7, row: 1 },
-      { short: '新', full: '新疆', capital: '乌鲁木齐', col: 1, row: 2 },
-      { short: '蒙', full: '内蒙古', capital: '呼和浩特', col: 5, row: 2 },
-      { short: '吉', full: '吉林', capital: '长春', col: 7, row: 2 },
-      { short: '辽', full: '辽宁', capital: '沈阳', col: 7, row: 3 },
-      { short: '青', full: '青海', capital: '西宁', col: 2, row: 3 },
-      { short: '甘', full: '甘肃', capital: '兰州', col: 3, row: 3 },
-      { short: '宁', full: '宁夏', capital: '银川', col: 4, row: 3 },
-      { short: '陕', full: '陕西', capital: '西安', col: 4, row: 4 },
-      { short: '晋', full: '山西', capital: '太原', col: 5, row: 4 },
-      { short: '冀', full: '河北', capital: '石家庄', col: 6, row: 4 },
-      { short: '京', full: '北京', capital: '北京', col: 6, row: 3 },
-      { short: '津', full: '天津', capital: '天津', col: 7, row: 4 },
-      { short: '藏', full: '西藏', capital: '拉萨', col: 1, row: 4 },
-      { short: '川', full: '四川', capital: '成都', col: 3, row: 4 },
-      { short: '渝', full: '重庆', capital: '重庆', col: 4, row: 5 },
-      { short: '豫', full: '河南', capital: '郑州', col: 5, row: 5 },
-      { short: '鲁', full: '山东', capital: '济南', col: 6, row: 5 },
-      { short: '滇', full: '云南', capital: '昆明', col: 2, row: 5 },
-      { short: '黔', full: '贵州', capital: '贵阳', col: 3, row: 5 },
-      { short: '湘', full: '湖南', capital: '长沙', col: 4, row: 6 },
-      { short: '鄂', full: '湖北', capital: '武汉', col: 5, row: 6 },
-      { short: '皖', full: '安徽', capital: '合肥', col: 6, row: 6 },
-      { short: '苏', full: '江苏', capital: '南京', col: 7, row: 6 },
-      { short: '沪', full: '上海', capital: '上海', col: 8, row: 6 },
-      { short: '桂', full: '广西', capital: '南宁', col: 3, row: 6 },
-      { short: '粤', full: '广东', capital: '广州', col: 4, row: 7 },
-      { short: '赣', full: '江西', capital: '南昌', col: 5, row: 7 },
-      { short: '闽', full: '福建', capital: '福州', col: 6, row: 7 },
-      { short: '浙', full: '浙江', capital: '杭州', col: 7, row: 7 },
-      { short: '台', full: '台湾', capital: '台北', col: 8, row: 7 },
-      { short: '琼', full: '海南', capital: '海口', col: 4, row: 8 },
-      { short: '港', full: '香港', capital: '香港', col: 5, row: 8 },
-      { short: '澳', full: '澳门', capital: '澳门', col: 6, row: 8 }
+    // ================= 缓存池 =================
+    const geoCache = {};
+    const matCache = {};
+    function getGeo(key, factory) {
+      if (!geoCache[key]) geoCache[key] = factory();
+      return geoCache[key];
+    }
+    function getMat(key, factory) {
+      if (!matCache[key]) matCache[key] = factory();
+      return matCache[key];
+    }
+
+    // ================= 在线排行榜配置 =================
+    const ONLINE_CONFIG = {
+      binId: '6aa61b76ac6210605ac6a887',
+      apiKey: '$2a$10$j5j5FhZNVTvYzqatPtjIbew14N4vXOf9vZ5DYysy0G4KROVzbTHm.',
+      enabled: false
+    };
+    if (ONLINE_CONFIG.binId && ONLINE_CONFIG.apiKey) ONLINE_CONFIG.enabled = true;
+
+    // ================= 设置 =================
+    const settings = { volume: 0.7, quality: 'mid', shake: true };
+    try {
+      Object.assign(settings, JSON.parse(localStorage.getItem('metro_settings') || '{}'));
+    } catch(e) {}
+    function saveSettings() { localStorage.setItem('metro_settings', JSON.stringify(settings)); }
+
+    window.setVolume = (v) => { settings.volume = v; saveSettings(); updateSettingsUI(); };
+    window.setQuality = (q) => {
+      settings.quality = q; saveSettings(); updateSettingsUI();
+      if (q === 'low') { renderer.setPixelRatio(0.75); renderer.shadowMap.enabled = false; }
+      else if (q === 'mid') { renderer.setPixelRatio(1); renderer.shadowMap.enabled = true; }
+      else { renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); renderer.shadowMap.enabled = true; }
+    };
+    window.setShake = (on) => { settings.shake = on; saveSettings(); updateSettingsUI(); };
+
+    function updateSettingsUI() {
+      const rows = document.querySelectorAll('#settings-content .setting-row');
+      if (rows.length >= 3) {
+        rows[0].querySelectorAll('.setting-btn').forEach(b => b.classList.remove('active'));
+        const volBtns = rows[0].querySelectorAll('.setting-btn');
+        if (settings.volume === 0.3) volBtns[0]?.classList.add('active');
+        else if (settings.volume === 0.7) volBtns[1]?.classList.add('active');
+        else if (settings.volume === 1.0) volBtns[2]?.classList.add('active');
+        else if (settings.volume === 0) volBtns[3]?.classList.add('active');
+        rows[1].querySelectorAll('.setting-btn').forEach(b => b.classList.remove('active'));
+        const qBtns = rows[1].querySelectorAll('.setting-btn');
+        if (settings.quality === 'low') qBtns[0]?.classList.add('active');
+        else if (settings.quality === 'mid') qBtns[1]?.classList.add('active');
+        else qBtns[2]?.classList.add('active');
+        document.getElementById('shake-on').classList.toggle('active', settings.shake);
+        document.getElementById('shake-off').classList.toggle('active', !settings.shake);
+      }
+    }
+
+    window.toggleSettings = () => {
+      const m = document.getElementById('settings-mask');
+      m.classList.toggle('show');
+      if (m.classList.contains('show')) {
+        paused = true;
+        ['pause-mask','shop-mask','daily-mask','online-mask'].forEach(id => document.getElementById(id).classList.remove('show'));
+        updateTotalStats();
+      } else {
+        if (!gameOver && !cdActive && mapBox.classList.contains('collapsed')) paused = false;
+      }
+    };
+
+    function updateTotalStats() {
+      const s = JSON.parse(localStorage.getItem('metro_total') || '{"coins":0,"runs":0,"distance":0}');
+      document.getElementById('total-stats').textContent = 
+        `金币 ${s.coins} · 局数 ${s.runs} · 里程 ${Math.floor(s.distance)}m`;
+    }
+
+    function getTotalCoins() {
+      const s = JSON.parse(localStorage.getItem('metro_total') || '{"coins":0}');
+      return s.coins || 0;
+    }
+    function addTotalCoins(n) {
+      const s = JSON.parse(localStorage.getItem('metro_total') || '{"coins":0,"runs":0,"distance":0}');
+      s.coins = (s.coins || 0) + n;
+      localStorage.setItem('metro_total', JSON.stringify(s));
+    }
+
+    // ================= 皮肤系统 =================
+    const SKINS = [
+      { id: 'red',    name: '红袍',   body: 0x8a1a1a, head: 0xe0c8a0, price: 0,   shape: 'box' },
+      { id: 'blue',   name: '蓝衣',   body: 0x1a1a8a, head: 0xe0c8a0, price: 100, shape: 'box' },
+      { id: 'green',  name: '绿衣',   body: 0x1a8a1a, head: 0xe0c8a0, price: 150, shape: 'box' },
+      { id: 'purple', name: '紫衣',   body: 0x8a1a8a, head: 0xe0c8a0, price: 200, shape: 'box' },
+      { id: 'gold',   name: '金衣',   body: 0xffcc00, head: 0xffeebb, price: 350, shape: 'box' },
+      { id: 'panda',  name: '熊猫',   body: 0xffffff, head: 0xffffff, price: 500, shape: 'panda' },
+      { id: 'shadow', name: '暗影',   body: 0x222222, head: 0x444444, price: 800, shape: 'box' }
     ];
+    let ownedSkins = JSON.parse(localStorage.getItem('metro_owned_skins') || '["red"]');
+    let activeSkin = localStorage.getItem('metro_active_skin') || 'red';
 
-    // ========== Cookie 最佳成绩 ==========
-    function getBestScore() {
-      const match = document.cookie.match(/(?:^|;\s*)Metro_best_score=([^;]*)/);
-      return match ? parseInt(match[1]) || 0 : 0;
-    }
-    function setBestScore(score) {
-      document.cookie = `Metro_best_score=${score}; path=/; max-age=31536000`;
-    }
-    let bestScore = getBestScore();
-    const bestScoreSpan = document.getElementById('bestScoreValue');
-    bestScoreSpan.textContent = bestScore;
-
-    // ========== 初始化场景 ==========
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x1a1410);
-    scene.fog = new THREE.Fog(0x1a1410, 20, 55);
-
-    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
-    camera.position.set(0, 4.2, 9);
-    camera.lookAt(0, 0.5, 6);
-
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    document.body.appendChild(renderer.domElement);
-
-    // ========== 光影 ==========
-    const ambientLight = new THREE.AmbientLight(0x403020, 0.6);
-    scene.add(ambientLight);
-    const mainLight = new THREE.DirectionalLight(0xffdd99, 1.2);
-    mainLight.position.set(5, 12, 8);
-    mainLight.castShadow = true;
-    mainLight.shadow.mapSize.width = 1024;
-    mainLight.shadow.mapSize.height = 1024;
-    scene.add(mainLight);
-    const fillLight = new THREE.DirectionalLight(0xffaa66, 0.5);
-    fillLight.position.set(-4, 6, 10);
-    scene.add(fillLight);
-    const backLight = new THREE.DirectionalLight(0x446688, 0.3);
-    backLight.position.set(0, 2, -10);
-    scene.add(backLight);
-    const lanternLight = new THREE.PointLight(0xff8844, 0.6, 15);
-    lanternLight.position.set(0, 3, 5);
-    scene.add(lanternLight);
-    const moonLight = new THREE.DirectionalLight(0xaaccff, 0.0);
-    moonLight.position.set(-5, 10, -5);
-    scene.add(moonLight);
-
-    let isNight = false;
-
-    // ========== 轨道 ==========
-    const groundWidth = 6;
-    const segmentLength = 4;
-    const totalSegments = 80;
-
-    function createTrackSegment(zPos) {
-      const group = new THREE.Group();
-      const stoneMat = new THREE.MeshStandardMaterial({ color: 0x5a4a3a, roughness: 0.8, metalness: 0.1, emissive: new THREE.Color(0x1a120a), emissiveIntensity: 0.1 });
-      const stone = new THREE.Mesh(new THREE.BoxGeometry(groundWidth, 0.3, segmentLength), stoneMat);
-      stone.position.y = -0.15;
-      stone.receiveShadow = true;
-      stone.castShadow = true;
-      group.add(stone);
-
-      const railMat = new THREE.MeshStandardMaterial({ color: 0x7a6a5a, roughness: 0.7, metalness: 0.2, emissive: new THREE.Color(0x2a1a0a), emissiveIntensity: 0.05 });
-      for (let side = -1; side <= 1; side+=2) {
-        const rail = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.2, segmentLength), railMat);
-        rail.position.set(side * 1.8, 0.1, 0);
-        rail.receiveShadow = true;
-        rail.castShadow = true;
-        group.add(rail);
+    function applySkin() {
+      const s = SKINS.find(x => x.id === activeSkin) || SKINS[0];
+      pBody.material.color.setHex(s.body);
+      pHead.material.color.setHex(s.head);
+      if (player.userData.ears) {
+        player.userData.ears.forEach(e => player.remove(e));
+        player.userData.ears = null;
       }
-      const decoMat = new THREE.MeshStandardMaterial({ color: 0x8a7a5a, emissive: new THREE.Color(0x3a2a1a), emissiveIntensity: 0.1 });
-      for (let i = -1; i <= 1; i++) {
-        const deco = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.05, 0.3), decoMat);
-        deco.position.set(i * 1.2, 0.2, 0);
-        group.add(deco);
-      }
-      const pillarMat = new THREE.MeshStandardMaterial({ color: 0x8a7a5a, roughness: 0.9, emissive: new THREE.Color(0x2a1a0a), emissiveIntensity: 0.1 });
-      for (let side = -1; side <= 1; side+=2) {
-        const pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.2, 0.5, 8), pillarMat);
-        pillar.position.set(side * 2.5, 0.25, 0);
-        pillar.castShadow = true;
-        pillar.receiveShadow = true;
-        group.add(pillar);
-      }
-      group.position.z = zPos;
-      return group;
-    }
-
-    const trackSegments = [];
-    const trackGroup = new THREE.Group();
-    const trackStartZ = -30;
-    for (let i = 0; i < totalSegments; i++) {
-      const z = trackStartZ + i * segmentLength;
-      const seg = createTrackSegment(z);
-      trackGroup.add(seg);
-      trackSegments.push(seg);
-    }
-    scene.add(trackGroup);
-
-    // ========== 宫灯 ==========
-    const lanterns = [];
-    function createLantern(x, z) {
-      const group = new THREE.Group();
-      const poleMat = new THREE.MeshStandardMaterial({ color: 0x4a2a1a, roughness: 0.9 });
-      const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.1, 1.2, 6), poleMat);
-      pole.position.y = 0.6;
-      group.add(pole);
-      const lanternMat = new THREE.MeshStandardMaterial({ color: 0xcc8844, emissive: new THREE.Color(0xcc6633), emissiveIntensity: 0.3, roughness: 0.4 });
-      const lanternBody = new THREE.Mesh(new THREE.SphereGeometry(0.35, 8, 8), lanternMat);
-      lanternBody.position.y = 1.0;
-      lanternBody.castShadow = true;
-      group.add(lanternBody);
-      const tasselMat = new THREE.MeshStandardMaterial({ color: 0xcc8844 });
-      const tassel = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.08, 0.3, 4), tasselMat);
-      tassel.position.y = 0.7;
-      group.add(tassel);
-      group.position.set(x, 0, z);
-      return group;
-    }
-
-    for (let i = 0; i < totalSegments; i+=2) {
-      const z = trackStartZ + i * segmentLength;
-      for (let side = -1; side <= 1; side+=2) {
-        const lantern = createLantern(side * 3.0, z);
-        scene.add(lantern);
-        lanterns.push(lantern);
+      if (s.shape === 'panda') {
+        const earGeo = getGeo('panda_ear', () => new THREE.SphereGeometry(0.12, 8, 8));
+        const earMat = getMat('panda_ear_mat', () => new THREE.MeshStandardMaterial({color: 0x111111}));
+        const earL = new THREE.Mesh(earGeo, earMat);
+        earL.position.set(-0.2, 1.15, 0);
+        const earR = new THREE.Mesh(earGeo, earMat);
+        earR.position.set(0.2, 1.15, 0);
+        player.add(earL, earR);
+        player.userData.ears = [earL, earR];
       }
     }
 
-    // ========== 远处楼阁 ==========
-    function createDistantBuilding(x, z) {
-      const group = new THREE.Group();
-      const baseMat = new THREE.MeshStandardMaterial({ color: 0x2a1a0a, emissive: new THREE.Color(0x0a0500), emissiveIntensity: 0.2 });
-      const base = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.6, 0.8), baseMat);
-      base.position.y = 0.3;
-      group.add(base);
-      const body = new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.0, 0.6), baseMat);
-      body.position.y = 0.9;
-      group.add(body);
-      const roof = new THREE.Mesh(new THREE.ConeGeometry(0.7, 0.6, 4), baseMat);
-      roof.position.y = 1.5;
-      roof.rotation.y = Math.PI/4;
-      group.add(roof);
-      group.position.set(x, 0, z);
-      return group;
-    }
-    for (let i = -3; i <= 3; i+=2) {
-      for (let j = -2; j <= 2; j+=2) {
-        const building = createDistantBuilding(i * 5.5, -30 + j * 6);
-        scene.add(building);
-      }
-    }
-
-    // ========== 玩家 ==========
-    const playerGroup = new THREE.Group();
-    const bodyMat = new THREE.MeshStandardMaterial({ color: 0x8a1a1a, emissive: new THREE.Color(0x2a0a0a), emissiveIntensity: 0.1, roughness: 0.5 });
-    const body = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.8, 0.4), bodyMat);
-    body.position.y = 0.5;
-    body.castShadow = true;
-    playerGroup.add(body);
-    const headMat = new THREE.MeshStandardMaterial({ color: 0xe0c8a0, roughness: 0.7 });
-    const head = new THREE.Mesh(new THREE.SphereGeometry(0.25, 8, 8), headMat);
-    head.position.y = 1.0;
-    head.castShadow = true;
-    playerGroup.add(head);
-    const hatMat = new THREE.MeshStandardMaterial({ color: 0x1a1a2a, roughness: 0.8 });
-    const hat = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.35, 0.1, 6), hatMat);
-    hat.position.y = 1.15;
-    hat.rotation.y = Math.PI/6;
-    playerGroup.add(hat);
-    const ribbonMat = new THREE.MeshStandardMaterial({ color: 0xcc3333 });
-    const ribbon = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.1, 0.3), ribbonMat);
-    ribbon.position.set(0.1, 1.0, 0.2);
-    playerGroup.add(ribbon);
-    playerGroup.position.set(0, 0.2, 0);
-    scene.add(playerGroup);
-
-    // ========== 障碍物 ==========
-    function createObstacle(x, z) {
-      const group = new THREE.Group();
-      const matStone = new THREE.MeshStandardMaterial({ color: 0x7a6a5a, roughness: 0.9, emissive: new THREE.Color(0x1a120a), emissiveIntensity: 0.1 });
-      const base = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.5, 0.4, 6), matStone);
-      base.position.y = 0.2;
-      base.castShadow = true;
-      base.receiveShadow = true;
-      group.add(base);
-      const bodyObs = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.35, 0.5, 6), matStone);
-      bodyObs.position.y = 0.5;
-      bodyObs.castShadow = true;
-      bodyObs.receiveShadow = true;
-      group.add(bodyObs);
-      const headStone = new THREE.Mesh(new THREE.SphereGeometry(0.15, 5), matStone);
-      headStone.position.set(0.2, 0.65, 0.2);
-      group.add(headStone);
-      group.position.set(x, 0, z);
-      return group;
+    function renderShop() {
+      const grid = document.getElementById('shop-grid');
+      grid.innerHTML = '';
+      document.getElementById('shop-coins').textContent = getTotalCoins();
+      SKINS.forEach(s => {
+        const card = document.createElement('div');
+        card.className = 'skin-card';
+        if (ownedSkins.includes(s.id)) card.classList.add('owned');
+        if (activeSkin === s.id) card.classList.add('active');
+        
+        const preview = document.createElement('div');
+        preview.className = 'skin-preview';
+        const bodyDiv = document.createElement('div');
+        bodyDiv.className = 'skin-body';
+        bodyDiv.style.background = '#' + s.body.toString(16).padStart(6, '0');
+        const headDiv = document.createElement('div');
+        headDiv.className = 'skin-head';
+        headDiv.style.background = '#' + s.head.toString(16).padStart(6, '0');
+        preview.appendChild(bodyDiv);
+        preview.appendChild(headDiv);
+        
+        const name = document.createElement('div');
+        name.className = 'skin-name';
+        name.textContent = s.name;
+        
+        const price = document.createElement('div');
+        price.className = 'skin-price';
+        if (ownedSkins.includes(s.id)) {
+          price.textContent = activeSkin === s.id ? '✅ 使用中' : '点击使用';
+        } else {
+          price.textContent = `🪙 ${s.price}`;
+        }
+        
+        card.appendChild(preview);
+        card.appendChild(name);
+        card.appendChild(price);
+        card.onclick = () => selectSkin(s);
+        grid.appendChild(card);
+      });
     }
 
-    let obstacles = [];
-    const maxObstacles = 20;
-    function spawnObstacle(zPos) {
-      const lane = Math.floor(Math.random() * 3) - 1;
-      const x = lane * 1.8;
-      const obstacle = createObstacle(x, zPos);
-      scene.add(obstacle);
-      obstacles.push(obstacle);
-    }
-
-    for (let i = 0; i < 12; i++) {
-      const z = 6 + i * 3.5 + Math.random() * 1.5;
-      spawnObstacle(z);
-    }
-
-    // ========== 金币 ==========
-    let coinsCollected = 0;
-    const coinValueSpan = document.getElementById('coinValue');
-    const coinMeshes = [];
-    const coinMaterial = new THREE.MeshStandardMaterial({ color: 0xffd966, emissive: new THREE.Color(0xffaa00), emissiveIntensity: 0.6, roughness: 0.3, metalness: 0.7 });
-    const coinGeo = new THREE.TorusGeometry(0.22, 0.08, 6, 12);
-
-    function spawnCoin(x, z, y = 0.8) {
-      const coin = new THREE.Mesh(coinGeo, coinMaterial.clone());
-      coin.position.set(x, y, z);
-      coin.rotation.x = Math.PI / 2;
-      coin.castShadow = true;
-      scene.add(coin);
-      coinMeshes.push(coin);
-    }
-
-    function spawnCoinLine(zStart) {
-      const lane = Math.floor(Math.random() * 3) - 1;
-      const x = lane * 1.8;
-      const count = 3 + Math.floor(Math.random() * 3);
-      for (let i = 0; i < count; i++) {
-        spawnCoin(x, zStart + i * 1.0, 0.8 + Math.sin(i * 0.8) * 0.1);
-      }
-    }
-
-    for (let i = 0; i < 10; i++) {
-      spawnCoinLine(12 + i * 7 + Math.random() * 3);
-    }
-
-    // ========== 滑板系统（放大 + 15秒） ==========
-    let hasSkateboard = false;
-    let skateboardTimer = 0;
-    const skateboardDuration = 900;
-    const skateboardMeshes = [];
-    
-    function createSkateboardMesh(x, z) {
-      const group = new THREE.Group();
-      const boardMat = new THREE.MeshStandardMaterial({ color: 0x8b5a2b, roughness: 0.5, emissive: new THREE.Color(0x3a1a0a), emissiveIntensity: 0.3 });
-      const board = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.18, 0.8), boardMat);
-      board.position.y = 0.09;
-      board.castShadow = true;
-      board.receiveShadow = true;
-      group.add(board);
-      const wheelMat = new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.3, metalness: 0.8, emissive: new THREE.Color(0x111111), emissiveIntensity: 0.4 });
-      for (let dx = -0.65; dx <= 0.65; dx+=1.3) {
-        for (let dz = -0.3; dz <= 0.3; dz+=0.6) {
-          const wheel = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.16, 8), wheelMat);
-          wheel.position.set(dx, 0.16, dz);
-          wheel.rotation.z = Math.PI/2;
-          wheel.castShadow = true;
-          group.add(wheel);
+    function selectSkin(s) {
+      if (ownedSkins.includes(s.id)) {
+        activeSkin = s.id;
+        localStorage.setItem('metro_active_skin', activeSkin);
+        applySkin();
+        renderShop();
+        playSound('coin');
+      } else {
+        const total = getTotalCoins();
+        if (total >= s.price) {
+          if (confirm(`花费 ${s.price} 金币解锁「${s.name}」？`)) {
+            addTotalCoins(-s.price);
+            ownedSkins.push(s.id);
+            localStorage.setItem('metro_owned_skins', JSON.stringify(ownedSkins));
+            activeSkin = s.id;
+            localStorage.setItem('metro_active_skin', activeSkin);
+            applySkin();
+            renderShop();
+            playSound('achieve');
+          }
+        } else {
+          alert(`金币不足！需要 ${s.price}，你有 ${total}。`);
         }
       }
-      const dragonMat = new THREE.MeshStandardMaterial({ color: 0xffcc44, emissive: new THREE.Color(0xffaa00), emissiveIntensity: 1.0, roughness: 0.2, metalness: 0.7 });
-      const dragon = new THREE.Mesh(new THREE.ConeGeometry(0.28, 0.5, 6), dragonMat);
-      dragon.position.set(1.0, 0.35, 0);
-      dragon.rotation.z = -0.3;
-      dragon.rotation.x = Math.PI/2;
-      dragon.castShadow = true;
-      group.add(dragon);
-      const eyeMat = new THREE.MeshStandardMaterial({ color: 0xff0000, emissive: new THREE.Color(0xff2200), emissiveIntensity: 1.5 });
-      const eye1 = new THREE.Mesh(new THREE.SphereGeometry(0.08, 6), eyeMat);
-      eye1.position.set(1.12, 0.38, 0.14);
-      group.add(eye1);
-      const eye2 = new THREE.Mesh(new THREE.SphereGeometry(0.08, 6), eyeMat);
-      eye2.position.set(1.12, 0.38, -0.14);
-      group.add(eye2);
-      const glowMat = new THREE.MeshStandardMaterial({ color: 0xffaa00, emissive: new THREE.Color(0xffaa00), emissiveIntensity: 0.5, transparent: true, opacity: 0.2 });
-      const glow = new THREE.Mesh(new THREE.SphereGeometry(0.8, 8), glowMat);
-      glow.position.y = 0.45;
-      group.add(glow);
-      group.position.set(x, 0.05, z);
+    }
+
+    window.toggleShop = () => {
+      const m = document.getElementById('shop-mask');
+      m.classList.toggle('show');
+      if (m.classList.contains('show')) {
+        paused = true;
+        ['pause-mask','settings-mask','daily-mask','online-mask'].forEach(id => document.getElementById(id).classList.remove('show'));
+        renderShop();
+      } else {
+        if (!gameOver && !cdActive && mapBox.classList.contains('collapsed')) paused = false;
+      }
+    };
+
+    // ================= 每日挑战 =================
+    const DAILY_RULES = [
+      { id: 'no_item',   name: '无道具模式',  desc: '本局不会生成道具', apply: () => { dailyNoItem = true; } },
+      { id: 'double_speed', name: '双倍速度', desc: '游戏速度翻倍',     apply: () => { dailySpeedMul = 2; } },
+      { id: 'magnet',    name: '磁铁常驻',    desc: '全程磁铁吸附',     apply: () => { pus.magnet.on = true; pus.magnet.t = 99999; pus.magnet.el.classList.add('visible'); } },
+      { id: 'skate',     name: '滑板护体',    desc: '开局送一次滑板保护', apply: () => { pus.skate.on = true; pus.skate.t = 99999; pus.skate.el.classList.add('visible'); } },
+      { id: 'no_jump',   name: '禁止跳跃',    desc: '只能左右移动和滑铲', apply: () => { dailyNoJump = true; } },
+      { id: 'hard',      name: '地狱模式',    desc: '障碍物全是高的',   apply: () => { dailyHard = true; } }
+    ];
+    let dailyNoItem = false, dailySpeedMul = 1, dailyNoJump = false, dailyHard = false;
+
+    function getDailyChallenge() {
+      const today = new Date().toDateString();
+      const seed = today.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+      const provIdx = seed % provinces.length;
+      const ruleIdx = (seed * 7) % DAILY_RULES.length;
+      return {
+        date: today,
+        prov: provinces[provIdx],
+        rule: DAILY_RULES[ruleIdx],
+        reward: 200,
+        targetScore: 1500
+      };
+    }
+
+    function getDailyProgress() {
+      try {
+        return JSON.parse(localStorage.getItem('metro_daily') || '{}');
+      } catch(e) { return {}; }
+    }
+    function setDailyProgress(obj) {
+      localStorage.setItem('metro_daily', JSON.stringify(obj));
+    }
+
+    window.toggleDaily = () => {
+      const m = document.getElementById('daily-mask');
+      m.classList.toggle('show');
+      if (m.classList.contains('show')) {
+        paused = true;
+        ['pause-mask','settings-mask','shop-mask','online-mask'].forEach(id => document.getElementById(id).classList.remove('show'));
+        renderDaily();
+      } else {
+        if (!gameOver && !cdActive && mapBox.classList.contains('collapsed')) paused = false;
+      }
+    };
+
+    function renderDaily() {
+      const d = getDailyChallenge();
+      const p = getDailyProgress();
+      const done = p[d.date] && p[d.date].completed;
+      document.getElementById('daily-date').textContent = d.date;
+      document.getElementById('daily-prov').textContent = `${d.prov.c} · ${d.prov.n}（${d.prov.bio}）`;
+      document.getElementById('daily-rule-text').textContent = `${d.rule.name} —— ${d.rule.desc}`;
+      document.getElementById('daily-reward').textContent = `🪙 ${d.reward} 金币（达成 ${d.targetScore} 分）`;
+      const status = document.getElementById('daily-status');
+      const btn = document.getElementById('daily-start-btn');
+      if (done) {
+        status.innerHTML = '<span class="daily-done">✅ 今日已完成</span>';
+        btn.textContent = '再玩一次（无奖励）';
+      } else {
+        status.textContent = '尚未完成';
+        btn.textContent = '开始挑战';
+      }
+    }
+
+    let dailyMode = false;
+    let dailyCompletedThisRun = false;
+
+    window.startDailyChallenge = () => {
+      const d = getDailyChallenge();
+      dailyMode = true;
+      dailyCompletedThisRun = false;
+      dailyNoItem = false; dailySpeedMul = 1; dailyNoJump = false; dailyHard = false;
+      curProv.name = d.prov.n;
+      curProv.bio = d.prov.bio;
+      curProv.color = d.prov.t;
+      curProv.city = d.prov.c;
+      document.getElementById('stationLabel').textContent = `${d.prov.c}地铁`;
+      scene.background = new THREE.Color(d.prov.t).multiplyScalar(0.5);
+      renderMap();
+      initScenery();
+      d.rule.apply();
+      document.getElementById('daily-mask').classList.remove('show');
+      startCD();
+      setTimeout(() => { showTipText(`🏆 每日挑战：${d.rule.name}`); }, 3000);
+    };
+
+    function checkDailyComplete() {
+      if (!dailyMode) return;
+      const d = getDailyChallenge();
+      if (score >= d.targetScore) {
+        const p = getDailyProgress();
+        if (!p[d.date] || !p[d.date].completed) {
+          p[d.date] = { completed: true, score: Math.floor(score), time: Date.now() };
+          setDailyProgress(p);
+          addTotalCoins(d.reward);
+          dailyCompletedThisRun = true;
+          showTipText(`🎉 每日挑战完成！+${d.reward} 金币`);
+        }
+      }
+    }
+
+    function showTipText(t) {
+      const tip = document.getElementById('tip-toast');
+      tip.textContent = t;
+      tip.classList.add('show');
+      setTimeout(() => tip.classList.remove('show'), 3000);
+    }
+
+    // ================= 回放系统 =================
+    let replayRecording = [];
+    let replayPlaying = false;
+    let replayIndex = 0;
+    let replayFrame = 0;
+    const REPLAY_INTERVAL = 3;
+
+    function resetReplay() {
+      replayRecording = [];
+      replayFrame = 0;
+    }
+
+    function recordReplay() {
+      if (replayFrame % REPLAY_INTERVAL === 0) {
+        replayRecording.push({
+          lane: lane,
+          y: player.position.y,
+          scaleY: player.scale.y,
+          action: isSliding ? 'slide' : (isJumping ? 'jump' : 'run')
+        });
+        if (replayRecording.length > 3000) replayRecording.shift();
+      }
+      replayFrame++;
+    }
+
+    function saveReplay() {
+      try {
+        localStorage.setItem('metro_replay', JSON.stringify({
+          data: replayRecording,
+          score: Math.floor(score),
+          date: Date.now()
+        }));
+      } catch(e) { console.warn('回放保存失败', e); }
+    }
+
+    window.playReplay = () => {
+      const saved = localStorage.getItem('metro_replay');
+      if (!saved) { alert('没有可用的回放'); return; }
+      const r = JSON.parse(saved);
+      if (!r.data || r.data.length === 0) { alert('回放为空'); return; }
+      document.getElementById('gameover-mask').classList.remove('show');
+      document.getElementById('replay-mask').classList.add('show');
+      replayPlaying = true;
+      replayIndex = 0;
+      replayRecording = r.data;
+      resetGame(true);
+      paused = false; gameOver = false;
+    };
+
+    window.stopReplay = () => {
+      replayPlaying = false;
+      document.getElementById('replay-mask').classList.remove('show');
+      paused = true;
+      document.getElementById('pause-mask').classList.add('show');
+    };
+
+    // ================= 在线排行榜 =================
+    async function loadOnlineLeaderboard() {
+      const listEl = document.getElementById('online-list');
+      const noteEl = document.getElementById('online-note');
+      listEl.innerHTML = '<div id="online-loading">加载中...</div>';
+      
+      if (!ONLINE_CONFIG.enabled) {
+        const local = JSON.parse(localStorage.getItem('metro_leaderboard') || '[]');
+        listEl.innerHTML = '';
+        if (local.length === 0) {
+          listEl.innerHTML = '<div style="color:#aaa;">暂无数据</div>';
+        } else {
+          local.slice(0, 10).forEach((s, i) => {
+            const row = document.createElement('div');
+            row.className = 'row' + (i === 0 ? ' top' : '');
+            row.innerHTML = `<span>#${i+1}</span><span>${s} 分</span>`;
+            listEl.appendChild(row);
+          });
+        }
+        noteEl.textContent = '⚠️ 未配置在线后端，显示本地排行榜。';
+        return;
+      }
+      
+      try {
+        const res = await fetch(`https://api.jsonbin.io/v3/b/${ONLINE_CONFIG.binId}/latest`, {
+          headers: { 'X-Master-Key': ONLINE_CONFIG.apiKey }
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json = await res.json();
+        const list = (json.record && json.record.scores) || [];
+        listEl.innerHTML = '';
+        if (list.length === 0) {
+          listEl.innerHTML = '<div style="color:#aaa;">暂无数据</div>';
+        } else {
+          list.sort((a, b) => b.score - a.score).slice(0, 10).forEach((item, i) => {
+            const row = document.createElement('div');
+            row.className = 'row' + (i === 0 ? ' top' : '');
+            row.innerHTML = `<span>#${i+1} ${item.name || '匿名'}</span><span>${item.score} 分</span>`;
+            listEl.appendChild(row);
+          });
+        }
+        noteEl.textContent = '🌐 在线数据 · jsonbin.io';
+      } catch(e) {
+        listEl.innerHTML = '<div style="color:#ff8888;">加载失败，请检查网络或配置</div>';
+        noteEl.textContent = '错误：' + e.message;
+      }
+    }
+
+    window.toggleOnline = () => {
+      const m = document.getElementById('online-mask');
+      m.classList.toggle('show');
+      if (m.classList.contains('show')) {
+        paused = true;
+        ['pause-mask','settings-mask','shop-mask','daily-mask'].forEach(id => document.getElementById(id).classList.remove('show'));
+        loadOnlineLeaderboard();
+      } else {
+        if (!gameOver && !cdActive && mapBox.classList.contains('collapsed')) paused = false;
+      }
+    };
+
+    window.submitScoreOnline = async () => {
+      if (!ONLINE_CONFIG.enabled) {
+        alert('未配置在线后端。');
+        return;
+      }
+      const name = prompt('输入你的昵称（最多 8 字）', '玩家') || '匿名';
+      const finalScore = Math.floor(score);
+      try {
+        const res = await fetch(`https://api.jsonbin.io/v3/b/${ONLINE_CONFIG.binId}/latest`, {
+          headers: { 'X-Master-Key': ONLINE_CONFIG.apiKey }
+        });
+        if (!res.ok) throw new Error(`读取失败 HTTP ${res.status}`);
+        const json = await res.json();
+        const list = (json.record && json.record.scores) || [];
+        list.push({ name: name.slice(0, 8), score: finalScore, time: Date.now() });
+        list.sort((a, b) => b.score - a.score);
+        const top = list.slice(0, 50);
+        const writeRes = await fetch(`https://api.jsonbin.io/v3/b/${ONLINE_CONFIG.binId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Master-Key': ONLINE_CONFIG.apiKey
+          },
+          body: JSON.stringify({ scores: top })
+        });
+        if (!writeRes.ok) throw new Error(`写入失败 HTTP ${writeRes.status}`);
+        const rank = top.findIndex(x => x.score === finalScore && x.name === name.slice(0,8)) + 1;
+        alert(`✅ 提交成功！你排第 ${rank} 名`);
+        loadOnlineLeaderboard();
+      } catch(e) {
+        alert('提交失败：' + e.message);
+      }
+    };
+
+    // ================= 音频 =================
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    let audioCtx;
+    let isMuted = false;
+    let bgmNodes = [];
+
+    function initAudio() {
+      if (!audioCtx) audioCtx = new AudioCtx();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    function playSound(type, pitch = 1) {
+      if (isMuted || !audioCtx || settings.volume === 0) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      const now = audioCtx.currentTime;
+      const vol = settings.volume;
+      if (type === 'jump') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(300 * pitch, now);
+        osc.frequency.exponentialRampToValueAtTime(600 * pitch, now + 0.1);
+        gain.gain.setValueAtTime(0.3 * vol, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+        osc.start(now); osc.stop(now + 0.1);
+      } else if (type === 'coin') {
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(1200 * pitch, now);
+        osc.frequency.setValueAtTime(1600 * pitch, now + 0.05);
+        gain.gain.setValueAtTime(0.1 * vol, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+        osc.start(now); osc.stop(now + 0.1);
+      } else if (type === 'crash') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(100, now);
+        osc.frequency.exponentialRampToValueAtTime(50, now + 0.3);
+        gain.gain.setValueAtTime(0.5 * vol, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+        osc.start(now); osc.stop(now + 0.3);
+      } else if (type === 'achieve') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(800, now);
+        osc.frequency.setValueAtTime(1000, now + 0.1);
+        osc.frequency.setValueAtTime(1200, now + 0.2);
+        gain.gain.setValueAtTime(0.15 * vol, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+        osc.start(now); osc.stop(now + 0.4);
+      }
+    }
+
+    function startBGM() {
+      if (isMuted || !audioCtx || settings.volume === 0) return;
+      if (bgmNodes.length > 0) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.value = 110;
+      gain.gain.value = 0.05 * settings.volume;
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.start();
+      bgmNodes.push({osc, gain});
+    }
+
+    function stopBGM() {
+      if (!audioCtx) return;
+      bgmNodes.forEach(o => {
+        try {
+          o.gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+          o.osc.stop(audioCtx.currentTime + 0.5);
+        } catch(e) {}
+      });
+      bgmNodes = [];
+    }
+
+    window.toggleMute = () => {
+      isMuted = !isMuted;
+      document.getElementById('mute-btn').textContent = isMuted ? '🔇' : '🔊';
+      if (isMuted) stopBGM(); else startBGM();
+    };
+
+    window.takeScreenshot = () => {
+      renderer.render(scene, camera);
+      const dataURL = renderer.domElement.toDataURL('image/png');
+      const a = document.createElement('a');
+      a.href = dataURL;
+      a.download = 'metro-run-' + Date.now() + '.png';
+      a.click();
+    };
+
+    // ================= 省份数据 =================
+    const provinces = [
+      { s:'黑', n:'黑龙江', c:'哈尔滨', x:7, y:1, t:0x8899aa, bio: 'snow' },
+      { s:'新', n:'新疆', c:'乌鲁木齐', x:1, y:2, t:0xddccaa, bio: 'desert' },
+      { s:'蒙', n:'内蒙古', c:'呼和浩特', x:5, y:2, t:0xaabb99, bio: 'grass' },
+      { s:'吉', n:'吉林', c:'长春', x:7, y:2, t:0x99aabb, bio: 'snow' },
+      { s:'辽', n:'辽宁', c:'沈阳', x:7, y:3, t:0x8899aa, bio: 'snow' },
+      { s:'青', n:'青海', c:'西宁', x:2, y:3, t:0xaaccbb, bio: 'plateau' },
+      { s:'甘', n:'甘肃', c:'兰州', x:3, y:3, t:0xccaa88, bio: 'desert' },
+      { s:'宁', n:'宁夏', c:'银川', x:4, y:3, t:0xddbb99, bio: 'desert' },
+      { s:'陕', n:'陕西', c:'西安', x:4, y:4, t:0xccaa88, bio: 'loess' },
+      { s:'晋', n:'山西', c:'太原', x:5, y:4, t:0xbb9977, bio: 'loess' },
+      { s:'冀', n:'河北', c:'石家庄', x:6, y:4, t:0xaa9988, bio: 'city' },
+      { s:'京', n:'北京', c:'北京', x:6, y:3, t:0xcc3333, bio: 'forbidden' },
+      { s:'津', n:'天津', c:'天津', x:7, y:4, t:0xaa9988, bio: 'city' },
+      { s:'藏', n:'西藏', c:'拉萨', x:1, y:4, t:0x886655, bio: 'plateau' },
+      { s:'川', n:'四川', c:'成都', x:3, y:4, t:0x88aa88, bio: 'sichuan' },
+      { s:'渝', n:'重庆', c:'重庆', x:4, y:5, t:0xaa6655, bio: 'city' },
+      { s:'豫', n:'河南', c:'郑州', x:5, y:5, t:0xccbb99, bio: 'loess' },
+      { s:'鲁', n:'山东', c:'济南', x:6, y:5, t:0xccbb88, bio: 'city' },
+      { s:'滇', n:'云南', c:'昆明', x:2, y:5, t:0x66aa66, bio: 'forest' },
+      { s:'黔', n:'贵州', c:'贵阳', x:3, y:5, t:0x779977, bio: 'forest' },
+      { s:'湘', n:'湖南', c:'长沙', x:4, y:6, t:0x88aa66, bio: 'forest' },
+      { s:'鄂', n:'湖北', c:'武汉', x:5, y:6, t:0x6688aa, bio: 'water' },
+      { s:'皖', n:'安徽', c:'合肥', x:6, y:6, t:0x99aa88, bio: 'water' },
+      { s:'苏', n:'江苏', c:'南京', x:7, y:6, t:0x88aacc, bio: 'jiangnan' },
+      { s:'沪', n:'上海', c:'上海', x:8, y:6, t:0x6688aa, bio: 'modern' },
+      { s:'桂', n:'广西', c:'南宁', x:3, y:6, t:0x66aa88, bio: 'forest' },
+      { s:'粤', n:'广东', c:'广州', x:4, y:7, t:0xffaa66, bio: 'modern' },
+      { s:'赣', n:'江西', c:'南昌', x:5, y:7, t:0x88aa77, bio: 'jiangnan' },
+      { s:'闽', n:'福建', c:'福州', x:6, y:7, t:0x6699aa, bio: 'sea' },
+      { s:'浙', n:'浙江', c:'杭州', x:7, y:7, t:0x7799aa, bio: 'jiangnan' },
+      { s:'台', n:'台湾', c:'台北', x:8, y:7, t:0x44aaaa, bio: 'sea' },
+      { s:'琼', n:'海南', c:'海口', x:4, y:8, t:0x44aaaa, bio: 'sea' },
+      { s:'港', n:'香港', c:'香港', x:5, y:8, t:0xccaa66, bio: 'modern' },
+      { s:'澳', n:'澳门', c:'澳门', x:6, y:8, t:0xccaa66, bio: 'sea' }
+    ];
+
+    const curProv = { name: '江苏', bio: 'jiangnan', color: 0x88aacc, city: '南京' };
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x1a1410);
+    scene.fog = new THREE.Fog(0x1a1410, 20, 60);
+
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 100);
+    camera.position.set(0, 4.5, 9);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
+    document.body.appendChild(renderer.domElement);
+
+    const ambientLight = new THREE.AmbientLight(0x403020, 0.6);
+    scene.add(ambientLight);
+    const sunLight = new THREE.DirectionalLight(0xffdd99, 1.2);
+    sunLight.position.set(10, 20, 10);
+    sunLight.castShadow = true;
+    sunLight.shadow.mapSize.set(1024, 1024);
+    scene.add(sunLight);
+
+    const celestialGroup = new THREE.Group();
+    const sunMesh = new THREE.Mesh(new THREE.SphereGeometry(2, 16, 16), new THREE.MeshBasicMaterial({color: 0xffaa00}));
+    sunMesh.position.set(40, 15, 0);
+    const moonMesh = new THREE.Mesh(new THREE.SphereGeometry(1.5, 16, 16), new THREE.MeshStandardMaterial({color: 0xeeeeff, emissive: 0x222244}));
+    moonMesh.position.set(-40, 15, 0);
+    celestialGroup.add(sunMesh, moonMesh);
+    scene.add(celestialGroup);
+
+    const starsGeo = new THREE.BufferGeometry();
+    const starCount = 500;
+    const starPos = new Float32Array(starCount * 3);
+    for (let i = 0; i < starCount * 3; i++) starPos[i] = (Math.random() - 0.5) * 100;
+    starsGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+    const starsMat = new THREE.PointsMaterial({color: 0xffffff, size: 0.2, transparent: true, opacity: 0});
+    scene.add(new THREE.Points(starsGeo, starsMat));
+
+    const snowGeo = new THREE.BufferGeometry();
+    const snowCount = 1000;
+    const snowPos = new Float32Array(snowCount * 3);
+    for (let i = 0; i < snowCount * 3; i++) snowPos[i] = (Math.random() - 0.5) * 50;
+    snowGeo.setAttribute('position', new THREE.BufferAttribute(snowPos, 3));
+    const snowMat = new THREE.PointsMaterial({color: 0xffffff, size: 0.15, transparent: true, opacity: 0});
+    const snowField = new THREE.Points(snowGeo, snowMat);
+    scene.add(snowField);
+
+    const rainGeo = new THREE.BufferGeometry();
+    const rainCount = 1500;
+    const rainPos = new Float32Array(rainCount * 3);
+    for (let i = 0; i < rainCount * 3; i++) rainPos[i] = (Math.random() - 0.5) * 60;
+    rainGeo.setAttribute('position', new THREE.BufferAttribute(rainPos, 3));
+    const rainMat = new THREE.PointsMaterial({color: 0xaaaaaa, size: 0.1, transparent: true, opacity: 0});
+    const rainField = new THREE.Points(rainGeo, rainMat);
+    scene.add(rainField);
+
+    const seaGeo = new THREE.PlaneGeometry(60, 400, 30, 30);
+    const seaMat = new THREE.MeshStandardMaterial({ color: 0x00aaff, transparent: true, opacity: 0.7, roughness: 0.2, metalness: 0.3, side: THREE.DoubleSide });
+    const seaMesh = new THREE.Mesh(seaGeo, seaMat);
+    seaMesh.rotation.x = -Math.PI / 2;
+    seaMesh.position.y = -0.5;
+    seaMesh.visible = false;
+    scene.add(seaMesh);
+
+    const player = new THREE.Group();
+    player.userData = { ears: null };
+    const pBody = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.8, 0.4), new THREE.MeshStandardMaterial({color: 0x8a1a1a}));
+    pBody.position.y = 0.5; pBody.castShadow = true;
+    const pHead = new THREE.Mesh(new THREE.SphereGeometry(0.25, 8, 8), new THREE.MeshStandardMaterial({color: 0xe0c8a0}));
+    pHead.position.y = 1.0;
+    player.add(pBody, pHead);
+    player.position.set(0, 0.2, 0);
+    scene.add(player);
+
+    const trackFloorGeo = new THREE.BoxGeometry(6, 0.3, 4);
+    const trackRailGeo = new THREE.BoxGeometry(0.3, 0.1, 4);
+    const trackFloorMat = new THREE.MeshStandardMaterial({color: 0x5a4a3a});
+    const trackRailMat = new THREE.MeshStandardMaterial({color: 0x888888, metalness: 0.8});
+    const tracks = [];
+    for (let i = 0; i < 80; i++) {
+      const g = new THREE.Group();
+      const floor = new THREE.Mesh(trackFloorGeo, trackFloorMat);
+      floor.position.y = -0.15; floor.receiveShadow = true;
+      g.add(floor);
+      [-1.8, 1.8].forEach(x => {
+        const r = new THREE.Mesh(trackRailGeo, trackRailMat);
+        r.position.set(x, 0.05, 0); g.add(r);
+      });
+      g.position.z = -30 + i * 4;
+      tracks.push(g); scene.add(g);
+    }
+
+    const sceneryObjects = [];
+
+    function createGreatWallItem(x, z) {
+      const group = new THREE.Group();
+      if (Math.random() > 0.5) {
+        const base = new THREE.Mesh(getGeo('gw_base', () => new THREE.BoxGeometry(3, 1, 1.5)), getMat('gw_mat', () => new THREE.MeshStandardMaterial({color: 0x9a8a6a})));
+        base.position.y = 0.5;
+        const top = new THREE.Mesh(getGeo('gw_top', () => new THREE.BoxGeometry(3.2, 0.3, 1.7)), getMat('gw_mat2', () => new THREE.MeshStandardMaterial({color: 0x8a7a5a})));
+        top.position.y = 1.15;
+        group.add(base, top);
+        for (let i = -1; i <= 1; i++) {
+          const crenel = new THREE.Mesh(getGeo('gw_crenel', () => new THREE.BoxGeometry(0.4, 0.5, 0.3)), getMat('gw_mat', () => new THREE.MeshStandardMaterial({color: 0x9a8a6a})));
+          crenel.position.set(i * 1.1, 1.55, 0.7);
+          group.add(crenel);
+        }
+      } else {
+        const tower = new THREE.Mesh(getGeo('gw_tower', () => new THREE.BoxGeometry(1.5, 3, 1.5)), getMat('gw_mat', () => new THREE.MeshStandardMaterial({color: 0x9a8a6a})));
+        tower.position.y = 1.5;
+        const roof = new THREE.Mesh(getGeo('gw_roof', () => new THREE.ConeGeometry(1.2, 0.6, 4)), getMat('gw_mat3', () => new THREE.MeshStandardMaterial({color: 0x6a5a4a})));
+        roof.position.y = 3.3; roof.rotation.y = Math.PI / 4;
+        group.add(tower, roof);
+      }
+      group.position.set(x, 0, z);
       return group;
     }
 
-    function spawnSkateboardItem(zPos) {
-      const lane = Math.floor(Math.random() * 3) - 1;
-      const x = lane * 1.8;
-      const mesh = createSkateboardMesh(x, zPos);
-      scene.add(mesh);
-      skateboardMeshes.push(mesh);
-    }
-
-    for (let i = 0; i < 3; i++) {
-      spawnSkateboardItem(20 + i * 20 + Math.random() * 10);
-    }
-
-    // ========== 列车 ==========
-    const trainGroup = new THREE.Group();
-    function createCarriage(offsetX, offsetZ) {
-      const g = new THREE.Group();
-      const matCar = new THREE.MeshStandardMaterial({ color: 0x4a2a1a, roughness: 0.8, emissive: new THREE.Color(0x1a0a00), emissiveIntensity: 0.1 });
-      const bodyCar = new THREE.Mesh(new THREE.BoxGeometry(1.6, 1.2, 2.5), matCar);
-      bodyCar.position.y = 0.6;
-      bodyCar.castShadow = true;
-      bodyCar.receiveShadow = true;
-      g.add(bodyCar);
-      const winMat = new THREE.MeshStandardMaterial({ color: 0xf0d090, emissive: new THREE.Color(0x886633), emissiveIntensity: 0.2 });
-      for (let i = -1; i <= 1; i+=2) {
-        const win = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.3, 0.1), winMat);
-        win.position.set(i * 0.5, 0.7, 1.26);
-        g.add(win);
-        const win2 = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.3, 0.1), winMat);
-        win2.position.set(i * 0.5, 0.7, -1.26);
-        g.add(win2);
+    function createTerraCottaItem(x, z) {
+      const group = new THREE.Group();
+      const count = 2 + Math.floor(Math.random() * 3);
+      const bodyGeo = getGeo('tc_body', () => new THREE.CylinderGeometry(0.25, 0.3, 1.2, 6));
+      const headGeo = getGeo('tc_head', () => new THREE.SphereGeometry(0.2, 8, 8));
+      const bodyMat = getMat('tc_body_mat', () => new THREE.MeshStandardMaterial({color: 0x8a7a5a}));
+      const headMat = getMat('tc_head_mat', () => new THREE.MeshStandardMaterial({color: 0x9a8a6a}));
+      for (let i = 0; i < count; i++) {
+        const soldier = new THREE.Group();
+        const body = new THREE.Mesh(bodyGeo, bodyMat);
+        body.position.y = 0.6;
+        const head = new THREE.Mesh(headGeo, headMat);
+        head.position.y = 1.35;
+        soldier.add(body, head);
+        soldier.position.set((Math.random() - 0.5) * 1.5, 0, (Math.random() - 0.5) * 1.5);
+        soldier.rotation.y = Math.random() * Math.PI * 2;
+        group.add(soldier);
       }
-      const roofMat = new THREE.MeshStandardMaterial({ color: 0x3a2a1a });
-      const roofDec = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.1, 1.0), roofMat);
-      roofDec.position.y = 1.2;
-      g.add(roofDec);
-      g.position.set(offsetX, 0, offsetZ);
-      return g;
+      group.position.set(x, 0, z);
+      return group;
     }
 
-    const trainPositions = [
-      { x: 0, z: 0 },
-      { x: 0, z: -3.0 },
-      { x: 0, z: -6.0 }
+    function createOperaItem(x, z) {
+      const group = new THREE.Group();
+      const pole = new THREE.Mesh(getGeo('op_pole', () => new THREE.CylinderGeometry(0.08, 0.1, 2.5, 6)), getMat('op_pole_mat', () => new THREE.MeshStandardMaterial({color: 0x4a2a1a})));
+      pole.position.y = 1.25;
+      const face = new THREE.Mesh(getGeo('op_face', () => new THREE.CircleGeometry(0.5, 16)), getMat('op_face_mat', () => new THREE.MeshStandardMaterial({color: 0xffffff, side: THREE.DoubleSide})));
+      face.position.y = 2.7;
+      const redPart = new THREE.Mesh(getGeo('op_red', () => new THREE.CircleGeometry(0.5, 16, 0, Math.PI)), getMat('op_red_mat', () => new THREE.MeshStandardMaterial({color: 0xcc2222, side: THREE.DoubleSide})));
+      redPart.position.set(0, 2.7, 0.01);
+      group.add(pole, face, redPart);
+      group.position.set(x, 0, z);
+      return group;
+    }
+
+    function createPandaExpressItem(x, z) {
+      const group = new THREE.Group();
+      const body = new THREE.Mesh(getGeo('pe_body', () => new THREE.BoxGeometry(3, 1.5, 1)), getMat('pe_body_mat', () => new THREE.MeshStandardMaterial({color: 0xffffff})));
+      body.position.y = 1;
+      const front = new THREE.Mesh(getGeo('pe_front', () => new THREE.BoxGeometry(0.3, 1.5, 1)), getMat('pe_front_mat', () => new THREE.MeshStandardMaterial({color: 0x111111})));
+      front.position.set(1.65, 1, 0);
+      const winMat = getMat('pe_win_mat', () => new THREE.MeshStandardMaterial({color: 0x44aaff, emissive: 0x224466}));
+      const winGeo = getGeo('pe_win', () => new THREE.BoxGeometry(0.4, 0.4, 0.05));
+      for (let i = -1; i <= 1; i++) {
+        const win = new THREE.Mesh(winGeo, winMat);
+        win.position.set(i * 0.9, 1.3, 0.51);
+        group.add(win);
+      }
+      const earGeo = getGeo('pe_ear', () => new THREE.SphereGeometry(0.2, 8, 8));
+      const earMat = getMat('pe_ear_mat', () => new THREE.MeshStandardMaterial({color: 0x111111}));
+      const earL = new THREE.Mesh(earGeo, earMat);
+      earL.position.set(1.2, 2, 0);
+      const earR = new THREE.Mesh(earGeo, earMat);
+      earR.position.set(1.2, 2, 0.3);
+      group.add(body, front, earL, earR);
+      group.position.set(x, 0, z);
+      return group;
+    }
+
+    function createDesertItem(x, z) {
+      const group = new THREE.Group();
+      if (Math.random() > 0.5) {
+        const sand = new THREE.Mesh(getGeo('des_sand', () => new THREE.ConeGeometry(2, 1, 4)), getMat('des_sand_mat', () => new THREE.MeshStandardMaterial({color: 0xe6c288, roughness: 1})));
+        sand.position.y = 0.5;
+        sand.scale.set(1 + Math.random() * 0.5, 1 + Math.random() * 0.5, 1);
+        group.add(sand);
+      } else {
+        const cactus = new THREE.Mesh(getGeo('des_cactus', () => new THREE.CylinderGeometry(0.2, 0.2, 1.5, 5)), getMat('des_cactus_mat', () => new THREE.MeshStandardMaterial({color: 0x228822})));
+        cactus.position.y = 0.75; group.add(cactus);
+      }
+      group.position.set(x, 0, z);
+      return group;
+    }
+
+    function createPlateauItem(x, z) {
+      const group = new THREE.Group();
+      const type = Math.random();
+      if (type > 0.6) {
+        const pole = new THREE.Mesh(getGeo('pla_pole', () => new THREE.CylinderGeometry(0.1, 0.15, 4, 6)), getMat('pla_pole_mat', () => new THREE.MeshStandardMaterial({color: 0xffffff})));
+        pole.position.y = 2;
+        const blades = new THREE.Group();
+        const blade = new THREE.Mesh(getGeo('pla_blade', () => new THREE.BoxGeometry(0.1, 2.5, 0.1)), getMat('pla_blade_mat', () => new THREE.MeshStandardMaterial({color: 0xeeeeee})));
+        blade.position.y = 1.25;
+        for (let i = 0; i < 3; i++) { const b = blade.clone(); b.rotation.z = (i * 120) * Math.PI / 180; blades.add(b); }
+        blades.position.y = 4;
+        blades.userData = { isBlade: true, speed: 0.05 + Math.random() * 0.05 };
+        group.add(pole, blades);
+      } else if (type > 0.3) {
+        const yak = new THREE.Mesh(getGeo('pla_yak', () => new THREE.BoxGeometry(0.8, 0.6, 1.2)), getMat('pla_yak_mat', () => new THREE.MeshStandardMaterial({color: 0x333333})));
+        yak.position.y = 0.3; group.add(yak);
+      } else {
+        const sheep = new THREE.Mesh(getGeo('pla_sheep', () => new THREE.SphereGeometry(0.4, 8, 8)), getMat('pla_sheep_mat', () => new THREE.MeshStandardMaterial({color: 0xffffff})));
+        sheep.position.y = 0.4; group.add(sheep);
+      }
+      group.position.set(x, 0, z);
+      return group;
+    }
+
+    function createForbiddenItem(x, z) {
+      const group = new THREE.Group();
+      const r = Math.random();
+      if (r > 0.7) {
+        const wall = new THREE.Mesh(getGeo('for_wall', () => new THREE.BoxGeometry(3, 2.5, 0.5)), getMat('for_wall_mat', () => new THREE.MeshStandardMaterial({color: 0xcc3333})));
+        wall.position.y = 1.25; group.add(wall);
+        const roof = new THREE.Mesh(getGeo('for_roof', () => new THREE.ConeGeometry(1.8, 0.8, 4)), getMat('for_roof_mat', () => new THREE.MeshStandardMaterial({color: 0xffcc00})));
+        roof.position.y = 2.9; roof.rotation.y = Math.PI / 4; group.add(roof);
+      } else if (r > 0.4) {
+        const pillar = new THREE.Mesh(getGeo('for_pillar', () => new THREE.CylinderGeometry(0.3, 0.3, 4, 8)), getMat('for_pillar_mat', () => new THREE.MeshStandardMaterial({color: 0xaa2222})));
+        pillar.position.y = 2; group.add(pillar);
+      } else {
+        const sub = createOperaItem(0, 0);
+        group.add(sub);
+      }
+      group.position.set(x, 0, z);
+      return group;
+    }
+
+    function createSnowItem(x, z) {
+      const group = new THREE.Group();
+      if (Math.random() > 0.3) {
+        const body = new THREE.Mesh(getGeo('snow_body', () => new THREE.SphereGeometry(0.5, 8, 8)), getMat('snow_body_mat', () => new THREE.MeshStandardMaterial({color: 0xffffff})));
+        body.position.y = 0.5;
+        const head = new THREE.Mesh(getGeo('snow_head', () => new THREE.SphereGeometry(0.3, 8, 8)), getMat('snow_head_mat', () => new THREE.MeshStandardMaterial({color: 0xffffff})));
+        head.position.y = 1.1;
+        const scarf = new THREE.Mesh(getGeo('snow_scarf', () => new THREE.TorusGeometry(0.3, 0.05, 8, 16)), getMat('snow_scarf_mat', () => new THREE.MeshStandardMaterial({color: 0xff0000})));
+        scarf.position.y = 0.9; scarf.rotation.x = Math.PI / 2;
+        group.add(body, head, scarf);
+      } else {
+        const ice = new THREE.Mesh(getGeo('snow_ice', () => new THREE.ConeGeometry(0.3, 1.5, 4)), getMat('snow_ice_mat', () => new THREE.MeshStandardMaterial({color: 0xaaddff, transparent: true, opacity: 0.8})));
+        ice.position.y = 0.75; group.add(ice);
+      }
+      group.position.set(x, 0, z);
+      return group;
+    }
+
+    function createGrassItem(x, z) {
+      const group = new THREE.Group();
+      if (Math.random() > 0.5) {
+        const base = new THREE.Mesh(getGeo('gra_base', () => new THREE.CylinderGeometry(0.8, 0.8, 0.8, 16)), getMat('gra_base_mat', () => new THREE.MeshStandardMaterial({color: 0xffffff})));
+        base.position.y = 0.4;
+        const roof = new THREE.Mesh(getGeo('gra_roof', () => new THREE.ConeGeometry(0.9, 0.6, 16)), getMat('gra_roof_mat', () => new THREE.MeshStandardMaterial({color: 0xeeeeee})));
+        roof.position.y = 1.1;
+        group.add(base, roof);
+      } else {
+        const cowMat = getMat('gra_cow_w', () => new THREE.MeshStandardMaterial({color: 0xffffff}));
+        const cowMat2 = getMat('gra_cow_b', () => new THREE.MeshStandardMaterial({color: 0x333333}));
+        const cow = new THREE.Mesh(getGeo('gra_cow', () => new THREE.BoxGeometry(0.8, 0.6, 1.2)), Math.random() > 0.5 ? cowMat : cowMat2);
+        cow.position.y = 0.3; group.add(cow);
+      }
+      group.position.set(x, 0, z);
+      return group;
+    }
+
+    function createLoessItem(x, z) {
+      const group = new THREE.Group();
+      const r = Math.random();
+      if (r > 0.6) {
+        const cave = new THREE.Mesh(getGeo('loe_cave', () => new THREE.BoxGeometry(2, 1.5, 1)), getMat('loe_cave_mat', () => new THREE.MeshStandardMaterial({color: 0xccaa88})));
+        cave.position.y = 0.75;
+        const entrance = new THREE.Mesh(getGeo('loe_ent', () => new THREE.SphereGeometry(0.6, 16, 16, 0, Math.PI * 2, 0, Math.PI / 2)), getMat('loe_ent_mat', () => new THREE.MeshStandardMaterial({color: 0x332211})));
+        entrance.position.set(0, 0.75, 0.51); entrance.rotation.x = Math.PI;
+        group.add(cave, entrance);
+      } else if (r > 0.3) {
+        const drum = new THREE.Mesh(getGeo('loe_drum', () => new THREE.CylinderGeometry(0.3, 0.3, 0.4, 8)), getMat('loe_drum_mat', () => new THREE.MeshStandardMaterial({color: 0xff4444})));
+        drum.position.y = 0.2; drum.rotation.z = Math.PI / 2; group.add(drum);
+      } else {
+        const sub = createTerraCottaItem(0, 0);
+        group.add(sub);
+      }
+      group.position.set(x, 0, z);
+      return group;
+    }
+
+    function createSeaItem(x, z) {
+      const group = new THREE.Group();
+      if (Math.random() > 0.4) {
+        const trunk = new THREE.Mesh(getGeo('sea_trunk', () => new THREE.CylinderGeometry(0.12, 0.18, 2.5, 6)), getMat('sea_trunk_mat', () => new THREE.MeshStandardMaterial({color: 0x8B6914})));
+        trunk.position.y = 1.25; trunk.rotation.z = (Math.random() - 0.5) * 0.2;
+        const leaves = new THREE.Group();
+        const leafGeo = getGeo('sea_leaf', () => new THREE.ConeGeometry(0.3, 1.2, 4));
+        const leafMat = getMat('sea_leaf_mat', () => new THREE.MeshStandardMaterial({color: 0x22aa22}));
+        for (let i = 0; i < 5; i++) {
+          const leaf = new THREE.Mesh(leafGeo, leafMat);
+          leaf.rotation.z = Math.PI / 3; leaf.rotation.y = (i / 5) * Math.PI * 2; leaf.position.y = 0.3;
+          leaves.add(leaf);
+        }
+        leaves.position.y = 2.5;
+        const nut = new THREE.Mesh(getGeo('sea_nut', () => new THREE.SphereGeometry(0.12, 6, 6)), getMat('sea_nut_mat', () => new THREE.MeshStandardMaterial({color: 0x6B4226})));
+        nut.position.set(0.15, 2.3, 0);
+        group.add(trunk, leaves, nut);
+      } else {
+        const board = new THREE.Mesh(getGeo('sea_board', () => new THREE.BoxGeometry(0.3, 1.2, 0.08)), getMat('sea_board_mat', () => new THREE.MeshStandardMaterial({color: 0xff6644})));
+        board.position.y = 0.6; board.rotation.z = 0.2; board.rotation.y = Math.random();
+        group.add(board);
+      }
+      group.position.set(x, 0, z);
+      return group;
+    }
+
+    function createJiangnanItem(x, z) {
+      const group = new THREE.Group();
+      if (Math.random() > 0.5) {
+        const wall = new THREE.Mesh(getGeo('jia_wall', () => new THREE.BoxGeometry(2, 1.5, 0.5)), getMat('jia_wall_mat', () => new THREE.MeshStandardMaterial({color: 0xeeeeee})));
+        wall.position.y = 0.75;
+        const roof = new THREE.Mesh(getGeo('jia_roof', () => new THREE.ConeGeometry(1.2, 0.8, 4)), getMat('jia_roof_mat', () => new THREE.MeshStandardMaterial({color: 0x333333})));
+        roof.position.y = 1.8; roof.rotation.y = Math.PI / 4;
+        group.add(wall, roof);
+      } else {
+        const trunk = new THREE.Mesh(getGeo('jia_trunk', () => new THREE.CylinderGeometry(0.1, 0.15, 1.5, 6)), getMat('jia_trunk_mat', () => new THREE.MeshStandardMaterial({color: 0x5a4a3a})));
+        trunk.position.y = 0.75;
+        const leaves = new THREE.Mesh(getGeo('jia_leaves', () => new THREE.ConeGeometry(0.8, 1.2, 8)), getMat('jia_leaves_mat', () => new THREE.MeshStandardMaterial({color: 0x88aa44})));
+        leaves.position.y = 1.8;
+        group.add(trunk, leaves);
+      }
+      group.position.set(x, 0, z);
+      return group;
+    }
+
+    function createModernItem(x, z) {
+      const group = new THREE.Group();
+      if (Math.random() > 0.5) {
+        const building = new THREE.Mesh(getGeo('mod_build', () => new THREE.BoxGeometry(1.5, 5, 1.5)), getMat('mod_build_mat', () => new THREE.MeshStandardMaterial({color: 0x445566, emissive: 0x112233, emissiveIntensity: 0.2})));
+        building.position.y = 2;
+        building.scale.y = 0.8 + Math.random() * 0.6;
+        group.add(building);
+      } else {
+        const pole = new THREE.Mesh(getGeo('mod_pole', () => new THREE.CylinderGeometry(0.1, 0.1, 2.5, 8)), getMat('mod_pole_mat', () => new THREE.MeshStandardMaterial({color: 0x888888})));
+        pole.position.y = 1.25;
+        const light = new THREE.Mesh(getGeo('mod_light', () => new THREE.SphereGeometry(0.2, 8, 8)), getMat('mod_light_mat', () => new THREE.MeshStandardMaterial({color: 0x00ffff, emissive: 0x00ffff, emissiveIntensity: 1})));
+        light.position.y = 2.5;
+        group.add(pole, light);
+      }
+      group.position.set(x, 0, z);
+      return group;
+    }
+
+    function createForestItem(x, z) {
+      const group = new THREE.Group();
+      if (Math.random() > 0.5) {
+        const stem = new THREE.Mesh(getGeo('for2_stem', () => new THREE.CylinderGeometry(0.05, 0.05, 1, 4)), getMat('for2_stem_mat', () => new THREE.MeshStandardMaterial({color: 0x44aa44})));
+        stem.position.y = 0.5;
+        const leaf = new THREE.Mesh(getGeo('for2_leaf', () => new THREE.BoxGeometry(0.8, 0.1, 0.4)), getMat('for2_leaf_mat', () => new THREE.MeshStandardMaterial({color: 0x228822})));
+        leaf.position.y = 1; leaf.rotation.z = 0.5;
+        group.add(stem, leaf);
+      } else {
+        const bamboo = new THREE.Mesh(getGeo('for2_bamboo', () => new THREE.CylinderGeometry(0.1, 0.12, 3, 8)), getMat('for2_bamboo_mat', () => new THREE.MeshStandardMaterial({color: 0x66aa44})));
+        bamboo.position.y = 1.5;
+        group.add(bamboo);
+      }
+      group.position.set(x, 0, z);
+      return group;
+    }
+
+    function createSichuanItem(x, z) {
+      const group = new THREE.Group();
+      const r = Math.random();
+      if (r > 0.75) {
+        const sub = createPandaExpressItem(0, 0);
+        group.add(sub);
+      } else if (r > 0.4) {
+        const body = new THREE.Mesh(getGeo('sic_body', () => new THREE.SphereGeometry(0.5, 8, 8)), getMat('sic_body_mat', () => new THREE.MeshStandardMaterial({color: 0xffffff})));
+        body.position.y = 0.5;
+        const head = new THREE.Mesh(getGeo('sic_head', () => new THREE.SphereGeometry(0.35, 8, 8)), getMat('sic_head_mat', () => new THREE.MeshStandardMaterial({color: 0xffffff})));
+        head.position.y = 1.0;
+        const earGeo = getGeo('sic_ear', () => new THREE.SphereGeometry(0.12, 6, 6));
+        const earMat = getMat('sic_ear_mat', () => new THREE.MeshStandardMaterial({color: 0x111111}));
+        const earL = new THREE.Mesh(earGeo, earMat);
+        earL.position.set(-0.25, 1.25, 0);
+        const earR = new THREE.Mesh(earGeo, earMat);
+        earR.position.set(0.25, 1.25, 0);
+        const eyeGeo = getGeo('sic_eye', () => new THREE.SphereGeometry(0.08, 6, 6));
+        const eyeL = new THREE.Mesh(eyeGeo, earMat);
+        eyeL.position.set(-0.12, 1.05, 0.25);
+        const eyeR = new THREE.Mesh(eyeGeo, earMat);
+        eyeR.position.set(0.12, 1.05, 0.25);
+        group.add(body, head, earL, earR, eyeL, eyeR);
+      } else {
+        const bamboo = new THREE.Mesh(getGeo('sic_bamboo', () => new THREE.CylinderGeometry(0.15, 0.18, 3.5, 8)), getMat('sic_bamboo_mat', () => new THREE.MeshStandardMaterial({color: 0x55aa55})));
+        bamboo.position.y = 1.75;
+        const joint = new THREE.Mesh(getGeo('sic_joint', () => new THREE.TorusGeometry(0.18, 0.02, 4, 8)), getMat('sic_joint_mat', () => new THREE.MeshStandardMaterial({color: 0x338833})));
+        joint.position.y = 1.0; joint.rotation.x = Math.PI / 2;
+        const joint2 = new THREE.Mesh(getGeo('sic_joint', () => new THREE.TorusGeometry(0.18, 0.02, 4, 8)), getMat('sic_joint_mat', () => new THREE.MeshStandardMaterial({color: 0x338833})));
+        joint2.position.y = 2.5; joint2.rotation.x = Math.PI / 2;
+        group.add(bamboo, joint, joint2);
+      }
+      group.position.set(x, 0, z);
+      return group;
+    }
+
+    function createCityItem(x, z) {
+      const group = new THREE.Group();
+      const r = Math.random();
+      if (r > 0.75) {
+        const sub = createGreatWallItem(0, 0);
+        group.add(sub);
+      } else if (r > 0.4) {
+        const pole = new THREE.Mesh(getGeo('cit_pole', () => new THREE.CylinderGeometry(0.08, 0.1, 2, 6)), getMat('cit_pole_mat', () => new THREE.MeshStandardMaterial({color: 0x4a2a1a})));
+        pole.position.y = 1;
+        const lantern = new THREE.Mesh(getGeo('cit_lantern', () => new THREE.SphereGeometry(0.3, 8, 8)), getMat('cit_lantern_mat', () => new THREE.MeshStandardMaterial({color: 0xff4444, emissive: 0xff0000, emissiveIntensity: 0.5})));
+        lantern.position.y = 1.8; group.add(pole, lantern);
+      } else {
+        const trunk = new THREE.Mesh(getGeo('cit_trunk', () => new THREE.CylinderGeometry(0.1, 0.15, 1, 6)), getMat('cit_trunk_mat', () => new THREE.MeshStandardMaterial({color: 0x5a4a3a})));
+        trunk.position.y = 0.5;
+        const leaves = new THREE.Mesh(getGeo('cit_leaves', () => new THREE.ConeGeometry(0.8, 1.5, 8)), getMat('cit_leaves_mat', () => new THREE.MeshStandardMaterial({color: 0x228822})));
+        leaves.position.y = 1.5; group.add(trunk, leaves);
+      }
+      group.position.set(x, 0, z);
+      return group;
+    }
+
+    // ================= 游戏状态 =================
+    let score = 0, coins = 0;
+    let bestScore = parseInt(localStorage.getItem('metro_best') || '0', 10);
+    document.getElementById('bestVal').textContent = bestScore;
+
+    let gameOver = false, paused = false, cdActive = false;
+    let lane = 0, targetLane = 0;
+    let isJumping = false, jumpV = 0, canDoubleJump = false;
+    let isSliding = false, slideTimer = 0;
+    const SLIDE_DURATION = 40;
+    let speed = 0.15;
+    let combo = 0, comboTimer = 0, maxCombo = 0;
+    let cameraShake = 0;
+    let isFirstPlay = !localStorage.getItem('metro_has_played');
+    let lastSkinScore = 0;
+    let itemsUsed = 0;
+    let distance = 0;
+    let tipTimer = 0;
+
+    const achievements = {
+      firstFly: { name: '首次飞行', got: false },
+      combo50: { name: '五十连击', got: false },
+      combo100: { name: '百连击', got: false },
+      score1000: { name: '千里之行', got: false },
+      score3000: { name: '三千里路', got: false },
+      allProv: { name: '走遍神州', got: false },
+      coin500: { name: '五百金', got: false },
+      distance2000: { name: '两千米', got: false },
+      noItem1000: { name: '真功夫', got: false }
+    };
+    const visitedProvs = new Set(['江苏']);
+
+    const pus = {
+      magnet: { on: false, t: 0, el: document.getElementById('eff-magnet') },
+      double: { on: false, t: 0, el: document.getElementById('eff-double') },
+      skate: { on: false, t: 0, el: document.getElementById('eff-skate') },
+      jet: { on: false, t: 0, el: document.getElementById('eff-jet') }
+    };
+    let doubleMul = 1;
+
+    let obstacles = [], coinObjs = [], itemObjs = [], particles = [];
+
+    let lastObstacleZ = 0;
+    const waveGroups = new Map();
+
+    function spawnObstacle(z) {
+      if (z < lastObstacleZ + 20) z = lastObstacleZ + 20;
+      lastObstacleZ = z;
+      const lanes = [0, 1, 2];
+      const shuffled = lanes.sort(() => Math.random() - 0.5);
+      const blockCount = Math.random() > 0.6 ? 2 : 1;
+      const blocked = shuffled.slice(0, blockCount);
+      const lowIndex = blockCount === 2 ? Math.floor(Math.random() * 2) : -1;
+      if (!waveGroups.has(z)) waveGroups.set(z, []);
+      const highGeo = getGeo('obs_high', () => new THREE.BoxGeometry(1.5, 1.5, 0.5));
+      const lowGeo = getGeo('obs_low', () => new THREE.CylinderGeometry(0.4, 0.5, 1, 6));
+      const obsMat = getMat('obs_mat', () => new THREE.MeshStandardMaterial({color: 0x7a6a5a}));
+      const movingGeo = getGeo('obs_moving', () => new THREE.BoxGeometry(1, 1, 0.5));
+      const movingMat = getMat('obs_moving_mat', () => new THREE.MeshStandardMaterial({color: 0xaa4466, emissive: 0x441122, emissiveIntensity: 0.3}));
+      blocked.forEach((laneIdx, i) => {
+        const l = laneIdx - 1;
+        const x = l * 1.8;
+        const isHigh = dailyHard ? true : (blockCount === 2 ? (i !== lowIndex) : (Math.random() > 0.7));
+        const isMoving = !dailyHard && blockCount === 1 && Math.random() < 0.1;
+        const mesh = isMoving 
+          ? new THREE.Mesh(movingGeo, movingMat)
+          : new THREE.Mesh(isHigh ? highGeo : lowGeo, obsMat);
+        mesh.position.set(x, isMoving ? 0.5 : (isHigh ? 1.5 : 0.5), z);
+        mesh.userData = { 
+          isHigh: isMoving ? false : isHigh, 
+          waveZ: z,
+          isMoving: isMoving,
+          baseX: x,
+          movePhase: Math.random() * Math.PI * 2,
+          moveSpeed: 0.02 + Math.random() * 0.02
+        };
+        mesh.castShadow = true;
+        scene.add(mesh);
+        obstacles.push(mesh);
+        waveGroups.get(z).push(mesh);
+      });
+    }
+
+    const coinGeo = new THREE.TorusGeometry(0.2, 0.05, 6, 12);
+    const coinMat = new THREE.MeshStandardMaterial({color: 0xffd966, emissive: 0xffaa00, emissiveIntensity: 0.5});
+    const itemGeos = [
+      new THREE.BoxGeometry(1.5, 0.1, 0.6),
+      new THREE.TorusGeometry(0.3, 0.1, 8, 16),
+      new THREE.OctahedronGeometry(0.3),
+      new THREE.ConeGeometry(0.3, 0.8, 8)
     ];
-    trainPositions.forEach(pos => {
-      const car = createCarriage(pos.x, pos.z);
-      trainGroup.add(car);
-    });
-    trainGroup.position.set(0, 0.2, -10);
-    scene.add(trainGroup);
+    const itemMats = [
+      new THREE.MeshStandardMaterial({color: 0x8b5a2b, emissive: 0x8b5a2b, emissiveIntensity: 0.5}),
+      new THREE.MeshStandardMaterial({color: 0xff4444, emissive: 0xff4444, emissiveIntensity: 0.5}),
+      new THREE.MeshStandardMaterial({color: 0x44ffff, emissive: 0x44ffff, emissiveIntensity: 0.5}),
+      new THREE.MeshStandardMaterial({color: 0x4444ff, emissive: 0x4444ff, emissiveIntensity: 0.5})
+    ];
 
-    // ========== 游戏状态 ==========
-    let score = 0;
-    let gameOver = false;
-    let paused = false;              // 暂停状态
-    let countdownActive = false;     // 倒计时状态
-    let targetLane = 0;
-    let currentLane = 0;
-    let isJumping = false;
-    let jumpVelocity = 0;
-    const gravity = -0.025;
-    const jumpPower = 0.32;
-    
-    let baseSpeed = 0.12;
-    const maxSpeed = 0.45;
-    const speedThreshold = 500;
+    function spawn(type, z) {
+      if (type === 'obs') { spawnObstacle(z); return; }
+      if (type === 'item' && dailyNoItem) return;
+      const l = Math.floor(Math.random() * 3) - 1;
+      const x = l * 1.8;
+      let mesh;
+      if (type === 'coin') {
+        mesh = new THREE.Mesh(coinGeo, coinMat);
+        mesh.position.set(x, 0.8, z);
+        mesh.rotation.x = Math.PI / 2;
+      } else {
+        const kind = Math.floor(Math.random() * 4) + 1;
+        mesh = new THREE.Mesh(itemGeos[kind - 1], itemMats[kind - 1]);
+        mesh.position.set(x, 0.8, z);
+        mesh.userData = { kind: kind };
+      }
+      mesh.castShadow = true;
+      scene.add(mesh);
+      if (type === 'coin') coinObjs.push(mesh);
+      else itemObjs.push(mesh);
+    }
 
-    const scoreSpan = document.getElementById('scoreValue');
+    const particleGeo = new THREE.BoxGeometry(0.1, 0.1, 0.1);
+    const particleMats = {
+      0xffd966: new THREE.MeshBasicMaterial({color: 0xffd966}),
+      0x888888: new THREE.MeshBasicMaterial({color: 0x888888}),
+      0xffffff: new THREE.MeshBasicMaterial({color: 0xffffff})
+    };
+    const trailGeo = new THREE.SphereGeometry(0.08, 4, 4);
+    const trailMat = new THREE.MeshBasicMaterial({color: 0xffd966, transparent: true, opacity: 0.8});
 
-    // 当前选中省份
-    let currentProvince = '江苏';
-    let currentCapital = '南京';
-
-    // 地图键盘导航状态
-    let mapKeyboardMode = false;
-    let keyboardIndex = provinces.findIndex(p => p.full === currentProvince);
-
-    // 更新站点标签
-    function updateTitle() {
-      const label = document.getElementById('stationLabel');
-      if (label) {
-        label.textContent = `${currentCapital}地铁 · 神州行`;
+    function initScenery() {
+      sceneryObjects.forEach(o => scene.remove(o));
+      sceneryObjects.length = 0;
+      for (let i = 0; i < 60; i++) {
+        const z = -30 + i * 5;
+        const side = Math.random() > 0.5 ? 1 : -1;
+        const x = side * (4 + Math.random() * 6);
+        let obj;
+        const bio = curProv.bio;
+        if (bio === 'desert') obj = createDesertItem(x, z);
+        else if (bio === 'plateau') obj = createPlateauItem(x, z);
+        else if (bio === 'forbidden') obj = createForbiddenItem(x, z);
+        else if (bio === 'snow') obj = createSnowItem(x, z);
+        else if (bio === 'grass') obj = createGrassItem(x, z);
+        else if (bio === 'loess') obj = createLoessItem(x, z);
+        else if (bio === 'sea') obj = createSeaItem(x, z);
+        else if (bio === 'jiangnan') obj = createJiangnanItem(x, z);
+        else if (bio === 'modern') obj = createModernItem(x, z);
+        else if (bio === 'forest') obj = createForestItem(x, z);
+        else if (bio === 'sichuan') obj = createSichuanItem(x, z);
+        else obj = createCityItem(x, z);
+        scene.add(obj);
+        sceneryObjects.push(obj);
       }
     }
-    updateTitle();
 
-    // ========== 地图渲染 ==========
-    const mapContainer = document.getElementById('map-container');
-    const mapTitle = document.getElementById('map-title');
-    const mapToggleHint = document.getElementById('map-toggle-hint');
+    function explode(pos, col) {
+      const mat = particleMats[col] || particleMats[0xffffff];
+      for (let i = 0; i < 10; i++) {
+        const p = new THREE.Mesh(particleGeo, mat);
+        p.position.copy(pos);
+        p.userData = {
+          v: new THREE.Vector3((Math.random() - 0.5) * 0.3, Math.random() * 0.3, (Math.random() - 0.5) * 0.3),
+          life: 1
+        };
+        scene.add(p); particles.push(p);
+      }
+    }
+
+    function coinTrail(pos) {
+      const p = new THREE.Mesh(trailGeo, trailMat);
+      p.position.copy(pos);
+      p.userData = { v: new THREE.Vector3(0, 0.02, 0), life: 1, fade: true };
+      scene.add(p); particles.push(p);
+    }
+
+    function floatText(text, worldX, worldY) {
+      const v = new THREE.Vector3(worldX, worldY, player.position.z);
+      v.project(camera);
+      const x = (v.x * 0.5 + 0.5) * window.innerWidth;
+      const y = (-v.y * 0.5 + 0.5) * window.innerHeight;
+      const el = document.createElement('div');
+      el.className = 'float-text';
+      el.textContent = text;
+      el.style.left = x + 'px';
+      el.style.top = y + 'px';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 1000);
+    }
+
+    function updateDayNight() {
+      const cycle = Math.floor(score / 100);
+      const progress = (score % 100) / 100;
+      const isDay = cycle % 2 === 0;
+      const targetColor = isDay ? new THREE.Color(0x87CEEB) : new THREE.Color(0x0a0a1a);
+      scene.background.lerp(targetColor, 0.05);
+      scene.fog.color.lerp(scene.background, 0.05);
+      celestialGroup.rotation.y = progress * Math.PI * 2;
+      const starTarget = isDay ? 0 : 1;
+      starsMat.opacity += (starTarget - starsMat.opacity) * 0.05;
+      sunLight.intensity = isDay ? 1.2 : 0.1;
+      ambientLight.intensity = isDay ? 0.6 : 0.2;
+    }
+
+    function updateSea(time) {
+      if (curProv.bio !== 'sea') { seaMesh.visible = false; return; }
+      seaMesh.visible = true;
+      seaMesh.position.z = player.position.z;
+      const pos = seaGeo.attributes.position;
+      for (let i = 0; i < pos.count; i++) {
+        const x = pos.getX(i);
+        const y = pos.getY(i);
+        pos.setZ(i, Math.sin(x * 0.5 + time * 2) * 0.3 + Math.cos(y * 0.3 + time * 1.5) * 0.2);
+      }
+      pos.needsUpdate = true;
+    }
+
+    const mapBox = document.getElementById('map-container');
     const grid = document.getElementById('map-grid');
-    const pauseMask = document.getElementById('pause-mask');
-    const countdownMask = document.getElementById('countdown-mask');
-    const countdownText = document.getElementById('countdownText');
-    const countdownSub = document.getElementById('countdownSub');
 
     function renderMap() {
       grid.innerHTML = '';
-      provinces.forEach((p, idx) => {
+      provinces.forEach(p => {
         const btn = document.createElement('div');
-        btn.className = 'province-btn' + (p.full === currentProvince ? ' active' : '');
-        btn.textContent = p.short;
-        btn.title = `${p.full} · ${p.capital}`;
-        btn.dataset.index = idx;
-        // 按地理坐标放置
-        btn.style.gridColumn = p.col;
-        btn.style.gridRow = p.row;
-        btn.addEventListener('click', () => {
-          if (gameOver) return;
-          selectProvince(idx);
-        });
+        btn.className = 'prov-btn' + (p.n === curProv.name ? ' active' : '');
+        btn.textContent = p.s;
+        btn.style.gridColumn = p.x; btn.style.gridRow = p.y;
+        btn.onclick = () => selectProv(p);
         grid.appendChild(btn);
       });
     }
 
-    function selectProvince(idx) {
-      const p = provinces[idx];
-      currentProvince = p.full;
-      currentCapital = p.capital;
-      updateTitle();
-      document.querySelectorAll('.province-btn').forEach((b, i) => {
-        b.classList.toggle('active', i === idx);
-        b.classList.remove('keyboard-selected');
-      });
-      keyboardIndex = idx;
-      collapseMap();
-      // 退出暂停状态，显示3秒倒计时后重开
-      paused = false;
-      pauseMask.classList.remove('show');
-      mapKeyboardMode = false;
-      startCountdown();
-    }
-
-    function collapseMap() {
-      mapContainer.classList.add('collapsed');
-      mapToggleHint.textContent = '◀';
-      mapKeyboardMode = false;
-    }
-
-    function expandMap() {
-      mapContainer.classList.remove('collapsed');
-      mapToggleHint.textContent = '▼';
-      const activeBtn = document.querySelector('.province-btn.active');
-      if (activeBtn) {
-        activeBtn.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    window.selectProv = (p) => {
+      curProv.name = p.n;
+      curProv.bio = p.bio;
+      curProv.color = p.t;
+      curProv.city = p.c;
+      document.getElementById('stationLabel').textContent = `${p.c}地铁`;
+      scene.background = new THREE.Color(p.t).multiplyScalar(0.5);
+      visitedProvs.add(p.n);
+      if (visitedProvs.size >= provinces.length && !achievements.allProv.got) {
+        unlockAchievement('allProv');
       }
-    }
+      renderMap();
+      initScenery();
+      toggleMap();
+    };
 
-    renderMap();
-
-    // 地图折叠/展开（点击标题）
-    mapTitle.addEventListener('click', () => {
-      if (mapContainer.classList.contains('collapsed')) {
-        // 展开地图 → 暂停游戏
-        expandMap();
-        if (!gameOver) {
-          paused = true;
-          pauseMask.classList.add('show');
-        }
+    window.toggleMap = () => {
+      mapBox.classList.toggle('collapsed');
+      const isOpen = !mapBox.classList.contains('collapsed');
+      if (isOpen) {
+        paused = true;
+        ['pause-mask','settings-mask','shop-mask','daily-mask','online-mask'].forEach(id => document.getElementById(id).classList.remove('show'));
       } else {
-        // 折叠地图 → 恢复游戏
-        collapseMap();
+        if (!gameOver && !cdActive) {
+          const anyPanelOpen = ['settings-mask','shop-mask','daily-mask','online-mask'].some(id => document.getElementById(id).classList.contains('show'));
+          if (!anyPanelOpen) paused = false;
+        }
+      }
+    };
+
+    window.resumeGame = () => {
+      if (!gameOver && !cdActive) {
         paused = false;
-        pauseMask.classList.remove('show');
+        document.getElementById('pause-mask').classList.remove('show');
+      }
+    };
+
+    function updatePauseInfo() {
+      document.getElementById('pause-score').textContent = Math.floor(score);
+      document.getElementById('pause-speed').textContent = Math.floor(speed / 0.4 * 200);
+      document.getElementById('pause-coins').textContent = coins;
+      document.getElementById('pause-combo').textContent = maxCombo;
+      document.getElementById('pause-items').textContent = itemsUsed;
+    }
+
+    function unlockAchievement(key) {
+      if (achievements[key].got) return;
+      achievements[key].got = true;
+      const toast = document.getElementById('achievement-toast');
+      document.getElementById('ach-name').textContent = achievements[key].name;
+      toast.classList.add('show');
+      playSound('achieve');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    function startCD() {
+      resetGame(true);
+      paused = true; cdActive = true;
+      const mask = document.getElementById('countdown-mask');
+      const txt = document.getElementById('cd-text');
+      mask.classList.add('show');
+      let c = 3;
+      txt.textContent = c;
+      const t = setInterval(() => {
+        c--;
+        if (c > 0) txt.textContent = c;
+        else if (c === 0) txt.textContent = "GO!";
+        else {
+          clearInterval(t); mask.classList.remove('show');
+          paused = false; cdActive = false;
+          initAudio();
+          startBGM();
+        }
+      }, 800);
+    }
+
+    window.restartFromGameOver = () => {
+      dailyMode = false;
+      dailyNoItem = false; dailySpeedMul = 1; dailyNoJump = false; dailyHard = false;
+      startCD();
+    };
+
+    function resetGame(isFullReset = true) {
+      if (isFullReset) {
+        gameOver = false; score = 0; coins = 0; speed = 0.15; combo = 0; comboTimer = 0;
+        maxCombo = 0; itemsUsed = 0; distance = 0;
+        lane = 0; targetLane = 0;
+        player.position.set(0, 0.2, 0);
+        player.scale.set(1, 1, 1);
+        player.rotation.z = 0;
+        lastSkinScore = 0;
+        doubleMul = 1;
+        resetReplay();
+        applySkin();
+
+        Object.values(pus).forEach(p => {
+          p.on = false; p.t = 0;
+          p.el.classList.remove('visible');
+        });
+
+        document.getElementById('scoreVal').textContent = 0;
+        document.getElementById('coinVal').textContent = 0;
+        document.getElementById('combo-display').classList.remove('show');
+        document.getElementById('combo-display').classList.remove('milestone');
+
+        for (let i = obstacles.length - 1; i >= 0; i--) scene.remove(obstacles[i]);
+        obstacles = [];
+        for (let i = coinObjs.length - 1; i >= 0; i--) scene.remove(coinObjs[i]);
+        coinObjs = [];
+        for (let i = itemObjs.length - 1; i >= 0; i--) scene.remove(itemObjs[i]);
+        itemObjs = [];
+        for (let i = particles.length - 1; i >= 0; i--) scene.remove(particles[i]);
+        particles = [];
+        waveGroups.clear();
+        lastObstacleZ = 0;
+
+        for (let i = 0; i < 20; i++) {
+          spawn('obs', 10 + i * 5);
+          if (i % 2 === 0) spawn('coin', 12 + i * 5);
+          if (i % 6 === 0) spawn('item', 15 + i * 5);
+        }
+      }
+
+      document.getElementById('gameover-mask').classList.remove('show');
+
+      if (isFirstPlay) showTutorial();
+    }
+
+    function showTutorial() {
+      const tip = document.getElementById('tutorial-tip');
+      tip.style.display = 'block';
+      let step = 0;
+      const steps = ["按 A / ◀ 向左移动", "按 D / ▶ 向右移动", "按 空格 / ⬆ 跳跃（可二段跳）", "按 S / ⬇ 滑铲"];
+      const tick = () => {
+        if (step >= steps.length) {
+          tip.style.display = 'none';
+          localStorage.setItem('metro_has_played', 'true');
+          isFirstPlay = false;
+          return;
+        }
+        tip.textContent = steps[step];
+        step++;
+      };
+      tick();
+      const interval = setInterval(() => {
+        if (!isFirstPlay) { clearInterval(interval); return; }
+        tick();
+        if (step > steps.length) clearInterval(interval);
+      }, 2000);
+    }
+
+    window.move = (d) => { if (!paused && !gameOver && !cdActive && !replayPlaying) targetLane = Math.max(-1, Math.min(1, targetLane + d)); };
+    window.jump = () => {
+      if (paused || gameOver || cdActive || replayPlaying) return;
+      if (dailyNoJump) return;
+      if (!isJumping && !pus.jet.on) {
+        isJumping = true; jumpV = 0.3; canDoubleJump = true;
+        playSound('jump');
+      } else if (canDoubleJump && !pus.jet.on) {
+        jumpV = 0.25; canDoubleJump = false; playSound('jump', 1.2);
+        const ring = document.getElementById('double-jump-ring');
+        ring.classList.remove('show'); void ring.offsetWidth; ring.classList.add('show');
+      }
+    };
+    window.slide = () => {
+      if (paused || gameOver || cdActive || replayPlaying) return;
+      if (!isSliding && !isJumping && !pus.jet.on) {
+        isSliding = true;
+        slideTimer = SLIDE_DURATION;
+        player.scale.y = 0.5;
+        const bar = document.getElementById('slide-bar');
+        bar.classList.add('show');
+        document.getElementById('slide-bar-fill').style.width = '100%';
+      }
+    };
+
+    let touchStartX = 0, touchStartY = 0;
+    window.addEventListener('touchstart', e => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+    window.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      const dy = e.changedTouches[0].clientY - touchStartY;
+      if (Math.abs(dx) < 30 && Math.abs(dy) < 30) return;
+      if (Math.abs(dx) > Math.abs(dy)) move(dx > 0 ? 1 : -1);
+      else { if (dy > 0) slide(); else jump(); }
+    }, { passive: true });
+
+    window.addEventListener('keydown', e => {
+      if (cdActive) return;
+      if (replayPlaying && e.key === 'Escape') { stopReplay(); return; }
+      if (e.key === 'Enter') toggleMap();
+      if (e.key === ' ') {
+        if (gameOver) startCD();
+        else if (paused && mapBox.classList.contains('collapsed')) {
+          const anyPanelOpen = ['settings-mask','shop-mask','daily-mask','online-mask'].some(id => document.getElementById(id).classList.contains('show'));
+          if (!anyPanelOpen) resumeGame();
+        }
+      }
+      if (e.key === 'p' || e.key === 'P') {
+        const ui = document.getElementById('ui-layer');
+        ui.style.display = ui.style.display === 'none' ? 'block' : 'none';
+      }
+      if (paused && e.key === 'Escape') {
+        const settingsOpen = document.getElementById('settings-mask').classList.contains('show');
+        const shopOpen = document.getElementById('shop-mask').classList.contains('show');
+        const dailyOpen = document.getElementById('daily-mask').classList.contains('show');
+        const onlineOpen = document.getElementById('online-mask').classList.contains('show');
+        if (settingsOpen) toggleSettings();
+        else if (shopOpen) toggleShop();
+        else if (dailyOpen) toggleDaily();
+        else if (onlineOpen) toggleOnline();
+        else toggleMap();
+      }
+      if (!paused && !gameOver && !cdActive && !replayPlaying) {
+        if (e.key === 'ArrowLeft' || e.key === 'a') move(-1);
+        if (e.key === 'ArrowRight' || e.key === 'd') move(1);
+        if (e.key === ' ' || e.key === 'ArrowUp') jump();
+        if (e.key === 'ArrowDown' || e.key === 's') slide();
       }
     });
 
-    // ========== 3秒倒计时 ==========
-    function startCountdown() {
-      countdownActive = true;
-      let count = 3;
-      countdownText.innerHTML = count + '<small id="countdownSub">即将开始</small>';
-      countdownMask.classList.add('show');
-      
-      const timer = setInterval(() => {
-        count--;
-        if (count > 0) {
-          countdownText.innerHTML = count + '<small id="countdownSub">即将开始</small>';
-        } else if (count === 0) {
-          countdownText.innerHTML = '开始!<small id="countdownSub">加油!</small>';
-        } else {
-          clearInterval(timer);
-          countdownMask.classList.remove('show');
-          countdownActive = false;
-          // 真正重开游戏
-          resetGame();
-        }
-      }, 1000);
-    }
-
-    // ========== 键盘导航 ==========
-    function handleMapKeyboard(e) {
-      if (!mapKeyboardMode) return false;
-      // 按地理坐标排序索引，用于方向键导航
-      const sorted = provinces.map((p, i) => ({...p, idx: i})).sort((a, b) => {
-        if (a.row !== b.row) return a.row - b.row;
-        return a.col - b.col;
-      });
-      const currentPos = sorted.findIndex(p => p.idx === keyboardIndex);
-      
-      if (e.key === 'ArrowRight') {
-        // 找同行右侧最近的省份
-        const cur = sorted[currentPos];
-        let best = -1, bestDist = Infinity;
-        for (let i = 0; i < sorted.length; i++) {
-          if (sorted[i].row === cur.row && sorted[i].col > cur.col) {
-            const d = sorted[i].col - cur.col;
-            if (d < bestDist) { bestDist = d; best = i; }
-          }
-        }
-        if (best >= 0) keyboardIndex = sorted[best].idx;
-        e.preventDefault();
-      } else if (e.key === 'ArrowLeft') {
-        const cur = sorted[currentPos];
-        let best = -1, bestDist = Infinity;
-        for (let i = 0; i < sorted.length; i++) {
-          if (sorted[i].row === cur.row && sorted[i].col < cur.col) {
-            const d = cur.col - sorted[i].col;
-            if (d < bestDist) { bestDist = d; best = i; }
-          }
-        }
-        if (best >= 0) keyboardIndex = sorted[best].idx;
-        e.preventDefault();
-      } else if (e.key === 'ArrowDown') {
-        const cur = sorted[currentPos];
-        let best = -1, bestDist = Infinity;
-        for (let i = 0; i < sorted.length; i++) {
-          if (sorted[i].col === cur.col && sorted[i].row > cur.row) {
-            const d = sorted[i].row - cur.row;
-            if (d < bestDist) { bestDist = d; best = i; }
-          }
-        }
-        if (best >= 0) keyboardIndex = sorted[best].idx;
-        e.preventDefault();
-      } else if (e.key === 'ArrowUp') {
-        const cur = sorted[currentPos];
-        let best = -1, bestDist = Infinity;
-        for (let i = 0; i < sorted.length; i++) {
-          if (sorted[i].col === cur.col && sorted[i].row < cur.row) {
-            const d = cur.row - sorted[i].row;
-            if (d < bestDist) { bestDist = d; best = i; }
-          }
-        }
-        if (best >= 0) keyboardIndex = sorted[best].idx;
-        e.preventDefault();
-      } else if (e.key === 'Enter') {
-        selectProvince(keyboardIndex);
-        e.preventDefault();
-        return true;
-      } else if (e.key === 'Escape') {
-        collapseMap();
-        paused = false;
-        pauseMask.classList.remove('show');
-        e.preventDefault();
-        return true;
-      } else {
-        return false;
-      }
-      // 更新高亮
-      document.querySelectorAll('.province-btn').forEach((b, i) => {
-        b.classList.toggle('keyboard-selected', i === keyboardIndex);
-      });
-      const btn = document.querySelectorAll('.province-btn')[keyboardIndex];
-      if (btn) btn.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-      return true;
-    }
-
-    // ========== 控制 ==========
-    document.getElementById('btnLeft').addEventListener('click', () => { if (!gameOver && !paused && !countdownActive) targetLane = Math.max(-1, targetLane - 1); });
-    document.getElementById('btnRight').addEventListener('click', () => { if (!gameOver && !paused && !countdownActive) targetLane = Math.min(1, targetLane + 1); });
-    document.getElementById('btnJump').addEventListener('click', () => { if (!gameOver && !paused && !countdownActive && !isJumping) { isJumping = true; jumpVelocity = jumpPower; } });
-
-    const gameoverMask = document.getElementById('gameover-mask');
-
-    window.addEventListener('keydown', (e) => {
-      // 倒计时期间忽略所有游戏操作
-      if (countdownActive) {
-        e.preventDefault();
-        return;
-      }
-
-      // 优先处理地图键盘模式
-      if (mapKeyboardMode) {
-        if (handleMapKeyboard(e)) return;
-      }
-
-      // 暂停状态：按 Esc 返回游戏
-      if (paused) {
-        if (e.key === 'Escape') {
-          collapseMap();
-          paused = false;
-          pauseMask.classList.remove('show');
-          e.preventDefault();
-          return;
-        }
-        return;
-      }
-
-      // 游戏结束后：
-      if (gameOver) {
-        if (e.key === ' ' || e.key === 'Spacebar') {
-          resetGame();
-          e.preventDefault();
-          return;
-        }
-        if (e.key === 'Enter') {
-          // 打开地图并暂停（此时游戏已结束，但仍然显示地图）
-          expandMap();
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        if (!gameOver && !cdActive && !paused && !replayPlaying) {
           paused = true;
-          pauseMask.classList.add('show');
-          mapKeyboardMode = true;
-          keyboardIndex = provinces.findIndex(p => p.full === currentProvince);
-          document.querySelectorAll('.province-btn').forEach((b, i) => {
-            b.classList.toggle('keyboard-selected', i === keyboardIndex);
-          });
-          e.preventDefault();
-          return;
+          document.getElementById('pause-mask').classList.add('show');
+          updatePauseInfo();
         }
-        return;
-      }
-
-      // 正常游戏中的控制
-      if (e.key === 'ArrowLeft' || e.key === 'a') { targetLane = Math.max(-1, targetLane - 1); e.preventDefault(); }
-      else if (e.key === 'ArrowRight' || e.key === 'd') { targetLane = Math.min(1, targetLane + 1); e.preventDefault(); }
-      else if (e.key === ' ' || e.key === 'w' || e.key === 'ArrowUp') { 
-        if (!isJumping) { isJumping = true; jumpVelocity = jumpPower; }
-        e.preventDefault();
       }
     });
 
-    // ========== 昼夜切换 ==========
-    const timeToggle = document.getElementById('time-toggle');
-    function setTimeOfDay(night) {
-      isNight = night;
-      if (night) {
-        scene.background = new THREE.Color(0x0a0a1a);
-        scene.fog = new THREE.Fog(0x0a0a1a, 15, 45);
-        ambientLight.intensity = 0.3;
-        mainLight.intensity = 0.2;
-        fillLight.intensity = 0.2;
-        backLight.intensity = 0.5;
-        moonLight.intensity = 0.8;
-        lanternLight.intensity = 1.2;
-        lanterns.forEach(l => {
-          l.children.forEach(c => {
-            if (c.material && c.material.emissive) c.material.emissiveIntensity = 0.8;
-          });
-        });
-        timeToggle.textContent = '☀️ 白昼';
-        timeToggle.style.background = 'rgba(20, 30, 60, 0.9)';
-      } else {
-        scene.background = new THREE.Color(0x1a1410);
-        scene.fog = new THREE.Fog(0x1a1410, 20, 55);
-        ambientLight.intensity = 0.6;
-        mainLight.intensity = 1.2;
-        fillLight.intensity = 0.5;
-        backLight.intensity = 0.3;
-        moonLight.intensity = 0.0;
-        lanternLight.intensity = 0.6;
-        lanterns.forEach(l => {
-          l.children.forEach(c => {
-            if (c.material && c.material.emissive) c.material.emissiveIntensity = 0.3;
-          });
-        });
-        timeToggle.textContent = '🌙 暮色';
-        timeToggle.style.background = 'rgba(60, 40, 24, 0.8)';
-      }
+    const speedLinesContainer = document.getElementById('speed-lines');
+    for (let i = 0; i < 20; i++) {
+      const line = document.createElement('div');
+      line.className = 'line';
+      line.style.left = Math.random() * 100 + '%';
+      line.style.animationDuration = (0.2 + Math.random() * 0.3) + 's';
+      line.style.animationDelay = Math.random() + 's';
+      speedLinesContainer.appendChild(line);
     }
 
-    timeToggle.addEventListener('click', () => {
-      setTimeOfDay(!isNight);
-    });
+    // ========== 初始化表盘刻度 ==========
+    (function initGauge() {
+      const ticksGroup = document.getElementById('speed-ticks');
+      const labelsGroup = document.getElementById('speed-labels');
+      const cx = 70, cy = 70, rOuter = 60, rInner = 52;
+      // 0-200，每 20 一格，共 11 格
+      for (let i = 0; i <= 10; i++) {
+        const value = i * 20;
+        // -120° 到 +120°，总共 240°
+        const angle = (-120 + (value / 200) * 240) * Math.PI / 180;
+        // SVG 坐标：0° 在三点钟方向，-90° 是十二点钟。我们要 -120° 起始（约七点半）
+        // 用 atan2 方式：从正上方顺时针测量
+        const svgAngle = angle - Math.PI / 2; // 调整到 SVG 的坐标系
+        const x1 = cx + Math.cos(svgAngle) * rOuter;
+        const y1 = cy + Math.sin(svgAngle) * rOuter;
+        const x2 = cx + Math.cos(svgAngle) * rInner;
+        const y2 = cy + Math.sin(svgAngle) * rInner;
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', x1); line.setAttribute('y1', y1);
+        line.setAttribute('x2', x2); line.setAttribute('y2', y2);
+        line.setAttribute('stroke', value >= 140 ? '#ff6666' : '#e8d5b0');
+        line.setAttribute('stroke-width', value % 40 === 0 ? '2' : '1');
+        ticksGroup.appendChild(line);
+        
+        // 标签（每 40 一个）
+        if (value % 40 === 0) {
+          const lx = cx + Math.cos(svgAngle) * (rInner - 7);
+          const ly = cy + Math.sin(svgAngle) * (rInner - 7) + 3;
+          const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          text.setAttribute('x', lx);
+          text.setAttribute('y', ly);
+          text.setAttribute('fill', value >= 140 ? '#ff6666' : '#c9b088');
+          text.textContent = value;
+          labelsGroup.appendChild(text);
+        }
+      }
+    })();
 
-    setTimeOfDay(false);
+    function updateSpeedometer(kmh) {
+      const clamped = Math.max(0, Math.min(200, kmh));
+      const angle = -120 + (clamped / 200) * 240;
+      document.getElementById('speed-needle').style.transform = `rotate(${angle}deg)`;
+      document.getElementById('speed-val').textContent = Math.floor(clamped);
+    }
 
-    // ========== 重置 ==========
-    function resetGame() {
-      obstacles.forEach(obj => scene.remove(obj));
-      obstacles = [];
-      coinMeshes.forEach(c => scene.remove(c));
-      coinMeshes.length = 0;
-      skateboardMeshes.forEach(s => scene.remove(s));
-      skateboardMeshes.length = 0;
-      
-      playerGroup.position.set(0, 0.2, 0);
-      currentLane = 0;
-      targetLane = 0;
-      score = 0;
-      coinsCollected = 0;
-      coinValueSpan.textContent = '0';
-      scoreSpan.textContent = '0';
-      gameOver = false;
-      paused = false;
-      isJumping = false;
-      jumpVelocity = 0;
-      baseSpeed = 0.12;
-      hasSkateboard = false;
-      skateboardTimer = 0;
-      
-      gameoverMask.classList.remove('show');
-      pauseMask.classList.remove('show');
-      countdownMask.classList.remove('show');
-      countdownActive = false;
-      
-      trackGroup.position.z = 0;
-      
-      lanterns.forEach((l, idx) => {
-        const z = trackStartZ + (idx % (totalSegments/2)) * segmentLength * 2;
-        l.position.z = z;
+    function updateLeaderboard() {
+      const list = JSON.parse(localStorage.getItem('metro_leaderboard') || '[]');
+      const ol = document.getElementById('leaderboard-list');
+      ol.innerHTML = '';
+      list.slice(0, 5).forEach((s, i) => {
+        const li = document.createElement('li');
+        li.textContent = `${s} 分`;
+        if (i === 0) li.className = 'top';
+        ol.appendChild(li);
       });
-      
-      for (let i = 0; i < 12; i++) {
-        const z = 6 + i * 3.5 + Math.random() * 1.5;
-        spawnObstacle(z);
-      }
-      
-      for (let i = 0; i < 10; i++) {
-        spawnCoinLine(12 + i * 7 + Math.random() * 3);
-      }
-      
-      for (let i = 0; i < 3; i++) {
-        spawnSkateboardItem(20 + i * 20 + Math.random() * 10);
-      }
-      
-      camera.position.set(0, 4.2, 9);
-      camera.lookAt(0, 0.5, 6);
-      trainGroup.position.set(0, 0.2, -10);
-      
-      setTimeOfDay(isNight);
-      updateTitle();
-    }
-
-    // ========== 碰撞检测 ==========
-    function checkCollision() {
-      const px = playerGroup.position.x;
-      const pz = playerGroup.position.z;
-      const py = playerGroup.position.y;
-      if (py > 0.9) return false;
-      for (let obs of obstacles) {
-        const ox = obs.position.x;
-        const oz = obs.position.z;
-        const distX = Math.abs(px - ox);
-        const distZ = Math.abs(pz - oz);
-        if (distX < 0.6 && distZ < 0.6) return true;
-      }
-      return false;
-    }
-
-    // ========== 更新轨道和宫灯 ==========
-    function updateTrackAndLanterns(playerZ) {
-      const threshold = 20;
-      for (let seg of trackSegments) {
-        if (seg.position.z < playerZ - threshold) {
-          seg.position.z += totalSegments * segmentLength;
-        }
-      }
-      for (let l of lanterns) {
-        if (l.position.z < playerZ - threshold) {
-          l.position.z += totalSegments * segmentLength;
-        }
+      if (list.length === 0) {
+        const li = document.createElement('li');
+        li.textContent = '暂无记录';
+        ol.appendChild(li);
       }
     }
 
-    // ========== 更新金币和滑板 ==========
-    function updateCollectibles(playerZ, clampedSpeed) {
-      for (let i = coinMeshes.length - 1; i >= 0; i--) {
-        const coin = coinMeshes[i];
-        coin.position.z -= clampedSpeed;
-        coin.rotation.z += 0.05;
-        coin.rotation.y += 0.03;
-        
-        const dx = Math.abs(coin.position.x - playerGroup.position.x);
-        const dz = Math.abs(coin.position.z - playerGroup.position.z);
-        const dy = Math.abs(coin.position.y - playerGroup.position.y - 0.5);
-        if (dx < 0.7 && dz < 0.7 && dy < 0.9) {
-          coinsCollected++;
-          coinValueSpan.textContent = coinsCollected;
-          scene.remove(coin);
-          coinMeshes.splice(i, 1);
-          continue;
-        }
-        
-        if (coin.position.z < playerZ - 20) {
-          scene.remove(coin);
-          coinMeshes.splice(i, 1);
-        }
-      }
-      
-      for (let i = skateboardMeshes.length - 1; i >= 0; i--) {
-        const board = skateboardMeshes[i];
-        board.position.z -= clampedSpeed;
-        board.rotation.y += 0.02;
-        
-        const dx = Math.abs(board.position.x - playerGroup.position.x);
-        const dz = Math.abs(board.position.z - playerGroup.position.z);
-        if (dx < 0.9 && dz < 0.9 && playerGroup.position.y < 0.8) {
-          hasSkateboard = true;
-          skateboardTimer = skateboardDuration;
-          scene.remove(board);
-          skateboardMeshes.splice(i, 1);
-          continue;
-        }
-        
-        if (board.position.z < playerZ - 20) {
-          scene.remove(board);
-          skateboardMeshes.splice(i, 1);
-        }
-      }
-      
-      while (coinMeshes.length < 30) {
-        const lastCoinZ = coinMeshes.length > 0 ? Math.max(...coinMeshes.map(c => c.position.z)) : playerZ;
-        const newZ = lastCoinZ + 5 + Math.random() * 8;
-        spawnCoinLine(newZ);
-      }
-      
-      if (skateboardMeshes.length < 4 && Math.random() < 0.02) {
-        const lastBoardZ = skateboardMeshes.length > 0 ? Math.max(...skateboardMeshes.map(s => s.position.z)) : playerZ;
-        if (lastBoardZ < playerZ + 30) {
-          spawnSkateboardItem(playerZ + 30 + Math.random() * 20);
-        }
-      }
+    function saveLeaderboard(finalScore) {
+      const list = JSON.parse(localStorage.getItem('metro_leaderboard') || '[]');
+      list.push(Math.floor(finalScore));
+      list.sort((a, b) => b - a);
+      localStorage.setItem('metro_leaderboard', JSON.stringify(list.slice(0, 5)));
     }
 
-    // ========== 更新最佳成绩 ==========
-    function updateBestScore() {
-      const currentScore = Math.floor(score);
-      if (currentScore > bestScore) {
-        bestScore = currentScore;
-        setBestScore(bestScore);
-        bestScoreSpan.textContent = bestScore;
-      }
+    function updateTotalStatsSave(coins, dist) {
+      const s = JSON.parse(localStorage.getItem('metro_total') || '{"coins":0,"runs":0,"distance":0}');
+      s.coins += coins;
+      s.runs += 1;
+      s.distance += dist;
+      localStorage.setItem('metro_total', JSON.stringify(s));
     }
 
-    // ========== 游戏结束处理 ==========
-    function triggerGameOver() {
-      gameOver = true;
-      gameoverMask.classList.add('show');
+    const tips = [
+      "💡 连击越高，单金币分数越多",
+      "💡 二段跳可以跳过更高的障碍",
+      "💡 滑铲可以穿过高障碍物",
+      "💡 磁铁吸附时金币有拖尾",
+      "💡 滑板能抵挡一次撞击",
+      "💡 飞行时无敌，但时间短",
+      "💡 每 10 连击全屏闪一下",
+      "💡 切换省份会改变场景",
+      "💡 空格键可以暂停/继续",
+      "💡 按 ESC 打开地图",
+      "💡 每日挑战有额外金币",
+      "💡 商店可以解锁新皮肤",
+      "💡 在线榜可以看全球排名"
+    ];
+    function showTip() {
+      const tip = document.getElementById('tip-toast');
+      tip.textContent = tips[Math.floor(Math.random() * tips.length)];
+      tip.classList.add('show');
+      setTimeout(() => tip.classList.remove('show'), 3000);
     }
 
-    // ========== 动画循环 ==========
     function animate() {
       requestAnimationFrame(animate);
+      const time = Date.now() * 0.001;
 
-      // 暂停或倒计时期间：只渲染不更新游戏逻辑
-      if (!gameOver && !paused && !countdownActive) {
-        let speedFactor = 1.0;
-        if (score > speedThreshold) {
-          const progress = Math.min((score - speedThreshold) / 800, 1.0);
-          speedFactor = 1.0 + progress * 2.2;
-        }
-        const currentSpeed = baseSpeed * speedFactor;
-        const clampedSpeed = Math.min(currentSpeed, maxSpeed);
+      if (!paused && !gameOver && !cdActive && !replayPlaying) {
+        recordReplay();
+        
+        lane += (targetLane - lane) * 0.1;
+        player.position.x = lane * 1.8;
+        player.rotation.z = THREE.MathUtils.lerp(player.rotation.z, -lane * 0.1, 0.1);
 
-        const diff = targetLane - currentLane;
-        if (Math.abs(diff) > 0.01) {
-          currentLane += Math.sign(diff) * 0.08;
-        } else {
-          currentLane = targetLane;
-        }
-        playerGroup.position.x = currentLane * 1.8;
-
-        if (isJumping) {
-          jumpVelocity += gravity;
-          playerGroup.position.y += jumpVelocity;
-          if (playerGroup.position.y <= 0.2) {
-            playerGroup.position.y = 0.2;
+        if (pus.jet.on) {
+          player.position.y = THREE.MathUtils.lerp(player.position.y, 3.5, 0.1);
+          for (let i = coinObjs.length - 1; i >= 0; i--) {
+            const c = coinObjs[i];
+            if (Math.abs(c.position.z - player.position.z) < 5 && Math.abs(c.position.x - player.position.x) < 2) {
+              c.position.lerp(player.position, 0.2);
+            }
+          }
+        } else if (isJumping) {
+          player.position.y += jumpV;
+          jumpV -= 0.02;
+          if (player.position.y <= 0.2) {
+            player.position.y = 0.2;
             isJumping = false;
-            jumpVelocity = 0;
+            if (jumpV < -0.1) cameraShake = settings.shake ? 6 : 0;
+          }
+        } else if (pus.skate.on) {
+          player.position.y = 0.35;
+        }
+
+        if (isSliding) {
+          slideTimer--;
+          document.getElementById('slide-bar-fill').style.width = (slideTimer / SLIDE_DURATION * 100) + '%';
+          if (slideTimer <= 0) {
+            isSliding = false; player.scale.y = 1;
+            document.getElementById('slide-bar').classList.remove('show');
           }
         }
 
-        playerGroup.position.z += clampedSpeed;
-        
-        camera.position.x = playerGroup.position.x * 0.15;
-        camera.position.z = playerGroup.position.z - 4.5;
-        camera.lookAt(playerGroup.position.x * 0.1, 0.5, playerGroup.position.z + 5);
+        const spd = speed * (doubleMul > 1 ? 1.2 : 1.0) * dailySpeedMul;
+        player.position.z += spd;
+        distance += spd;
+        camera.position.z = player.position.z - 5;
+        camera.position.x = lane * 0.3;
 
-        score += 0.3 * (clampedSpeed / 0.2);
-        scoreSpan.textContent = Math.floor(score);
-        
-        updateBestScore();
+        if (cameraShake > 0 && settings.shake) {
+          camera.position.y = 4.5 + Math.sin(time * 30) * 0.15 * (cameraShake / 6);
+          cameraShake--;
+        } else {
+          camera.position.y = 4.5;
+        }
 
+        camera.lookAt(lane * 0.1, pus.jet.on ? 3 : 0.5, player.position.z + 10);
+
+        tracks.forEach(t => { if (t.position.z < player.position.z - 10) t.position.z += 320; });
+
+        for (let i = sceneryObjects.length - 1; i >= 0; i--) {
+          const obj = sceneryObjects[i];
+          obj.position.z -= spd;
+          if (obj.children[1] && obj.children[1].userData.isBlade) {
+            obj.children[1].rotation.z += obj.children[1].userData.speed;
+          }
+          if (obj.position.z < player.position.z - 20) {
+            obj.position.z += 300;
+            const side = Math.random() > 0.5 ? 1 : -1;
+            obj.position.x = side * (4 + Math.random() * 6);
+          }
+        }
+
+        updateSea(time);
+
+        if (curProv.bio === 'snow') {
+          snowMat.opacity = 0.8; rainMat.opacity = 0;
+          const positions = snowField.geometry.attributes.position.array;
+          for (let i = 1; i < positions.length; i += 3) {
+            positions[i] -= 0.1;
+            if (positions[i] < 0) positions[i] = 20;
+          }
+          snowField.geometry.attributes.position.needsUpdate = true;
+          snowField.position.z = player.position.z;
+        } else if (curProv.bio === 'jiangnan' || curProv.bio === 'water' || curProv.bio === 'sea') {
+          snowMat.opacity = 0; rainMat.opacity = 0.6;
+          const positions = rainField.geometry.attributes.position.array;
+          for (let i = 1; i < positions.length; i += 3) {
+            positions[i] -= 0.5;
+            if (positions[i] < -10) positions[i] = 20;
+          }
+          rainField.geometry.attributes.position.needsUpdate = true;
+          rainField.position.z = player.position.z;
+        } else {
+          snowMat.opacity = 0; rainMat.opacity = 0;
+        }
+
+        const passedWaves = new Set();
         for (let i = obstacles.length - 1; i >= 0; i--) {
-          const obs = obstacles[i];
-          obs.position.z -= clampedSpeed;
-          if (obs.position.z < playerGroup.position.z - 20) {
-            scene.remove(obs);
-            obstacles.splice(i, 1);
+          const o = obstacles[i];
+          o.position.z -= spd;
+          if (o.userData.isMoving) {
+            o.userData.movePhase += o.userData.moveSpeed;
+            o.position.x = o.userData.baseX + Math.sin(o.userData.movePhase) * 1.2;
           }
-        }
-
-        const lastObstacleZ = obstacles.length > 0 ? obstacles[obstacles.length-1].position.z : playerGroup.position.z;
-        const maxSpawnZ = playerGroup.position.z + 25;
-        while (obstacles.length < maxObstacles && lastObstacleZ < maxSpawnZ) {
-          const newZ = lastObstacleZ + 3.0 + Math.random() * 3.0;
-          spawnObstacle(newZ);
-        }
-
-        trainGroup.position.z += clampedSpeed * 0.85;
-        if (trainGroup.position.z > playerGroup.position.z + 30) {
-          trainGroup.position.z = playerGroup.position.z - 25;
-        }
-
-        updateCollectibles(playerGroup.position.z, clampedSpeed);
-
-        if (hasSkateboard) {
-          skateboardTimer--;
-          playerGroup.position.y = Math.max(playerGroup.position.y, 0.3);
-          if (skateboardTimer <= 0) {
-            hasSkateboard = false;
-            if (!isJumping) playerGroup.position.y = 0.2;
+          const dx = Math.abs(o.position.x - player.position.x);
+          const dz = Math.abs(o.position.z - player.position.z);
+          const dy = player.position.y;
+          let hit = false;
+          if (!pus.jet.on && dx < 0.8 && dz < 0.8) {
+            if (o.userData.isHigh) { if (!isSliding) hit = true; }
+            else { if (dy < 1.0) hit = true; }
           }
-        }
-
-        updateTrackAndLanterns(playerGroup.position.z);
-
-        if (checkCollision()) {
-          if (hasSkateboard) {
-            hasSkateboard = false;
-            skateboardTimer = 0;
-            playerGroup.position.y = 0.2;
-            if (obstacles.length > 0) {
-              let closest = obstacles[0];
-              let minDist = Infinity;
-              for (let obs of obstacles) {
-                const d = Math.abs(obs.position.z - playerGroup.position.z);
-                if (d < minDist) { minDist = d; closest = obs; }
+          if (hit) {
+            if (pus.skate.on) {
+              pus.skate.on = false; pus.skate.t = 0; pus.skate.el.classList.remove('visible');
+              scene.remove(o); obstacles.splice(i, 1);
+              const wg = waveGroups.get(o.userData.waveZ);
+              if (wg) { const idx = wg.indexOf(o); if (idx >= 0) wg.splice(idx, 1); }
+              explode(player.position, 0x888888);
+              playSound('crash');
+              cameraShake = settings.shake ? 4 : 0;
+            } else {
+              gameOver = true;
+              stopBGM();
+              playSound('crash');
+              cameraShake = settings.shake ? 10 : 0;
+              checkDailyComplete();
+              saveReplay();
+              const isNewRecord = score > bestScore;
+              if (isNewRecord) {
+                bestScore = Math.floor(score);
+                localStorage.setItem('metro_best', bestScore);
+                document.getElementById('bestVal').textContent = bestScore;
+                document.getElementById('go-new-record').style.display = 'block';
+              } else {
+                document.getElementById('go-new-record').style.display = 'none';
               }
-              scene.remove(closest);
-              obstacles.splice(obstacles.indexOf(closest), 1);
+              saveLeaderboard(score);
+              updateLeaderboard();
+              updateTotalStatsSave(coins, distance);
+              document.getElementById('go-score').textContent = Math.floor(score);
+              document.getElementById('go-best').textContent = "历史最佳: " + bestScore;
+              document.getElementById('go-coins').textContent = coins;
+              document.getElementById('go-combo').textContent = maxCombo;
+              document.getElementById('go-items').textContent = itemsUsed;
+              document.getElementById('go-distance').textContent = Math.floor(distance);
+              document.getElementById('gameover-mask').classList.add('show');
+              document.body.classList.add('shake');
+              setTimeout(() => document.body.classList.remove('shake'), 500);
+            }
+            continue;
+          }
+          if (o.position.z < player.position.z - 20) passedWaves.add(o.userData.waveZ);
+        }
+
+        passedWaves.forEach(wz => {
+          const group = waveGroups.get(wz);
+          if (!group) return;
+          group.forEach(m => {
+            scene.remove(m);
+            const idx = obstacles.indexOf(m);
+            if (idx >= 0) obstacles.splice(idx, 1);
+          });
+          waveGroups.delete(wz);
+          spawn('obs', player.position.z + 40 + Math.random() * 20);
+        });
+
+        for (let i = coinObjs.length - 1; i >= 0; i--) {
+          const c = coinObjs[i];
+          c.position.z -= spd;
+          c.rotation.z += 0.1;
+          if (pus.magnet.on && c.position.distanceTo(player.position) < 10) {
+            c.position.lerp(player.position, 0.15);
+            if (Math.random() < 0.3) coinTrail(c.position);
+          }
+          if (c.position.distanceTo(player.position) < 1.0) {
+            coins++;
+            combo++;
+            if (combo > maxCombo) maxCombo = combo;
+            comboTimer = 120;
+            const comboEl = document.getElementById('combo-display');
+            comboEl.textContent = `COMBO x${combo}`;
+            comboEl.classList.add('show');
+            if (combo % 10 === 0) {
+              comboEl.classList.add('milestone');
+              document.getElementById('flash').classList.add('flash');
+              setTimeout(() => {
+                comboEl.classList.remove('milestone');
+                document.getElementById('flash').classList.remove('flash');
+              }, 400);
+              playSound('coin', 1 + combo / 100);
+            } else {
+              playSound('coin');
+            }
+            if (combo >= 50 && !achievements.combo50.got) unlockAchievement('combo50');
+            if (combo >= 100 && !achievements.combo100.got) unlockAchievement('combo100');
+            if (coins >= 500 && !achievements.coin500.got) unlockAchievement('coin500');
+            if (distance >= 2000 && !achievements.distance2000.got) unlockAchievement('distance2000');
+            if (Math.floor(score) >= 1000 && itemsUsed === 0 && !achievements.noItem1000.got) unlockAchievement('noItem1000');
+            const comboBonus = Math.min(20, Math.floor(combo / 10));
+            const coinValue = (10 + comboBonus) * (pus.double.on ? 2 : 1) * doubleMul;
+            score += coinValue;
+            floatText(`+${coinValue}`, c.position.x, c.position.y + 0.5);
+            document.getElementById('coinVal').textContent = coins;
+            document.getElementById('stats-box').classList.add('pop');
+            setTimeout(() => document.getElementById('stats-box').classList.remove('pop'), 200);
+            explode(c.position, 0xffd966);
+            scene.remove(c); coinObjs.splice(i, 1);
+            spawn('coin', player.position.z + 30 + Math.random() * 10);
+            Object.values(pus).forEach(p => { if (p.on) p.t = Math.min(p.t + 30, 1800); });
+          } else if (c.position.z < player.position.z - 10) {
+            scene.remove(c); coinObjs.splice(i, 1);
+            combo = 0;
+            document.getElementById('combo-display').classList.remove('show');
+          }
+        }
+
+        if (combo > 0) {
+          comboTimer--;
+          if (comboTimer <= 0) {
+            combo = 0;
+            document.getElementById('combo-display').classList.remove('show');
+          }
+        }
+
+        for (let i = itemObjs.length - 1; i >= 0; i--) {
+          const it = itemObjs[i];
+          it.position.z -= spd;
+          it.rotation.y += 0.05;
+          if (it.position.distanceTo(player.position) < 1.0) {
+            const k = it.userData.kind;
+            itemsUsed++;
+            if (k === 1) { pus.skate.on = true; pus.skate.t = 600; pus.skate.el.classList.add('visible'); }
+            if (k === 2) { pus.magnet.on = true; pus.magnet.t = 600; pus.magnet.el.classList.add('visible'); }
+            if (k === 3) { pus.double.on = true; pus.double.t = 600; pus.double.el.classList.add('visible'); doubleMul = 2; }
+            if (k === 4) {
+              pus.jet.on = true; pus.jet.t = 300; pus.jet.el.classList.add('visible');
+              if (!achievements.firstFly.got) unlockAchievement('firstFly');
+            }
+            explode(it.position, 0xffffff);
+            scene.remove(it); itemObjs.splice(i, 1);
+            spawn('item', player.position.z + 50);
+          } else if (it.position.z < player.position.z - 10) {
+            scene.remove(it); itemObjs.splice(i, 1);
+          }
+        }
+
+        Object.values(pus).forEach(p => {
+          if (p.on) {
+            p.t--;
+            const seconds = (p.t / 60).toFixed(1);
+            p.el.querySelector('.effect-timer').textContent = seconds + 's';
+            if (p.t <= 0) {
+              p.on = false;
+              p.el.classList.remove('visible');
+              if (p === pus.double) doubleMul = 1;
             }
           } else {
-            triggerGameOver();
+            p.el.classList.remove('visible');
           }
-        }
-        if (Math.abs(playerGroup.position.x) > 3.2) {
-          if (hasSkateboard) {
-            hasSkateboard = false;
-            targetLane = 0;
-            currentLane = 0;
-            playerGroup.position.x = 0;
-          } else {
-            triggerGameOver();
-          }
+        });
+
+        score += spd * dailySpeedMul;
+        document.getElementById('scoreVal').textContent = Math.floor(score);
+
+        if (Math.floor(score) >= 1000 && !achievements.score1000.got) unlockAchievement('score1000');
+        if (Math.floor(score) >= 3000 && !achievements.score3000.got) unlockAchievement('score3000');
+
+        // ===== 速度表：按 spd 映射到 0-200 km/h =====
+        // spd 范围：0.15（开局）~ 0.4（满速）
+        // 映射：kmh = spd / 0.4 * 200
+        const kmh = Math.floor((spd / 0.4) * 200);
+        updateSpeedometer(kmh);
+        document.getElementById('speed-lines').style.opacity = kmh > 100 ? Math.min(1, (kmh - 100) / 100) : 0;
+
+        updateDayNight();
+        if (speed < 0.4) speed += 0.00005;
+
+        tipTimer++;
+        if (tipTimer > 1800) { showTip(); tipTimer = 0; }
+      }
+
+      if (replayPlaying) {
+        if (replayIndex >= replayRecording.length) {
+          stopReplay();
+        } else {
+          const f = replayRecording[replayIndex];
+          player.position.x = f.lane * 1.8;
+          player.position.y = f.y;
+          player.scale.y = f.scaleY;
+          player.position.z += speed * 1.0;
+          camera.position.z = player.position.z - 5;
+          camera.position.x = f.lane * 0.3;
+          camera.position.y = 4.5;
+          camera.lookAt(f.lane * 0.1, 0.5, player.position.z + 10);
+          document.getElementById('replay-progress').textContent = 
+            Math.floor(replayIndex / replayRecording.length * 100) + '%';
+          replayIndex++;
         }
       }
 
-      const time = Date.now() * 0.002;
-      lanternLight.intensity = (isNight ? 1.2 : 0.6) + Math.sin(time) * 0.15;
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.position.add(p.userData.v);
+        p.userData.life -= 0.05;
+        p.scale.setScalar(Math.max(0, p.userData.life));
+        if (p.userData.fade) p.material.opacity = p.userData.life;
+        if (p.userData.life <= 0) {
+          scene.remove(p);
+          particles.splice(i, 1);
+        }
+      }
 
       renderer.render(scene, camera);
     }
 
+    applySkin();
+    renderMap();
+    initScenery();
+    updateLeaderboard();
+    updateSettingsUI();
+    resetGame(true);
+    mapBox.classList.add('collapsed');
+    paused = true;
+    document.getElementById('pause-mask').classList.add('show');
     animate();
 
     window.addEventListener('resize', () => {
@@ -1463,9 +2465,6 @@
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
-
-    window.addEventListener('contextmenu', e => e.preventDefault());
-    console.log('🏮 神州行 · 地图版：选省暂停 · 3秒倒计时 · 空格重开 · Enter选省');
   </script>
 </body>
-</html>  
+</html>
