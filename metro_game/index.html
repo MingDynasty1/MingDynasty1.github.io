@@ -4,327 +4,112 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>大明神州地铁行 | MingDynasty</title>
-
-    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+  <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
   <style>
     body { margin: 0; overflow: hidden; font-family: "华文楷体", serif; background: #1a1410; user-select: none; touch-action: none; }
     #ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 150; }
-
-    .hud-panel {
-      position: absolute; background: rgba(30, 20, 12, 0.75); backdrop-filter: blur(8px);
-      border: 1px solid #b89a6b; color: #e8d5b0; padding: 8px 20px; border-radius: 30px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 10px;
-      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
+    .hud-panel { position: absolute; background: rgba(30, 20, 12, 0.75); backdrop-filter: blur(8px); border: 1px solid #b89a6b; color: #e8d5b0; padding: 8px 20px; border-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 10px; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
     .hud-panel.pop { transform: scale(1.15); }
     #info-box { top: 20px; left: 20px; border-left: 4px solid #b89a6b; }
     #info-box h1 { margin: 0; font-size: 1.4rem; font-weight: normal; }
     #info-box small { color: #c9b088; font-size: 0.8rem; }
-
-    #rank-badge {
-      position: absolute; top: 80px; left: 20px;
-      background: rgba(30, 20, 12, 0.85);
-      border: 2px solid #b89a6b; border-radius: 16px;
-      padding: 8px 16px; display: flex; align-items: center; gap: 10px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-      transition: all 0.3s;
-    }
+    #rank-badge { position: absolute; top: 80px; left: 20px; background: rgba(30, 20, 12, 0.85); border: 2px solid #b89a6b; border-radius: 16px; padding: 8px 16px; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); transition: all 0.3s; }
     #rank-badge.up { animation: rankUp 1s ease-out; }
-    @keyframes rankUp {
-      0% { transform: scale(1); box-shadow: 0 0 0 rgba(255,215,0,0); }
-      50% { transform: scale(1.3); box-shadow: 0 0 30px rgba(255,215,0,0.9); }
-      100% { transform: scale(1); box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-    }
+    @keyframes rankUp { 0% { transform: scale(1); box-shadow: 0 0 0 rgba(255,215,0,0); } 50% { transform: scale(1.3); box-shadow: 0 0 30px rgba(255,215,0,0.9); } 100% { transform: scale(1); box-shadow: 0 4px 15px rgba(0,0,0,0.5); } }
     #rank-icon { font-size: 1.6rem; }
     #rank-info { display: flex; flex-direction: column; line-height: 1.1; }
     #rank-name { font-size: 0.95rem; font-weight: bold; }
     #rank-score { font-size: 0.7rem; color: #aaa; }
-
-    /* 载具 & 宠物 徽章 */
-    #vehicle-badge {
-      position: absolute; top: 152px; left: 20px;
-      background: rgba(30, 20, 12, 0.85);
-      border: 2px solid #6b9ab8; border-radius: 14px;
-      padding: 5px 12px; display: flex; align-items: center; gap: 6px;
-      font-size: 0.8rem; color: #e8d5b0;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-    }
-    #pet-badge {
-      position: absolute; top: 192px; left: 20px;
-      background: rgba(30, 20, 12, 0.85);
-      border: 2px solid #6bdb6b; border-radius: 14px;
-      padding: 5px 12px; display: flex; align-items: center; gap: 6px;
-      font-size: 0.8rem; color: #e8d5b0;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-    }
+    #vehicle-badge { position: absolute; top: 152px; left: 20px; background: rgba(30, 20, 12, 0.85); border: 2px solid #6b9ab8; border-radius: 14px; padding: 5px 12px; display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: #e8d5b0; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+    #pet-badge { position: absolute; top: 192px; left: 20px; background: rgba(30, 20, 12, 0.85); border: 2px solid #6bdb6b; border-radius: 14px; padding: 5px 12px; display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: #e8d5b0; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
     #vehicle-badge.hidden, #pet-badge.hidden { display: none; }
-
-    #quest-panel {
-      position: absolute; top: 80px; right: 20px;
-      background: rgba(30, 20, 12, 0.85);
-      border: 2px solid #b89a6b; border-radius: 16px;
-      padding: 12px 16px; width: 240px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-      transition: transform 0.3s;
-    }
-    #quest-panel h3 {
-      margin: 0 0 10px; font-size: 0.95rem; color: #ffd966;
-      text-align: center; border-bottom: 1px solid #4a3a2a; padding-bottom: 6px;
-    }
-    .quest-item {
-      display: flex; flex-direction: column; gap: 4px;
-      padding: 6px 0; border-bottom: 1px solid #3a2a1e;
-      font-size: 0.8rem; color: #e8d5b0;
-    }
+    #quest-panel { position: absolute; top: 80px; right: 20px; background: rgba(30, 20, 12, 0.85); border: 2px solid #b89a6b; border-radius: 16px; padding: 12px 16px; width: 240px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); transition: transform 0.3s; }
+    #quest-panel h3 { margin: 0 0 10px; font-size: 0.95rem; color: #ffd966; text-align: center; border-bottom: 1px solid #4a3a2a; padding-bottom: 6px; }
+    .quest-item { display: flex; flex-direction: column; gap: 4px; padding: 6px 0; border-bottom: 1px solid #3a2a1e; font-size: 0.8rem; color: #e8d5b0; }
     .quest-item:last-child { border-bottom: none; }
     .quest-item.done { opacity: 0.5; }
     .quest-item.done .quest-text { text-decoration: line-through; }
     .quest-row { display: flex; justify-content: space-between; align-items: center; }
     .quest-reward { color: #ffd966; font-size: 0.75rem; }
-    .quest-bar {
-      width: 100%; height: 4px; background: rgba(0,0,0,0.5);
-      border-radius: 2px; overflow: hidden;
-    }
-    .quest-bar-fill {
-      height: 100%; background: linear-gradient(90deg, #b89a6b, #ffd966);
-      transition: width 0.3s;
-    }
+    .quest-bar { width: 100%; height: 4px; background: rgba(0,0,0,0.5); border-radius: 2px; overflow: hidden; }
+    .quest-bar-fill { height: 100%; background: linear-gradient(90deg, #b89a6b, #ffd966); transition: width 0.3s; }
     .quest-item.done .quest-bar-fill { background: #6bdb6b; }
-
-    #super-overlay {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      pointer-events: none; z-index: 7; opacity: 0;
-      background: radial-gradient(ellipse at center, rgba(255,215,0,0.1) 0%, rgba(255,150,0,0.3) 100%);
-      transition: opacity 0.3s;
-    }
+    #super-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 7; opacity: 0; background: radial-gradient(ellipse at center, rgba(255,215,0,0.1) 0%, rgba(255,150,0,0.3) 100%); transition: opacity 0.3s; }
     #super-overlay.active { opacity: 1; animation: superPulse 1s infinite; }
     @keyframes superPulse { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; } }
-    #super-banner {
-      position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%) scale(0);
-      font-size: 4rem; font-weight: bold; color: #ffd966;
-      text-shadow: 0 0 30px #ff8800, 0 0 60px #ff4400, 4px 4px 0 #000;
-      z-index: 260; pointer-events: none; opacity: 0;
-    }
+    #super-banner { position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%) scale(0); font-size: 4rem; font-weight: bold; color: #ffd966; text-shadow: 0 0 30px #ff8800, 0 0 60px #ff4400, 4px 4px 0 #000; z-index: 260; pointer-events: none; opacity: 0; }
     #super-banner.show { animation: superBannerIn 2s ease-out; }
-    @keyframes superBannerIn {
-      0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0; }
-      20% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
-      80% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-      100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
-    }
-    #super-timer {
-      position: absolute; top: 120px; left: 50%; transform: translateX(-50%);
-      color: #ffd966; font-size: 1.2rem; font-weight: bold;
-      text-shadow: 0 0 10px #ff8800;
-      opacity: 0; transition: opacity 0.3s; z-index: 260;
-    }
+    @keyframes superBannerIn { 0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0; } 20% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; } 80% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(2); opacity: 0; } }
+    #super-timer { position: absolute; top: 120px; left: 50%; transform: translateX(-50%); color: #ffd966; font-size: 1.2rem; font-weight: bold; text-shadow: 0 0 10px #ff8800; opacity: 0; transition: opacity 0.3s; z-index: 260; }
     #super-timer.show { opacity: 1; }
-
     #stats-box { top: 20px; right: 20px; flex-direction: column; align-items: flex-end; gap: 6px; }
     .stat-row { font-size: 1.2rem; letter-spacing: 1px; text-shadow: 0 0 5px rgba(255,215,0,0.3); }
-
-    #speedometer {
-      position: absolute; bottom: 20px; left: 20px;
-      width: 140px; height: 140px;
-      pointer-events: none;
-    }
+    #speedometer { position: absolute; bottom: 20px; left: 20px; width: 140px; height: 140px; pointer-events: none; }
     #speedometer svg { width: 100%; height: 100%; filter: drop-shadow(0 0 8px rgba(0,0,0,0.6)); }
     #speed-needle { transform-origin: 70px 70px; transform: rotate(-120deg); transition: transform 0.08s linear; }
-    #speed-readout {
-      position: absolute; bottom: 32px; left: 0; right: 0;
-      text-align: center; color: #ffd966; font-size: 1.1rem; font-weight: bold;
-      text-shadow: 0 0 5px #000; font-family: monospace;
-    }
+    #speed-readout { position: absolute; bottom: 32px; left: 0; right: 0; text-align: center; color: #ffd966; font-size: 1.1rem; font-weight: bold; text-shadow: 0 0 5px #000; font-family: monospace; }
     #speed-readout small { font-size: 0.6rem; color: #aaa; display: block; }
-
-    #combo-display {
-      position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%);
-      font-size: 3rem; color: #ff4444; font-weight: bold;
-      text-shadow: 0 0 10px #fff, 2px 2px 0 #000;
-      opacity: 0; transition: opacity 0.3s, transform 0.1s; pointer-events: none;
-    }
+    #combo-display { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); font-size: 3rem; color: #ff4444; font-weight: bold; text-shadow: 0 0 10px #fff, 2px 2px 0 #000; opacity: 0; transition: opacity 0.3s, transform 0.1s; pointer-events: none; }
     #combo-display.show { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
     #combo-display.milestone { color: #ffdd44; text-shadow: 0 0 20px #ff8800, 3px 3px 0 #000; }
-
-    #slide-bar {
-      position: absolute; bottom: 130px; left: 50%; transform: translateX(-50%);
-      width: 200px; height: 8px;
-      background: rgba(0,0,0,0.5); border: 1px solid #6b9ab8; border-radius: 4px;
-      opacity: 0; transition: opacity 0.2s; pointer-events: none;
-      overflow: hidden;
-    }
-    #slide-bar-fill {
-      height: 100%; background: linear-gradient(90deg, #6b9ab8, #aaddff);
-      width: 100%; transition: width 0.05s linear;
-    }
+    #slide-bar { position: absolute; bottom: 130px; left: 50%; transform: translateX(-50%); width: 200px; height: 8px; background: rgba(0,0,0,0.5); border: 1px solid #6b9ab8; border-radius: 4px; opacity: 0; transition: opacity 0.2s; pointer-events: none; overflow: hidden; }
+    #slide-bar-fill { height: 100%; background: linear-gradient(90deg, #6b9ab8, #aaddff); width: 100%; transition: width 0.05s linear; }
     #slide-bar.show { opacity: 1; }
-
-    .float-text {
-      position: absolute; color: #ffd966; font-size: 1.2rem; font-weight: bold;
-      text-shadow: 0 0 5px #000, 0 0 10px #ffaa00;
-      pointer-events: none; z-index: 200;
-      animation: floatUp 1s ease-out forwards;
-    }
-    @keyframes floatUp {
-      0% { transform: translateY(0); opacity: 1; }
-      100% { transform: translateY(-80px); opacity: 0; }
-    }
-
-    #danger-flash {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      pointer-events: none; z-index: 8; opacity: 0;
-      box-shadow: inset 0 0 100px 30px rgba(255, 0, 0, 0.6);
-    }
+    .float-text { position: absolute; color: #ffd966; font-size: 1.2rem; font-weight: bold; text-shadow: 0 0 5px #000, 0 0 10px #ffaa00; pointer-events: none; z-index: 200; animation: floatUp 1s ease-out forwards; }
+    @keyframes floatUp { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-80px); opacity: 0; } }
+    #danger-flash { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 8; opacity: 0; box-shadow: inset 0 0 100px 30px rgba(255, 0, 0, 0.6); }
     #danger-flash.flash { animation: dangerFlash 0.3s ease-out; }
     @keyframes dangerFlash { 0%{opacity:1} 100%{opacity:0} }
-
-    #vignette {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      pointer-events: none; z-index: 4;
-      background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.5) 100%);
-    }
-
-    #tip-toast {
-      position: absolute; top: 70px; left: 50%; transform: translateX(-50%);
-      background: rgba(60, 40, 24, 0.9); border: 1px solid #b89a6b;
-      color: #e8d5b0; padding: 8px 20px; border-radius: 20px;
-      font-size: 0.9rem; opacity: 0; pointer-events: none;
-      transition: opacity 0.5s; z-index: 220;
-    }
+    #vignette { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 4; background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.5) 100%); }
+    #tip-toast { position: absolute; top: 70px; left: 50%; transform: translateX(-50%); background: rgba(60, 40, 24, 0.9); border: 1px solid #b89a6b; color: #e8d5b0; padding: 8px 20px; border-radius: 20px; font-size: 0.9rem; opacity: 0; pointer-events: none; transition: opacity 0.5s; z-index: 220; }
     #tip-toast.show { opacity: 1; }
-
-    #double-jump-ring {
-      position: absolute; top: 60%; left: 50%; transform: translate(-50%, -50%);
-      width: 60px; height: 60px; border: 3px solid #ffd966; border-radius: 50%;
-      opacity: 0; pointer-events: none; z-index: 6;
-    }
+    #double-jump-ring { position: absolute; top: 60%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; border: 3px solid #ffd966; border-radius: 50%; opacity: 0; pointer-events: none; z-index: 6; }
     #double-jump-ring.show { animation: ringExpand 0.4s ease-out; }
-    @keyframes ringExpand {
-      0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
-      100% { opacity: 0; transform: translate(-50%, -50%) scale(2); }
-    }
-
-    #tutorial-tip {
-      position: absolute; bottom: 150px; left: 0; right: 0;
-      text-align: center; color: #fff; font-size: 1.5rem;
-      text-shadow: 0 2px 4px #000; background: rgba(0,0,0,0.5);
-      padding: 10px; display: none; pointer-events: none;
-      animation: slideUp 0.5s ease-out;
-    }
+    @keyframes ringExpand { 0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); } 100% { opacity: 0; transform: translate(-50%, -50%) scale(2); } }
+    #tutorial-tip { position: absolute; bottom: 150px; left: 0; right: 0; text-align: center; color: #fff; font-size: 1.5rem; text-shadow: 0 2px 4px #000; background: rgba(0,0,0,0.5); padding: 10px; display: none; pointer-events: none; animation: slideUp 0.5s ease-out; }
     @keyframes slideUp { from{transform:translateY(20px); opacity:0} to{transform:translateY(0); opacity:1} }
-
-    #active-effects {
-      position: absolute; bottom: 20px; right: 20px;
-      display: flex; flex-direction: column; align-items: flex-end; gap: 5px;
-      pointer-events: none;
-    }
-    .effect-row {
-      background: rgba(0, 0, 0, 0.6);
-      border-right: 3px solid #ffd966;
-      padding: 5px 15px;
-      border-radius: 4px 0 0 4px;
-      color: #fff; font-size: 1rem;
-      display: flex; align-items: center; gap: 10px;
-      transform: translateX(100%); opacity: 0;
-      transition: all 0.3s ease-out;
-      text-shadow: 0 0 5px rgba(255,255,255,0.5);
-    }
+    #active-effects { position: absolute; bottom: 20px; right: 20px; display: flex; flex-direction: column; align-items: flex-end; gap: 5px; pointer-events: none; }
+    .effect-row { background: rgba(0, 0, 0, 0.6); border-right: 3px solid #ffd966; padding: 5px 15px; border-radius: 4px 0 0 4px; color: #fff; font-size: 1rem; display: flex; align-items: center; gap: 10px; transform: translateX(100%); opacity: 0; transition: all 0.3s ease-out; text-shadow: 0 0 5px rgba(255,255,255,0.5); }
     .effect-row.visible { transform: translateX(0); opacity: 1; }
     .effect-timer { font-family: monospace; font-weight: bold; color: #ffd966; min-width: 40px; text-align: right; }
-
     #controls { position: absolute; bottom: 30px; left: 0; right: 0; display: flex; justify-content: center; gap: 20px; pointer-events: auto; }
-    .ctrl-btn {
-      width: 70px; height: 70px; background: rgba(60, 40, 24, 0.8); border: 2px solid #b89a6b; border-radius: 50%;
-      color: #efddc0; font-size: 1.8rem; display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 6px 0 #2f1e12; cursor: pointer; transition: 0.1s;
-    }
+    .ctrl-btn { width: 70px; height: 70px; background: rgba(60, 40, 24, 0.8); border: 2px solid #b89a6b; border-radius: 50%; color: #efddc0; font-size: 1.8rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 0 #2f1e12; cursor: pointer; transition: 0.1s; }
     .ctrl-btn:active { transform: translateY(6px); box-shadow: 0 0 0 #2f1e12; }
     .ctrl-btn.jump { width: 90px; height: 90px; font-size: 2.2rem; background: rgba(80, 50, 20, 0.9); }
     .ctrl-btn.slide { background: rgba(40, 60, 80, 0.8); border-color: #6b9ab8; }
-
-    #map-container {
-      position: absolute; top: 80px; left: 20px; width: 380px; height: 320px;
-      background: rgba(20, 16, 12, 0.96); border: 2px solid #b89a6b; border-radius: 16px;
-      backdrop-filter: blur(10px); z-index: 160; box-shadow: 0 10px 40px rgba(0,0,0,0.8);
-      padding: 10px; box-sizing: border-box; display: flex; flex-direction: column;
-      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: auto;
-    }
-    #map-container.collapsed {
-      left: auto; right: 20px; top: 50%; transform: translateY(-50%);
-      width: 50px; height: 50px; padding: 0; border-radius: 25px;
-      background: rgba(60, 40, 24, 0.8); border: 2px solid #ffd966; cursor: pointer; overflow: hidden;
-    }
+    #map-container { position: absolute; top: 80px; left: 20px; width: 380px; height: 320px; background: rgba(20, 16, 12, 0.96); border: 2px solid #b89a6b; border-radius: 16px; backdrop-filter: blur(10px); z-index: 160; box-shadow: 0 10px 40px rgba(0,0,0,0.8); padding: 10px; box-sizing: border-box; display: flex; flex-direction: column; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: auto; }
+    #map-container.collapsed { left: auto; right: 20px; top: 50%; transform: translateY(-50%); width: 50px; height: 50px; padding: 0; border-radius: 25px; background: rgba(60, 40, 24, 0.8); border: 2px solid #ffd966; cursor: pointer; overflow: hidden; }
     #map-container.collapsed #map-grid, #map-container.collapsed #map-header { display: none; }
-    #map-mini-icon {
-      display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      font-size: 24px; color: #ffd966; text-align: center; line-height: 1;
-    }
+    #map-mini-icon { display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 24px; color: #ffd966; text-align: center; line-height: 1; }
     #map-container.collapsed #map-mini-icon { display: block; }
     #map-header { color: #e8d5b0; font-size: 0.9rem; border-bottom: 1px solid #6a5238; padding-bottom: 5px; margin-bottom: 5px; display: flex; justify-content: space-between; }
     #map-grid { flex: 1; display: grid; grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(7, 1fr); gap: 2px; overflow: hidden; }
-    .prov-btn {
-      background: rgba(90, 74, 58, 0.7); border: 1px solid #8a7a5a; border-radius: 3px; color: #e8d5b0;
-      font-size: 0.55rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.1s;
-    }
+    .prov-btn { background: rgba(90, 74, 58, 0.7); border: 1px solid #8a7a5a; border-radius: 3px; color: #e8d5b0; font-size: 0.55rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.1s; }
     .prov-btn:hover { background: #b89a6b; color: #1a1410; transform: scale(1.1); z-index: 2; }
     .prov-btn.active { background: #ffd966; color: #3a2a1e; font-weight: bold; box-shadow: 0 0 8px #ffaa00; }
-
-    .mask {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);
-      display: none; justify-content: center; align-items: center; z-index: 90; pointer-events: auto;
-    }
+    .mask { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 90; pointer-events: auto; }
     .mask.show { display: flex; }
     .mask-text { color: #ffd966; font-size: 2.5rem; text-align: center; text-shadow: 0 0 20px #ffaa00; animation: pulse 1.5s infinite; }
     @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
-
-    #gameover-content, #pause-content, #settings-content, #shop-content, #daily-content, #leaderboard-content,
-    #weekly-content, #signin-content, #share-content {
-      background: rgba(30, 20, 12, 0.95);
-      border: 2px solid #b89a6b;
-      padding: 30px 40px;
-      border-radius: 20px;
-      text-align: center;
-      box-shadow: 0 0 50px rgba(0,0,0,0.8);
-      max-width: 560px; max-height: 90vh; overflow-y: auto;
-      color: #e8d5b0;
-    }
+    #gameover-content, #pause-content, #settings-content, #shop-content, #daily-content, #leaderboard-content, #weekly-content, #signin-content, #share-content { background: rgba(30, 20, 12, 0.95); border: 2px solid #b89a6b; padding: 30px 40px; border-radius: 20px; text-align: center; box-shadow: 0 0 50px rgba(0,0,0,0.8); max-width: 560px; max-height: 90vh; overflow-y: auto; color: #e8d5b0; }
     #go-title { font-size: 2rem; color: #ffd966; margin-bottom: 20px; }
     #go-score { font-size: 3rem; color: #fff; margin: 10px 0; font-weight: bold; }
     #go-best { font-size: 1.2rem; color: #aaa; margin-bottom: 20px; }
-    #go-new-record {
-      color: #ff4444; font-size: 1.5rem; font-weight: bold;
-      display: none; margin-bottom: 15px;
-      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
+    #go-new-record { color: #ff4444; font-size: 1.5rem; font-weight: bold; display: none; margin-bottom: 15px; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
     @keyframes popIn { 0%{transform:scale(0)} 100%{transform:scale(1)} }
-    .btn-restart {
-      background: #b89a6b; color: #1a1410; border: none;
-      padding: 10px 30px; font-size: 1.2rem; border-radius: 30px;
-      cursor: pointer; font-family: inherit; font-weight: bold;
-      transition: 0.2s; margin: 5px;
-    }
+    .btn-restart { background: #b89a6b; color: #1a1410; border: none; padding: 10px 30px; font-size: 1.2rem; border-radius: 30px; cursor: pointer; font-family: inherit; font-weight: bold; transition: 0.2s; margin: 5px; }
     .btn-restart:hover { background: #ffd966; transform: scale(1.05); }
     .btn-secondary { background: #5a4a3a; color: #e8d5b0; }
     .btn-danger { background: #8a2a2a; color: #ffd0d0; }
     .btn-gold { background: #ffd966; color: #1a1410; }
-
     #leaderboard { text-align: left; margin: 15px 0; font-size: 0.95rem; }
     #leaderboard h3 { margin: 0 0 8px; color: #ffd966; font-size: 1rem; }
     #leaderboard ol { margin: 0; padding-left: 20px; color: #ccc; }
     #leaderboard li { padding: 2px 0; }
     #leaderboard li.top { color: #ffd966; font-weight: bold; }
-
     #run-stats { text-align: left; margin: 15px 0; font-size: 0.9rem; color: #ccc; }
     #run-stats div { padding: 3px 0; }
-
-    #mute-btn, #screenshot-btn, #settings-btn, #shop-btn, #daily-btn, #online-btn, #weekly-btn, #signin-btn {
-      position: absolute; top: 20px;
-      background: rgba(60, 40, 24, 0.8); border: 1px solid #b89a6b;
-      color: #e8d5b0; padding: 5px 12px; border-radius: 20px;
-      cursor: pointer; pointer-events: auto; font-size: 0.9rem;
-      z-index: 20;
-    }
+    #mute-btn, #screenshot-btn, #settings-btn, #shop-btn, #daily-btn, #online-btn, #weekly-btn, #signin-btn { position: absolute; top: 20px; background: rgba(60, 40, 24, 0.8); border: 1px solid #b89a6b; color: #e8d5b0; padding: 5px 12px; border-radius: 20px; cursor: pointer; pointer-events: auto; font-size: 0.9rem; z-index: 20; }
     #mute-btn { left: 50%; transform: translateX(-50%); }
     #screenshot-btn { left: 50%; transform: translateX(calc(-50% + 80px)); }
     #settings-btn { left: 50%; transform: translateX(calc(-50% + 160px)); }
@@ -333,137 +118,50 @@
     #online-btn { left: 50%; transform: translateX(calc(-50% + 400px)); }
     #weekly-btn { left: 50%; transform: translateX(calc(-50% + 490px)); }
     #signin-btn { left: 50%; transform: translateX(calc(-50% + 580px)); }
-
-    #speed-lines {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      pointer-events: none; z-index: 5; opacity: 0;
-      transition: opacity 0.5s;
-    }
-    .line {
-      position: absolute; background: rgba(255,255,255,0.3);
-      width: 2px; height: 100px;
-      animation: speedLine 0.5s linear infinite;
-    }
-    @keyframes speedLine {
-      from { transform: translateY(-100px); opacity: 0; }
-      to { transform: translateY(100vh); opacity: 1; }
-    }
-
-    #achievement-toast {
-      position: absolute; top: 120px; left: 50%; transform: translateX(-50%) translateY(-30px);
-      background: linear-gradient(135deg, #b89a6b, #ffd966);
-      color: #1a1410; padding: 15px 30px; border-radius: 12px;
-      font-size: 1.1rem; font-weight: bold;
-      box-shadow: 0 10px 30px rgba(255,215,0,0.5);
-      opacity: 0; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      pointer-events: none; z-index: 250; text-align: center;
-    }
+    #speed-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; opacity: 0; transition: opacity 0.5s; }
+    .line { position: absolute; background: rgba(255,255,255,0.3); width: 2px; height: 100px; animation: speedLine 0.5s linear infinite; }
+    @keyframes speedLine { from { transform: translateY(-100px); opacity: 0; } to { transform: translateY(100vh); opacity: 1; } }
+    #achievement-toast { position: absolute; top: 120px; left: 50%; transform: translateX(-50%) translateY(-30px); background: linear-gradient(135deg, #b89a6b, #ffd966); color: #1a1410; padding: 15px 30px; border-radius: 12px; font-size: 1.1rem; font-weight: bold; box-shadow: 0 10px 30px rgba(255,215,0,0.5); opacity: 0; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; z-index: 250; text-align: center; }
     #achievement-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
     #achievement-toast .ach-title { font-size: 0.8rem; opacity: 0.7; }
-
     .shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
     @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
-
-    #flash {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: #fff; opacity: 0; pointer-events: none; z-index: 240;
-    }
+    #flash { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #fff; opacity: 0; pointer-events: none; z-index: 240; }
     #flash.flash { animation: flashAnim 0.4s ease-out; }
     @keyframes flashAnim { 0%{opacity:0.6} 100%{opacity:0} }
-
-    .setting-row {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 10px 0; border-bottom: 1px solid #4a3a2a;
-      font-size: 1rem;
-    }
+    .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #4a3a2a; font-size: 1rem; }
     .setting-row:last-child { border-bottom: none; }
     .setting-btn-group { display: flex; gap: 5px; flex-wrap: wrap; }
-    .setting-btn {
-      background: #5a4a3a; color: #e8d5b0; border: 1px solid #b89a6b;
-      padding: 4px 12px; border-radius: 15px; cursor: pointer;
-      font-family: inherit; font-size: 0.9rem;
-    }
+    .setting-btn { background: #5a4a3a; color: #e8d5b0; border: 1px solid #b89a6b; padding: 4px 12px; border-radius: 15px; cursor: pointer; font-family: inherit; font-size: 0.9rem; }
     .setting-btn.active { background: #ffd966; color: #1a1410; font-weight: bold; }
-
-    /* 商店标签页 */
-    .shop-tabs {
-      display: flex; gap: 5px; margin-bottom: 15px; justify-content: center;
-    }
-    .shop-tab {
-      background: #5a4a3a; color: #e8d5b0; border: 1px solid #b89a6b;
-      padding: 6px 18px; border-radius: 20px; cursor: pointer;
-      font-family: inherit; font-size: 0.9rem;
-    }
+    .shop-tabs { display: flex; gap: 5px; margin-bottom: 15px; justify-content: center; }
+    .shop-tab { background: #5a4a3a; color: #e8d5b0; border: 1px solid #b89a6b; padding: 6px 18px; border-radius: 20px; cursor: pointer; font-family: inherit; font-size: 0.9rem; }
     .shop-tab.active { background: #ffd966; color: #1a1410; font-weight: bold; }
-
-    #shop-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
-      margin: 20px 0;
-    }
-    .skin-card {
-      background: rgba(60, 40, 24, 0.6); border: 2px solid #8a7a5a;
-      border-radius: 12px; padding: 10px; cursor: pointer;
-      transition: all 0.2s;
-    }
+    #shop-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 20px 0; }
+    .skin-card { background: rgba(60, 40, 24, 0.6); border: 2px solid #8a7a5a; border-radius: 12px; padding: 10px; cursor: pointer; transition: all 0.2s; }
     .skin-card:hover { border-color: #ffd966; transform: translateY(-3px); }
     .skin-card.owned { border-color: #6b9ab8; }
     .skin-card.active { border-color: #ffd966; background: rgba(120, 90, 40, 0.6); box-shadow: 0 0 15px rgba(255,215,0,0.4); }
-    .skin-preview {
-      width: 60px; height: 80px; margin: 0 auto 8px;
-      display: flex; flex-direction: column; align-items: center;
-    }
+    .skin-preview { width: 60px; height: 80px; margin: 0 auto 8px; display: flex; flex-direction: column; align-items: center; }
     .skin-body { width: 40px; height: 50px; border-radius: 4px; }
     .skin-head { width: 24px; height: 24px; border-radius: 50%; margin-top: -3px; }
     .skin-name { font-size: 0.85rem; color: #e8d5b0; }
     .skin-price { font-size: 0.75rem; color: #ffd966; margin-top: 3px; }
-
-    .daily-rule {
-      background: rgba(60, 40, 24, 0.6); border-left: 3px solid #ffd966;
-      padding: 10px 15px; margin: 10px 0; text-align: left;
-      font-size: 0.95rem; border-radius: 0 8px 8px 0;
-    }
+    .daily-rule { background: rgba(60, 40, 24, 0.6); border-left: 3px solid #ffd966; padding: 10px 15px; margin: 10px 0; text-align: left; font-size: 0.95rem; border-radius: 0 8px 8px 0; }
     .daily-done { color: #6bdb6b; font-weight: bold; }
-
-    #signin-grid {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
-      margin: 20px 0;
-    }
-    .signin-day {
-      background: rgba(60, 40, 24, 0.6); border: 2px solid #8a7a5a;
-      border-radius: 10px; padding: 10px 5px;
-      display: flex; flex-direction: column; align-items: center; gap: 4px;
-      font-size: 0.8rem;
-      transition: all 0.2s;
-    }
+    #signin-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 20px 0; }
+    .signin-day { background: rgba(60, 40, 24, 0.6); border: 2px solid #8a7a5a; border-radius: 10px; padding: 10px 5px; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 0.8rem; transition: all 0.2s; }
     .signin-day.claimed { background: rgba(107, 219, 107, 0.2); border-color: #6bdb6b; }
-    .signin-day.today {
-      border-color: #ffd966; box-shadow: 0 0 15px rgba(255,215,0,0.5);
-      animation: pulse 1.5s infinite;
-    }
+    .signin-day.today { border-color: #ffd966; box-shadow: 0 0 15px rgba(255,215,0,0.5); animation: pulse 1.5s infinite; }
     .signin-day .num { font-size: 1.1rem; font-weight: bold; color: #ffd966; }
     .signin-day .reward { color: #ffd966; font-size: 0.75rem; }
     .signin-day.claimed .num { color: #6bdb6b; }
-
-    #share-preview {
-      max-width: 100%; max-height: 60vh;
-      border: 2px solid #b89a6b; border-radius: 12px;
-      margin: 15px 0;
-    }
-
+    #share-preview { max-width: 100%; max-height: 60vh; border: 2px solid #b89a6b; border-radius: 12px; margin: 15px 0; }
     #online-list { text-align: left; margin: 15px 0; }
-    #online-list .row {
-      display: flex; justify-content: space-between;
-      padding: 6px 10px; border-bottom: 1px solid #4a3a2a;
-      font-size: 0.95rem;
-    }
+    #online-list .row { display: flex; justify-content: space-between; padding: 6px 10px; border-bottom: 1px solid #4a3a2a; font-size: 0.95rem; }
     #online-list .row.top { color: #ffd966; font-weight: bold; }
     #online-loading { color: #aaa; font-size: 0.9rem; }
-
-    #weekly-rule {
-      background: rgba(60, 40, 24, 0.6); border-left: 3px solid #ffd966;
-      padding: 10px 15px; margin: 10px 0; text-align: left;
-      font-size: 0.95rem; border-radius: 0 8px 8px 0;
-    }
+    #weekly-rule { background: rgba(60, 40, 24, 0.6); border-left: 3px solid #ffd966; padding: 10px 15px; margin: 10px 0; text-align: left; font-size: 0.95rem; border-radius: 0 8px 8px 0; }
   </style>
 </head>
 <body>
@@ -476,7 +174,6 @@
       <div class="stat-row">🪙 <span id="coinVal">0</span></div>
       <div class="stat-row" style="font-size:0.9rem; color:#aaa;">🏆 <span id="bestVal">0</span></div>
     </div>
-
     <div id="rank-badge">
       <div id="rank-icon">🥉</div>
       <div id="rank-info">
@@ -484,22 +181,12 @@
         <div id="rank-score">最高 0 分</div>
       </div>
     </div>
-
-    <div id="vehicle-badge" class="hidden">
-      <span id="vehicle-icon">🛹</span>
-      <span id="vehicle-name">滑板</span>
-    </div>
-
-    <div id="pet-badge" class="hidden">
-      <span id="pet-icon">🐶</span>
-      <span id="pet-name">小狗</span>
-    </div>
-
+    <div id="vehicle-badge" class="hidden"><span id="vehicle-icon">🛹</span><span id="vehicle-name">滑板</span></div>
+    <div id="pet-badge" class="hidden"><span id="pet-icon">🐶</span><span id="pet-name">小狗</span></div>
     <div id="quest-panel">
       <h3>🎯 本局任务</h3>
       <div id="quest-list"></div>
     </div>
-
     <div id="combo-display">COMBO x0</div>
     <div id="tutorial-tip">按 A / ◀ 向左移动</div>
     <div id="mute-btn" onclick="toggleMute()">🔊</div>
@@ -510,17 +197,14 @@
     <div id="online-btn" onclick="toggleOnline()">🌐</div>
     <div id="weekly-btn" onclick="toggleWeekly()">📅</div>
     <div id="signin-btn" onclick="toggleSignin()">🎁</div>
-
     <div id="tip-toast">💡 连击越高，单金币分数越多</div>
     <div id="double-jump-ring"></div>
     <div id="speed-lines"></div>
     <div id="danger-flash"></div>
     <div id="vignette"></div>
     <div id="super-overlay"></div>
-
     <div id="super-banner">⚡ 超级模式 ⚡</div>
     <div id="super-timer">超级模式 10.0s</div>
-
     <div id="speedometer">
       <svg viewBox="0 0 140 140">
         <circle cx="70" cy="70" r="66" fill="rgba(20,14,8,0.85)" stroke="#b89a6b" stroke-width="2"/>
@@ -535,21 +219,15 @@
         <circle cx="70" cy="70" r="6" fill="#b89a6b" stroke="#5a4a3a" stroke-width="1.5"/>
         <circle cx="70" cy="70" r="2.5" fill="#1a1410"/>
       </svg>
-      <div id="speed-readout">
-        <span id="speed-val">0</span>
-        <small>KM/H</small>
-      </div>
+      <div id="speed-readout"><span id="speed-val">0</span><small>KM/H</small></div>
     </div>
-
     <div id="slide-bar"><div id="slide-bar-fill"></div></div>
-
     <div id="active-effects">
       <div id="eff-jet" class="effect-row">🚀 飞行中 <span class="effect-timer">0.0s</span></div>
       <div id="eff-magnet" class="effect-row">🧲 磁铁吸附 <span class="effect-timer">0.0s</span></div>
       <div id="eff-double" class="effect-row">✨ 双倍积分 <span class="effect-timer">0.0s</span></div>
       <div id="eff-skate" class="effect-row">🛹 滑板保护 <span class="effect-timer">0.0s</span></div>
     </div>
-
     <div id="map-container">
       <div id="map-mini-icon">🗺️<br><span style="font-size:10px">地图</span></div>
       <div id="map-header">
@@ -565,7 +243,6 @@
       <div class="ctrl-btn" onclick="move(1)">▶</div>
     </div>
   </div>
-
   <div id="pause-mask" class="mask">
     <div id="pause-content">
       <div style="font-size:2rem; color:#ffd966; margin-bottom:15px;">⏸ 暂停</div>
@@ -580,7 +257,6 @@
       <button class="btn-restart btn-secondary" onclick="resumeGame()">继续游戏</button>
     </div>
   </div>
-
   <div id="settings-mask" class="mask" style="z-index:180">
     <div id="settings-content">
       <div style="font-size:1.8rem; color:#ffd966; margin-bottom:20px;">⚙️ 设置</div>
@@ -615,8 +291,6 @@
       <button class="btn-restart btn-secondary" style="margin-top:20px;" onclick="toggleSettings()">关闭</button>
     </div>
   </div>
-
-  <!-- 商店（含载具、宠物） -->
   <div id="shop-mask" class="mask" style="z-index:180">
     <div id="shop-content">
       <div style="font-size:1.8rem; color:#ffd966; margin-bottom:5px;">🎨 商店</div>
@@ -632,7 +306,6 @@
       <button class="btn-restart btn-secondary" onclick="toggleShop()">关闭</button>
     </div>
   </div>
-
   <div id="daily-mask" class="mask" style="z-index:180">
     <div id="daily-content">
       <div style="font-size:1.8rem; color:#ffd966; margin-bottom:15px;">🏆 每日挑战</div>
@@ -654,7 +327,6 @@
       <button class="btn-restart btn-secondary" onclick="toggleDaily()">关闭</button>
     </div>
   </div>
-
   <div id="weekly-mask" class="mask" style="z-index:180">
     <div id="weekly-content">
       <div style="font-size:1.8rem; color:#ffd966; margin-bottom:15px;">📅 每周挑战</div>
@@ -676,7 +348,6 @@
       <button class="btn-restart btn-secondary" onclick="toggleWeekly()">关闭</button>
     </div>
   </div>
-
   <div id="signin-mask" class="mask" style="z-index:180">
     <div id="signin-content">
       <div style="font-size:1.8rem; color:#ffd966; margin-bottom:5px;">🎁 每日签到</div>
@@ -689,7 +360,6 @@
       <button class="btn-restart btn-secondary" onclick="toggleSignin()">关闭</button>
     </div>
   </div>
-
   <div id="share-mask" class="mask" style="z-index:200">
     <div id="share-content">
       <div style="font-size:1.5rem; color:#ffd966; margin-bottom:10px;">📸 分享图</div>
@@ -699,7 +369,6 @@
       <button class="btn-restart btn-secondary" onclick="closeShare()">关闭</button>
     </div>
   </div>
-
   <div id="online-mask" class="mask" style="z-index:180">
     <div id="leaderboard-content">
       <div style="font-size:1.8rem; color:#ffd966; margin-bottom:15px;">🌐 在线排行榜</div>
@@ -710,11 +379,9 @@
       <button class="btn-restart btn-secondary" onclick="toggleOnline()">关闭</button>
     </div>
   </div>
-
   <div id="countdown-mask" class="mask" style="z-index:300; background:rgba(0,0,0,0.8)">
     <div class="mask-text" id="cd-text">3</div>
   </div>
-
   <div id="gameover-mask" class="mask" style="z-index:200">
     <div id="gameover-content">
       <div id="go-title">🏁 抵达终点</div>
@@ -740,7 +407,6 @@
       <div style="margin-top:15px; font-size:0.9rem; color:#888;">按空格键快速重开</div>
     </div>
   </div>
-
   <div id="replay-mask" class="mask" style="z-index:260; background:rgba(0,0,0,0.7)">
     <div style="text-align:center; color:#ffd966;">
       <div style="font-size:2rem; margin-bottom:15px;">🎬 回放中</div>
@@ -748,12 +414,10 @@
       <button class="btn-restart btn-danger" onclick="stopReplay()">退出回放</button>
     </div>
   </div>
-
   <div id="achievement-toast">
     <div class="ach-title">🏆 成就解锁</div>
     <div id="ach-name">首次飞行</div>
   </div>
-
   <div id="flash"></div>
 
   <script type="importmap">
@@ -774,6 +438,7 @@
       return matCache[key];
     }
 
+    // ================= 在线排行榜配置 =================
     const ONLINE_CONFIG = {
       binId: '6aa61b76ac6210605ac6a887',
       apiKey: '$2a$10$j5j5FhZNVTvYzqatPtjIbew14N4vXOf9vZ5DYysy0G4KROVzbTHm.',
@@ -783,6 +448,7 @@
       ONLINE_CONFIG.enabled = true;
     }
 
+    // ================= 设置 =================
     const settings = { volume: 0.7, quality: 'mid', shake: true };
     try { Object.assign(settings, JSON.parse(localStorage.getItem('metro_settings') || '{}')); } catch(e) {}
     function saveSettings() { localStorage.setItem('metro_settings', JSON.stringify(settings)); }
@@ -958,7 +624,6 @@
       if (p.id === 'none') return;
       petTimer++;
       if (p.effect === 'magnet5' && petTimer % 300 === 0) {
-        // 每 5 秒吸一颗最近金币
         let nearest = null, minD = Infinity;
         coinObjs.forEach(c => {
           const d = c.position.distanceTo(player.position);
@@ -967,13 +632,11 @@
         if (nearest) nearest.position.lerp(player.position, 0.5);
       }
       if (p.effect === 'comboKeep') {
-        // 连击超时时，不清零，只减半
         if (comboTimer <= 0 && combo > 0) {
           comboTimer = 60;
         }
       }
       if (p.effect === 'item30' && petTimer % 1800 === 0) {
-        // 每 30 秒给一个随机道具
         const kinds = [1,2,3,4];
         const k = kinds[Math.floor(Math.random() * 4)];
         if (k === 1) { pus.skate.on = true; pus.skate.t = 600; pus.skate.el.classList.add('visible'); }
@@ -983,7 +646,6 @@
         showTipText('🐼 熊猫宝宝送你一个道具！');
       }
       if (p.effect === 'coin10' && petTimer % 600 === 0) {
-        // 每 10 秒生成一颗金币
         const l = Math.floor(Math.random() * 3) - 1;
         const mesh = new THREE.Mesh(coinGeo, coinMat);
         mesh.position.set(l * 1.8, 0.8, player.position.z + 25);
@@ -1902,6 +1564,14 @@
         const r = new THREE.Mesh(trackRailGeo, trackRailMat);
         r.position.set(x, 0.05, 0); g.add(r);
       });
+      // 修复：添加两侧无限延伸的地面
+      const sideGroundMat = new THREE.MeshStandardMaterial({color: 0x3a2a1a});
+      const leftGround = new THREE.Mesh(new THREE.BoxGeometry(20, 0.1, 4), sideGroundMat);
+      leftGround.position.set(-13, -0.2, 0);
+      const rightGround = new THREE.Mesh(new THREE.BoxGeometry(20, 0.1, 4), sideGroundMat);
+      rightGround.position.set(13, -0.2, 0);
+      g.add(leftGround, rightGround);
+      
       g.position.z = -30 + i * 4;
       tracks.push(g); scene.add(g);
     }
@@ -1996,15 +1666,33 @@
       const group = new THREE.Group();
       const type = Math.random();
       if (type > 0.6) {
-        const pole = new THREE.Mesh(getGeo('pla_pole', () => new THREE.CylinderGeometry(0.1, 0.15, 4, 6)), getMat('pla_pole_mat', () => new THREE.MeshStandardMaterial({color: 0xffffff})));
+        // 修复：风车（更真实，有机舱和叶片正确旋转）
+        const poleMat = getMat('pla_pole_mat', () => new THREE.MeshStandardMaterial({color: 0xffffff}));
+        const poleGeo = getGeo('pla_pole', () => new THREE.CylinderGeometry(0.1, 0.15, 4, 6));
+        const pole = new THREE.Mesh(poleGeo, poleMat);
         pole.position.y = 2;
+
+        // 机舱
+        const nacelleGeo = getGeo('pla_nacelle', () => new THREE.BoxGeometry(0.6, 0.4, 0.8));
+        const nacelleMat = getMat('pla_nacelle_mat', () => new THREE.MeshStandardMaterial({color: 0xcccccc}));
+        const nacelle = new THREE.Mesh(nacelleGeo, nacelleMat);
+        nacelle.position.set(0, 4.2, 0.4);
+        nacelle.castShadow = true;
+
+        // 叶片
         const blades = new THREE.Group();
-        const blade = new THREE.Mesh(getGeo('pla_blade', () => new THREE.BoxGeometry(0.1, 2.5, 0.1)), getMat('pla_blade_mat', () => new THREE.MeshStandardMaterial({color: 0xeeeeee})));
-        blade.position.y = 1.25;
-        for (let i = 0; i < 3; i++) { const b = blade.clone(); b.rotation.z = (i * 120) * Math.PI / 180; blades.add(b); }
-        blades.position.y = 4;
+        const bladeGeo = getGeo('pla_blade', () => new THREE.BoxGeometry(0.1, 2.5, 0.1));
+        const bladeMat = getMat('pla_blade_mat', () => new THREE.MeshStandardMaterial({color: 0xeeeeee}));
+        
+        for (let i = 0; i < 3; i++) {
+          const b = new THREE.Mesh(bladeGeo, bladeMat);
+          b.position.y = 1.25; 
+          b.rotation.z = (i * 120) * Math.PI / 180;
+          blades.add(b);
+        }
+        blades.position.set(0, 4.2, 0.8);
         blades.userData = { isBlade: true, speed: 0.05 + Math.random() * 0.05 };
-        group.add(pole, blades);
+        group.add(pole, nacelle, blades);
       } else if (type > 0.3) {
         const yak = new THREE.Mesh(getGeo('pla_yak', () => new THREE.BoxGeometry(0.8, 0.6, 1.2)), getMat('pla_yak_mat', () => new THREE.MeshStandardMaterial({color: 0x333333})));
         yak.position.y = 0.3; group.add(yak);
@@ -2542,7 +2230,13 @@
         if (step > steps.length) clearInterval(interval);
       }, 2000);
     }
-    window.move = (d) => { if (!paused && !gameOver && !cdActive && !replayPlaying) targetLane = Math.max(-1, Math.min(1, targetLane + d)); };
+    window.move = (d) => { 
+      if (!paused && !gameOver && !cdActive && !replayPlaying) {
+        const currentLane = Math.round(targetLane);
+        const nextLane = Math.max(-1, Math.min(1, currentLane + d));
+        targetLane = nextLane;
+      }
+    };
     window.jump = () => {
       if (paused || gameOver || cdActive || replayPlaying) return;
       if (dailyNoJump) return;
@@ -2761,7 +2455,6 @@
           }
         }
 
-        // 载具速度倍数
         const superSpeedMul = superMode ? 1.5 : 1;
         const spd = speed * (doubleMul > 1 ? 1.2 : 1.0) * dailySpeedMul * superSpeedMul * v.speedMul;
         player.position.z += spd;
@@ -2805,7 +2498,6 @@
           rainField.position.z = player.position.z;
         } else { snowMat.opacity = 0; rainMat.opacity = 0; }
 
-        // 载具火箭扣金币
         if (v.drain > 0) {
           vehicleDrainTimer++;
           if (vehicleDrainTimer >= 180) {
@@ -2815,10 +2507,8 @@
           }
         }
 
-        // 宠物
         triggerPetEffect(1);
         updatePetMesh();
-        // 皮肤拖尾
         spawnTrail();
         updateTrails();
 
@@ -2839,7 +2529,6 @@
             else { if (dy < 1.0) hit = true; }
           }
           if (hit) {
-            // 自行车自动护盾
             if (v.autoShield) {
               scene.remove(o); obstacles.splice(i, 1);
               const wg = waveGroups.get(o.userData.waveZ);
@@ -2902,6 +2591,8 @@
           });
           waveGroups.delete(wz);
           spawn('obs', player.position.z + 40 + Math.random() * 20);
+          spawn('coin', player.position.z + 30 + Math.random() * 15);
+          if (Math.random() < 0.15) spawn('item', player.position.z + 50 + Math.random() * 20);
         });
         for (let i = coinObjs.length - 1; i >= 0; i--) {
           const c = coinObjs[i];
