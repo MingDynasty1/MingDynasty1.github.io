@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户主页 | MingDynasty</title>
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://mingdynasty1.github.io/supabase-client.js"></script>
+    <style>
+        body {
+            font-family: 'serif', 'SimSun', 'FangSong';
+            background-color: #FFFFF0;
+            color: #2C2C2C;
+            min-height: 100vh;
+        }
+        .paper {
+            background-color: #FFFFF0;
+            border: 2px solid #D4AF37;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        }
+        .paper h2 {
+            color: #A62424;
+            border-bottom: 2px dashed #D4AF37;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        .avatar-big {
+            width: 88px;
+            height: 88px;
+            border-radius: 50%;
+            background-color: #A62424;
+            color: #FFFFF0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            font-weight: bold;
+            background-size: cover;
+            background-position: center;
+            border: 3px solid #D4AF37;
+            flex-shrink: 0;
+        }
+        .rating-badge {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #D4AF37;
+            line-height: 1;
+        }
+        .status-AC { color: #2e7d32; font-weight: bold; }
+        .status-WA { color: #c62828; font-weight: bold; }
+        .status-Pending { color: #ef6c00; }
+        .status-Judging { color: #ef6c00; }
+        .status-TLE { color: #6a1b9a; font-weight: bold; }
+        .status-MLE { color: #6a1b9a; font-weight: bold; }
+        .status-RE  { color: #ad1457; font-weight: bold; }
+        .status-CE  { color: #555; font-weight: bold; }
+        .law-link { color: #A62424; text-decoration: none; }
+        .law-link:hover { text-decoration: underline; }
+        .sub-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .sub-table th, .sub-table td {
+            padding: 10px;
+            border: 1px solid #e0c987;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+        .sub-table th {
+            background-color: #f8f3e6;
+            color: #A62424;
+        }
+        .sub-table tr:hover {
+            background-color: #fdf8ec;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部红头 -->
+    <div class="w-full h-16 bg-[#A62424] shadow-lg flex items-center justify-center">
+        <div class="w-3/4 h-full border-b-4 border-[#D4AF37] flex items-center justify-center">
+            <h1 class="text-3xl md:text-4xl text-[#D4AF37] font-bold" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
+                大明王朝 - 用户主页
+            </h1>
+        </div>
+    </div>
+
+    <main class="container mx-auto px-4 py-8 max-w-4xl">
+        <!-- 加载中 -->
+        <div id="loading" class="text-center py-16 text-gray-600">
+            <i class="fa fa-spinner fa-spin text-3xl"></i>
+            <p class="mt-3">加载用户信息...</p>
+        </div>
+
+        <!-- 内容 -->
+        <div id="user-content" style="display:none;">
+
+            <!-- 用户卡片 -->
+            <div class="paper">
+                <div class="flex items-center gap-5 flex-wrap">
+                    <div class="avatar-big" id="avatar">U</div>
+                    <div class="flex-1 min-w-[200px]">
+                        <div class="text-2xl font-bold text-[#A62424]" id="username">用户名</div>
+                        <div class="text-sm text-gray-600" id="email">邮箱</div>
+                        <div class="text-xs text-gray-500 font-mono" id="uid">UID: ---</div>
+                        <div class="text-xs text-gray-500 mt-1" id="created-at">注册于 ---</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="rating-badge" id="rating">1500</div>
+                        <div class="text-xs text-gray-500">Rating</div>
+                        <div class="text-xs text-gray-500 mt-1">
+                            通过题目：<span id="solved-count">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 pt-4 border-t border-[#D4AF37] text-gray-700" id="bio">
+                    暂无简介
+                </div>
+            </div>
+
+            <!-- 最近提交 -->
+            <div class="paper">
+                <h2><i class="fa fa-code"></i> 最近提交</h2>
+                <div id="submissions">加载中...</div>
+            </div>
+
+            <!-- 返回 -->
+            <div class="text-center">
+                <a href="https://mingdynasty1.github.io/code/index.html" class="law-link">
+                    <i class="fa fa-arrow-left"></i> 返回首页
+                </a>
+            </div>
+        </div>
+
+        <!-- 错误 -->
+        <div id="error-box" class="paper text-center" style="display:none;">
+            <i class="fa fa-exclamation-circle text-4xl text-[#A62424]"></i>
+            <p class="mt-3 text-lg" id="error-text">加载失败</p>
+            <a href="https://mingdynasty1.github.io/code/index.html" class="law-link mt-3 inline-block">返回首页</a>
+        </div>
+    </main>
+
+    <footer class="mt-10">
+        <div class="w-full h-16 bg-[#A62424] flex items-center justify-center">
+            <div class="w-3/4 h-full border-t-4 border-[#D4AF37] flex items-center justify-center">
+                <p class="text-[#D4AF37] font-medium">
+                    © 2013-2026 MingDynasty,Inc. 用户主页 | MingEmperor
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ============================================================
+        // 1. 解析 URL 参数
+        // ============================================================
+        const params = new URLSearchParams(window.location.search);
+        const userId = params.get('id');
+
+        const loadingEl = document.getElementById('loading');
+        const contentEl = document.getElementById('user-content');
+        const errorBox = document.getElementById('error-box');
+        const errorText = document.getElementById('error-text');
+
+        // ============================================================
+        // 2. 工具函数
+        // ============================================================
+        function showError(msg) {
+            loadingEl.style.display = 'none';
+            contentEl.style.display = 'none';
+            errorBox.style.display = 'block';
+            errorText.textContent = msg;
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function statusClass(status) {
+            if (!status) return '';
+            return 'status-' + status;
+        }
+
+        // ============================================================
+        // 3. 从 Supabase 加载用户数据
+        // ============================================================
+        async function loadUser() {
+            if (!userId) {
+                showError('未指定用户 ID');
+                return;
+            }
+
+            try {
+                // ---- 3.1 查 profiles 表 ----
+                const { data: profile, error: profileErr } = await supabaseClient
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', userId)
+                    .maybeSingle();
+
+                if (profileErr) {
+                    console.error('查询 profile 失败:', profileErr);
+                }
+
+                if (!profile) {
+                    showError('用户不存在');
+                    return;
+                }
+
+                // ---- 3.2 渲染页面 ----
+                loadingEl.style.display = 'none';
+                contentEl.style.display = 'block';
+
+                const name = profile.username || '匿名用户';
+                const email = profile.email || '未公开';
+                const bio = profile.bio || '暂无简介';
+                const rating = profile.rating != null ? profile.rating : 1500;
+                const solved = profile.solved_count != null ? profile.solved_count : 0;
+                const avatarUrl = profile.avatar_url || '';
+
+                // 头像
+                const avatarEl = document.getElementById('avatar');
+                if (avatarUrl) {
+                    avatarEl.style.backgroundImage = `url(${avatarUrl})`;
+                    avatarEl.textContent = '';
+                    // 加载失败时回退
+                    const testImg = new Image();
+                    testImg.onerror = function() {
+                        avatarEl.style.backgroundImage = '';
+                        avatarEl.textContent = name.charAt(0).toUpperCase();
+                    };
+                    testImg.src = avatarUrl;
+                } else {
+                    avatarEl.style.backgroundImage = '';
+                    avatarEl.textContent = name.charAt(0).toUpperCase();
+                }
+
+                document.getElementById('username').textContent = name;
+                document.getElementById('email').textContent = email;
+                document.getElementById('uid').textContent = 'UID: ' + String(profile.id).slice(0, 8);
+                document.getElementById('created-at').textContent =
+                    profile.created_at ? '注册于 ' + new Date(profile.created_at).toLocaleDateString() : '';
+                document.getElementById('rating').textContent = rating;
+                document.getElementById('solved-count').textContent = solved;
+                document.getElementById('bio').textContent = bio;
+
+                // ---- 3.3 查最近提交 ----
+                await loadSubmissions(userId);
+
+            } catch (e) {
+                console.error('加载用户异常:', e);
+                showError('加载失败：' + e.message);
+            }
+        }
+
+        // ============================================================
+        // 4. 加载该用户的提交记录
+        // ============================================================
+        async function loadSubmissions(uid) {
+            const container = document.getElementById('submissions');
+            container.innerHTML = '<p style="color:#999;">加载中...</p>';
+
+            // 先查 submissions，再手动补题目标题（避免外键 embed 权限问题）
+            const { data: subs, error } = await supabaseClient
+                .from('submissions')
+                .select('id, problem_id, language, status, score, time_used, created_at')
+                .eq('user_id', uid)
+                .order('created_at', { ascending: false })
+                .limit(20);
+
+            if (error) {
+                console.error('查询 submissions 失败:', error);
+                container.innerHTML = '<p style="color:#999;">加载提交记录失败</p>';
+                return;
+            }
+
+            if (!subs || subs.length === 0) {
+                container.innerHTML = '<p style="color:#999;">暂无提交记录</p>';
+                return;
+            }
+
+            // 收集 problem_id，一次性查题目标题
+            const problemIds = [...new Set(subs.map(s => s.problem_id).filter(Boolean))];
+            let problemMap = {};
+            if (problemIds.length > 0) {
+                const { data: probs, error: pErr } = await supabaseClient
+                    .from('problems')
+                    .select('id, title')
+                    .in('id', problemIds);
+                if (!pErr && probs) {
+                    probs.forEach(p => { problemMap[p.id] = p.title; });
+                }
+            }
+
+            // 渲染表格
+            container.innerHTML = `
+                <div style="overflow-x:auto;">
+                    <table class="sub-table">
+                        <thead>
+                            <tr>
+                                <th style="width:160px;">时间</th>
+                                <th>题目</th>
+                                <th style="width:100px;">语言</th>
+                                <th style="width:90px;">状态</th>
+                                <th style="width:70px;">得分</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${subs.map(s => {
+                                const title = problemMap[s.problem_id] || '';
+                                const probLink = `https://mingdynasty1.github.io/code/problem/index.html?id=${s.problem_id}`;
+                                return `
+                                    <tr>
+                                        <td>${s.created_at ? new Date(s.created_at).toLocaleString() : ''}</td>
+                                        <td>
+                                            <a class="law-link" href="${probLink}">
+                                                #${s.problem_id} ${escapeHtml(title)}
+                                            </a>
+                                        </td>
+                                        <td>${escapeHtml(s.language || '')}</td>
+                                        <td class="${statusClass(s.status)}">${escapeHtml(s.status || '')}</td>
+                                        <td>${s.score != null ? s.score : 0}</td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        // ============================================================
+        // 5. 启动
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', loadUser);
+    </script>
+</body>
+</html>
