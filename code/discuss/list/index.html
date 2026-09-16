@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大明讨论区 | MingDynasty</title>
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://mingdynasty1.github.io/supabase-client.js"></script>
+    <style>
+        body { font-family: 'serif', 'SimSun', 'FangSong'; background-color: #FFFFF0; color: #2C2C2C; min-height: 100vh; }
+        .paper {
+            background-color: #FFFFF0;
+            border: 2px solid #D4AF37;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        }
+        .paper h2 {
+            color: #A62424;
+            border-bottom: 2px dashed #D4AF37;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        .input-paper {
+            background-color: #FFFFF0;
+            border: 1px solid #D4AF37;
+            border-radius: 4px;
+            padding: 0.5rem;
+            font-family: 'serif', 'SimSun', 'FangSong';
+            width: 100%;
+        }
+        .input-paper:focus { outline: none; border-color: #A62424; }
+        .seal-button {
+            background-color: #A62424;
+            color: #FFFFF0;
+            border: 2px solid #8B0000;
+            border-radius: 4px;
+            padding: 0.5rem 1.5rem;
+            font-family: 'serif', 'SimSun', 'FangSong';
+            font-size: 1rem;
+            box-shadow: 0 4px 0 #8B0000;
+            cursor: pointer;
+        }
+        .seal-button:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #8B0000; }
+        .seal-button:disabled { opacity: 0.6; cursor: not-allowed; }
+        .law-link { color: #A62424; text-decoration: none; }
+        .law-link:hover { text-decoration: underline; }
+        .discuss-item {
+            padding: 14px 0;
+            border-bottom: 1px dashed #e0c987;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+        .discuss-item:last-child { border-bottom: none; }
+        .mini-avatar {
+            width: 40px; height: 40px; border-radius: 50%;
+            background-color: #A62424; color: #FFFFF0;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: bold; flex-shrink: 0;
+            background-size: cover; background-position: center;
+        }
+        .discuss-title { font-size: 1.1rem; color: #A62424; text-decoration: none; font-weight: bold; }
+        .discuss-title:hover { text-decoration: underline; }
+        .discuss-meta { font-size: 0.82rem; color: #888; margin-top: 4px; }
+        .modal-mask {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+            display: none; align-items: center; justify-content: center; z-index: 100;
+        }
+        .modal-mask.show { display: flex; }
+        .modal-box {
+            background: #FFFFF0; border: 2px solid #D4AF37; border-radius: 10px;
+            max-width: 640px; width: 90%; padding: 25px; box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        }
+        .modal-box h3 { color: #A62424; font-size: 1.3rem; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+    <div class="w-full h-16 bg-[#A62424] shadow-lg flex items-center justify-center">
+        <div class="w-3/4 h-full border-b-4 border-[#D4AF37] flex items-center justify-center">
+            <h1 class="text-3xl md:text-4xl text-[#D4AF37] font-bold" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
+                大明王朝 - 讨论区
+            </h1>
+        </div>
+    </div>
+
+    <main class="container mx-auto px-4 py-8 max-w-3xl">
+        <div class="paper">
+            <div class="flex justify-between items-center mb-4">
+                <h2 style="margin:0;border:none;">💬 最新讨论</h2>
+                <button class="seal-button" id="newPostBtn">
+                    <i class="fa fa-plus"></i> 发新帖
+                </button>
+            </div>
+
+            <div id="discuss-list">
+                <p style="text-align:center;color:#999;padding:30px;">加载中...</p>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="https://mingdynasty1.github.io/code/index.html" class="law-link">
+                <i class="fa fa-arrow-left"></i> 返回首页
+            </a>
+        </div>
+    </main>
+
+    <!-- 发帖弹窗 -->
+    <div class="modal-mask" id="postModal">
+        <div class="modal-box">
+            <h3><i class="fa fa-pencil"></i> 发布新帖</h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-bold mb-1">标题</label>
+                    <input type="text" id="postTitle" class="input-paper" placeholder="简明扼要的标题">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold mb-1">内容</label>
+                    <textarea id="postContent" rows="6" class="input-paper" placeholder="支持纯文本"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold mb-1">关联题目 ID（可选）</label>
+                    <input type="number" id="postProblem" class="input-paper" placeholder="如 1，留空则不限">
+                </div>
+                <div id="postMsg" class="text-sm"></div>
+                <div class="flex gap-3">
+                    <button class="seal-button" id="submitPostBtn">发布</button>
+                    <button class="seal-button" id="cancelPostBtn" style="background:#888;border-color:#666;box-shadow:0 4px 0 #666;">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="mt-10">
+        <div class="w-full h-16 bg-[#A62424] flex items-center justify-center">
+            <div class="w-3/4 h-full border-t-4 border-[#D4AF37] flex items-center justify-center">
+                <p class="text-[#D4AF37] font-medium">
+                    © 2013-2026 MingDynasty,Inc. 讨论区 | MingEmperor
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function escapeHtml(s) {
+            if (!s) return '';
+            return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+                .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+        }
+
+        async function loadList() {
+            const container = document.getElementById('discuss-list');
+            const list = await getDiscussions(30);
+
+            if (!list.length) {
+                container.innerHTML = '<p style="text-align:center;color:#999;padding:30px;">暂无讨论，快来发第一个帖子吧！</p>';
+                return;
+            }
+
+            container.innerHTML = list.map(d => {
+                const authorName = d.author ? d.author.username : '匿名';
+                const avatarUrl = d.author ? d.author.avatar_url : '';
+                const avatarStyle = avatarUrl ? `background-image:url(${avatarUrl});` : '';
+                const initial = avatarUrl ? '' : authorName.charAt(0).toUpperCase();
+                const dateStr = new Date(d.created_at).toLocaleString();
+
+                return `
+                    <div class="discuss-item">
+                        <div class="mini-avatar" style="${avatarStyle}">${initial}</div>
+                        <div style="flex:1;">
+                            <a class="discuss-title"
+                               href="https://mingdynasty1.github.io/code/discuss/index.html?id=${d.id}">
+                                ${escapeHtml(d.title)}
+                            </a>
+                            <div class="discuss-meta">
+                                作者：${escapeHtml(authorName)}
+                                ${d.problem_id ? ` · 题目 #${d.problem_id}` : ''}
+                                · ${d.reply_count || 0} 回复
+                                · ${dateStr}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 弹窗控制
+        const modal = document.getElementById('postModal');
+        document.getElementById('newPostBtn').addEventListener('click', async function() {
+            // 检查登录
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            if (!user) {
+                alert('请先登录后再发帖');
+                window.location.href = 'https://mingdynasty1.github.io/sign/in.html?client_id=1437rfybwr6rbf7rf&ssid=2473refh3rfygwfhei7&redirect_uri=' + encodeURIComponent(window.location.href);
+                return;
+            }
+            modal.classList.add('show');
+        });
+        document.getElementById('cancelPostBtn').addEventListener('click', function() {
+            modal.classList.remove('show');
+            document.getElementById('postMsg').textContent = '';
+        });
+
+        // 提交新帖
+        document.getElementById('submitPostBtn').addEventListener('click', async function() {
+            const btn = this;
+            const msg = document.getElementById('postMsg');
+            const title = document.getElementById('postTitle').value.trim();
+            const content = document.getElementById('postContent').value.trim();
+            const problemIdRaw = document.getElementById('postProblem').value.trim();
+            const problemId = problemIdRaw ? parseInt(problemIdRaw, 10) : null;
+
+            if (!title || title.length < 2) {
+                msg.textContent = '标题至少 2 个字符';
+                msg.style.color = '#A62424';
+                return;
+            }
+            if (!content || content.length < 2) {
+                msg.textContent = '内容至少 2 个字符';
+                msg.style.color = '#A62424';
+                return;
+            }
+
+            btn.disabled = true;
+            msg.textContent = '发布中...';
+            msg.style.color = '#666';
+
+            const result = await createDiscussion(title, content, problemId);
+            btn.disabled = false;
+
+            if (result.success) {
+                msg.textContent = '✅ 发布成功，正在跳转...';
+                msg.style.color = '#2e7d32';
+                setTimeout(() => {
+                    window.location.href = `https://mingdynasty1.github.io/code/discuss/index.html?id=${result.discussion.id}`;
+                }, 600);
+            } else {
+                msg.textContent = '❌ ' + result.error;
+                msg.style.color = '#A62424';
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', loadList);
+    </script>
+</body>
+</html>
