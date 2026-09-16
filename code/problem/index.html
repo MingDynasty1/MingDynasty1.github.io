@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>题目详情 | MingDynasty</title>
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://mingdynasty1.github.io/supabase-client.js"></script>
+    <style>
+        body { font-family: 'serif', 'SimSun', 'FangSong'; background-color: #FFFFF0; color: #2C2C2C; min-height: 100vh; }
+        .paper {
+            background-color: #FFFFF0;
+            border: 2px solid #D4AF37;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        }
+        .paper h2 {
+            color: #A62424;
+            border-bottom: 2px dashed #D4AF37;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        .sample-box {
+            background-color: #f8f3e6;
+            border: 1px solid #e0c987;
+            border-radius: 5px;
+            padding: 12px;
+            margin: 8px 0;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.95rem;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .seal-button {
+            background-color: #A62424;
+            color: #FFFFF0;
+            border: 2px solid #8B0000;
+            border-radius: 4px;
+            padding: 0.6rem 1.8rem;
+            font-family: 'serif', 'SimSun', 'FangSong';
+            font-size: 1.05rem;
+            box-shadow: 0 4px 0 #8B0000;
+            cursor: pointer;
+        }
+        .seal-button:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #8B0000; }
+        .seal-button:disabled { opacity: 0.6; cursor: not-allowed; }
+        .law-link { color: #A62424; text-decoration: none; }
+        .law-link:hover { text-decoration: underline; }
+
+        textarea.code-editor {
+            width: 100%;
+            height: 340px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            background-color: #2b2b2b;
+            color: #f8f8f2;
+            border: 1px solid #D4AF37;
+            border-radius: 6px;
+            padding: 14px;
+            font-size: 14px;
+            line-height: 1.5;
+            resize: vertical;
+        }
+
+        .meta-chip {
+            display: inline-block;
+            background: #f8f3e6;
+            border: 1px solid #e0c987;
+            border-radius: 4px;
+            padding: 3px 10px;
+            font-size: 0.85rem;
+            color: #A62424;
+            margin-right: 8px;
+        }
+        .status-AC { color: #2e7d32; font-weight: bold; }
+        .status-WA { color: #c62828; font-weight: bold; }
+        .status-Pending { color: #ef6c00; }
+        .status-Judging { color: #ef6c00; }
+        .status-TLE { color: #6a1b9a; font-weight: bold; }
+        .status-MLE { color: #6a1b9a; font-weight: bold; }
+        .status-RE  { color: #ad1457; font-weight: bold; }
+        .status-CE  { color: #555; font-weight: bold; }
+
+        .sub-table { width: 100%; border-collapse: collapse; }
+        .sub-table th, .sub-table td {
+            padding: 10px;
+            border: 1px solid #e0c987;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+        .sub-table th { background: #f8f3e6; color: #A62424; }
+
+        .result-box {
+            border-left: 5px solid #D4AF37;
+            background: #fdf8ec;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            white-space: pre-wrap;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+        }
+        .detail-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            margin-right: 6px;
+            margin-bottom: 4px;
+            font-weight: bold;
+        }
+        .detail-AC { background: #e8f5e8; color: #2e7d32; }
+        .detail-WA { background: #ffebee; color: #c62828; }
+        .detail-TLE { background: #f3e5f5; color: #6a1b9a; }
+        .detail-RE { background: #fce4ec; color: #ad1457; }
+        .detail-CE { background: #eceff1; color: #455a64; }
+        .detail-Pending { background: #fff3e0; color: #ef6c00; }
+    </style>
+</head>
+<body>
+    <div class="w-full h-16 bg-[#A62424] shadow-lg flex items-center justify-center">
+        <div class="w-3/4 h-full border-b-4 border-[#D4AF37] flex items-center justify-center">
+            <h1 class="text-3xl md:text-4xl text-[#D4AF37] font-bold" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
+                大明王朝 - 题目详情
+            </h1>
+        </div>
+    </div>
+
+    <main class="container mx-auto px-4 py-8 max-w-4xl">
+        <div id="loading" class="text-center py-16 text-gray-600">
+            <i class="fa fa-spinner fa-spin text-3xl"></i>
+            <p class="mt-3">加载题目中...</p>
+        </div>
+
+        <div id="error-box" class="paper text-center" style="display:none;">
+            <i class="fa fa-exclamation-circle text-4xl text-[#A62424]"></i>
+            <p class="mt-3 text-lg" id="error-text">加载失败</p>
+            <a href="https://mingdynasty1.github.io/code/problem/list/index.html" class="law-link mt-3 inline-block">
+                返回题目列表
+            </a>
+        </div>
+
+        <div id="problem-content" style="display:none;">
+            <!-- 题面 -->
+            <div class="paper">
+                <h2 id="problem-title">题目</h2>
+                <div class="mb-4">
+                    <span class="meta-chip">时间限制：<span id="time-limit"></span> ms</span>
+                    <span class="meta-chip">内存限制：<span id="memory-limit"></span> MB</span>
+                    <span class="meta-chip">难度：<span id="difficulty"></span></span>
+                </div>
+                <div id="problem-desc" style="line-height: 1.9;"></div>
+            </div>
+
+            <div class="paper">
+                <h2>输入格式</h2>
+                <div id="input-format" style="line-height: 1.8;"></div>
+            </div>
+
+            <div class="paper">
+                <h2>输出格式</h2>
+                <div id="output-format" style="line-height: 1.8;"></div>
+            </div>
+
+            <div class="paper">
+                <h2>样例</h2>
+                <div id="samples"></div>
+            </div>
+
+            <!-- 提交代码 -->
+            <div class="paper">
+                <h2><i class="fa fa-code"></i> 提交代码</h2>
+                <div class="mb-3 flex flex-wrap items-center gap-3">
+                    <label>语言：</label>
+                    <select id="language" class="border border-[#D4AF37] rounded p-2" style="font-family: inherit;">
+                        <option value="cpp">C++</option>
+                        <option value="python">Python</option>
+                        <option value="java">Java</option>
+                        <option value="javascript">JavaScript</option>
+                    </select>
+                </div>
+                <textarea id="code" class="code-editor" placeholder="在此粘贴你的代码..."></textarea>
+                <div class="mt-3 flex items-center gap-3 flex-wrap">
+                    <button class="seal-button" id="submit-btn">
+                        <i class="fa fa-paper-plane"></i> 提交评测
+                    </button>
+                    <span id="submit-msg" class="text-sm"></span>
+                </div>
+
+                <div id="result-panel" style="display:none;">
+                    <div class="result-box" id="result-text"></div>
+                    <div id="result-detail" style="margin-top:10px;"></div>
+                </div>
+            </div>
+
+            <!-- 我的提交 -->
+            <div class="paper">
+                <h2><i class="fa fa-history"></i> 我的提交</h2>
+                <div id="my-submissions">加载中...</div>
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="https://mingdynasty1.github.io/code/problem/list/index.html" class="law-link">
+                    <i class="fa fa-arrow-left"></i> 返回题目列表
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="mt-10">
+        <div class="w-full h-16 bg-[#A62424] flex items-center justify-center">
+            <div class="w-3/4 h-full border-t-4 border-[#D4AF37] flex items-center justify-center">
+                <p class="text-[#D4AF37] font-medium">
+                    © 2013-2026 MingDynasty,Inc. 题目详情 | MingEmperor
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const problemId = params.get('id');
+
+        const loadingEl = document.getElementById('loading');
+        const errorBox = document.getElementById('error-box');
+        const errorText = document.getElementById('error-text');
+        const contentEl = document.getElementById('problem-content');
+
+        let currentProblem = null;
+        let pollTimer = null;
+
+        function escapeHtml(s) {
+            if (s == null) return '';
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+        }
+
+        function showError(msg) {
+            loadingEl.style.display = 'none';
+            contentEl.style.display = 'none';
+            errorBox.style.display = 'block';
+            errorText.textContent = msg;
+        }
+
+        function statusClass(status) {
+            if (!status) return '';
+            return 'status-' + status;
+        }
+
+        // ============================================================
+        // 加载题目
+        // ============================================================
+        async function loadProblem() {
+            if (!problemId) { showError('未指定题目 ID'); return; }
+
+            const p = await getProblem(problemId);
+            if (!p) { showError('题目不存在'); return; }
+
+            currentProblem = p;
+            loadingEl.style.display = 'none';
+            contentEl.style.display = 'block';
+
+            document.getElementById('problem-title').textContent = `#${p.id} ${p.title}`;
+            document.getElementById('time-limit').textContent = p.time_limit || 1000;
+            document.getElementById('memory-limit').textContent = p.memory_limit || 256;
+            document.getElementById('difficulty').textContent = p.difficulty || '入门';
+
+            document.getElementById('problem-desc').innerHTML = escapeHtml(p.description || '').replace(/\n/g, '<br>');
+            document.getElementById('input-format').innerHTML = escapeHtml(p.input_format || '无').replace(/\n/g, '<br>');
+            document.getElementById('output-format').innerHTML = escapeHtml(p.output_format || '无').replace(/\n/g, '<br>');
+
+            const samples = p.samples || [];
+            document.getElementById('samples').innerHTML = samples.length ? samples.map((s, i) => `
+                <div style="margin-bottom: 15px;">
+                    <div style="font-weight:bold;color:#A62424;">输入 #${i + 1}</div>
+                    <div class="sample-box">${escapeHtml(s.input || '')}</div>
+                    <div style="font-weight:bold;color:#A62424;">输出 #${i + 1}</div>
+                    <div class="sample-box">${escapeHtml(s.output || '')}</div>
+                </div>
+            `).join('') : '<p style="color:#999;">无样例</p>';
+
+            await loadMySubmissions();
+        }
+
+        // ============================================================
+        // 加载我的提交
+        // ============================================================
+        async function loadMySubmissions() {
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            const container = document.getElementById('my-submissions');
+
+            if (!user) {
+                container.innerHTML = '<p style="color:#999;">请先登录后查看提交记录</p>';
+                return;
+            }
+
+            const { data, error } = await supabaseClient
+                .from('submissions')
+                .select('id, language, status, score, time_used, memory_used, created_at')
+                .eq('user_id', user.id)
+                .eq('problem_id', problemId)
+                .order('created_at', { ascending: false })
+                .limit(15);
+
+            if (error) {
+                container.innerHTML = '<p style="color:#999;">加载失败</p>';
+                return;
+            }
+            if (!data || !data.length) {
+                container.innerHTML = '<p style="color:#999;">暂无提交</p>';
+                return;
+            }
+
+            container.innerHTML = `
+                <div style="overflow-x:auto;">
+                    <table class="sub-table">
+                        <thead>
+                            <tr>
+                                <th style="width:160px;">时间</th>
+                                <th style="width:90px;">语言</th>
+                                <th style="width:90px;">状态</th>
+                                <th style="width:70px;">得分</th>
+                                <th style="width:90px;">耗时</th>
+                                <th style="width:90px;">内存</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.map(s => `
+                                <tr>
+                                    <td>${new Date(s.created_at).toLocaleString()}</td>
+                                    <td>${escapeHtml(s.language)}</td>
+                                    <td class="${statusClass(s.status)}">${escapeHtml(s.status)}</td>
+                                    <td>${s.score || 0}</td>
+                                    <td>${s.time_used || '-'} ms</td>
+                                    <td>${s.memory_used || '-'} KB</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        // ============================================================
+        // 提交代码 + 轮询
+        // ============================================================
+        document.getElementById('submit-btn').addEventListener('click', async function() {
+            const btn = this;
+            const msg = document.getElementById('submit-msg');
+            const code = document.getElementById('code').value;
+            const language = document.getElementById('language').value;
+
+            if (!code.trim()) {
+                msg.textContent = '请先输入代码';
+                msg.style.color = '#A62424';
+                return;
+            }
+
+            btn.disabled = true;
+            msg.textContent = '提交中...';
+            msg.style.color = '#666';
+            document.getElementById('result-panel').style.display = 'none';
+
+            const result = await submitCode(problemId, language, code);
+            btn.disabled = false;
+
+            if (!result.success) {
+                msg.textContent = '❌ ' + result.error;
+                msg.style.color = '#A62424';
+                return;
+            }
+
+            msg.textContent = '✅ 提交成功，评测中...';
+            msg.style.color = '#2e7d32';
+
+            pollSubmission(result.submission.id);
+        });
+
+        function pollSubmission(submissionId) {
+            if (pollTimer) clearInterval(pollTimer);
+            let attempts = 0;
+
+            const panel = document.getElementById('result-panel');
+            const textEl = document.getElementById('result-text');
+            const detailEl = document.getElementById('result-detail');
+            panel.style.display = 'block';
+            textEl.textContent = '⏳ 正在评测...';
+            detailEl.innerHTML = '';
+
+            pollTimer = setInterval(async () => {
+                attempts++;
+                if (attempts > 90) {
+                    clearInterval(pollTimer);
+                    textEl.textContent = '❌ 评测超时或查询失败';
+                    return;
+                }
+
+                const { data, error } = await supabaseClient
+                    .from('submissions')
+                    .select('status, score, time_used, memory_used, judge_detail, compile_output')
+                    .eq('id', submissionId)
+                    .maybeSingle();
+
+                if (error || !data) return;
+
+                if (data.status === 'Pending' || data.status === 'Judging') {
+                    textEl.textContent = `⏳ 正在评测... (${data.status})`;
+                    return;
+                }
+
+                clearInterval(pollTimer);
+
+                const statusEmoji = {
+                    AC: '✅ Accepted',
+                    WA: '❌ Wrong Answer',
+                    TLE: '⏰ Time Limit Exceeded',
+                    MLE: '💾 Memory Limit Exceeded',
+                    RE: '💥 Runtime Error',
+                    CE: '🔧 Compile Error'
+                }[data.status] || data.status;
+
+                textEl.innerHTML = `
+                    <div style="font-size:1.2rem;font-weight:bold;" class="${statusClass(data.status)}">${statusEmoji}</div>
+                    <div style="margin-top:8px;">得分：<b>${data.score || 0}</b> · 最大耗时：${data.time_used || '-'} ms · 最大内存：${data.memory_used || '-'} KB</div>
+                    ${data.compile_output ? `<div style="margin-top:8px;color:#c62828;">${escapeHtml(data.compile_output)}</div>` : ''}
+                `;
+
+                if (Array.isArray(data.judge_detail) && data.judge_detail.length) {
+                    detailEl.innerHTML = `
+                        <div style="font-weight:bold;margin-bottom:6px;">测试点详情：</div>
+                        <div>
+                            ${data.judge_detail.map(d => `
+                                <span class="detail-tag detail-${d.status}">
+                                    #${d.case} ${d.status} (${Math.round(d.time || 0)}ms)
+                                </span>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+
+                await loadMySubmissions();
+            }, 2000);
+        }
+
+        document.addEventListener('DOMContentLoaded', loadProblem);
+    </script>
+</body>
+</html>
