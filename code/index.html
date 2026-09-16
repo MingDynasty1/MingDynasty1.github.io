@@ -4,8 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>大明 OJ | OnlineJudge | MingDynasty</title>
-        <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
+    <link rel="icon" href="https://MingDynasty1.github.io/000000000000000000.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Supabase 客户端（必须先加载 supabase-js，再加载你自己的客户端封装） -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://mingdynasty1.github.io/supabase-client.js"></script>
+
     <style>
         /* 全局样式 */
         * {
@@ -14,9 +19,8 @@
             box-sizing: border-box;
             transition: background-color 0.3s, color 0.3s, border-color 0.3s;
         }
-        
+
         :root {
-            /* 亮色主题变量 */
             --bg-color: #f8f3e6;
             --text-color: #333;
             --card-bg: #fff;
@@ -30,9 +34,8 @@
             --time-bg: linear-gradient(135deg, #8b0000, #d4af37);
             --pattern-opacity: 0.05;
         }
-        
+
         .dark-mode {
-            /* 暗色主题变量 */
             --bg-color: #1a1a1a;
             --text-color: #e6e6e6;
             --card-bg: #2d2d2d;
@@ -46,7 +49,7 @@
             --time-bg: linear-gradient(135deg, #600000, #9b7a1f);
             --pattern-opacity: 0.1;
         }
-        
+
         body {
             font-family: 'SimSun', '宋体', serif;
             background-color: var(--bg-color);
@@ -56,14 +59,13 @@
             padding: 0;
             margin: 0;
         }
-        
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
-        
-        /* 页眉样式 */
+
         header {
             background: var(--header-bg);
             color: #f8f3e6;
@@ -73,15 +75,14 @@
             text-align: center;
             position: relative;
         }
-        
+
         header h1 {
             font-size: 2.5rem;
             text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
             letter-spacing: 5px;
             margin-bottom: 10px;
         }
-        
-        /* 导航样式 */
+
         nav {
             background-color: var(--nav-bg);
             padding: 15px 0;
@@ -93,7 +94,7 @@
             align-items: center;
             flex-wrap: wrap;
         }
-        
+
         nav a {
             color: #f8f3e6;
             text-decoration: none;
@@ -103,27 +104,26 @@
             border-radius: 5px;
             transition: background-color 0.3s;
         }
-        
+
         nav a:hover {
             background-color: rgba(255, 255, 255, 0.1);
         }
-        
+
         .nav-active {
             background-color: rgba(255, 255, 255, 0.2);
         }
-        
-        /* 用户信息样式 */
+
         .user-info {
             margin-left: auto;
             display: flex;
             align-items: center;
             color: #f8f3e6;
         }
-        
+
         .user-info span {
             margin-right: 15px;
         }
-        
+
         .login-btn, .register-btn, .logout-btn {
             background: rgba(255, 255, 255, 0.2);
             color: #f8f3e6;
@@ -134,18 +134,17 @@
             margin-left: 10px;
             font-family: 'SimSun', '宋体', serif;
         }
-        
+
         .login-btn:hover, .register-btn:hover, .logout-btn:hover {
             background: rgba(255, 255, 255, 0.3);
         }
-        
-        /* 主题切换按钮 */
+
         .theme-switch {
             margin-left: 20px;
             display: flex;
             align-items: center;
         }
-        
+
         .theme-switch-label {
             display: flex;
             align-items: center;
@@ -153,7 +152,7 @@
             color: #f8f3e6;
             font-size: 0.9rem;
         }
-        
+
         .switch {
             position: relative;
             display: inline-block;
@@ -161,13 +160,13 @@
             height: 24px;
             margin-left: 10px;
         }
-        
+
         .switch input {
             opacity: 0;
             width: 0;
             height: 0;
         }
-        
+
         .slider {
             position: absolute;
             cursor: pointer;
@@ -179,7 +178,7 @@
             transition: .4s;
             border-radius: 24px;
         }
-        
+
         .slider:before {
             position: absolute;
             content: "";
@@ -191,16 +190,15 @@
             transition: .4s;
             border-radius: 50%;
         }
-        
+
         input:checked + .slider {
             background-color: var(--gold-color);
         }
-        
+
         input:checked + .slider:before {
             transform: translateX(26px);
         }
-        
-        /* 卡片样式 */
+
         .card {
             background: var(--card-bg);
             border-radius: 8px;
@@ -211,7 +209,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .card::before {
             content: "";
             position: absolute;
@@ -221,7 +219,7 @@
             height: 5px;
             background: linear-gradient(to right, var(--accent-color), var(--gold-color));
         }
-        
+
         .card h2 {
             color: var(--accent-color);
             margin-bottom: 15px;
@@ -229,15 +227,14 @@
             border-bottom: 2px dashed var(--border-color);
             font-size: 1.5rem;
         }
-        
-        /* 特性网格 */
+
         .features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 25px;
             margin: 30px 0;
         }
-        
+
         .feature-card {
             background: var(--card-bg);
             border-radius: 8px;
@@ -247,27 +244,27 @@
             border-top: 5px solid var(--gold-color);
             transition: transform 0.3s;
         }
-        
+
         .feature-card:hover {
             transform: translateY(-5px);
         }
-        
+
         .feature-icon {
             font-size: 3rem;
             color: var(--accent-color);
             margin-bottom: 15px;
         }
-        
+
         .feature-card h3 {
             color: var(--accent-color);
             margin-bottom: 10px;
         }
-        
+
         .feature-card p {
             color: var(--text-color);
             opacity: 0.8;
         }
-        
+
         .btn {
             display: inline-block;
             background: var(--accent-color);
@@ -279,12 +276,11 @@
             margin-top: 15px;
             transition: background 0.3s;
         }
-        
+
         .btn:hover {
             background: var(--nav-bg);
         }
-        
-        /* 页脚样式 */
+
         footer {
             background: var(--header-bg);
             color: #f8f3e6;
@@ -293,30 +289,28 @@
             margin-top: 40px;
             border-top: 5px solid var(--gold-color);
         }
-        
-        /* 明朝特色装饰 */
+
         .ming-decoration {
             font-family: 'KaiTi', '楷体', serif;
             color: var(--accent-color);
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
         }
-        
+
         .chinese-pattern {
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"><path fill="' + var(--accent-color) + '" fill-opacity="0.1" d="M0 0h60v60H0z"/><path fill="' + var(--gold-color) + '" fill-opacity="0.1" d="M0 0h30v30H0z"/></svg>');
             background-size: 60px 60px;
         }
-        
-        /* 响应式设计 */
+
         @media (max-width: 768px) {
             nav {
                 flex-direction: column;
                 gap: 10px;
             }
-            
+
             .user-info {
                 margin-left: 0;
             }
-            
+
             .features-grid {
                 grid-template-columns: 1fr;
             }
@@ -330,7 +324,7 @@
             <p>传承明朝风韵，展现编程之美</p>
         </div>
     </header>
-    
+
     <nav>
         <div class="container">
             <a href="#" class="nav-active">首页</a>
@@ -338,14 +332,14 @@
             <a href="https://mingdynasty1.github.io/code/contest/index.html">比赛</a>
             <a href="https://mingdynasty1.github.io/code/rank/index.html">排名</a>
             <a href="https://mgdyqwq.freeflarum.com">讨论</a>
-            
+
             <div class="user-info" id="user-info">
                 <span id="username-display">游客</span>
                 <button class="login-btn" id="login-btn">登录</button>
                 <button class="register-btn" id="register-btn">注册</button>
                 <button class="logout-btn" id="logout-btn" style="display: none;">退出</button>
             </div>
-            
+
             <div class="theme-switch">
                 <label class="theme-switch-label">
                     <i class="fas fa-moon"></i>
@@ -358,51 +352,40 @@
             </div>
         </div>
     </nav>
-    
+
     <div class="container">
         <div class="card chinese-pattern">
             <h2>欢迎来到大明编程挑战</h2>
             <p>在这里，你可以挑战各种编程题目，提升编程技能，感受明朝文化的独特魅力。我们的平台提供丰富的题目资源、实时评测系统和活跃的社区讨论。</p>
         </div>
-        
+
         <div class="features-grid">
             <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-code"></i>
-                </div>
+                <div class="feature-icon"><i class="fas fa-code"></i></div>
                 <h3>丰富题库</h3>
                 <p>涵盖算法、数据结构、数学等各类编程题目，从简单到困难，满足不同水平的学习需求。</p>
                 <a href="https://mingdynasty1.github.io/code/problem/list/index.html" class="btn">开始刷题</a>
             </div>
-            
             <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-trophy"></i>
-                </div>
+                <div class="feature-icon"><i class="fas fa-trophy"></i></div>
                 <h3>编程比赛</h3>
                 <p>定期举办编程竞赛，与本站的程序员同台竞技，提升编程能力和解决问题的能力。</p>
                 <a href="https://mingdynasty1.github.io/code/contest/index.html" class="btn">查看比赛</a>
             </div>
-            
             <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-chart-line"></i>
-                </div>
+                <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
                 <h3>实时排名</h3>
                 <p>查看本站OIer的排名情况，了解自己的水平位置，激励自己不断进步。</p>
                 <a href="https://mingdynasty1.github.io/code/rank/index.html" class="btn">查看排名</a>
             </div>
-            
             <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-users"></i>
-                </div>
+                <div class="feature-icon"><i class="fas fa-users"></i></div>
                 <h3>社区讨论</h3>
                 <p>加入我们的社区，与其他编程爱好者交流学习心得，解决编程难题。</p>
                 <a href="https://mgdyqwq.freeflarum.com" class="btn">参与讨论</a>
             </div>
         </div>
-        
+
         <div class="card">
             <h2>系统特色</h2>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;">
@@ -425,7 +408,7 @@
             </div>
         </div>
     </div>
-    
+
     <footer>
         <div class="container">
             <p>© 2013-2026 MingDynasty,Inc. MingDynasty's OnlineJudge OJ | 大明OJ</p>
@@ -434,18 +417,18 @@
     </footer>
 
     <script>
-        // 主题切换功能
+        // ============================================================
+        // 主题切换
+        // ============================================================
         const themeToggle = document.getElementById('theme-toggle');
         const body = document.body;
-        
-        // 检查本地存储的主题偏好
+
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'dark') {
             body.classList.add('dark-mode');
             themeToggle.checked = true;
         }
-        
-        // 切换主题
+
         themeToggle.addEventListener('change', function() {
             if (this.checked) {
                 body.classList.add('dark-mode');
@@ -455,53 +438,111 @@
                 localStorage.setItem('theme', 'light');
             }
         });
-        
-        // 根据系统偏好设置初始主题
+
         if (!savedTheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
             body.classList.add('dark-mode');
             themeToggle.checked = true;
         }
-        
-        // 简单的用户状态管理
+
+        // ============================================================
+        // 登录状态管理（与 Supabase 同步）
+        // ============================================================
         const loginBtn = document.getElementById('login-btn');
         const registerBtn = document.getElementById('register-btn');
         const logoutBtn = document.getElementById('logout-btn');
         const usernameDisplay = document.getElementById('username-display');
-        
-        // 检查登录状态
-        function checkLoginStatus() {
-            const userData = localStorage.getItem('mingdynasty_user');
-            if (userData) {
-                const user = JSON.parse(userData);
-                usernameDisplay.textContent = user.username;
-                loginBtn.style.display = 'none';
-                registerBtn.style.display = 'none';
-                logoutBtn.style.display = 'block';
+
+        const OAUTH_CLIENT_ID = '1437rfybwr6rbf7rf';
+        const OAUTH_SSID = '2473refh3rfygwfhei7';
+        const LOGIN_URL = 'https://mingdynasty1.github.io/sign/in.html';
+        const REGISTER_URL = 'https://mingdynasty1.github.io/sign/up.html';
+
+        async function checkLoginStatus() {
+            try {
+                const user = await getCurrentUser();
+                if (user) {
+                    const displayName =
+                        (user.profile && user.profile.username) ||
+                        (user.user_metadata && user.user_metadata.username) ||
+                        user.email ||
+                        '用户';
+                    usernameDisplay.textContent = displayName;
+                    loginBtn.style.display = 'none';
+                    registerBtn.style.display = 'none';
+                    logoutBtn.style.display = 'block';
+                } else {
+                    usernameDisplay.textContent = '游客';
+                    loginBtn.style.display = 'block';
+                    registerBtn.style.display = 'block';
+                    logoutBtn.style.display = 'none';
+                }
+            } catch (e) {
+                console.warn('checkLoginStatus error:', e);
+                usernameDisplay.textContent = '游客';
+                loginBtn.style.display = 'block';
+                registerBtn.style.display = 'block';
+                logoutBtn.style.display = 'none';
             }
         }
-        
-        // 退出登录
-        logoutBtn.addEventListener('click', function() {
-            localStorage.removeItem('mingdynasty_user');
-            usernameDisplay.textContent = '游客';
-            loginBtn.style.display = 'block';
-            registerBtn.style.display = 'block';
-            logoutBtn.style.display = 'none';
-        });
-        
-        // 模拟登录（实际应用中应该有真实的登录逻辑）
+
+        // 登录按钮：带 client_id / ssid / redirect_uri 跳转
         loginBtn.addEventListener('click', function() {
-            const username = prompt('请输入用户名:');
-            if (username) {
-                const user = {
-                    username: username,
-                    loginTime: new Date().toISOString()
-                };
-                localStorage.setItem('mingdynasty_user', JSON.stringify(user));
-                checkLoginStatus();
-            }
+            const redirectUri = encodeURIComponent(window.location.href);
+            const url = `${LOGIN_URL}?client_id=${encodeURIComponent(OAUTH_CLIENT_ID)}`
+                      + `&ssid=${encodeURIComponent(OAUTH_SSID)}`
+                      + `&redirect_uri=${redirectUri}`;
+            window.location.href = url;
         });
-        
+
+        // 注册按钮
+        registerBtn.addEventListener('click', function() {
+            window.location.href = REGISTER_URL;
+        });
+
+        // 退出登录
+        logoutBtn.addEventListener('click', async function() {
+            try {
+                if (typeof logoutUser === 'function') {
+                    await logoutUser();
+                } else {
+                    await supabaseClient.auth.signOut();
+                }
+            } catch (e) {
+                console.warn('logout error:', e);
+            }
+            checkLoginStatus();
+        });
+
+        // ============================================================
+        // 处理从登录页回跳带来的 access_token / refresh_token
+        // ============================================================
+        (async function handleAuthCallback() {
+            const params = new URLSearchParams(window.location.search);
+            const accessToken = params.get('access_token');
+            const refreshToken = params.get('refresh_token');
+
+            if (accessToken && refreshToken) {
+                try {
+                    const { error } = await supabaseClient.auth.setSession({
+                        access_token: accessToken,
+                        refresh_token: refreshToken
+                    });
+                    if (error) throw error;
+                } catch (e) {
+                    console.warn('setSession error:', e);
+                }
+                // 清理 URL
+                const cleanUrl = window.location.origin + window.location.pathname;
+                window.history.replaceState({}, document.title, cleanUrl);
+            }
+            await checkLoginStatus();
+        })();
+
+        // 监听 Supabase 登录状态变化
+        supabaseClient.auth.onAuthStateChange(function(event, session) {
+            checkLoginStatus();
+        });
+
         // 初始化
         checkLoginStatus();
     </script>
